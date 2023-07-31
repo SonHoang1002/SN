@@ -108,7 +108,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
       },
       {'type': 'blank'}
     ];
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Scaffold(

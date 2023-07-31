@@ -53,7 +53,7 @@ class _TextFormFieldCustomState extends State<TextFormFieldCustom> {
       text: TextSpan(text: text, style: const TextStyle(fontSize: 14)),
       maxLines: 5,
       textDirection: TextDirection.ltr,
-    )..layout(maxWidth: MediaQuery.of(context).size.width * 0.5);
+    )..layout(maxWidth: MediaQuery.sizeOf(context).width * 0.5);
 
     // if ((painter.size / 16) % 2 == 0) {
     //   return Size(painter.size.width, painter.size.height + 30.0);

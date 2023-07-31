@@ -261,10 +261,10 @@ class _CropEditorState extends State<_CropEditor> {
     final ratio = _targetImage!.height / _targetImage!.width;
 
     if (_isFitVertically) {
-      baseHeight = MediaQuery.of(context).size.height;
+      baseHeight = MediaQuery.sizeOf(context).height;
       baseWidth = baseHeight / ratio;
     } else {
-      baseWidth = MediaQuery.of(context).size.width;
+      baseWidth = MediaQuery.sizeOf(context).width;
       baseHeight = baseWidth * ratio;
     }
 
@@ -366,7 +366,7 @@ class _CropEditorState extends State<_CropEditor> {
 
   /// reset [Rect] of cropping area with current state
   void _resetCroppingArea() {
-    final screenSize = MediaQuery.of(context).size;
+    final screenSize = MediaQuery.sizeOf(context);
 
     final imageRatio = _targetImage!.width / _targetImage!.height;
     _isFitVertically = imageRatio < screenSize.aspectRatio;
@@ -396,7 +396,7 @@ class _CropEditorState extends State<_CropEditor> {
 
     if (initialArea == null) {
       rect = calculator.initialCropRect(
-        MediaQuery.of(context).size,
+        MediaQuery.sizeOf(context),
         _imageRect,
         _aspectRatio ?? 1,
         widget.initialSize ?? 1,
@@ -404,7 +404,7 @@ class _CropEditorState extends State<_CropEditor> {
     } else {
       final screenSizeRatio = calculator.screenSizeRatio(
         _targetImage!,
-        MediaQuery.of(context).size,
+        MediaQuery.sizeOf(context),
       );
       rect = Rect.fromLTWH(
         _imageRect.left + initialArea.left / screenSizeRatio,
@@ -421,7 +421,7 @@ class _CropEditorState extends State<_CropEditor> {
 
     final screenSizeRatio = calculator.screenSizeRatio(
       _targetImage!,
-      MediaQuery.of(context).size,
+      MediaQuery.sizeOf(context),
     );
 
     widget.onStatusChanged?.call(CropStatus.cropping);
@@ -458,8 +458,8 @@ class _CropEditorState extends State<_CropEditor> {
                   onScaleUpdate: widget.interactive ? _updateScale : null,
                   child: Container(
                     color: widget.baseColor,
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.sizeOf(context).width,
+                    height: MediaQuery.sizeOf(context).height,
                     child: Stack(
                       children: [
                         Positioned(
@@ -469,9 +469,9 @@ class _CropEditorState extends State<_CropEditor> {
                             widget.image,
                             width: _isFitVertically
                                 ? null
-                                : MediaQuery.of(context).size.width * _scale,
+                                : MediaQuery.sizeOf(context).width * _scale,
                             height: _isFitVertically
-                                ? MediaQuery.of(context).size.height * _scale
+                                ? MediaQuery.sizeOf(context).height * _scale
                                 : null,
                             fit: BoxFit.contain,
                           ),

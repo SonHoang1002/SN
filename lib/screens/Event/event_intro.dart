@@ -83,7 +83,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
     List groupSuggest = ref.watch(eventControllerProvider).groupSuggest;
     final theme = pv.Provider.of<ThemeManager>(context);
 
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Column(
@@ -141,7 +141,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
           thickness: 1,
         ),
         SizedBox(
-          width: MediaQuery.of(context).size.width,
+          width: MediaQuery.sizeOf(context).width,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -165,8 +165,8 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                     itemBuilder: (context, index) {
                       return Container(
                         width: hosts.length > 1
-                            ? MediaQuery.of(context).size.width * 0.61
-                            : MediaQuery.of(context).size.width * 0.91,
+                            ? MediaQuery.sizeOf(context).width * 0.61
+                            : MediaQuery.sizeOf(context).width * 0.91,
                         margin: const EdgeInsets.only(top: 10),
                         child: CardComponents(
                           onTap: () {
@@ -318,7 +318,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                     },
                                     child: Container(
                                       height: 35,
-                                      width: MediaQuery.of(context).size.width *
+                                      width: MediaQuery.sizeOf(context).width *
                                           0.8,
                                       decoration: BoxDecoration(
                                           color: const Color.fromARGB(
@@ -327,10 +327,10 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                               BorderRadius.circular(6),
                                           border: Border.all(
                                               width: 0.2, color: greyColor)),
-                                      child: Row(
+                                      child: const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Icon(FontAwesomeIcons.user, size: 14),
                                           SizedBox(
                                             width: 5.0,
@@ -369,12 +369,12 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                     height: 20,
                     thickness: 1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 4.0, bottom: 8.0, right: 4.0),
+                  const Padding(
+                    padding:
+                        EdgeInsets.only(left: 4.0, bottom: 8.0, right: 4.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text(
                           'Thông tin về địa điểm',
                           textAlign: TextAlign.center,
@@ -432,12 +432,12 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                     height: 20,
                     thickness: 1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 4.0, bottom: 8.0, right: 4.0),
+                  const Padding(
+                    padding:
+                        EdgeInsets.only(left: 4.0, bottom: 8.0, right: 4.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text(
                           'Sự kiện gợi ý',
                           textAlign: TextAlign.center,
@@ -457,7 +457,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                         shrinkWrap: true,
                         itemBuilder: (context, indexSuggest) {
                           return Container(
-                            width: MediaQuery.of(context).size.width * 0.6,
+                            width: MediaQuery.sizeOf(context).width * 0.6,
                             margin: const EdgeInsets.only(top: 10),
                             child: CardComponents(
                               imageCard: Column(
@@ -476,7 +476,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                             : linkBannerDefault,
                                         height: 180.0,
                                         width:
-                                            MediaQuery.of(context).size.width *
+                                            MediaQuery.sizeOf(context).width *
                                                 0.6,
                                         fit: BoxFit.cover,
                                       )),
@@ -757,10 +757,10 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                                           ['event_relationship']
                                                       ['status'] ==
                                                   'interested'
-                                              ? Row(
+                                              ? const Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     Padding(
                                                       padding: EdgeInsets.only(
                                                           bottom: 3.0),
@@ -801,11 +801,11 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                                               'event_relationship']
                                                           ['status'] ==
                                                       'going'
-                                                  ? Row(
+                                                  ? const Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
-                                                      children: const [
+                                                      children: [
                                                         Icon(
                                                             FontAwesomeIcons
                                                                 .circleCheck,
@@ -842,11 +842,11 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                                         )
                                                       ],
                                                     )
-                                                  : Row(
+                                                  : const Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
-                                                      children: const [
+                                                      children: [
                                                         Padding(
                                                           padding:
                                                               EdgeInsets.only(
@@ -914,10 +914,10 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                               border: Border.all(
                                                   width: 0.2,
                                                   color: greyColor)),
-                                          child: Row(
+                                          child: const Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: const [
+                                            children: [
                                               Icon(FontAwesomeIcons.share,
                                                   size: 14),
                                             ],
@@ -943,12 +943,12 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                     height: 20,
                     thickness: 1,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        left: 4.0, bottom: 8.0, right: 4.0),
+                  const Padding(
+                    padding:
+                        EdgeInsets.only(left: 4.0, bottom: 8.0, right: 4.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text(
                           'Nhóm liên quan',
                           textAlign: TextAlign.center,
@@ -968,7 +968,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                         shrinkWrap: true,
                         itemBuilder: (context, indexGroup) {
                           return Container(
-                            width: MediaQuery.of(context).size.width * 0.6,
+                            width: MediaQuery.sizeOf(context).width * 0.6,
                             margin: const EdgeInsets.only(top: 10),
                             child: CardComponents(
                               imageCard: Column(
@@ -986,7 +986,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                             : linkBannerDefault,
                                         height: 180.0,
                                         width:
-                                            MediaQuery.of(context).size.width *
+                                            MediaQuery.sizeOf(context).width *
                                                 0.6,
                                         fit: BoxFit.cover,
                                       )),
@@ -1074,10 +1074,10 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                               border: Border.all(
                                                   width: 0.2,
                                                   color: greyColor)),
-                                          child: Row(
+                                          child: const Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: const [
+                                            children: [
                                               Padding(
                                                 padding: EdgeInsets.only(
                                                     bottom: 3.0),

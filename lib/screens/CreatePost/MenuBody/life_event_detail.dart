@@ -44,7 +44,7 @@ class _LifeEventDetailState extends State<LifeEventDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return GestureDetector(
       onTap: () {
         hiddenKeyboard(context);

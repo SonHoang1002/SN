@@ -19,6 +19,7 @@ class PostFooter extends StatelessWidget {
   final Function? reloadDetailFunction;
   final bool? isShowCommentBox;
   final Function(dynamic)? updateDataFunction;
+  final Function(Offset)? jumpToOffsetFunction;
   const PostFooter(
       {Key? key,
       this.post,
@@ -27,7 +28,8 @@ class PostFooter extends StatelessWidget {
       this.indexOfImage,
       this.reloadDetailFunction,
       this.isShowCommentBox,
-      this.updateDataFunction})
+      this.updateDataFunction,
+      this.jumpToOffsetFunction})
       : super(key: key);
 
   @override
@@ -76,7 +78,8 @@ class PostFooter extends StatelessWidget {
             indexImage: indexOfImage,
             isShowCommentBox: isShowCommentBox,
             reloadDetailFunction: reloadDetailFunction,
-            updateDataFunction: updateDataFunction),
+            updateDataFunction: updateDataFunction,
+            jumpToOffsetFunction: jumpToOffsetFunction),
         type != postDetail
             ? const SizedBox()
             : Column(

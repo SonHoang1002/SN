@@ -20,17 +20,22 @@ import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 class Suggest extends ConsumerStatefulWidget {
   final dynamic type;
   final Widget? headerWidget;
-  // độ rộng của suggest items
+
+  /// Width of suggest items
   final double? viewportFraction;
   final Widget? subHeaderWidget;
-  // khắc phục tình trạng lắng nghe thay đổi chậm của riverpod
+
+  ///  Fix slowly changable problem with riverpod ,reloadFunction will be called to rerender widget
   final Function? reloadFunction;
+
+  final List<String> cancellMessage;
 
   final dynamic footerTitle;
 
   const Suggest(
       {super.key,
       required this.type,
+      required this.cancellMessage,
       this.headerWidget,
       this.subHeaderWidget,
       this.reloadFunction,
@@ -77,43 +82,48 @@ class _SuggestState extends ConsumerState<Suggest> {
   }
 
   _handleSettingHeader() {
-    showCustomBottomSheet(context, 170,title: "",
+    showCustomBottomSheet(context, 200,
+        title: "",
         isNoHeader: true,
         bgColor: Theme.of(context).colorScheme.background,
-        widget: Column(
-          children: [
-            GeneralComponent(
-              [
-                buildTextContent("Ẩn", false, fontSize: 15),
-                buildSpacer(height: 7),
-                buildTextContent("Ẩn bớt các bài viết tương tự", false,
-                    fontSize: 12, colorWord: greyColor)
-              ],
-              prefixWidget: const Icon(
-                FontAwesomeIcons.rectangleXmark,
-                size: 18,
+        widget: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: Column(
+            children: [
+              GeneralComponent(
+                [
+                  buildTextContent("Ẩn", false, fontSize: 15),
+                  buildSpacer(height: 7),
+                  buildTextContent("Ẩn bớt các bài viết tương tự", false,
+                      fontSize: 12, colorWord: greyColor)
+                ],
+                prefixWidget: const Icon(
+                  FontAwesomeIcons.rectangleXmark,
+                  size: 18,
+                ),
+                changeBackground: Theme.of(context).colorScheme.background,
+                borderColor: greyColor,
               ),
-              changeBackground: Theme.of(context).colorScheme.background,
-
-              // greyColor[300],
-            ),
-            buildSpacer(height: 10),
-            GeneralComponent(
-              [
-                buildTextContent("Quản lý Bảng feed", false, fontSize: 15),
-              ],
-              prefixWidget: const Icon(
-                FontAwesomeIcons.sliders,
-                size: 18,
+              buildSpacer(height: 10),
+              GeneralComponent(
+                [
+                  buildTextContent("Quản lý Bảng feed", false, fontSize: 15),
+                ],
+                prefixWidget: const Icon(
+                  FontAwesomeIcons.sliders,
+                  size: 18,
+                ),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                changeBackground: Theme.of(context).colorScheme.background,
+                borderColor: greyColor,
+                function: () {
+                  Navigator.of(context).push(CupertinoPageRoute(
+                      builder: (ctx) => const ReefSettingMain()));
+                },
               ),
-              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-              changeBackground: Theme.of(context).colorScheme.background,
-              function: () {
-                Navigator.of(context).push(CupertinoPageRoute(
-                    builder: (ctx) => const ReefSettingMain()));
-              },
-            ),
-          ],
+            ],
+          ),
         ));
   }
 
@@ -130,82 +140,102 @@ class _SuggestState extends ConsumerState<Suggest> {
       }
     }
 
-    return _isShowSuggest
-        ? listData.isNotEmpty
-            ? Column(
+    return Column(
+      children: [
+        _isShowSuggest
+            ? listData.isNotEmpty
+                ? Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(
+                          children: [
+                            SuggestHeader(
+                              settingFunction: () {
+                                _handleSettingHeader();
+                              },
+                              closeFunction: () {
+                                setState(() {
+                                  _isShowSuggest = false;
+                                });
+                              },
+                              headerWidget: widget.headerWidget,
+                              subHeaderWidget: widget.subHeaderWidget,
+                            ),
+                            buildSpacer(height: 10),
+                            SuggestCenter(
+                                type: widget.type,
+                                suggestList: listData,
+                                viewportFraction: widget.viewportFraction,
+                                loadMoreFunction: () {
+                                  _loadMoreData();
+                                },
+                                reloadFunction: () {
+                                  widget.reloadFunction;
+                                  setState(() {});
+                                }),
+                            buildSpacer(height: 10),
+                            SuggestFooter(
+                              suggestData: listData,
+                              title: widget.footerTitle,
+                              function: () {},
+                            )
+                          ],
+                        ),
+                      ),
+                      const CrossBar(
+                        height: 7,
+                        opacity: 0.2,
+                      ),
+                    ],
+                  )
+                : const SizedBox()
+            : Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
+                  GeneralComponent(
+                    [
+                      buildTextContent(widget.cancellMessage[0], true,
+                          fontSize: 14),
+                      buildSpacer(height: 3),
+                      buildTextContent(widget.cancellMessage[1], false,
+                          fontSize: 13)
+                    ],
+                    prefixWidget: Container(
+                      margin: const EdgeInsets.only(left: 7),
+                      child: const Icon(
+                        FontAwesomeIcons.xmarkSquare,
+                        size: 20,
+                      ),
+                    ),
+                    suffixWidget: Row(
                       children: [
-                        SuggestHeader(
-                          settingFunction: () {
-                            _handleSettingHeader();
-                          },
-                          closeFunction: () {
+                        buildSpacer(
+                          width: 15,
+                        ),
+                        ButtonPrimary(
+                          label: 'Hoàn tác',
+                          colorButton: Theme.of(context).canvasColor,
+                          colorText:
+                              Theme.of(context).textTheme.bodyLarge!.color,
+                          handlePress: () {
                             setState(() {
-                              _isShowSuggest = false;
+                              _isShowSuggest = true;
                             });
                           },
-                          headerWidget: widget.headerWidget,
-                          subHeaderWidget: widget.subHeaderWidget,
                         ),
-                        buildSpacer(height: 10),
-                        SuggestCenter(
-                            type: widget.type,
-                            suggestList: listData,
-                            viewportFraction: widget.viewportFraction,
-                            loadMoreFunction: () {
-                              _loadMoreData();
-                            },
-                            reloadFunction: () {
-                              widget.reloadFunction;
-                              setState(() {});
-                            }),
-                        buildSpacer(height: 10),
-                        SuggestFooter(
-                          suggestData: listData,
-                          title: widget.footerTitle,
-                          function: () {},
-                        )
                       ],
                     ),
+                    suffixFlexValue: 12,
+                    padding: EdgeInsets.zero,
+                    changeBackground: transparent,
                   ),
                   const CrossBar(
-                    height: 5,
+                    height: 7,
+                    opacity: 0.2,
                   ),
                 ],
-              )
-            : const SizedBox()
-        : GeneralComponent(
-            [
-              buildTextContent("Đã ẩn phần những người bạn có thể biết", true,
-                  fontSize: 14),
-              buildSpacer(height: 3),
-              buildTextContent(
-                  "Tạm thời, phần Những người bạn có thể biết đã ẩn khỏi Bảng Feed",
-                  false,
-                  fontSize: 13)
-            ],
-            prefixWidget: Container(
-              margin: const EdgeInsets.only(left: 7),
-              child: const Icon(
-                FontAwesomeIcons.xmarkSquare,
-                size: 20,
               ),
-            ),
-            suffixWidget: ButtonPrimary(
-              label: 'Hoàn tác',
-              colorButton: greyColor[300],
-              handlePress: () {
-                setState(() {
-                  _isShowSuggest = true;
-                });
-              },
-            ),
-            suffixFlexValue: 11,
-            padding: EdgeInsets.zero,
-            changeBackground: transparent,
-          );
+      ],
+    );
   }
 }

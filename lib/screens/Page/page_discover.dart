@@ -1,15 +1,19 @@
 import 'dart:convert';
 
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
+import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
+import 'package:social_network_app_mobile/screens/Page/PageCreate/page_create.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
+import 'package:social_network_app_mobile/widgets/skeleton.dart';
 
 import '../../providers/page/page_list_provider.dart';
 import '../../theme/colors.dart';
@@ -52,11 +56,21 @@ class _PageDiscoverState extends ConsumerState<PageDiscover> {
     super.dispose();
   }
 
+  Future<void> getApiData() async {
+    await ref
+        .read(pageListControllerProvider.notifier)
+        .getListPageSuggest({'limit': 10});
+    pageDiscover = ref.watch(pageListControllerProvider).pageSuggestions;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
+    String modeTheme = theme.isDarkMode ? 'dark' : 'light';
     if (ref.watch(pageListControllerProvider).pageSuggestions.isNotEmpty) {
       pageDiscover = ref.watch(pageListControllerProvider).pageSuggestions;
+    } else {
+      getApiData();
     }
     return SizedBox(
       child: SingleChildScrollView(
@@ -160,7 +174,7 @@ class _PageDiscoverState extends ConsumerState<PageDiscover> {
                                                     colorButton:
                                                         theme.isDarkMode
                                                             ? greyColor.shade800
-                                                            : greyColor,
+                                                            : greyColorOutlined,
                                                     fontSize: 13,
                                                     handlePress: () {
                                                       ref
@@ -194,10 +208,62 @@ class _PageDiscoverState extends ConsumerState<PageDiscover> {
                         })
                     : Container(
                         padding: const EdgeInsets.only(top: 20),
-                        child: buildTextContent("Không có nhóm nào !!!", false,
-                            isCenterLeft: false),
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              'assets/reaction/wow.gif',
+                              width: 80.0,
+                              height: 80.0,
+                              fit: BoxFit.contain,
+                            ),
+                            const Center(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 25.0),
+                                child: Text(
+                                  "Hiện bạn chưa có Trang nào, vui lòng tạo trang",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) =>
+                                        const CreateModalBaseMenu(
+                                      title: "Tạo",
+                                      body: PageCreate(),
+                                      buttonAppbar: SizedBox(),
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: const ButtonPrimary(
+                                  label: "Tạo trang ngay",
+                                  colorText: Colors.white,
+                                  icon: Icon(Icons.add, color: Colors.white),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       )
-                : buildCircularProgressIndicator()
+                : ListView.builder(
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: 10,
+                    itemBuilder: (context, index) {
+                      return Center(
+                        child: SkeletonCustom().postSkeletonDiscovery(context),
+                      );
+                    })
           ],
         ),
       ),

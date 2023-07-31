@@ -39,7 +39,7 @@ List reefSelections = [
     "icon": "assets/icons/plus_favorite.png",
     "title": "Kết nối lại",
     "content":
-        "kết nối lại với những người, Trang và Nhóm mà bạn đã bỏ theo dỡi"
+        "kết nối lại với những người, Trang và Nhóm mà bạn đã bỏ theo dõi"
   },
 ];
 
@@ -71,7 +71,7 @@ class _ReefSettingMain1State extends State<ReefSettingMain> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final width = size.width;
     final bgColor =
         ThemeMode.dark == true ? blackColor.withOpacity(0.4) : greyColor[200];

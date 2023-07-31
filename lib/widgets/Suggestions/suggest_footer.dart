@@ -20,9 +20,9 @@ class SuggestFooter extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          buildTextContent(title, false, fontSize: 13, isCenterLeft: false),
-          buildSpacer(width: 5),
-          const Icon(FontAwesomeIcons.chevronDown, size: 15),
+          buildTextContent(title, false, fontSize: 14, isCenterLeft: false),
+          buildSpacer(width: 7),
+          const Icon(FontAwesomeIcons.chevronDown, size: 14),
         ],
       ),
     );

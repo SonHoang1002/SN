@@ -122,7 +122,7 @@ class ConfirmNoticeStoryState extends ConsumerState<ConfirmNoticeStory> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final theme = pv.Provider.of<ThemeManager>(context);
     final snackbar = ScaffoldMessenger.of(context);
     return Scaffold(

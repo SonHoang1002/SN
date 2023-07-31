@@ -155,7 +155,7 @@ class _DefaultSocialTextFieldControllerState
     RenderBox box = renderObject;
     Offset position = box.localToGlobal(Offset.zero); //this is global position
     double y = position.dy; //
-    return MediaQuery.of(context).size.height - y;
+    return MediaQuery.sizeOf(context).height - y;
   }
 
   ///returns detected content

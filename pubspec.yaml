@@ -81,7 +81,7 @@ dependencies:
   modal_bottom_sheet: ^3.0.0-pre
   flutter_html: ^3.0.0-alpha.6
   flutter_secure_storage: ^8.0.0
-  audioplayers: ^4.1.0
+  # audioplayers: ^4.1.0
   hooks_riverpod: ^2.3.1
   flutter_launcher_icons: ^0.12.0
   marquee: ^2.2.3 
@@ -144,6 +144,8 @@ dependencies:
   image_picker: ^1.0.0
   permission_handler: ^10.4.1 
   multi_image_picker: ^4.8.1
+  flutter_persistent_keyboard_height: ^1.0.5
+  qr_code_scanner: ^1.0.1
   
 dev_dependencies:
   flutter_test:
@@ -241,7 +243,7 @@ flutter:
     - assets/Noti/
     - assets/pages/
     - assets/groups/
-
+    - assets/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

@@ -37,7 +37,7 @@ class _InviteFriendPageState extends ConsumerState<InviteFriendPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     List friends = ref.watch(userInformationProvider).friends.length >= 6
         ? ref.watch(userInformationProvider).friends.sublist(0, 6)
         : ref.watch(userInformationProvider).friends;

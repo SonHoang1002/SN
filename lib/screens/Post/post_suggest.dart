@@ -246,7 +246,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    var size = MediaQuery.sizeOf(context);
     suggestContent = buildSuggestContent();
     return isShow && widget.post['account']['id'] != meData['id']
         ? Column(

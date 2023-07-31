@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
@@ -18,7 +19,9 @@ import '../../../providers/market_place_providers/campaine_provider.dart';
 // ];
 
 class CustomBanner extends ConsumerStatefulWidget {
-  const CustomBanner({super.key,});
+  const CustomBanner({
+    super.key,
+  });
 
   @override
   CustomBannerState createState() => CustomBannerState();
@@ -49,7 +52,7 @@ class CustomBannerState extends ConsumerState<CustomBanner> {
           });
         }
       });
-    }); 
+    });
 
     _timer = Timer.periodic(const Duration(seconds: 2), (Timer timer) {
       if (_currentPage < images.length - 1) {
@@ -95,8 +98,8 @@ class CustomBannerState extends ConsumerState<CustomBanner> {
                   itemBuilder: (context, index) {
                     return SizedBox(
                       child: ExtendedImage.network(
-                        images[index],
-                        width: MediaQuery.of(context).size.width,
+                        images[index] ?? linkBannerDefault,
+                        width: MediaQuery.sizeOf(context).width,
                         fit: BoxFit.cover,
                         height: 200.0,
                       ),

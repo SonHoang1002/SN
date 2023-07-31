@@ -17,7 +17,7 @@ class AddFriendRequestPage extends StatelessWidget {
   late double height = 0;
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Scaffold(
@@ -79,8 +79,8 @@ class AddFriendRequestPage extends StatelessWidget {
                           width: 200,
                           child: GestureDetector(
                             onTap: (() {
-                              showCustomBottomSheet(
-                                  context, 300, title:" lam cai nay di");
+                              showCustomBottomSheet(context, 300,
+                                  title: " lam cai nay di");
                             }),
                             child: GeneralComponent(
                               [

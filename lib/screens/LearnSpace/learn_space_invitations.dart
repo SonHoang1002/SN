@@ -58,7 +58,7 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
     List courseInvitations =
         ref.watch(learnSpaceStateControllerProvider).courseInvitations;
     bool isMore = ref.watch(learnSpaceStateControllerProvider).isMore;
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Expanded(

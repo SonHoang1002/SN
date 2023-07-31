@@ -55,7 +55,7 @@ class _TextFieldEditState extends State<TextFieldEdit> {
     } else {
       EasyDebounce.debounce(
         'errorTextDebounce', // A unique identifier for the debounce
-        const Duration(seconds: 1), // Debounce duration
+        const Duration(milliseconds: 500), // Debounce duration
         () async {
           setState(() {
             valueText = value;
@@ -133,13 +133,19 @@ class _TextFieldEditState extends State<TextFieldEdit> {
                             Expanded(
                               child: Align(
                                 alignment: Alignment.bottomCenter,
-                                child: ButtonPrimary(
-                                  label: 'Lưu',
-                                  handlePress: () {
-                                    widget.onChange(valueText);
-                                    Navigator.pop(context);
-                                  },
-                                ),
+                                child: errorText || valueText == ""
+                                    ? const ButtonPrimary(
+                                        label: 'Lưu',
+                                        handlePress: null,
+                                        colorButton: Color(0xff808080),
+                                      )
+                                    : ButtonPrimary(
+                                        label: 'Lưu',
+                                        handlePress: () {
+                                          widget.onChange(valueText);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -149,7 +155,6 @@ class _TextFieldEditState extends State<TextFieldEdit> {
                                 child: ButtonPrimary(
                                   label: 'Xoá, gỡ',
                                   isGrey: true,
-                                  colorText: Colors.black,
                                   handlePress: () {
                                     Navigator.pop(context);
                                   },

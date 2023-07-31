@@ -165,7 +165,7 @@ class _RenderPhotoState extends State<RenderPhoto> {
   @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     return GridView.builder(
         shrinkWrap: true,

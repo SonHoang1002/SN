@@ -28,7 +28,7 @@ class _PagePinPostState extends ConsumerState<PagePinPost> {
   @override
   Widget build(BuildContext context) {
     List pinPosts = ref.watch(pageControllerProvider).pagePined;
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     return pinPosts.isNotEmpty
         ? Column(

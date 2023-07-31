@@ -14,8 +14,8 @@ Widget buildSuggestListComponent(
     Axis? axis = Axis.vertical,
     bool? isLoading = false,
     bool? isLoadingMore = false}) {
-  final width = MediaQuery.of(context).size.width;
-  final height = MediaQuery.of(context).size.height;
+  final width = MediaQuery.sizeOf(context).width;
+  final height = MediaQuery.sizeOf(context).height;
 
   return axis == Axis.vertical
       ? SingleChildScrollView(

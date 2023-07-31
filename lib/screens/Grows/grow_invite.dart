@@ -73,7 +73,7 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
     bool isMore = ref.watch(growControllerProvider).isMore;
 
     final theme = pv.Provider.of<ThemeManager>(context);
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Expanded(
@@ -109,7 +109,7 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                       },
                       child: Container(
                         height: 38,
-                        width: MediaQuery.of(context).size.width * 0.43,
+                        width: MediaQuery.sizeOf(context).width * 0.43,
                         decoration: BoxDecoration(
                             color: eventAction
                                 ? secondaryColor
@@ -142,7 +142,7 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                       },
                       child: Container(
                         height: 38,
-                        width: MediaQuery.of(context).size.width * 0.43,
+                        width: MediaQuery.sizeOf(context).width * 0.43,
                         decoration: BoxDecoration(
                             color: !eventAction
                                 ? secondaryColor

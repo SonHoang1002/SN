@@ -742,7 +742,7 @@ class StoryViewState extends ConsumerState<StoryView>
             top: 20,
             left: 20,
             child: SizedBox(
-              width: MediaQuery.of(context).size.width - 40,
+              width: MediaQuery.sizeOf(context).width - 40,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

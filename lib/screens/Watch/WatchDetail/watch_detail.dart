@@ -10,12 +10,14 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
 import 'package:social_network_app_mobile/helper/split_link.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
+import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_content.dart';
 import 'package:social_network_app_mobile/screens/Post/comment_tree.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
@@ -73,8 +75,6 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
   bool isHiddenAction = true;
   bool isDragVideo = false;
   bool isDismissed = false;
-
-  final GlobalKey _animationKey = GlobalKey();
   bool iconFlying = false;
   Offset? offset;
   // bool isShowAnimatedReactionIcon = false;
@@ -143,7 +143,7 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
                   .chewieController!
                   .pause();
               Future.delayed(Duration.zero, () {
-                Navigator.pop(context);
+                popToPreviousScreen(context);
               });
             },
             child: Hero(
@@ -199,7 +199,7 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
     }
   }
 
-  handleReaction(dynamic react) async { 
+  handleReaction(dynamic react) async {
     final viewerReaction = (widget.post?['viewer_reaction'] ?? "");
     var newPost = watchData;
     List newFavourites = newPost['reactions'];
@@ -621,7 +621,7 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    size = MediaQuery.of(context).size;
+    size = MediaQuery.sizeOf(context);
     watchData = ref.watch(currentPostControllerProvider).currentPost;
     return GestureDetector(
         onTap: () {
@@ -822,7 +822,7 @@ class _BottomActionState extends State<BottomAction> {
                               backgroundColor: Colors.transparent,
                               builder: (context) => SizedBox(
                                   height:
-                                      MediaQuery.of(context).size.height * 0.7,
+                                      MediaQuery.sizeOf(context).height * 0.7,
                                   child: ScreenShare(
                                       entityShare: widget.widget.post,
                                       type: 'post',
@@ -836,7 +836,7 @@ class _BottomActionState extends State<BottomAction> {
                       ),
                     ),
                     SizedBox(
-                        width: MediaQuery.of(context).size.width - 70,
+                        width: MediaQuery.sizeOf(context).width - 70,
                         child: CommentTextfield(
                             commentSelected: widget.commentSelected,
                             getCommentSelected: widget.getCommentSelected,

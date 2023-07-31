@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -19,7 +20,7 @@ import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'begin_join_emso_login_page.dart';
 
 class MainLoginPage extends ConsumerStatefulWidget {
-  final accountChoose;
+  final dynamic accountChoose;
   const MainLoginPage(this.accountChoose, {Key? key}) : super(key: key);
 
   @override
@@ -81,7 +82,7 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return GestureDetector(
       onTap: () {
         hiddenKeyboard(context);
@@ -131,10 +132,13 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content:  response?['status'] == 500
-                ? const Text("Máy chủ đang gặp vấn đề. Vui lòng thử lại sau")
-                : const Text(
-                    "Tài khoản hoặc mật khẩu không đúng, vui lòng kiểm tra lại", style: TextStyle(fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
+          content: response?['status'] == 500
+              ? const Text("Máy chủ đang gặp vấn đề. Vui lòng thử lại sau")
+              : const Text(
+                  "Tài khoản hoặc mật khẩu không đúng, vui lòng kiểm tra lại",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
           duration: const Duration(seconds: 3),
           backgroundColor: secondaryColor,
         ));

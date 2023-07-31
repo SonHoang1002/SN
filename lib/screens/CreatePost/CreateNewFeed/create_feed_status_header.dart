@@ -49,7 +49,7 @@ class _CreateFeedStatusHeaderState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     var meData = ref.watch(meControllerProvider)[0];
 
     return Row(

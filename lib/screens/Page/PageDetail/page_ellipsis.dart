@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/screens/Page/PageDetail/page_search.dart';
@@ -10,6 +11,7 @@ import 'package:social_network_app_mobile/screens/Page/PageEdit/page_activity.da
 import 'package:social_network_app_mobile/screens/Page/PageEdit/page_edit.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/report_category.dart';
 
 import '../../../apis/config.dart';
@@ -206,11 +208,13 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
         updatePageEllipsis();
         break;
       case 'edit':
+        // Lấy data pag mới nếu đã được người dùng edit
+        var pageInfo = ref.read(pageControllerProvider).pageDetail;
         Navigator.push(
             context,
             CupertinoPageRoute(
                 builder: (context) => PageEdit(
-                    data: widget.data,
+                    data: pageInfo ?? widget.data,
                     handleChangeDependencies:
                         widget.handleChangeDependencies)));
         break;
@@ -259,89 +263,149 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
         elevation: 0,
         centerTitle: true,
         title: const AppBarTitle(title: 'Quản lý'),
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            FontAwesomeIcons.angleLeft,
+            size: 18,
+            color: Theme.of(context).textTheme.titleLarge?.color,
+          ),
+        ),
+        shape: Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListView.builder(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                itemCount: pageEllipsis.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 0.0),
-                        visualDensity:
-                            const VisualDensity(horizontal: -4, vertical: -4),
-                        horizontalTitleGap: 0,
-                        dense: true,
-                        leading: Image.asset(pageEllipsis[index]['icon'],
-                            width: 20,
-                            height: 20,
+      body: Container(
+        height: double.infinity,
+        color: theme.isDarkMode
+            ? MyThemes.darkTheme.canvasColor
+            : Colors.grey.withOpacity(0.5),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const CrossBar(
+                height: 7,
+                margin: 0,
+              ),
+              Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    itemCount: pageEllipsis.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          index == 0
+                              ? const SizedBox(
+                                  height: 10,
+                                )
+                              : Container(),
+                          ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 0.0),
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            horizontalTitleGap: 0,
+                            dense: true,
+                            leading: Image.asset(pageEllipsis[index]['icon'],
+                                width: 20,
+                                height: 20,
+                                color: theme.isDarkMode
+                                    ? Colors.white
+                                    : Colors.black),
+                            title: Text(pageEllipsis[index]['label']),
+                            onTap: () {
+                              handlePress(
+                                  pageEllipsis[index]['key'], context, index);
+                            },
+                          ),
+                          index == pageEllipsis.length - 1
+                              ? const SizedBox(
+                                  height: 10,
+                                )
+                              : Container(),
+                          Divider(
+                            height: index == pageEllipsis.length - 1 ? 0 : 20,
+                            indent: 0,
+                            thickness: 1,
+                          ),
+                          index == pageEllipsis.length - 1
+                              ? const CrossBar(
+                                  height: 7,
+                                  margin: 0,
+                                )
+                              : Container(),
+                        ],
+                      );
+                    }),
+              ),
+              Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0, right: 16.0, top: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Liên kết đến trang của ${widget.data['title']}',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18)),
+                          const SizedBox(height: 10),
+                          Text(
+                              'Liên kết riêng của ${widget.data['title']} trên EMSO'),
+                        ],
+                      ),
+                    ),
+                    const Divider(
+                      height: 30,
+                      thickness: 1,
+                      indent: 16,
+                      endIndent: 16,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                      child: Text(
+                        '$urlWebEmso/page/${widget.data['id']}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
                             color:
                                 theme.isDarkMode ? Colors.white : Colors.black),
-                        title: Text(pageEllipsis[index]['label']),
-                        onTap: () {
-                          handlePress(
-                              pageEllipsis[index]['key'], context, index);
-                        },
                       ),
-                      Divider(
-                        thickness: 1,
-                        indent: index == pageEllipsis.length - 1 ? 0 : 48,
-                      ),
-                    ],
-                  );
-                }),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Liên kết đến trang của ${widget.data['title']}',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 18)),
-                  const SizedBox(height: 10),
-                  Text('Liên kết riêng của ${widget.data['title']} trên EMSO'),
-                ],
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: ButtonPrimary(
+                          handlePress: () {
+                            Clipboard.setData(ClipboardData(
+                                text: '$urlWebEmso/page/${widget.data['id']}'));
+                            showSnackbar(context, 'Đã sao chép liên kết');
+                          },
+                          label: 'Sao chép liên kết',
+                          fontSize: 14,
+
+                          /* min: MainAxisSize.min,
+                          minimumSize:
+                              MaterialStateProperty.all(const Size(20, 20)), */
+                          paddingButton: MaterialStateProperty.all(
+                              const EdgeInsets.all(8)),
+                          colorText:
+                              theme.isDarkMode ? Colors.white : Colors.black,
+                          colorButton: theme.isDarkMode
+                              ? greyColor.shade800
+                              : greyColorOutlined,
+                        )),
+                  ],
+                ),
               ),
-            ),
-            const Divider(
-              height: 20,
-              thickness: 1,
-              indent: 16,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-              child: Text(
-                '$urlWebEmso/page/${widget.data['id']}',
-                style: TextStyle(
-                    fontSize: 14,
-                    color: theme.isDarkMode ? Colors.white : Colors.black),
-              ),
-            ),
-            Padding(
-                padding: const EdgeInsets.only(top: 8.0, left: 16, right: 16),
-                child: ButtonPrimary(
-                  handlePress: () {
-                    Clipboard.setData(ClipboardData(
-                        text: '$urlWebEmso/page/${widget.data['id']}'));
-                    showSnackbar(context, 'Đã sao chép liên kết');
-                  },
-                  label: 'Sao chép liên kết',
-                  fontSize: 12,
-                  colorText: theme.isDarkMode ? Colors.white : Colors.black,
-                  min: MainAxisSize.min,
-                  minimumSize: MaterialStateProperty.all(const Size(20, 20)),
-                  paddingButton:
-                      MaterialStateProperty.all(const EdgeInsets.all(8)),
-                  colorBorder: theme.isDarkMode ? Colors.white : Colors.black,
-                  colorButton: transparent,
-                )),
-          ],
+            ],
+          ),
         ),
       ),
     );

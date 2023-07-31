@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/UserPage/EditUser/NoticeStory/edit_notice_story.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -26,6 +29,7 @@ import '../../widgets/text_description.dart';
 import '../CreatePost/create_modal_base_menu.dart';
 import 'EditUser/Details/edit_detail.dart';
 import 'EditUser/Hobbies/edit_user_hobby.dart';
+import 'EditUser/biography/edit_user_biography.dart';
 
 class UserPageEditProfile extends ConsumerStatefulWidget {
   final Function onUpdate;
@@ -264,12 +268,12 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final theme = pv.Provider.of<ThemeManager>(context);
-    final userAbout = ref.watch(userInformationProvider).userMoreInfor;
     final userData = ref.watch(userInformationProvider).userInfor;
     final meData = ref.watch(meControllerProvider)[0];
     final lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
+    final userAbout = ref.watch(userInformationProvider).userMoreInfor;
     final generalInformation = userAbout['general_information'];
     descriptionTxtCtrl.text = generalInformation['description'].toString();
     List featureContents = ref.watch(userInformationProvider).featureContent;
@@ -336,76 +340,16 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
             BlockProfile(
               title: "Tiểu sử",
               widgetChild: Text(
-                '${(((userAbout['general_information']['description'] != null) && (userAbout['general_information']['description'] != ""))) ? userAbout['general_information']['description'] : "Mô tả bản thân ..."}',
+                '${((userAbout['general_information']['description'] != null) && (userAbout['general_information']['description'] != "")) 
+                    ? userAbout['general_information']['description'] : "Mô tả bản thân ..."}',
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 18, color: greyColor),
               ),
               updateProfile: () {
-                showCupertinoModalPopup<void>(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return CupertinoAlertDialog(
-                      title: const Column(
-                        children: [
-                          Text('Đổi tiểu sử'),
-                          TextDescription(description: "Nhập tiểu sử mới"),
-                        ],
-                      ),
-                      content: StatefulBuilder(builder: (context, setStateful) {
-                        return  Material(
-                          child: TextFormField(
-                            autofocus: true,
-                            maxLines: 2,
-                            maxLength: 100,
-                            controller: descriptionTxtCtrl,
-                            textCapitalization:
-                                TextCapitalization.sentences,
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        );
-                      }),
-                      actions: [
-                        CupertinoDialogAction(
-                          isDefaultAction: true,
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Hủy'),
-                        ),
-                        CupertinoDialogAction(
-                          isDestructiveAction: true,
-                          onPressed: () {
-                            if (descriptionTxtCtrl.text.split('').isNotEmpty) {
-                              ref
-                                  .read(userInformationProvider.notifier)
-                                  .updateDescription(
-                                    dataPage['id'],
-                                    descriptionTxtCtrl.text.trim(),
-                                  );
-                              Navigator.pop(context);
-                              widget.onUpdate();
-                            }
-                            else{
-                               ref
-                                  .read(userInformationProvider.notifier)
-                                  .updateDescription(
-                                    dataPage['id'],
-                                    descriptionTxtCtrl.text.trim(),
-                                  );
-                              Navigator.pop(context);
-                              widget.onUpdate();
-                            }
-
-                            setState(() {});
-                          },
-                          child: const Text('Lưu'),
-                        ),
-                      ],
-                    );
-                  },
-                );
+                pushToNextScreen(
+                    context,
+                    EditUserBiography(
+                        dataPage: dataPage, onUpdate: widget.onUpdate));
               },
             ),
             buildLine(),
@@ -413,71 +357,69 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
             // Block 4: Detail about user (high school, university)
             BlockProfile(
               title: "Chi tiết",
-              widgetChild: Container(
-                child: Column(
-                  children: [
-                    SingleChildScrollView(
-                      child: ListView.builder(
-                          padding: EdgeInsets.zero,
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: lifeEvent.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              dense: true,
-                              horizontalTitleGap: 0.0,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 0.0, vertical: 0.0),
-                              visualDensity: const VisualDensity(
-                                  horizontal: -4, vertical: -4),
-                              leading: const Icon(FontAwesomeIcons.briefcase,
-                                  size: 18),
-                              title: Text(
-                                renderContent(lifeEvent[index]),
-                                style: const TextStyle(fontSize: 15),
-                              ),
-                            );
-                          }),
+              widgetChild: Column(
+                children: [
+                  SingleChildScrollView(
+                    child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: lifeEvent.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            dense: true,
+                            horizontalTitleGap: 0.0,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 0.0, vertical: 0.0),
+                            visualDensity: const VisualDensity(
+                                horizontal: -4, vertical: -4),
+                            leading: const Icon(FontAwesomeIcons.briefcase,
+                                size: 18),
+                            title: Text(
+                              renderContent(lifeEvent[index]),
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          );
+                        }),
+                  ),
+                  if (generalInformation['place_live'] != null)
+                    buildListTile(
+                      'Sống tại',
+                      '${generalInformation['place_live']['title'] ?? generalInformation['place_live']['name']}',
+                      theme,
+                      FontAwesomeIcons.house,
                     ),
-                    if (generalInformation['place_live'] != null)
-                      buildListTile(
-                        'Sống tại',
-                        '${generalInformation['place_live']['title'] ?? generalInformation['place_live']['name']}',
-                        theme,
-                        FontAwesomeIcons.house,
-                      ),
-                    if (generalInformation['hometown'] != null)
-                      buildListTile(
-                        'Đến từ',
-                        '${generalInformation['hometown']['title'] ?? generalInformation['hometown']['name']}',
-                        theme,
-                        FontAwesomeIcons.locationDot,
-                      ),
-                    if (relationshipPartner != null &&
-                        relationshipPartner['relationship_category'] != null &&
-                        relationshipPartner['partner'] != null)
-                      buildListTile(
-                        '${relationshipPartner['relationship_category']['name']} cùng với ',
-                        '${relationshipPartner['partner']['display_name']}',
-                        theme,
-                        FontAwesomeIcons.heart,
-                      ),
-                    if (generalInformation['phone_number'] != null)
-                      buildListTile(
-                        generalInformation['phone_number'],
-                        '',
-                        theme,
-                        FontAwesomeIcons.phone,
-                      ),
-                    if (createdDate != null)
-                      buildListTile(
-                        'Tham gia vào',
-                        '${createdDate.day} tháng ${createdDate.month} năm ${createdDate.year}',
-                        theme,
-                        FontAwesomeIcons.clock,
-                      ),
-                  ],
-                ),
+                  if (generalInformation['hometown'] != null)
+                    buildListTile(
+                      'Đến từ',
+                      '${generalInformation['hometown']['title'] ?? generalInformation['hometown']['name']}',
+                      theme,
+                      FontAwesomeIcons.locationDot,
+                    ),
+                  if (relationshipPartner != null &&
+                      relationshipPartner['relationship_category'] != null &&
+                      relationshipPartner['partner'] != null)
+                    buildListTile(
+                      '${relationshipPartner['relationship_category']['name']} cùng với ',
+                      '${relationshipPartner['partner']['display_name']}',
+                      theme,
+                      FontAwesomeIcons.heart,
+                    ),
+                  if (generalInformation['phone_number'] != null)
+                    buildListTile(
+                      generalInformation['phone_number'],
+                      '',
+                      theme,
+                      FontAwesomeIcons.phone,
+                    ),
+                  if (createdDate != null)
+                    buildListTile(
+                      'Tham gia vào',
+                      '${createdDate.day} tháng ${createdDate.month} năm ${createdDate.year}',
+                      theme,
+                      FontAwesomeIcons.clock,
+                    ),
+                ],
               ),
               updateProfile: () {
                 Navigator.push(

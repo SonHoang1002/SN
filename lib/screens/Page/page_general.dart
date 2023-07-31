@@ -10,6 +10,7 @@ import 'package:social_network_app_mobile/screens/Page/page_invite.dart';
 import 'package:social_network_app_mobile/screens/Page/page_liked.dart';
 import 'package:social_network_app_mobile/widgets/chip_menu.dart';
 import 'package:social_network_app_mobile/widgets/page_item.dart';
+import 'package:social_network_app_mobile/widgets/skeleton.dart';
 
 import '../MarketPlace/widgets/circular_progress_indicator.dart';
 
@@ -73,8 +74,9 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
   @override
   Widget build(BuildContext context) {
     List pagesAdmin = ref.watch(pageListControllerProvider).pageAdmin;
-
-    final size = MediaQuery.of(context).size;
+    bool isMorePageAdmin =
+        ref.watch(pageListControllerProvider).isMorePageAdmin;
+    final size = MediaQuery.sizeOf(context);
     handlePressMenu(menu) {
       Widget body = const SizedBox();
       switch (menu['key']) {
@@ -129,57 +131,69 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
 
     return RefreshIndicator(
       onRefresh: () async {
+        setState(() {
+          _isLoading = true;
+        });
         fetchData();
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: size.width,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(
-                  menuButton.length,
-                  (index) => GestureDetector(
-                    onTap: () {
-                      handlePressMenu(menuButton[index]);
-                    },
-                    child: ChipMenu(
-                      icon: Icon(
-                        menuButton[index]['icon'],
-                        color: Theme.of(context).textTheme.displayLarge!.color,
-                        size: 14,
+      child: SingleChildScrollView(
+        controller: scrollController,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: size.width,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(
+                    menuButton.length,
+                    (index) => GestureDetector(
+                      onTap: () {
+                        handlePressMenu(menuButton[index]);
+                      },
+                      child: ChipMenu(
+                        icon: Icon(
+                          menuButton[index]['icon'],
+                          color:
+                              Theme.of(context).textTheme.displayLarge!.color,
+                          size: 14,
+                        ),
+                        isSelected: false,
+                        label: menuButton[index]['name'],
                       ),
-                      isSelected: false,
-                      label: menuButton[index]['name'],
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: Divider(
-              height: 2,
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: Divider(
+                height: 2,
+              ),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(12, 10, 12, 8),
-            child: Text(
-              'Trang bạn quản lý',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(12, 10, 12, 8),
+              child: Text(
+                'Trang bạn quản lý',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+              ),
             ),
-          ),
-          _isLoading
-              ? buildCircularProgressIndicator()
-              : Expanded(
-                  child: ListView.builder(
-                    // physics: const NeverScrollableScrollPhysics(),
+            _isLoading
+                ? ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    controller: scrollController,
+                    itemCount: 10,
+                    itemBuilder: (context, i) {
+                      return Center(
+                        child: SkeletonCustom().postSkeletonInList(context),
+                      );
+                    })
+                : ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
                     itemCount: pagesAdmin.length,
                     itemBuilder: (context, i) {
                       return Padding(
@@ -189,8 +203,12 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
                       );
                     },
                   ),
-                )
-        ],
+            if (isMorePageAdmin)
+              Center(
+                child: SkeletonCustom().postSkeletonInList(context),
+              )
+          ],
+        ),
       ),
     );
   }

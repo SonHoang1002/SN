@@ -436,7 +436,7 @@ class FlutterMentionsState extends State<FlutterMentions> {
   void showOverlay(list) {
     final overlay = Overlay.of(context);
     final renderBox = context.findRenderObject() as RenderBox;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final screenHeight = MediaQuery.sizeOf(context).height;
 
     entry = OverlayEntry(
       builder: (context) => Positioned(

@@ -77,7 +77,7 @@ class _ReviewProductMarketPageState
 // hướng dẫn, mã giảm giá, chất lượng, mô tả, ảnh, video, thẻ mô tả, kích thước, hiển thị tên, dịch vụ người bạn, dịch vụ vận chuyển.
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     colorTheme = ThemeMode.dark == true
@@ -735,7 +735,7 @@ class _ReviewProductMarketPageState
       _imgFileList![index]
           .add(File(selectedImage.path != null ? selectedImage.path : ""));
     });
-       }
+  }
 
   Future getVideo(int index, ImageSource src) async {
     XFile selectedVideo = XFile("");

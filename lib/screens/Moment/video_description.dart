@@ -31,13 +31,12 @@ class VideoDescription extends ConsumerStatefulWidget {
 
 class _VideoDescriptionState extends ConsumerState<VideoDescription> {
   bool _isFollowing = false;
-  bool showTick = false;
   // bool isWidgetExpanded = false;
   bool isEyeVisible = false;
 
   @override
   void initState() {
-    super.initState(); 
+    super.initState();
 
     if (widget.moment?['account_relationships']?['following'] == true ||
         widget.moment?["account"]?['relationships']?['following'] == true) {
@@ -106,7 +105,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     var account = widget.moment['account'];
     var page = widget.moment['page'];

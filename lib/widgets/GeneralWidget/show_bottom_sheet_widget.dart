@@ -15,7 +15,8 @@ showCustomBottomSheet(BuildContext context, double height,
     bool? enableDrag = true,
     bool? isNoHeader = false,
     bool? isShowCloseButton = true,
-    Function? onEnd,bool? isHaveCloseButton = true}) {
+    Function? onEnd,
+    bool? isHaveCloseButton = true}) {
   const Color transparent = Colors.transparent;
   showModalBottomSheet(
       enableDrag: enableDrag!,
@@ -25,7 +26,7 @@ showCustomBottomSheet(BuildContext context, double height,
       barrierColor: isBarrierTransparent! ? transparent : null,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(10))),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
       builder: (context) {
         return Container(
           padding: const EdgeInsets.symmetric(vertical: 5),
@@ -45,7 +46,9 @@ showCustomBottomSheet(BuildContext context, double height,
                     color: Colors.grey,
                     borderRadius: BorderRadius.only(
                         topRight: Radius.circular(15),
-                        topLeft: Radius.circular(15))),
+                        topLeft: Radius.circular(15),
+                        bottomLeft: Radius.circular(15),
+                        bottomRight: Radius.circular(15))),
               ),
             ),
             !isNoHeader!
@@ -53,7 +56,7 @@ showCustomBottomSheet(BuildContext context, double height,
                     children: [
                       //  title
                       Container(
-                        padding: const EdgeInsets.only(left: 5, right: 5),
+                        padding: const EdgeInsets.only(left: 16, right: 16),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

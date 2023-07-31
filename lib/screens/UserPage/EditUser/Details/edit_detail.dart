@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/screens/UserPage/EditUser/Details/change_place_live.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 import '../../../../helper/push_to_new_screen.dart';
@@ -12,6 +13,10 @@ import '../../../../widgets/appbar_title.dart';
 import '../../../../widgets/back_icon_appbar.dart';
 import '../../../../widgets/button_primary.dart';
 import 'package:provider/provider.dart' as pv;
+
+import '../../../CreatePost/MenuBody/life_event_categories.dart';
+import '../../../CreatePost/create_modal_base_menu.dart';
+import 'add_website_link.dart';
 
 class EditUserDetail extends ConsumerStatefulWidget {
   const EditUserDetail({super.key});
@@ -93,7 +98,7 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final theme = pv.Provider.of<ThemeManager>(context);
     final userAbout = ref.watch(userInformationProvider).userMoreInfor;
     final infor = userAbout?['general_information'];
@@ -138,6 +143,7 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                 color: theme.isDarkMode ? Colors.white : Colors.black,
               ))
             : SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -177,6 +183,20 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                       label: "Thêm công việc hiện tại",
                       colorButton: greyColor[300],
                       colorText: Colors.black54,
+                      handlePress: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => CreateModalBaseMenu(
+                              title: 'Sự kiện trong đời',
+                              body: LifeEventCategories(
+                                handleUpdateData: () {},
+                              ),
+                              buttonAppbar: const SizedBox(),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     buildDrawer(),
                     buildBoldTxt("Trung Học", theme),
@@ -202,6 +222,20 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                       label: "Thêm trường trung học",
                       colorButton: greyColor[300],
                       colorText: Colors.black54,
+                      handlePress: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => CreateModalBaseMenu(
+                              title: 'Sự kiện trong đời',
+                              body: LifeEventCategories(
+                                handleUpdateData: () {},
+                              ),
+                              buttonAppbar: const SizedBox(),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     buildDrawer(),
                     buildBoldTxt("Đại học", theme),
@@ -215,7 +249,7 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                                 margin:
                                     const EdgeInsets.symmetric(vertical: 7.5),
                                 child: buildRowInfo(
-                                    "Từng học tại ${universityEvents[index]['life_event']['company']}",
+                                    "Từng học tại ${universityEvents[index]['life_event']['company'] ?? "Trường mới"}",
                                     const Icon(FontAwesomeIcons.briefcase,
                                         size: 18),
                                     () {},
@@ -227,6 +261,20 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                       label: "Thêm trường đại học",
                       colorButton: greyColor[300],
                       colorText: Colors.black54,
+                      handlePress: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => CreateModalBaseMenu(
+                              title: 'Sự kiện trong đời',
+                              body: LifeEventCategories(
+                                handleUpdateData: () {},
+                              ),
+                              buttonAppbar: const SizedBox(),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     buildDrawer(),
                     buildBoldTxt("Tỉnh/Thành phố hiện tại", theme),
@@ -235,15 +283,34 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                             label: "Thêm tỉnh/thành phố hiện tại",
                             colorButton: greyColor[300],
                             colorText: Colors.black54,
+                            handlePress: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) =>
+                                      const ChangeLivingPlace(),
+                                ),
+                              );
+                            },
                           )
                         : buildRowInfo(
                             "Sống tại ${infor['place_live']['title']}",
                             Checkbox(
-                                activeColor: secondaryColor,
-                                value: true,
-                                onChanged: (value) {}),
-                            () {},
-                            theme),
+                              activeColor: secondaryColor,
+                              value: true,
+                              onChanged: (value) {},
+                            ),
+                            () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) =>
+                                      const ChangeLivingPlace(),
+                                ),
+                              );
+                            },
+                            theme,
+                          ),
                     buildDrawer(),
                     buildBoldTxt("Quê quán", theme),
                     infor['hometown'] == null
@@ -282,6 +349,7 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                     infor['account_web_link'] != null
                         ? ListView.builder(
                             shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
                             itemCount: infor['account_web_link'].length,
                             itemBuilder: (context, index) {
                               return Container(
@@ -303,9 +371,22 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                       label: "Thêm trang web",
                       colorButton: greyColor[300],
                       colorText: Colors.black54,
+                      handlePress: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => const AddWebsiteLink(),
+                          ),
+                        );
+                      },
                     ),
                     buildDrawer(),
                     buildBoldTxt("Liên kết xã hội", theme),
+                    ButtonPrimary(
+                      label: "Thêm liên kết xã hội",
+                      colorButton: greyColor[300],
+                      colorText: Colors.black54,
+                    ),
                     const SizedBox(height: 25.0),
                   ],
                 ),

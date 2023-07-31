@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../apis/config.dart';
@@ -14,33 +16,36 @@ class WebSocketService {
   Future fetchToken() async {
     try {
       var res = await MeApi().fetchDataMeApi();
-      final response = await Dio().post(
-        '$getTokenNovuUrl/v1/widgets/session/initialize',
-        data: {
-          "applicationIdentifier": baseRootNovu,
-          "subscriberId": res['id'].toString(),
-          "hmacHash": null,
-        },
-      );
-      return response.data;
+      if (res != null) {
+        final response = await Dio().post(
+          '$getTokenNovuUrl/v1/widgets/session/initialize',
+          data: {
+            "applicationIdentifier": baseRootNovu,
+            "subscriberId": res?['id'].toString(),
+            "hmacHash": null,
+          },
+        );
+        return response.data;
+      } else {
+        return null;
+      }
     } catch (error) {
-      // Handle the error as per your requirement
-      print('Error fetching token: $error');
+      Logger logger = Logger();
+      logger.e('Error fetching token: $error');
     }
   }
 
-  Future<WebSocketChannel> connectToWebSocket() async {
+  Future<WebSocketChannel?> connectToWebSocket() async {
     var res = await fetchToken();
-    if (res != null && res['data']['token'] != null) {
+    if (res != null && (res?['data']?['token']) != null) {
       webSocketChannel = WebSocketChannel.connect(
         Uri.parse(
           '$socketNovuUrl/?token=${res['data']['token']}&EIO=3&transport=websocket',
         ),
       );
       setupPeriodicSending();
+      return webSocketChannel!;
     }
-
-    return webSocketChannel!;
   }
 
   void setupPeriodicSending() {

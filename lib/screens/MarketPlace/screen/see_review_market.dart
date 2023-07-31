@@ -1,21 +1,19 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/data/market_datas/dat_data.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/review_item_widget.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/review_product_apis.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/Market/show_market_bottom_sheet.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
-import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+import 'package:social_network_app_mobile/widgets/messenger_app_bar/app_bar_title.dart';
 
 class SeeReviewShopMarketPage extends ConsumerStatefulWidget {
   final List<dynamic>? reviewData;
@@ -53,7 +51,7 @@ class _SeeReviewShopMarketPageComsumerState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     // Future<int> a = _initData();
@@ -62,15 +60,20 @@ class _SeeReviewShopMarketPageComsumerState
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: const Row(
+          title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              BackIconAppbar(),
-              AppBarTitle(title: "Đánh giá Shop của bạn"),
-              Icon(
-                FontAwesomeIcons.bell,
-                size: 18,
-                color: Colors.black,
+              const BackIconAppbar(),
+              const AppBarTitle(title: "Đánh giá Shop của bạn"),
+              InkWell(
+                onTap: () {
+                  pushToNextScreen(context, NotificationMarketPage());
+                },
+                child: const Icon(
+                  FontAwesomeIcons.bell,
+                  size: 18,
+                  color: Colors.black,
+                ),
               )
             ],
           ),

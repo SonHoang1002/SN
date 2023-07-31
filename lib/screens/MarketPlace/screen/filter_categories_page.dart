@@ -4,19 +4,20 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/category_product_apis.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/province_api.dart';
 import 'package:social_network_app_mobile/constant/get_min_max_price.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart'; 
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/classify_category_conponent.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart'; 
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
-import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart'; 
+import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 
 class FilterPage extends ConsumerStatefulWidget {
   final dynamic categoryId;
@@ -145,21 +146,26 @@ class _FilterPageState extends ConsumerState<FilterPage> {
 
   @override
   Widget build(BuildContext context) {
-    size ??= MediaQuery.of(context).size;
+    size ??= MediaQuery.sizeOf(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            BackIconAppbar(),
-            AppBarTitle(title: "Lọc theo hạng mục"),
-            Icon(
-              FontAwesomeIcons.bell,
-              size: 18,
-              color: Colors.black,
+            const BackIconAppbar(),
+            const AppBarTitle(title: "Lọc theo hạng mục"),
+            InkWell(
+              onTap: () {
+                pushToNextScreen(context, NotificationMarketPage());
+              },
+              child: const Icon(
+                FontAwesomeIcons.bell,
+                size: 18,
+                color: Colors.black,
+              ),
             )
           ],
         ),

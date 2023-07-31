@@ -34,11 +34,11 @@ class PageItem extends ConsumerWidget {
       : super(key: key);
 
   @override
-Widget build(BuildContext context, WidgetRef ref) {
-    final size = MediaQuery.of(context).size;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final size = MediaQuery.sizeOf(context);
     return isActiveNewScreen
         ? InkWell(
-            onTap: ()async  {
+            onTap: () async {
               await ref.read(pageControllerProvider.notifier).reset();
               Navigator.pushNamed(context, '/page', arguments: page);
             },

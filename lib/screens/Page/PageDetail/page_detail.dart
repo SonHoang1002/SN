@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +9,6 @@ import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
-import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/screens/Page/PageDetail/about_page.dart';
 import 'package:social_network_app_mobile/screens/Page/PageDetail/box_quick_update_page.dart';
 import 'package:social_network_app_mobile/screens/Page/PageDetail/feed_page.dart';
@@ -45,6 +46,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
   bool showHeaderTabFixed = false;
   String typeMedia = 'image';
   bool _isLoading = true;
+  bool isUser = false;
 
   @override
   void initState() {
@@ -257,7 +259,10 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                   }),
               const SizedBox(height: 8),
               const PagePinPost(),
-              FeedPage(pageData: data),
+              FeedPage(
+                pageData: data,
+                isUser: isUser,
+              ),
             ],
           );
         case 'group_page':
@@ -307,9 +312,10 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     final theme = pv.Provider.of<ThemeManager>(context);
     var meData = ref.watch(meControllerProvider);
     var rolePage = ref.watch(pageControllerProvider).rolePage;
+    var namePage = ref.read(pageControllerProvider).pageDetail;
     List<dynamic> listSwitch = [meData[0], pageData];
     String modeTheme = theme.isDarkMode ? 'dark' : 'light';
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     if (!isModalOpen && pageData?['page_relationship']?['role'] == 'admin') {
       isModalOpen = true;
@@ -346,10 +352,10 @@ class _PageDetailState extends ConsumerState<PageDetail> {
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text(
                 rolePage
-                    ? (pageData?['title'] != null &&
-                            pageData?['title'].length >= 32
-                        ? '${pageData?['title'].substring(0, 32)}...'
-                        : pageData?['title'] ?? "")
+                    ? (namePage?['title'] != null &&
+                            namePage?['title'].length >= 32
+                        ? '${namePage?['title'].substring(0, 32)}...'
+                        : namePage?['title'] ?? "")
                     : meData[0]['display_name'],
                 style: TextStyle(
                     color: Theme.of(context).textTheme.bodyLarge?.color,
@@ -377,10 +383,14 @@ class _PageDetailState extends ConsumerState<PageDetail> {
       ),
       body: Stack(
         children: [
-          getBody(size, modeTheme, pageData, rolePage),
+          getBody(
+              size,
+              modeTheme,
+              /* pageData */ ref.read(pageControllerProvider).pageDetail,
+              rolePage),
           if (showHeaderTabFixed)
             Container(
-              width: MediaQuery.of(context).size.width,
+              width: MediaQuery.sizeOf(context).width,
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
               decoration: BoxDecoration(
                   color: Theme.of(context).scaffoldBackgroundColor),
@@ -480,9 +490,11 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                       width: size.width * 0.38,
                       height: 35,
                       child: ButtonPrimary(
+                        colorText:
+                            modeTheme == 'dark' ? Colors.white : Colors.black,
                         colorButton: modeTheme == 'dark'
                             ? greyColor.shade800
-                            : greyColor,
+                            : greyColorOutlined,
                         label: data?['page_relationship']?['like'] == true
                             ? "Đã thích"
                             : "Thích",
@@ -504,14 +516,17 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                     ),
                     const SizedBox(width: 8),
                     SizedBox(
-                      width: size.width * 0.12,
+                      width: size.width * 0.117,
                       height: 35,
                       child: ButtonPrimary(
                         colorButton: modeTheme == 'dark'
                             ? greyColor.shade800
-                            : greyColor,
-                        icon: const Icon(FontAwesomeIcons.ellipsis,
-                            size: 16, color: Colors.white),
+                            : greyColorOutlined,
+                        icon: Icon(FontAwesomeIcons.ellipsis,
+                            size: 11,
+                            color: modeTheme == 'dark'
+                                ? Colors.white
+                                : Colors.black),
                         handlePress: () {
                           Navigator.push(
                             context,
@@ -545,7 +560,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
             ],
           ),
           Container(
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery.sizeOf(context).width,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
             color: Theme.of(context).scaffoldBackgroundColor,
             child: Column(
@@ -624,6 +639,9 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                                 ref
                                     .read(pageControllerProvider.notifier)
                                     .switchToRolePage(false);
+                                setState(() {
+                                  isUser = true;
+                                });
                               } else {
                                 ref
                                     .read(pageControllerProvider.notifier)
@@ -676,7 +694,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                                       (rolePage && index == 1) ||
                                               (!rolePage && index == 0)
                                           ? FontAwesomeIcons.circleDot
-                                          : FontAwesomeIcons.circle,  
+                                          : FontAwesomeIcons.circle,
                                       size: 16,
                                       color: secondaryColor,
                                     ),

@@ -23,6 +23,10 @@ class RecruitApi {
     return await Api().getRequestBase('/api/v1/recruits/$id', {});
   }
 
+  Future sendInvitationFriendRecruitApi(id, data) async {
+    return await Api().postRequestBase('/api/v1/recruits/$id/invitations', data);
+  }
+
   Future recruitUpdateStatusApi(id) async {
     return await Api()
         .postRequestBase('/api/v1/recruits/$id/recruit_followers', null);

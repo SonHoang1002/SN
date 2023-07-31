@@ -7,6 +7,7 @@ import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/interest_product_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/detail_product_page.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/share_and_search.dart';
@@ -73,7 +74,7 @@ class _InterestProductMarketPageState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     _initData();
@@ -84,12 +85,17 @@ class _InterestProductMarketPageState
           automaticallyImplyLeading: false,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              BackIconAppbar(),
-              AppBarTitle(title: "Quan tâm"),
-              Icon(
-                FontAwesomeIcons.bell,
-                size: 18,
+            children: [
+              const BackIconAppbar(),
+              const AppBarTitle(title: "Quan tâm"),
+              InkWell(
+                onTap: () {
+                  pushToNextScreen(context, NotificationMarketPage());
+                },
+                child: const Icon(
+                  FontAwesomeIcons.bell,
+                  size: 18,
+                ),
               )
             ],
           ),

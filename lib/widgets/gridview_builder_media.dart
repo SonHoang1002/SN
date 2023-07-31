@@ -4,7 +4,7 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 
 // ignore: must_be_immutable
-class GridViewBuilderMedia extends StatelessWidget {
+class GridViewBuilderMedia extends StatefulWidget {
   final List medias;
   final double aspectRatio;
   final int crossAxisCount;
@@ -28,45 +28,54 @@ class GridViewBuilderMedia extends StatelessWidget {
       this.mediasNoneCheck})
       : super(key: key);
 
+  @override
+  State<GridViewBuilderMedia> createState() => _GridViewBuilderMediaState();
+}
+
+class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
+  bool isPlaying = true;
   checkIsImage(media) {
     return media['type'] == 'image' ? true : false;
   }
 
   checkIsPlayVideo(int index) {
-    return currentFocusVideoId != medias[index]['id'];
+    return widget.currentFocusVideoId != widget.medias[index]['id'];
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
+    final size = MediaQuery.sizeOf(context);
     return GridView.builder(
         shrinkWrap: true,
         primary: false,
-        // padding: EdgeInsets.only(bottom: medias.length == 2 ? 6 : 0),
+        padding: EdgeInsets.only(bottom: widget.medias.length == 2 ? 6 : 0),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisSpacing: 3,
             mainAxisSpacing: 3,
-            crossAxisCount: crossAxisCount,
-            childAspectRatio: aspectRatio),
-        itemCount: medias.length,
+            crossAxisCount: widget.crossAxisCount,
+            childAspectRatio: widget.aspectRatio),
+        itemCount: widget.medias.length,
         itemBuilder: (context, indexBg) {
           return GestureDetector(
               onTap: () {
-                if (handlePress != null) {
-                  handlePress!(medias[indexBg]);
+                setState(() {
+                  isPlaying = false;
+                });
+                if (widget.handlePress != null) {
+                  widget.handlePress!(widget.medias[indexBg]);
                 }
               },
-              child: checkIsImage(medias[indexBg])
+              child: checkIsImage(widget.medias[indexBg])
                   ? Stack(
                       fit: StackFit.expand,
                       children: [
-                        medias[indexBg]['subType'] == 'local'
-                            ? medias[indexBg]['newUint8ListFile'] != null
+                        widget.medias[indexBg]['subType'] == 'local'
+                            ? widget.medias[indexBg]['newUint8ListFile'] != null
                                 ? Hero(
                                     tag: indexBg,
                                     child: Image.memory(
-                                      medias[indexBg]['newUint8ListFile'],
+                                      widget.medias[indexBg]
+                                          ['newUint8ListFile'],
                                       fit: BoxFit.fitWidth,
                                       width: size.width,
                                     ),
@@ -74,42 +83,42 @@ class GridViewBuilderMedia extends StatelessWidget {
                                 : Hero(
                                     tag: indexBg,
                                     child: Image.file(
-                                      medias[indexBg]['file'],
+                                      widget.medias[indexBg]['file'],
                                       fit: BoxFit.cover,
                                     ),
                                   )
                             : Hero(
-                                tag: medias[indexBg]['id'] ?? indexBg,
+                                tag: widget.medias[indexBg]['id'] ?? indexBg,
                                 child: ExtendedImage.network(
-                                    medias[indexBg]['url'],
+                                    widget.medias[indexBg]['url'],
                                     fit: BoxFit.cover,
                                     width: size.width, loadStateChanged:
                                         (ExtendedImageState state) {
                                   if (state.extendedImageLoadState !=
                                       LoadState.completed) {
                                     return Container(
-                                      height: double.parse((medias[indexBg]
-                                                      ?['meta']?['small']
-                                                  ?['height'] ??
-                                              400)
-                                          .toString()),
+                                      height: double.parse(
+                                          (widget.medias[indexBg]?['meta']
+                                                      ?['small']?['height'] ??
+                                                  400)
+                                              .toString()),
                                       width: size.width,
-                                      color: white,
                                       decoration: BoxDecoration(
+                                          color: white,
                                           borderRadius:
                                               BorderRadius.circular(10.0)),
                                     );
                                   }
                                 })),
-                        imageRemain != null &&
-                                imageRemain! > 0 &&
-                                indexBg + 1 == medias.length
+                        widget.imageRemain != null &&
+                                widget.imageRemain! > 0 &&
+                                indexBg + 1 == widget.medias.length
                             ? Positioned.fill(
                                 child: Container(
                                   alignment: Alignment.center,
                                   color: Colors.black54,
                                   child: Text(
-                                    '+ $imageRemain',
+                                    '+ ${widget.imageRemain}',
                                     style: const TextStyle(
                                         fontSize: 32,
                                         color: white,
@@ -124,20 +133,22 @@ class GridViewBuilderMedia extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                           VideoPlayerNoneController(
-                              aspectRatio: aspectRatio,
-                              path: medias[indexBg]['file']?.path ??
-                                  medias[indexBg]['remote_url'] ??
-                                  medias[indexBg]['url'],
-                              media: medias[indexBg],
-                              isPause: (isFocus != true ||
-                                  currentFocusVideoId != medias[indexBg]['id']),
+                              aspectRatio: widget.aspectRatio,
+                              path: widget.medias[indexBg]['file']?.path ??
+                                  widget.medias[indexBg]['remote_url'] ??
+                                  widget.medias[indexBg]['url'],
+                              media: widget.medias[indexBg],
+                              isPause: (widget.isFocus != true ||
+                                  widget.currentFocusVideoId !=
+                                      widget.medias[indexBg]['id'] ||
+                                  !isPlaying),
                               // removeObserver:false,
-                              type: medias[indexBg]['file']?.path != null
+                              type: widget.medias[indexBg]['file']?.path != null
                                   ? 'local'
                                   : 'network',
                               index: indexBg,
                               onEnd: () {
-                                onEnd != null ? onEnd!() : null;
+                                widget.onEnd != null ? widget.onEnd!() : null;
                               })
                         ]));
         });

@@ -10,7 +10,8 @@ import 'package:social_network_app_mobile/widgets/text_description.dart';
 
 class FeedPage extends ConsumerStatefulWidget {
   final dynamic pageData;
-  const FeedPage({Key? key, this.pageData}) : super(key: key);
+  final bool? isUser;
+  const FeedPage({Key? key, this.pageData, this.isUser}) : super(key: key);
 
   @override
   ConsumerState<FeedPage> createState() => _FeedPageState();
@@ -64,16 +65,16 @@ class _FeedPageState extends ConsumerState<FeedPage> {
   @override
   Widget build(BuildContext context) {
     List feedPage = ref.watch(pageControllerProvider).pageFeed;
-    bool isMoreFeed = ref.watch(pageControllerProvider).isMoreFeed; 
+    bool isMoreFeed = ref.watch(pageControllerProvider).isMoreFeed;
     return Column(
       children: [
         widget.pageData != null &&
-                (widget.pageData?['page_relationship']?['role'] == null ||
-                    widget.pageData?['page_relationship']?['role'] == "")
+                (widget.pageData?['page_relationship']?['role'] != null &&
+                    widget.pageData?['page_relationship']?['role'] == "admin")
             ? CreatePostButton(
                 preType: postPage,
                 reloadFunction: _reloadFunction,
-                pageData: widget.pageData,
+                pageData: widget.isUser == true ? null : widget.pageData,
               )
             : const SizedBox(),
         const CrossBar(height: 5),
@@ -83,7 +84,7 @@ class _FeedPageState extends ConsumerState<FeedPage> {
           itemCount: feedPage.length + 1,
           itemBuilder: (context, index) {
             if (index < feedPage.length) {
-              return Post(type: postPage, post: feedPage[index]);
+              return Post(type: postPage, post: feedPage[index],);
             } else {
               return isMoreFeed == true
                   ? Center(child: SkeletonCustom().postSkeleton(context))

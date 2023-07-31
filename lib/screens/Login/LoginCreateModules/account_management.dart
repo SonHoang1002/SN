@@ -56,11 +56,9 @@ class _AccountManagerment extends State<AccountManagerment> {
     }
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
 
@@ -73,10 +71,16 @@ class _AccountManagerment extends State<AccountManagerment> {
           appBar: AppBar(
             elevation: 0,
             automaticallyImplyLeading: false,
-             title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [const BackIconAppbar(), Container(child: Text("Quản lý trang cá nhân"),), Container()],
-          ),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const BackIconAppbar(),
+                Container(
+                  child: Text("Quản lý trang cá nhân"),
+                ),
+                Container()
+              ],
+            ),
           ),
           resizeToAvoidBottomInset: true,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -94,53 +98,58 @@ class _AccountManagerment extends State<AccountManagerment> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Center(
-                            child: Wrap(
-                                children: List.generate(
-                                    dataLogin.length,
-                                    (index) => GestureDetector(
-                                          onTap: () {
-                                           pushToNextScreen(context, SettingLoginPage(index)); 
-                                          },
-                                           child: Column(children: [
-                                            Container(
-                                              height: 100,
-                                              width: 100,
-                                              margin: const EdgeInsets.only(
-                                                  bottom: 5, right: 5, left: 5),
-                                              decoration: BoxDecoration(
+                              child: Wrap(
+                                  children: List.generate(
+                                      dataLogin.length,
+                                      (index) => GestureDetector(
+                                            onTap: () {
+                                              pushToNextScreen(context,
+                                                  SettingLoginPage(index));
+                                            },
+                                            child: Column(children: [
+                                              Container(
+                                                height: 100,
+                                                width: 100,
+                                                margin: const EdgeInsets.only(
+                                                    bottom: 5,
+                                                    right: 5,
+                                                    left: 5),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                    border: Border.all(
+                                                        width: 0.2,
+                                                        color: greyColor)),
+                                                child: ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           8.0),
-                                                  border: Border.all(
-                                                      width: 0.2,
-                                                      color: greyColor)),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0),
-                                                child: ImageCacheRender(
-                                                  path: dataLogin[index]
-                                                          ['show_url'] ??
-                                                      linkAvatarDefault,
-                                                  width: 99.8,
-                                                  height: 99.8,
+                                                  child: ImageCacheRender(
+                                                    path: dataLogin[index]
+                                                            ['show_url'] ??
+                                                        linkAvatarDefault,
+                                                    width: 99.8,
+                                                    height: 99.8,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                                width: 100,
-                                                child: Text(
-                                                  dataLogin[index]['name'],
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ))
-                                          ])
-                                          ,)
-                                        ))),
+                                              SizedBox(
+                                                  width: 100,
+                                                  child: Text(
+                                                    dataLogin[index]['name'],
+                                                    textAlign: TextAlign.center,
+                                                    style: const TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ))
+                                            ]),
+                                          )))),
                         ],
                       ),
                     ),

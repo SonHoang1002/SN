@@ -24,7 +24,6 @@ import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/video_player.dart';
 
-
 class ReviewProductMarketPage extends ConsumerStatefulWidget {
   final List<dynamic>? completeProductList;
   final dynamic reviewId;
@@ -74,7 +73,7 @@ class _ReviewProductMarketPageState
 // hướng dẫn, mã giảm giá, chất lượng, mô tả, ảnh, video, thẻ mô tả, kích thước, hiển thị tên, dịch vụ người bạn, dịch vụ vận chuyển.
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     colorTheme = ThemeMode.dark == true

@@ -558,7 +558,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
                     previewWidget: contentEmoji(functionGetEmoji),
                     expandedWidget: contentEmoji(functionGetEmoji),
                     backgroundWidget: const SizedBox(),
-                    maxExtent: MediaQuery.of(context).size.height * 0.8,
+                    maxExtent: MediaQuery.sizeOf(context).height * 0.8,
                     onDragging: (pos) {
                       setState(() {
                         heightModal = pos;

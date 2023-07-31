@@ -39,7 +39,7 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
   @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     return widget.friends.isEmpty
         ? Container(

@@ -331,8 +331,8 @@ class _EditImageMainState extends State<EditImageMain> {
   }
 
   Future<Uint8List> _capturePng() async {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final screenHeight = MediaQuery.sizeOf(context).height;
     // get height of image
     final imageRenderObject = _imageKey.currentContext?.findRenderObject();
     double imageHeight = 0;
@@ -471,8 +471,8 @@ class _EditImageMainState extends State<EditImageMain> {
       child: RepaintBoundary(
         child: Container(
             color: Colors.transparent,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.sizeOf(context).width,
+            height: MediaQuery.sizeOf(context).height,
             child: StreamBuilder<Stroke>(
                 stream: currentLineStreamController.stream,
                 builder: (context, snapshot) {
@@ -491,8 +491,8 @@ class _EditImageMainState extends State<EditImageMain> {
   Widget buildAllPaths(BuildContext context) {
     return RepaintBoundary(
       child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.sizeOf(context).width,
+        height: MediaQuery.sizeOf(context).height,
         child: StreamBuilder<List<Stroke>>(
           stream: linesStreamController.stream,
           builder: (context, snapshot) {
@@ -510,7 +510,7 @@ class _EditImageMainState extends State<EditImageMain> {
   }
 
   Widget buildToolbar() {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return Container(
         margin: EdgeInsets.only(top: size.height * 0.6, right: 5.0),
         child: Container(
@@ -641,11 +641,11 @@ class _EditImageMainState extends State<EditImageMain> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     if (rect == null) {
       Offset deletePoint = Offset(size.width / 2, size.height * 0.8);
       rect = Rect.fromCircle(center: deletePoint, radius: 50);
-    } 
+    }
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: blackColor,
@@ -1054,7 +1054,7 @@ class _EditImageMainState extends State<EditImageMain> {
 
   Widget _buildTextFormField(dynamic data) {
     return Container(
-      color: greyColor.withOpacity(0.2),
+      // color: greyColor.withOpacity(0.2),
       child: ValueListenableBuilder<double>(
           valueListenable: data['fontSize'],
           builder: (context, value, child) {
@@ -1063,7 +1063,7 @@ class _EditImageMainState extends State<EditImageMain> {
                 builder: (context, value, child) {
                   return Container(
                     alignment: Alignment.center,
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery.sizeOf(context).width,
                     child: TextFormField(
                       onChanged: (value) {},
                       maxLines: null,
@@ -1095,7 +1095,7 @@ class _EditImageMainState extends State<EditImageMain> {
 
 // music
   _showBarMusicSelection() {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return showBarModalBottomSheet(
         context: context,
         builder: (ctx) {
@@ -1149,7 +1149,7 @@ class _EditImageMainState extends State<EditImageMain> {
   }
 
   _showBarEmojiSelection() {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return showBarModalBottomSheet(
         context: context,
         builder: (ctx) {

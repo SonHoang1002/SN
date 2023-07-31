@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -32,18 +34,21 @@ class PostFooterButton extends ConsumerStatefulWidget {
   final dynamic type;
   final String? preType;
 
-  /// reload post one media screen when user see iamge in photo page on page screen
+  /// Reload post one media screen when user see iamge in photo page on page screen
   final Function? updateDataPhotoPage;
   final Function? reloadFunction;
   final int? indexImage;
 
-  /// reload post detail screen
+  /// Reload post detail screen
   final Function? reloadDetailFunction;
   final bool? isShowCommentBox;
   final bool? fromOneMediaPost;
 
-  /// update data from post and post detail screen
+  /// Update data from post and post detail screen
   final Function(dynamic)? updateDataFunction;
+  /// Transfer current offset of textformfield to scroll post listview 
+  final Function(Offset)? jumpToOffsetFunction;
+
   const PostFooterButton(
       {Key? key,
       this.post,
@@ -55,7 +60,8 @@ class PostFooterButton extends ConsumerStatefulWidget {
       this.reloadDetailFunction,
       this.isShowCommentBox,
       this.updateDataFunction,
-      this.fromOneMediaPost = false})
+      this.fromOneMediaPost = false,
+      this.jumpToOffsetFunction})
       : super(key: key);
 
   @override
@@ -71,11 +77,24 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
   dynamic commentSelected;
   FocusNode commentNode = FocusNode();
   String viewerReaction = "";
+  final GlobalKey textFieldGlobalKey = GlobalKey();
   @override
   void initState() {
+    commentNode.addListener(() {
+      if (commentNode.hasFocus) {
+        RenderBox renderBox =
+            textFieldGlobalKey.currentContext!.findRenderObject() as RenderBox;
+        
+          widget.jumpToOffsetFunction != null
+              ? widget
+                  .jumpToOffsetFunction!(renderBox.localToGlobal(Offset.zero))
+              : null;
+        
+      }
+    });
     super.initState();
   }
-
+  
   @override
   void dispose() {
     super.dispose();
@@ -98,6 +117,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
       "label": "Chia sẻ",
     }
   ];
+
   handlePress(key) {
     if (key == 'comment') {
       if (![postDetail, postMultipleMedia, postWatch, imagePhotoPage]
@@ -333,8 +353,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
             widget.post['viewer_reaction'] ??
             '')
         : (widget.post?['viewer_reaction'] ?? ""));
-    postData = widget.post;
-
+    postData ??= widget.post;
     return Column(
       children: [
         GestureDetector(
@@ -365,12 +384,6 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                                 // suggestReactionStatus = false;
                               });
                             },
-                            // onHoverReaction: () {
-                            //   setState(() {
-                            //     suggestReactionContent = "";
-                            //     suggestReactionStatus = false;
-                            //   });
-                            // },
                             onCancelReaction: () {
                               setState(() {
                                 suggestReactionContent = "";
@@ -473,7 +486,8 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                 shrinkWrap: true,
                 itemCount: postComment.length,
                 itemBuilder: ((context, index) => CommentTree(
-                    key: Key(postComment[index]['id']),
+                    key: Key(postComment[index]['id'] ??
+                        (Random().nextInt(10000).toString())),
                     // commentChildCreate: postComment[index]
                     //             ['id'] ==
                     //         commentChild?['in_reply_to_id']
@@ -532,6 +546,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
               ),
               Flexible(
                   child: CommentTextfield(
+                      key: textFieldGlobalKey,
                       handleComment: handleComment,
                       commentNode: commentNode,
                       autoFocus: false,

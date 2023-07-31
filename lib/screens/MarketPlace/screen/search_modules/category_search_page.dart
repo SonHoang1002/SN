@@ -25,7 +25,6 @@ import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 
-
 class CategorySearchPage extends ConsumerStatefulWidget {
   final String? questionKeyWord;
   final dynamic title;
@@ -70,7 +69,7 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     Future.wait([_initData()]);
@@ -91,7 +90,7 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(children: [
-            const CustomBanner(),
+          const CustomBanner(),
           _buildCategoriesComponent(),
           const CrossBar(height: 5),
           Container(

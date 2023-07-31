@@ -31,7 +31,7 @@ class _ReefCenterState extends State<ReefCenter> {
   @override
   Widget build(BuildContext context) {
     List reefList = widget.reefList;
-    final size = MediaQuery.of(context).size; 
+    final size = MediaQuery.sizeOf(context);
     return Container(
       width: size.width,
       height: size.height * 0.45,

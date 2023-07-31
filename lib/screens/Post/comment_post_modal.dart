@@ -102,17 +102,18 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
       });
       // change count to
       final currentPost = ref.watch(currentPostControllerProvider).currentPost;
-      if (currentPost['media_attachments'].isNotEmpty &&
+      if (currentPost?['media_attachments'] != null &&
+          currentPost?['media_attachments'].isNotEmpty &&
           widget.indexImagePost != null &&
           newList.isNotEmpty) {
         int sumComment = postComment.length;
         newList.forEach((element) {
           sumComment += int.parse(
-              (element['replies_count'] ?? element['replies_total'])
+              ((element?['replies_count']) ?? (element?['replies_total']))
                   .toString());
         });
-        currentPost['media_attachments'][widget.indexImagePost]['status_media']
-            ['replies_total'] = sumComment;
+        currentPost?['media_attachments']?[widget.indexImagePost]
+            ?['status_media']?['replies_total'] = sumComment;
         ref
             .read(currentPostControllerProvider.notifier)
             .saveCurrentPost(currentPost);
@@ -130,9 +131,9 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
       final preCardData = await getPreviewUrl(previewLinkText);
       final cardData = preCardData != null
           ? {
-              "url": preCardData[0]['link'],
-              "title": preCardData[0]['title'],
-              "description": preCardData[0]['description'],
+              "url": preCardData?[0]?['link'],
+              "title": preCardData?[0]?['title'],
+              "description": preCardData?[0]?['description'],
               "type": "link",
               "author_name": "",
               "author_url": "",
@@ -466,21 +467,37 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
       dynamic newComment;
       // cal api
       if (!['editComment', 'editChild'].contains(data['typeStatus'])) {
-        newComment = await PostApi().createStatus({
-              ...data,
-              "visibility": "public",
-              "in_reply_to_id": data['in_reply_to_id'] ?? widget.post['id']
-            }) ??
-            newCommentPreview;
+        final result = await PostApi().createStatus({
+          ...data,
+          "visibility": "public",
+          "in_reply_to_id": data['in_reply_to_id'] ?? widget.post['id']
+        });
+        if (result['status_code'] != null) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: buildTextContent(result['content']?['error'], false,
+                  colorWord: red, fontSize: 15)));
+          newComment = newCommentPreview;
+        } else {
+          newComment = result ?? newCommentPreview;
+        }
+
         if (newComment['card'] == null && preCardData != null) {
           newComment["card"] = newCommentPreview["card"];
         }
       } else {
-        newComment = await PostApi().updatePost(data['id'], {
+        final result = await PostApi().updatePost(data['id'], {
           "extra_body": data['extra_body'],
           "status": data['status'],
           "tags": data['tags']
         });
+        if (result['status_code'] != null) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: buildTextContent(result['content']?['error'], false,
+                  colorWord: red, fontSize: 15)));
+          newComment = newCommentPreview;
+        } else {
+          newComment = result ?? newCommentPreview;
+        }
         if (newComment['card'] == null ||
             (newComment["card"] != newCommentPreview["card"])) {
           newComment["card"] = newCommentPreview["card"];
@@ -615,7 +632,9 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
       dynamic updateCountPostData = widget.post;
       dynamic count = postComment.length;
       postComment.forEach((element) {
-        count += element["replies_total"];
+        if (element?["replies_total"] != null) {
+          count += element?["replies_total"];
+        }
       });
       updateCountPostData['replies_total'] =
           count + addtionalIfChild - subIfChild;
@@ -723,19 +742,24 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
                                 primary: false,
                                 shrinkWrap: true,
                                 itemCount: postComment.length,
-                                itemBuilder: ((context, index) => CommentTree(
-                                    key: Key(postComment[index]['id']),
-                                    type: widget.type,
-                                    commentChildCreate: postComment[index]
-                                                ['id'] ==
-                                            commentChild?['in_reply_to_id']
-                                        ? commentChild
-                                        : null,
-                                    commentNode: commentNode,
-                                    commentSelected: commentSelected,
-                                    commentParent: postComment[index],
-                                    getCommentSelected: getCommentSelected,
-                                    handleDeleteComment: handleDeleteComment))),
+                                itemBuilder: ((context, index) => postComment[
+                                            index]['status_code'] !=
+                                        null
+                                    ? Container()
+                                    : CommentTree(
+                                        key: Key(postComment[index]['id']),
+                                        type: widget.type,
+                                        commentChildCreate: postComment[index]
+                                                    ['id'] ==
+                                                commentChild?['in_reply_to_id']
+                                            ? commentChild
+                                            : null,
+                                        commentNode: commentNode,
+                                        commentSelected: commentSelected,
+                                        commentParent: postComment[index],
+                                        getCommentSelected: getCommentSelected,
+                                        handleDeleteComment:
+                                            handleDeleteComment))),
                           ],
                         ),
                       ),

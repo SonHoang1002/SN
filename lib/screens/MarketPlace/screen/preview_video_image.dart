@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
-import 'package:social_network_app_mobile/widgets/video_player.dart'; 
+import 'package:social_network_app_mobile/widgets/video_player.dart';
 
 class PreviewVideoImage extends StatefulWidget {
   final List<dynamic> src;
@@ -32,7 +32,7 @@ class _PreviewVideoImageComsumerState extends State<PreviewVideoImage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Scaffold(

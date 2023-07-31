@@ -29,7 +29,7 @@ class _PostProductState extends State<PostProduct> {
   @override
   Widget build(BuildContext context) {
     product ??= widget.post['shared_product'];
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return GestureDetector(
       onTap: () {
         widget.type != 'edit_post' ? null : null;

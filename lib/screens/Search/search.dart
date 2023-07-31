@@ -133,7 +133,7 @@ class _SearchState extends ConsumerState<Search> {
                             width: 8.0,
                           ),
                           SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.75,
+                            width: MediaQuery.sizeOf(context).width * 0.75,
                             child: Text.rich(
                               key: ValueKey(keyword),
                               TextSpan(

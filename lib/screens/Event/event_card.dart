@@ -62,7 +62,7 @@ class _EventCardState extends ConsumerState<EventCard> {
     bool isMore = ref.watch(eventControllerProvider).isMore;
     final theme = pv.Provider.of<ThemeManager>(context);
 
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
 
@@ -320,8 +320,7 @@ class _EventCardState extends ConsumerState<EventCard> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w700),
-                                                          children: <
-                                                              InlineSpan>[
+                                                          children: <InlineSpan>[
                                                             TextSpan(
                                                               text: ' Bạn bè',
                                                               style: TextStyle(

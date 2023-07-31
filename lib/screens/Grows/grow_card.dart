@@ -55,7 +55,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
   Widget build(BuildContext context) {
     List grows = ref.watch(growControllerProvider).grows;
     bool isMore = ref.watch(growControllerProvider).isMore;
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Expanded(

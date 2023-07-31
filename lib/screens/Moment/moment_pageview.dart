@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:preload_page_view/preload_page_view.dart';
@@ -6,6 +7,7 @@ import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment_video.dart';
 import 'package:social_network_app_mobile/screens/Post/comment_post_modal.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 class MomentPageview extends ConsumerStatefulWidget {
   final List momentRender;
@@ -54,7 +56,6 @@ class _MomentPageviewState extends ConsumerState<MomentPageview>
       if (data['viewer_reaction'] != null) {
         response = await PostApi()
             .reactionPostApi(data['id'], {"custom_vote_type": 'love'});
-
         {
           response = {
             ...response,
@@ -96,8 +97,9 @@ class _MomentPageviewState extends ConsumerState<MomentPageview>
             widget: widget)
         : Column(
             children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height - 80,
+              Container(
+                height: MediaQuery.sizeOf(context).height - 80,
+                color: blackColor,
                 child: RenderPageView(
                     type: widget.type,
                     pageController: _pageController,
@@ -132,7 +134,7 @@ class BoxCommentMoment extends StatelessWidget {
             barrierColor: Colors.transparent,
             backgroundColor: Colors.transparent,
             builder: (context) => SizedBox(
-                height: MediaQuery.of(context).size.height * 0.65,
+                height: MediaQuery.sizeOf(context).height * 0.65,
                 child: CommentPostModal(
                     post: widget.momentRender[currentPage.toInt()])));
       },

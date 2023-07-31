@@ -65,7 +65,7 @@ class _GrowHostState extends ConsumerState<GrowHost> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     var width = size.width;
     var height = size.height;
     List grows = ref.watch(growControllerProvider).growsHostNow;

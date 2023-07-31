@@ -65,7 +65,7 @@ class _CheckinState extends State<Checkin> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return Column(
       children: [
         Container(

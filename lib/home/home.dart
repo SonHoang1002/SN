@@ -30,6 +30,7 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'Standards_Violation.dart';
 
 class Home extends ConsumerStatefulWidget {
   final int? selectedIndex;
@@ -50,7 +51,7 @@ class _HomeState extends ConsumerState<Home>
   Size? size;
   ThemeManager? theme;
   ValueNotifier<bool?> isDisconnected = ValueNotifier(null);
-  late WebSocketChannel webSocketChannel;
+  WebSocketChannel? webSocketChannel;
   StreamSubscription<dynamic>? subscription;
   double valueFromPercentageInRange(
       {required final double min, max, percentage}) {
@@ -108,7 +109,7 @@ class _HomeState extends ConsumerState<Home>
   }
 
   void listenToWebSocket() {
-    subscription = webSocketChannel.stream.listen(
+    subscription = webSocketChannel?.stream.listen(
       (data) {
         if (data.contains('42')) {
           int startIndex = data.indexOf('[') + 1;
@@ -124,15 +125,20 @@ class _HomeState extends ConsumerState<Home>
                   .where((element) => element['id'] == object['id'])
                   .toList();
               if (dataFilter != null && dataFilter.isNotEmpty) {
-                await NotificationService().showNotification(
-                    title: 'EMSO',
-                    payLoad: jsonEncode(dataFilter),
-                    largeIcon: dataFilter[0]['account']['avatar_media'] != null
-                        ? dataFilter[0]['account']['avatar_media']
-                            ['preview_url']
-                        : dataFilter[0]['account']['avatar_static'],
-                    body:
-                        '${renderName(dataFilter)}${renderContent(dataFilter)['textNone'] ?? ''} ${renderContent(dataFilter)['textBold'] ?? ''}');
+                if (dataFilter[0]["type"] == "bad_status") {
+                  AlertDialogUtils.showAlertDialog(context, dataFilter);
+                } else {
+                  await NotificationService().showNotification(
+                      title: 'EMSO',
+                      payLoad: jsonEncode(dataFilter),
+                      largeIcon:
+                          dataFilter[0]['account']['avatar_media'] != null
+                              ? dataFilter[0]['account']['avatar_media']
+                                  ['preview_url']
+                              : dataFilter[0]['account']['avatar_static'],
+                      body:
+                          '${renderName(dataFilter)}${renderContent(dataFilter)['textNone'] ?? ''} ${renderContent(dataFilter)['textBold'] ?? ''}');
+                }
               }
             });
           }
@@ -148,7 +154,7 @@ class _HomeState extends ConsumerState<Home>
   }
 
   void cancelListening() {
-    webSocketChannel.sink.close();
+    webSocketChannel?.sink.close();
   }
 
   dynamic renderContent(noti) {
@@ -252,7 +258,12 @@ class _HomeState extends ConsumerState<Home>
         'textNone':
             ' đã bày tỏ cảm xúc về ${status['in_reply_to_parent_id'] != null || status['in_reply_to_id'] != null ? 'bình luận' : 'bài viết'} ${status['page_owner'] == null && status['account']?['id'] == ref.watch(meControllerProvider)[0]['id'] ? 'của bạn' : ''} ${status['content'] ?? ""}'
       };
-    } else if (type == 'status') {
+      
+    }else if (type == 'bad_status') {
+      return {
+        'textNone': ' , bài viết của bạn đã vi phạm tiểu chuẩn cộng đồng'
+      };
+    }  else if (type == 'status') {
       if (status['reblog'] != null) {
         return {
           'textNone':
@@ -419,7 +430,7 @@ class _HomeState extends ConsumerState<Home>
   }
 
   _showBottomNavigator(bool value) {
-    if (showBottomNavigatorNotifier.value != value ) {
+    if (showBottomNavigatorNotifier.value != value) {
       setState(() {
         showBottomNavigatorNotifier.value = value;
       });
@@ -439,7 +450,7 @@ class _HomeState extends ConsumerState<Home>
 
   @override
   Widget build(BuildContext context) {
-    size ??= MediaQuery.of(context).size;
+    size ??= MediaQuery.sizeOf(context);
     theme ??= pv.Provider.of<ThemeManager>(context);
     String modeTheme = theme!.themeMode == ThemeMode.dark
         ? 'dark'
@@ -482,7 +493,10 @@ class _HomeState extends ConsumerState<Home>
       const Moment(typePage: 'home'),
       const SizedBox(),
       const Watch(),
-      const MainMarketPage(false)
+      MainMarketPage(
+        isBack: false,
+        callbackFunction: _showBottomNavigator,
+      )
     ];
     List actions = [
       List.generate(

@@ -6,8 +6,9 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_wid
 
 import '../../screens/MarketPlace/widgets/button_for_market_widget.dart';
 
-buildMessageDialog(BuildContext context, String title, {bool? oneButton = false,Function? oKFunction}) {
-  final width = MediaQuery.of(context).size.width;
+buildMessageDialog(BuildContext context, String title,
+    {bool? oneButton = false, Function? oKFunction}) {
+  final width = MediaQuery.sizeOf(context).width;
   showDialog(
       barrierDismissible: false,
       context: context,

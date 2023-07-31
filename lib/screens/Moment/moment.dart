@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
+import 'package:social_network_app_mobile/screens/Menu/menu.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment_pageview.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
@@ -157,6 +158,12 @@ class _MomentState extends ConsumerState<Moment>
         },
         child: Scaffold(
             backgroundColor: Colors.black,
+            key: key,
+            drawer: Drawer(
+              width: MediaQuery.sizeOf(context).width - 20,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              child: const Menu(),
+            ),
             body: Stack(children: <Widget>[
               MomentTabBarView(
                   tabController: _tabController,
@@ -187,8 +194,9 @@ class _MomentState extends ConsumerState<Moment>
                               widget.isBack != null
                                   ? const BackButton()
                                   : InkWell(
-                                      onTap: () =>
-                                          key.currentState!.openDrawer(),
+                                      onTap: () {
+                                        key.currentState?.openDrawer();
+                                      },
                                       child: const Padding(
                                         padding: EdgeInsets.only(top: 0),
                                         child: Icon(
@@ -391,7 +399,9 @@ class MomentTabBar extends StatelessWidget {
         unselectedLabelColor: Colors.white.withOpacity(0.5),
         indicatorSize: TabBarIndicatorSize.label,
         indicatorWeight: 0,
-        labelStyle: GoogleFonts.ibmPlexSans(),
+        labelStyle: GoogleFonts.ibmPlexSans(
+            textStyle: const TextStyle(fontWeight: FontWeight.w700)),
+        unselectedLabelStyle: const TextStyle(),
         tabs: const [
           Tab(
             text: "Đang theo dõi",
@@ -422,12 +432,9 @@ class MomentIconAction extends StatelessWidget {
                 margin: const EdgeInsets.only(left: 5),
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.grey.withOpacity(0.3)),
-                child: Icon(
-                  iconAction[index]['icon'],
-                  size: 20,
-                  color: white,
-                ),
+                    color: Colors.grey.withOpacity(0.3),
+                    border: Border.all(color: primaryColor, width: 0.2)),
+                child: Icon(iconAction[index]['icon'], size: 20, color: white),
               )),
     );
   }
@@ -438,7 +445,7 @@ class NoData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return Container(
       color: Colors.black,
       width: size.width,

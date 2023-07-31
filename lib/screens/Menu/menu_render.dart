@@ -24,11 +24,12 @@ class MenuRender extends StatelessWidget {
               builder: (context) => menu['key'] == 'moment'
                   ? const Moment(isBack: true)
                   : menu["key"] == "marketPlace"
-                      ? const MainMarketPage(true)
+                      ? const MainMarketPage(isBack: true)
                       : MenuSelected(
                           menuSelected: menu,
                         )));
     }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -237,7 +237,7 @@ class CreateUpdateRender extends StatelessWidget {
         context: context,
         builder: (context) {
           return StatefulBuilder(builder: (context, setStateFull) {
-            final height = MediaQuery.of(context).size.height;
+            final height = MediaQuery.sizeOf(context).height;
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               height: height * 0.8,

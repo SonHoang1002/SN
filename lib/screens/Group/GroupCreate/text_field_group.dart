@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 class TextFieldGroup extends StatefulWidget {
   final String label;
@@ -35,7 +36,7 @@ class _TextFieldGroupState extends State<TextFieldGroup> {
         controller: widget.controller,
         readOnly: widget.readOnly ?? false,
         enabled: widget.enabled,
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: colorWord(context)),
         decoration: InputDecoration(
           labelText: widget.label,
           suffixIcon: widget.suffixIcon,

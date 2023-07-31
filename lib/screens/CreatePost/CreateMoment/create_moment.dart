@@ -100,7 +100,7 @@ class _CreateMomentState extends ConsumerState<CreateMoment> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     const optionAction = [
       {

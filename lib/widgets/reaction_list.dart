@@ -126,7 +126,7 @@ class _ReactionListState extends State<ReactionList> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SizedBox(
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.sizeOf(context).height,
         child: TabSocial(
             tabCustom: List.generate(
                 tabsRenderObject.length,

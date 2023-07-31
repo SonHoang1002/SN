@@ -17,7 +17,6 @@ import 'package:social_network_app_mobile/providers/market_place_providers/produ
 import 'package:social_network_app_mobile/providers/market_place_providers/review_product_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/review_all_product.dart';
-import 'package:social_network_app_mobile/screens/MarketPlace/screen/transfer_order_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/preview_video_image.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/cart_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/classify_category_conponent.dart';
@@ -49,13 +48,9 @@ const String share_on_personal_page_of_friend =
 const configReviewParams = {"limit": 1};
 
 class DetailProductMarketPage extends ConsumerStatefulWidget {
-  dynamic simpleData;
+  final dynamic simpleData;
   final dynamic id;
-  DetailProductMarketPage({
-    super.key,
-    required this.id,
-    this.simpleData,
-  });
+  const DetailProductMarketPage({super.key, required this.id, this.simpleData});
   @override
   ConsumerState<DetailProductMarketPage> createState() =>
       _DetailProductMarketPageComsumerState();
@@ -102,17 +97,18 @@ class _DetailProductMarketPageComsumerState
         _detailData = widget.simpleData;
         if (_detailData != null) {
           _initData();
+        } else {
+          final detailData = await ref
+              .read(detailProductProvider.notifier)
+              .getDetailProduct(widget.id);
+          final comment = await ref
+              .read(reviewProductProvider.notifier)
+              .getReviewProduct(widget.id, configReviewParams);
+          setState(() {
+            _detailData = ref.watch(detailProductProvider).detail;
+          });
+          _initData();
         }
-        final detailData = await ref
-            .read(detailProductProvider.notifier)
-            .getDetailProduct(widget.id);
-        final comment = await ref
-            .read(reviewProductProvider.notifier)
-            .getReviewProduct(widget.id, configReviewParams);
-        setState(() {
-          _detailData = ref.watch(detailProductProvider).detail;
-        });
-        _initData();
       });
     });
     _scrollController
@@ -165,7 +161,7 @@ class _DetailProductMarketPageComsumerState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     _detailData ??= widget.simpleData;
@@ -203,15 +199,17 @@ class _DetailProductMarketPageComsumerState
 
   Future<int> _initData() async {
     if (_listMedia == null || _listMedia!.isEmpty) {
-      if (_detailData!["product_video"] != null) {
-        _listMedia?.add(_detailData!["product_video"]["url"]);
-      }
-      if (_detailData!["product_image_attachments"] != null &&
-          _detailData!["product_image_attachments"].isNotEmpty) {
-        _detailData!["product_image_attachments"].forEach((element) {
-          _listMedia?.add(element["attachment"]["url"]);
-        });
-      }
+      setState(() {
+        if (_detailData!["product_video"] != null) {
+          _listMedia?.add(_detailData!["product_video"]["url"]);
+        }
+        if (_detailData!["product_image_attachments"] != null &&
+            _detailData!["product_image_attachments"].isNotEmpty) {
+          _detailData!["product_image_attachments"].forEach((element) {
+            _listMedia?.add(element["attachment"]["url"]);
+          });
+        }
+      });
     }
     _productToCart = _detailData!["product_variants"][0];
     selectedProduct = _detailData!["product_variants"][0];
@@ -302,20 +300,14 @@ class _DetailProductMarketPageComsumerState
             return AlertDialog(
                 backgroundColor: transparent,
                 content: Container(
-                  height: 60,
-                  width: 60,
+                  height: 100,
+                  width: 100,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(7),
                       color: blackColor.withOpacity(0.4)),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
-                          FontAwesomeIcons.ticket,
-                          size: 18,
-                          color: white,
-                        ),
-                        buildSpacer(height: 10),
                         buildTextContent("Đã thêm vào giỏ", false,
                             colorWord: white, fontSize: 16, isCenterLeft: false)
                       ]),
@@ -742,6 +734,7 @@ class _DetailProductMarketPageComsumerState
                     : const SizedBox(),
                 buildSpacer(height: 10),
                 _buildDescriptionAndReview(),
+                buildSpacer(height: 10),
                 _listProductOfPage != null && _listProductOfPage!.isNotEmpty
                     ? Padding(
                         padding: const EdgeInsets.only(top: 10),
@@ -752,30 +745,33 @@ class _DetailProductMarketPageComsumerState
                               direction: Axis.horizontal,
                               children: [
                                 Flexible(
-                                  child: buildDivider(color: greyColor),
+                                  child:
+                                      buildDivider(color: greyColor, right: 10),
                                 ),
-                                buildTextContent(
-                                    "Sản phẩm khác của shop", false),
+                                buildTextContent("Sản phẩm khác của shop", true,
+                                    fontSize: 16),
                                 Flexible(
-                                  child: buildDivider(color: greyColor),
+                                  child:
+                                      buildDivider(color: greyColor, left: 10),
                                 ),
                               ],
                             ),
                             contentList: _listProductOfPage ?? []),
                       )
                     : const SizedBox(),
-                buildSpacer(height: 10),
+                buildSpacer(height: 15),
                 buildSuggestListComponent(
                     context: context,
                     title: Flex(
                       direction: Axis.horizontal,
                       children: [
                         Flexible(
-                          child: buildDivider(color: greyColor),
+                          child: buildDivider(color: greyColor, right: 10),
                         ),
-                        buildTextContent("Có thể bạn sẽ thích", false),
+                        buildTextContent("Có thể bạn sẽ thích", true,
+                            fontSize: 16),
                         Flexible(
-                          child: buildDivider(color: greyColor),
+                          child: buildDivider(color: greyColor, left: 10),
                         ),
                       ],
                     ),
@@ -846,7 +842,7 @@ class _DetailProductMarketPageComsumerState
                                     ),
                                     buildSpacer(height: 3),
                                     buildTextContent("Thêm vào giỏ", false,
-                                        fontSize: 9)
+                                        fontSize: 9,isCenterLeft: false)
                                   ],
                                   isVertical: true,
                                   radiusValue: 0,
@@ -1214,15 +1210,36 @@ class _DetailProductMarketPageComsumerState
                         fontSize: 13)
                   ],
                   function: () async {
-                    _updateAnimation();
-                    popToPreviousScreen(context);
-                    _canAddToCart ? _addToCart() : null;
+                    _callAddToCartFunction();
                   }),
             ),
           ],
         ),
       );
     }));
+  }
+
+// ba truong hop: có màu, cớ cỡ; không màu, có cỡ; có màu, không cỡ
+  _callAddToCartFunction() {
+    if (_listCheckedColor.isNotEmpty && _listCheckedSize.isNotEmpty) {
+      if (_selectedColorValue != null && _selectedSizeValue != null) {
+        _updateAnimation();
+        popToPreviousScreen(context);
+        _canAddToCart ? _addToCart() : null;
+      }
+    } else if (_listCheckedColor.isNotEmpty && _listCheckedSize.isEmpty) {
+      if (_selectedColorValue != null) {
+        _updateAnimation();
+        popToPreviousScreen(context);
+        _canAddToCart ? _addToCart() : null;
+      }
+    } else if (_listCheckedColor.isEmpty && _listCheckedSize.isNotEmpty) {
+      if (_selectedSizeValue != null) {
+        _updateAnimation();
+        popToPreviousScreen(context);
+        _canAddToCart ? _addToCart() : null;
+      }
+    }
   }
 
   Widget _buildColorOrSizeWidget(String title, List<dynamic> data,

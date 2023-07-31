@@ -33,7 +33,7 @@ class _NamePagePageState extends State<NamePagePage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     return GestureDetector(
       onTap: (() {

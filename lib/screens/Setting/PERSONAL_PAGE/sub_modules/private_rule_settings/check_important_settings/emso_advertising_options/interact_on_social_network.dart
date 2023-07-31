@@ -19,7 +19,7 @@ class InteractOnSocialNetworksPage extends StatelessWidget {
   InteractOnSocialNetworksPage({super.key});
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     return Scaffold(

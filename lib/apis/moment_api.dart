@@ -13,8 +13,8 @@ class MomentApi {
     return await Api().getRequestBase('/api/v1/timelines/tag/$hashtag', params);
   }
 
-  Future favoriteReactionMoment(id) async {
-    return await Api().postRequestBase('/api/v1/statuses/$id/favourite', null);
+  Future favoriteReactionMoment(id,data) async {
+    return await Api().postRequestBase('/api/v1/statuses/$id/favourite', data);
   }
 
   Future unfavoriteReactionMoment(id) async {

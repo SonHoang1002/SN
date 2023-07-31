@@ -189,7 +189,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                           ? growDetail['introduction_video']['meta']['small']
                                       ['aspect'] <
                                   0.58
-                              ? MediaQuery.of(context).size.height - 66
+                              ? MediaQuery.sizeOf(context).height - 66
                               : null
                           : 200,
                       width: 500,
@@ -235,8 +235,8 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                         itemBuilder: (context, index) {
                           return Container(
                             width: hosts.length > 1
-                                ? MediaQuery.of(context).size.width * 0.61
-                                : MediaQuery.of(context).size.width * 0.91,
+                                ? MediaQuery.sizeOf(context).width * 0.61
+                                : MediaQuery.sizeOf(context).width * 0.91,
                             margin: const EdgeInsets.only(top: 10),
                             child: CardComponents(
                               imageCard: Column(
@@ -392,7 +392,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                     },
                                     child: Container(
                                       height: 35,
-                                      width: MediaQuery.of(context).size.width *
+                                      width: MediaQuery.sizeOf(context).width *
                                           0.8,
                                       decoration: BoxDecoration(
                                           color: const Color.fromARGB(
@@ -459,7 +459,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                         shrinkWrap: true,
                         itemBuilder: (context, indexSuggest) {
                           return Container(
-                            width: MediaQuery.of(context).size.width * 0.6,
+                            width: MediaQuery.sizeOf(context).width * 0.6,
                             margin: const EdgeInsets.only(top: 10),
                             child: CardComponents(
                               imageCard: Column(
@@ -475,7 +475,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                           : linkBannerDefault,
                                       fit: BoxFit.cover,
                                       height: 180.0,
-                                      width: MediaQuery.of(context).size.width *
+                                      width: MediaQuery.sizeOf(context).width *
                                           0.6,
                                     ),
                                   ),

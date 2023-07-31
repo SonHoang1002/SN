@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupDetail/group_detail.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
@@ -36,13 +37,11 @@ class GroupListAll extends ConsumerWidget {
                       itemCount: groupAdmin.length,
                       itemBuilder: (context, index) => InkWell(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                builder: (context) {
-                                  return GroupDetail(
+                              pushCustomCupertinoPageRoute(
+                                  context,
+                                  GroupDetail(
                                     id: groupAdmin[index]['id'],
-                                  );
-                                },
-                              ));
+                                  ));
                             },
                             borderRadius: BorderRadius.circular(10.0),
                             child: Container(
@@ -86,13 +85,11 @@ class GroupListAll extends ConsumerWidget {
                   itemCount: groupMember.length,
                   itemBuilder: (context, indexMember) => InkWell(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return GroupDetail(
+                          pushCustomCupertinoPageRoute(
+                              context,
+                              GroupDetail(
                                 id: groupMember[indexMember]['id'],
-                              );
-                            },
-                          ));
+                              ));
                         },
                         borderRadius: BorderRadius.circular(10.0),
                         child: Container(

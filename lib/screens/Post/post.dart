@@ -38,6 +38,11 @@ class Post extends ConsumerStatefulWidget {
   final bool? waitingForApproval;
   // trong trường hợp bài post đang chờ duyệt thì bắt buộc phải truyền pageId
   final dynamic groupId;
+  final Function? approvalFunction;
+  final bool? haveSuggest;
+  final bool? isInGroup;
+
+  final Function(Offset)? jumpToOffsetFunction;
 
   const Post(
       {Key? key,
@@ -52,7 +57,11 @@ class Post extends ConsumerStatefulWidget {
       this.preType,
       this.updateDataFunction,
       this.waitingForApproval = false,
-      this.groupId})
+      this.groupId,
+      this.approvalFunction,
+      this.haveSuggest = true,
+      this.isInGroup = false,
+      this.jumpToOffsetFunction})
       : super(key: key);
 
   @override
@@ -86,9 +95,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    setState(() {
-      currentPost = widget.post;
-    });
+    currentPost = widget.post;
     super.initState();
   }
 
@@ -117,138 +124,152 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
         });
       }
     }
-    return
-        // currentPost != null
-        //     ?
-        Column(
-      children: [
-        Visibility.maintain(
-          // visible: widget.visible == true,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return currentPost != null
+        ? Column(
             children: [
-              widget.type != postPageUser &&
-                      currentPost?['account']?['id'] != meData['id']
-                  ? PostSuggest(
-                      post: currentPost,
-                      type: widget.type,
-                      renderFunction: () {
-                        isHaveSuggest = false;
-                      },
-                      updateDataFunction: updateNewPost,
-                    )
-                  : const SizedBox(),
-              ref.watch(connectivityControllerProvider).connectInternet ==
-                          false &&
-                      currentPost['processing'] == "isProcessing"
-                  ? InternetWarningCreatePost(
-                      warning: warning,
-                      showDeletePostPopup: showDeletePostPopup,
-                    )
-                  : const SizedBox(),
-              currentPost['processing'] == "isProcessing"
-                  ? const CustomLinearProgressIndicator()
-                  : const SizedBox(),
-              Stack(
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        padding: currentPost['processing'] == "isProcessing"
-                            ? const EdgeInsets.only(top: 7)
-                            : null,
-                        child: PostHeader(
+              Visibility.maintain(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ((widget.type != postPageUser &&
+                                    currentPost?['account']?['id'] !=
+                                        meData['id']) &&
+                                widget.haveSuggest == true) ||
+                            (currentPost?['group'] == null ||
+                                currentPost?['group'].isEmpty) ||
+                            (currentPost?['page'] == null ||
+                                currentPost?['page'].isEmpty)
+                        ? PostSuggest(
                             post: currentPost,
                             type: widget.type,
-                            // isHaveAction:
-                            //     widget.type != postPageUser ? !isHaveSuggest : true,
-                            reloadFunction: () {
-                              setState(() {});
+                            renderFunction: () {
+                              isHaveSuggest = false;
                             },
-                            updateDataFunction: updateNewPost),
-                      ),
-                      PostCenter(
-                          post: currentPost,
-                          type: widget.type,
-                          data: widget.data,
-                          reloadFunction: () {
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              widget.reloadFunction != null
-                                  ? widget.reloadFunction!()
-                                  : null;
-                              setState(() {});
-                            });
-                          },
-                          preType: widget.preType,
-                          isFocus: widget.isFocus,
-                          updateDataFunction: updateNewPost,
-                          showCmtBoxFunction: () {
-                            _changeShowCommentBox();
-                          }),
-                    ],
-                  ),
-                  currentPost['processing'] == "isProcessing"
-                      ? Container(
-                          height: ref
-                                      .watch(processingPostController)
-                                      .heightOfProcessingPost !=
-                                  0
-                              ? (ref
-                                      .watch(processingPostController)
-                                      .heightOfProcessingPost -
-                                  80)
-                              : 0,
-                          color: white.withOpacity(0.2),
-                        )
-                      : const SizedBox()
-                ],
-              ),
-              widget.waitingForApproval == true && widget.groupId != null
-                  ? Flex(
-                      direction: Axis.horizontal,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            updateDataFunction: updateNewPost,
+                          )
+                        : const SizedBox(),
+                    ref.watch(connectivityControllerProvider).connectInternet ==
+                                false &&
+                            currentPost?['processing'] == "isProcessing"
+                        ? InternetWarningCreatePost(
+                            warning: warning,
+                            showDeletePostPopup: showDeletePostPopup,
+                          )
+                        : const SizedBox(),
+                    currentPost?['processing'] == "isProcessing"
+                        ? const CustomLinearProgressIndicator()
+                        : const SizedBox(),
+                    Stack(
                       children: [
-                        Flexible(
-                          child: ButtonPrimary(
-                              label: "Phê duyệt",
-                              handlePress: () async {
-                                handleApprovePost(true);
-                              }),
+                        Column(
+                          children: [
+                            Container(
+                              padding:
+                                  currentPost?['processing'] == "isProcessing"
+                                      ? const EdgeInsets.only(top: 7)
+                                      : null,
+                              child: PostHeader(
+                                  post: currentPost,
+                                  type: widget.type,
+                                  isHaveAction: widget.type != postPageUser
+                                      ? !isHaveSuggest
+                                      : true,
+                                  reloadFunction: () {
+                                    setState(() {});
+                                  },
+                                  isInGroup: widget.isInGroup,
+                                  updateDataFunction: updateNewPost),
+                            ),
+                            PostCenter(
+                                post: currentPost,
+                                type: widget.type,
+                                data: widget.data,
+                                reloadFunction: () {
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) {
+                                    widget.reloadFunction != null
+                                        ? widget.reloadFunction!()
+                                        : null;
+                                    setState(() {});
+                                  });
+                                },
+                                preType: widget.preType,
+                                isFocus: widget.isFocus,
+                                updateDataFunction: updateNewPost,
+                                showCmtBoxFunction: () {
+                                  _changeShowCommentBox();
+                                }),
+                          ],
                         ),
-                        Flexible(
-                          child: ButtonPrimary(
-                              label: "Từ chối",
-                              handlePress: () async {
-                                handleApprovePost(false);
-                              }),
-                        )
+                        currentPost?['processing'] == "isProcessing"
+                            ? Container(
+                                height: ref
+                                            .watch(processingPostController)
+                                            .heightOfProcessingPost !=
+                                        0
+                                    ? (ref
+                                            .watch(processingPostController)
+                                            .heightOfProcessingPost -
+                                        80)
+                                    : 0,
+                                color: white.withOpacity(0.2),
+                              )
+                            : const SizedBox()
                       ],
-                    )
-                  : ((widget.isHiddenFooter != null &&
-                              widget.isHiddenFooter == true) ||
-                          currentPost['processing'] == "isProcessing")
-                      ? const SizedBox()
-                      : PostFooter(
-                          post: currentPost,
-                          type: widget.type,
-                          updateDataFunction: updateNewPost,
-                          isShowCommentBox: _isShowCommentBox.value,
-                          preType: widget.preType,
-                        ),
-            ],
-          ),
-        ),
-        widget.isHiddenCrossbar != null && widget.isHiddenCrossbar == true
-            ? const SizedBox()
-            : const CrossBar(
-                height: 7,
-                onlyBottom: 12,
-                onlyTop: 6,
-                opacity: 0.2,
+                    ),
+                    widget.waitingForApproval == true && widget.groupId != null
+                        ? Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Flex(
+                              direction: Axis.horizontal,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Flexible(
+                                  child: ButtonPrimary(
+                                      label: "Phê duyệt",
+                                      handlePress: () async {
+                                        handleApprovePost(true);
+                                      }),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Flexible(
+                                  child: ButtonPrimary(
+                                      label: "Từ chối",
+                                      handlePress: () async {
+                                        handleApprovePost(false);
+                                      }),
+                                )
+                              ],
+                            ),
+                          )
+                        : ((widget.isHiddenFooter != null &&
+                                    widget.isHiddenFooter == true) ||
+                                currentPost?['processing'] == "isProcessing")
+                            ? const SizedBox()
+                            : PostFooter(
+                                post: currentPost,
+                                type: widget.type,
+                                updateDataFunction: updateNewPost,
+                                isShowCommentBox: _isShowCommentBox.value,
+                                preType: widget.preType,
+                                jumpToOffsetFunction:
+                                    widget.jumpToOffsetFunction),
+                  ],
+                ),
               ),
-      ],
-    );
-    // : const SizedBox();
+              widget.isHiddenCrossbar != null && widget.isHiddenCrossbar == true
+                  ? const SizedBox()
+                  : const CrossBar(
+                      height: 7,
+                      onlyBottom: 12,
+                      onlyTop: 6,
+                      opacity: 0.2,
+                    ),
+            ],
+          )
+        : const SizedBox();
   }
 
   handleApprovePost(bool approve) async {
@@ -262,7 +283,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
         ? "Đã phê duyệt bài viết thành công"
         : "Đã từ chối phê duyệt bài viết thành công";
     Color messageColor = Colors.green;
-    if (response['status_code'] != null) {
+    if (response?['status_code'] != null) {
       message = (response?['content']?['error']).toString();
       messageColor = red;
     }
@@ -271,6 +292,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
       message,
       style: TextStyle(color: messageColor),
     )));
+    widget.approvalFunction != null ? widget.approvalFunction!() : null;
   }
 
   showDeletePostPopup() {

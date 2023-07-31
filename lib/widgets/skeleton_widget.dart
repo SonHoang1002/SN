@@ -27,10 +27,12 @@ Decoration myBoxDec(animation, {isCircle = false}) {
 class CardSkeleton extends StatefulWidget {
   final bool isCircularImage;
   final bool isBottomLinesActive;
+  final bool isPaddingActive;
   const CardSkeleton(
       {super.key,
       this.isCircularImage = true,
-      this.isBottomLinesActive = true});
+      this.isBottomLinesActive = true,
+      this.isPaddingActive = true});
   @override
   // ignore: library_private_types_in_public_api
   _CardSkeletonState createState() => _CardSkeletonState();
@@ -71,13 +73,15 @@ class _CardSkeletonState extends State<CardSkeleton>
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          padding: widget.isPaddingActive
+              ? const EdgeInsets.symmetric(vertical: 16.0)
+              : const EdgeInsets.all(0),
           child: Container(
             color: Colors.white,
             padding: const EdgeInsets.all(16),
@@ -186,10 +190,12 @@ Decoration myDarkBoxDec(animation, {isCircle = false}) {
 class DarkCardSkeleton extends StatefulWidget {
   final bool isCircularImage;
   final bool isBottomLinesActive;
+  final bool isPaddingActive;
   const DarkCardSkeleton(
       {super.key,
       this.isCircularImage = true,
-      this.isBottomLinesActive = true});
+      this.isBottomLinesActive = true,
+      this.isPaddingActive = true});
   @override
   _DarkCardSkeletonState createState() => _DarkCardSkeletonState();
 }
@@ -229,13 +235,15 @@ class _DarkCardSkeletonState extends State<DarkCardSkeleton>
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          padding: widget.isPaddingActive
+              ? const EdgeInsets.symmetric(vertical: 16.0)
+              : const EdgeInsets.all(0),
           child: Container(
             color: Colors.grey[800],
             padding: const EdgeInsets.all(16),
@@ -413,8 +421,8 @@ class _CardProfileSkeletonState extends State<CardProfileSkeleton>
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
@@ -562,8 +570,8 @@ class _DarkCardProfileSkeletonState extends State<DarkCardProfileSkeleton>
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
@@ -706,8 +714,8 @@ class _CardPageSkeletonState extends State<CardPageSkeleton>
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
@@ -796,8 +804,8 @@ class _DarkCardPageSkeletonState extends State<DarkCardPageSkeleton>
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
@@ -838,6 +846,267 @@ class _DarkCardPageSkeletonState extends State<DarkCardPageSkeleton>
                           ],
                         )).toList(),
               )),
+        );
+      },
+    );
+  }
+}
+
+class DarkCardSkeletonInList extends StatefulWidget {
+  final bool isCircularImage;
+  final bool isBottomLinesActive;
+  const DarkCardSkeletonInList(
+      {super.key,
+      this.isCircularImage = true,
+      this.isBottomLinesActive = true});
+  @override
+  _DarkCardSkeletonInListState createState() => _DarkCardSkeletonInListState();
+}
+
+class _DarkCardSkeletonInListState extends State<DarkCardSkeletonInList>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+
+    animation = Tween<double>(begin: -1.0, end: 2.0).animate(
+        CurvedAnimation(curve: Curves.easeInOutSine, parent: _controller));
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed ||
+          status == AnimationStatus.dismissed) {
+        _controller.repeat();
+      } else if (status == AnimationStatus.dismissed) {
+        _controller.forward();
+      }
+    });
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    height: width * 0.10,
+                    width: width * 0.10,
+                    decoration: myDarkBoxDec(animation,
+                        isCircle: widget.isCircularImage),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                    height: width * 0.13,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          height: height * 0.008,
+                          width: width * 0.3,
+                          decoration: myDarkBoxDec(animation),
+                        ),
+                        Container(
+                          height: height * 0.007,
+                          width: width * 0.2,
+                          decoration: myDarkBoxDec(animation),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              widget.isBottomLinesActive
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          height: height * 0.007,
+                          width: width * 0.7,
+                          decoration: myDarkBoxDec(animation),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: height * 0.007,
+                          width: width * 0.8,
+                          decoration: myDarkBoxDec(animation),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: height * 0.007,
+                          width: width * 0.5,
+                          decoration: myDarkBoxDec(animation),
+                        ),
+                      ],
+                    )
+                  : const Offstage()
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class CardSkeletonInList extends StatefulWidget {
+  final bool isCircularImage;
+  final bool isBottomLinesActive;
+  const CardSkeletonInList(
+      {super.key,
+      this.isCircularImage = true,
+      this.isBottomLinesActive = true});
+  @override
+  // ignore: library_private_types_in_public_api
+  _CardSkeletonInListState createState() => _CardSkeletonInListState();
+}
+
+class _CardSkeletonInListState extends State<CardSkeletonInList>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+
+    animation = Tween<double>(begin: -1.0, end: 2.0).animate(
+        CurvedAnimation(curve: Curves.easeInOutSine, parent: _controller));
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed ||
+          status == AnimationStatus.dismissed) {
+        _controller.repeat();
+      } else if (status == AnimationStatus.dismissed) {
+        _controller.forward();
+      }
+    });
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    height: width * 0.10,
+                    width: width * 0.10,
+                    decoration:
+                        myBoxDec(animation, isCircle: widget.isCircularImage),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                    height: width * 0.13,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          height: height * 0.008,
+                          width: width * 0.3,
+                          decoration: myBoxDec(animation),
+                        ),
+                        Container(
+                          height: height * 0.007,
+                          width: width * 0.2,
+                          decoration: myBoxDec(animation),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              widget.isBottomLinesActive
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Container(
+                          height: height * 0.007,
+                          width: width * 0.7,
+                          decoration: myBoxDec(animation),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: height * 0.007,
+                          width: width * 0.8,
+                          decoration: myBoxDec(animation),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          height: height * 0.007,
+                          width: width * 0.5,
+                          decoration: myBoxDec(animation),
+                        ),
+                      ],
+                    )
+                  : const Offstage()
+            ],
+          ),
         );
       },
     );

@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +63,7 @@ class _UserPageHomeState extends State<UserPageHome> {
     const Moment(typePage: 'home'),
     const SizedBox(),
     const Watch(),
-    const MainMarketPage(false)
+    const MainMarketPage(isBack: false)
   ];
   void _onItemTapped(int index) {
     if (index == 2) {
@@ -94,7 +97,7 @@ class _UserPageHomeState extends State<UserPageHome> {
       const Moment(typePage: 'home'),
       const SizedBox(),
       const Watch(),
-      const MainMarketPage(false)
+      const MainMarketPage(isBack: false)
     ];
     return Scaffold(
         body: IndexedStack(
@@ -311,7 +314,7 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   Widget _buildSendMessage() {
     // Nhắn tin cho ai đó -> điều hướng sang app nhắn tin
-    return Expanded(
+    return Flexible(
       child: ButtonPrimary(
         icon: const Icon(
           FontAwesomeIcons.facebookMessenger,
@@ -327,8 +330,8 @@ class _UserPageState extends ConsumerState<UserPage> {
   }
 
   Widget buildUserPageBody(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final theme = pv.Provider.of<ThemeManager>(context);
+    final size = MediaQuery.sizeOf(context);
+    final theme = pv.Provider.of<ThemeManager>(context); 
     if (ref.watch(postControllerProvider).postUserPage.isNotEmpty) {
       postUser = ref.read(postControllerProvider).postUserPage;
       isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
@@ -388,7 +391,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
                                     children: [
-                                      Expanded(
+                                      Flexible(
                                         child: ButtonPrimary(
                                           icon: const Icon(
                                             FontAwesomeIcons.userCheck,
@@ -416,7 +419,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                                                         MainAxisAlignment
                                                             .spaceAround,
                                                     children: [
-                                                      Expanded(
+                                                      Flexible(
                                                         child: InkWell(
                                                           onTap: () {
                                                             if (following
@@ -500,7 +503,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                                                           ),
                                                         ),
                                                       ),
-                                                      Expanded(
+                                                      Flexible(
                                                         child: InkWell(
                                                           onTap: () {
                                                             showCupertinoDialog(
@@ -623,7 +626,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
-                                          Expanded(
+                                          Flexible(
                                             child: ButtonPrimary(
                                               icon: const Icon(
                                                 FontAwesomeIcons.userPlus,
@@ -652,7 +655,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
-                                          Expanded(
+                                          Flexible(
                                             child: ButtonPrimary(
                                               icon: const Icon(
                                                 FontAwesomeIcons.userPlus,
@@ -681,7 +684,11 @@ class _UserPageState extends ConsumerState<UserPage> {
                   height: 35,
                   width: 48,
                   child: ButtonPrimary(
-                    icon: const Icon(FontAwesomeIcons.ellipsis, size: 16),
+                    icon: const Icon(
+                      FontAwesomeIcons.ellipsis,
+                      size: 16,
+                      color: Colors.white,
+                    ),
                     handlePress: () {},
                   ),
                 ),
@@ -701,7 +708,7 @@ class _UserPageState extends ConsumerState<UserPage> {
             opacity: 0.1,
           ),
           UserPageFriendBlock(user: userData, friends: friend),
-          id == ref.watch(meControllerProvider)[0]['id']
+          id == ref.watch(meControllerProvider)[0]['id'] || userType == "friend"
               ? Column(
                   children: [
                     const CrossBar(
@@ -711,6 +718,8 @@ class _UserPageState extends ConsumerState<UserPage> {
                     CreatePostButton(
                       preType: postPageUser,
                       reloadFunction: _reloadFunction,
+                      friendData: userData,
+                      userType: userType,
                     ),
                   ],
                 )
@@ -765,23 +774,22 @@ class _UserPageState extends ConsumerState<UserPage> {
           delegate: SliverChildBuilderDelegate(
         (context, index) {
           return VisibilityDetector(
-            key: Key(postUser[index]['id']),
-            onVisibilityChanged: (info) {
-              if (info.visibleFraction > 0.6) {
-                if (focusCurrentPostIndex.value != postUser[index]['id']) {
-                  focusCurrentPostIndex.value = postUser[index]['id'];
+              key: Key((postUser[index]?['id']).toString()),
+              onVisibilityChanged: (info) {
+                if (info.visibleFraction > 0.6) {
+                  if (focusCurrentPostIndex.value != postUser[index]['id']) {
+                    focusCurrentPostIndex.value = postUser[index]['id'];
+                  }
                 }
-              }
-            },
-            child: Post(
-              type: postPageUser,
-              post: postUser[index],
-              isFocus: focusCurrentPostIndex.value == postUser[index]['id'],
-              reloadFunction: () {
-                setState(() {});
               },
-            ),
-          );
+              child: Post(
+                type: postPageUser,
+                post: postUser[index],
+                isFocus: focusCurrentPostIndex.value == postUser[index]['id'],
+                reloadFunction: () {
+                  setState(() {});
+                },
+              ));
         },
         childCount: postUser.length,
       )),

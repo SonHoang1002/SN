@@ -21,7 +21,7 @@ class SuggestItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return InkWell(
       onTap: () {
         // pushCustomCupertinoPageRoute(context, const Moment());
@@ -97,6 +97,7 @@ class SuggestItem extends ConsumerWidget {
                       flex: 3,
                       child: ButtonPrimary(
                         label: "Gỡ",
+                        colorText: Theme.of(context).textTheme.bodyLarge!.color,
                         handlePress: () {
                           if (type == suggestFriends) {
                             ref
@@ -109,7 +110,7 @@ class SuggestItem extends ConsumerWidget {
                           }
                           reloadFunction != null ? reloadFunction!() : null;
                         },
-                        colorButton: greyColor[300],
+                        colorButton: Theme.of(context).canvasColor,
                       )),
                   buildSpacer(width: 10),
                 ],

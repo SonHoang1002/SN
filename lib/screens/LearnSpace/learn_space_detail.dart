@@ -41,6 +41,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   String courseMenu = 'intro';
   String currentMenu = 'intro';
   String menuCourse = '';
+  final scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -52,6 +53,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   @override
   void dispose() {
     super.dispose();
+    scrollController.dispose();
   }
 
   void loadData() async {
@@ -160,6 +162,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                   .getDetailCourses(widget.data['id']);
             },
             child: SingleChildScrollView(
+              controller: scrollController,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -167,8 +170,8 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                   Stack(
                     children: [
                       Container(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.sizeOf(context).height * 0.3,
+                        width: MediaQuery.sizeOf(context).width,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30.0),
                           boxShadow: const [
@@ -483,14 +486,14 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                                               'title'] ??
                                                                           '',
                                                                       style: TextStyle(
-                                                                        color: colorWord(
-                                                                            context)
-                                                                      )),
-                                                                   TextSpan(
+                                                                          color:
+                                                                              colorWord(context))),
+                                                                  TextSpan(
                                                                       text:
                                                                           ' không?',
                                                                       style: TextStyle(
-                                                                          color: colorWord(context))),
+                                                                          color:
+                                                                              colorWord(context))),
                                                                 ])),
                                                             actions: <CupertinoDialogAction>[
                                                               CupertinoDialogAction(
@@ -681,7 +684,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                           margin: const EdgeInsets.only(
                                               left: 8.0, top: 15.0),
                                           width:
-                                              MediaQuery.of(context).size.width,
+                                              MediaQuery.sizeOf(context).width,
                                           height: eGLRModalBtmHeight,
                                           child: Column(
                                             children: [
@@ -732,29 +735,39 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                                 index]['key'] ==
                                                             'copy') {
                                                           Clipboard.setData(ClipboardData(
-                                                              text: courseDetail.isNotEmpty
+                                                              text: courseDetail
+                                                                      .isNotEmpty
                                                                   ? 'https://sn.emso.vn/course/${courseDetail['id']}/about'
                                                                   : 'https://sn.emso.vn/course/${courseDetail['id']}/discussion'));
                                                           ScaffoldMessenger.of(
                                                                   context)
                                                               .showSnackBar(
-                                                              const SnackBar(
+                                                                  const SnackBar(
                                                             content: Text(
-                                                                'Sao chép thành công', style: TextStyle(fontWeight: FontWeight.bold),),
+                                                              'Sao chép thành công',
+                                                              style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
                                                             duration: Duration(
                                                                 seconds: 3),
                                                             backgroundColor:
                                                                 secondaryColor,
-                                                          ));}
-                                                        else if(iconActionEllipsis[
+                                                          ));
+                                                        } else if (iconActionEllipsis[
                                                                 index]['key'] ==
-                                                            'report'){
-                                                                   showBarModalBottomSheet(
-                                                                context: context,
-                                                                builder: (context) =>
-                                                                    ReportCategory(entityType: 'course', entityReport: widget.data));
-                                                            }
-                                                         else {
+                                                            'report') {
+                                                          showBarModalBottomSheet(
+                                                              context: context,
+                                                              builder: (context) =>
+                                                                  ReportCategory(
+                                                                      entityType:
+                                                                          'course',
+                                                                      entityReport:
+                                                                          widget
+                                                                              .data));
+                                                        } else {
                                                           const SizedBox();
                                                         }
                                                       },
@@ -812,7 +825,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                     child: Container(
                                         height: 35,
                                         width:
-                                            MediaQuery.of(context).size.width *
+                                            MediaQuery.sizeOf(context).width *
                                                 0.08,
                                         decoration: BoxDecoration(
                                             color: const Color.fromARGB(
@@ -943,7 +956,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                   })
                                 : const SizedBox.shrink(),
                             currentMenu == 'course'
-                                ? LearnSpaceCourse(id: courseDetail['id'])
+                                ? LearnSpaceCourse(id: courseDetail['id'], scrollController: scrollController)
                                 : const SizedBox.shrink(),
                             menuCourse == 'faq'
                                 ? LearnSpaceFAQ(courseDetail: courseDetail)

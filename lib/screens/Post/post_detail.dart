@@ -33,6 +33,7 @@ class PostDetail extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic preType;
   final int? indexImagePost;
+  final bool? isInGroup;
   final Function(dynamic)? updateDataFunction;
   final dynamic postId;
   const PostDetail(
@@ -41,7 +42,8 @@ class PostDetail extends ConsumerStatefulWidget {
       this.post,
       this.indexImagePost,
       this.updateDataFunction,
-      this.postId})
+      this.postId,
+      this.isInGroup})
       : super(key: key);
 
   @override
@@ -460,12 +462,15 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const BackIconAppbar(),
-                                Flexible(
+                                Container(
+                                    // color: blueColor,
+                                    child: const BackIconAppbar()),
+                                Expanded(
                                   child: SizedBox(
                                     child: PostHeader(
                                       post: postData,
                                       type: postDetail,
+                                      isInGroup: widget.isInGroup,
                                     ),
                                   ),
                                 ),
@@ -637,7 +642,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
   _callApiFilterComment(dynamic key) {}
 
   buildFilterCommentSelectionBottomSheet() {
-    showCustomBottomSheet(context, 365,
+    showCustomBottomSheet(context, 450,
         title: "Sắp xếp theo",
         isHaveCloseButton: false,
         bgColor: Colors.grey[300], widget: StatefulBuilder(
@@ -659,8 +664,10 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                             colorWord: greyColor),
                       ],
                       changeBackground: transparent,
-                      padding: const EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(16),
                       suffixWidget: Radio(
+                        fillColor: MaterialStateColor.resolveWith(
+                            (states) => secondaryColor),
                         groupValue: _filterSelection['key'],
                         value: data['key'],
                         onChanged: (value) async {

@@ -141,7 +141,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
         Padding(
           padding: const EdgeInsets.only(right: 16.0, left: 16.0),
           child: SizedBox(
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery.sizeOf(context).width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -156,7 +156,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                 SizedBox(
                     height: 340,
                     child: Container(
-                      width: MediaQuery.of(context).size.width,
+                      width: MediaQuery.sizeOf(context).width,
                       margin: const EdgeInsets.only(top: 10),
                       child: CardComponents(
                         imageCard: Column(
@@ -174,7 +174,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                           : recruitDetail['page_owner']
                                               ['avatar_media']['show_url'],
                                       fit: BoxFit.cover,
-                                      width: MediaQuery.of(context).size.width,
+                                      width: MediaQuery.sizeOf(context).width,
                                       height: 180.0,
                                     ),
                                   )
@@ -274,7 +274,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                               },
                               child: Container(
                                 height: 35,
-                                width: MediaQuery.of(context).size.width * 0.8,
+                                width: MediaQuery.sizeOf(context).width * 0.8,
                                 decoration: BoxDecoration(
                                     color: const Color.fromARGB(
                                         189, 202, 202, 202),
@@ -340,8 +340,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                               shrinkWrap: true,
                               itemBuilder: (context, indexPropose) {
                                 return Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.6,
+                                  width: MediaQuery.sizeOf(context).width * 0.6,
                                   margin: const EdgeInsets.only(top: 10),
                                   child: CardComponents(
                                     imageCard: Column(
@@ -638,8 +637,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                               shrinkWrap: true,
                               itemBuilder: (context, indexSimilar) {
                                 return Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.6,
+                                  width: MediaQuery.sizeOf(context).width * 0.6,
                                   margin: const EdgeInsets.only(top: 10),
                                   child: CardComponents(
                                     imageCard: Column(

@@ -22,7 +22,7 @@ class _QuestionAnwerState extends ConsumerState<QuestionAnwer> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     return GestureDetector(
       onTap: () {
         hiddenKeyboard(context);

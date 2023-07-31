@@ -23,7 +23,7 @@ class _WatchCommentState extends State<WatchComment> {
                 backgroundColor: Colors.transparent,
                 barrierColor: Colors.transparent,
                 builder: (context) => SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.66,
+                    height: MediaQuery.sizeOf(context).height * 0.66,
                     child:
                         CommentPostModal(post: widget.post, type: postWatch)))
             .whenComplete(() => Navigator.pop(context));
@@ -42,7 +42,7 @@ class _WatchCommentState extends State<WatchComment> {
         backgroundColor: Colors.black,
         resizeToAvoidBottomInset: false,
         body: Container(
-          height: MediaQuery.of(context).size.height * 0.31,
+          height: MediaQuery.sizeOf(context).height * 0.31,
           margin: const EdgeInsets.all(8.0),
           child: Center(
               child: ClipRRect(

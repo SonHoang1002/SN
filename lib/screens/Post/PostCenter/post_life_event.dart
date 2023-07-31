@@ -9,7 +9,7 @@ class PostLifeEvent extends StatelessWidget {
   Widget build(BuildContext context) {
     var lifeEvent = post['life_event'];
     return SizedBox(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.sizeOf(context).width,
       child: Column(
         children: [
           const SizedBox(
@@ -27,7 +27,7 @@ class PostLifeEvent extends StatelessWidget {
           ),
           lifeEvent['place'] != null
               ? Container(
-                  width: MediaQuery.of(context).size.width - 30,
+                  width: MediaQuery.sizeOf(context).width - 30,
                   margin: const EdgeInsets.only(top: 5, bottom: 5),
                   child: Text(
                     lifeEvent['place']['title'],

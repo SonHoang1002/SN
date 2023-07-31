@@ -176,6 +176,40 @@ class GroupListController extends StateNotifier<GroupListState> {
     );
   }
 
+  removeApproval(id) async {
+    final newApprovalList =
+        state.waitingApproval.where((item) => item["id"] != id).toList();
+    state = state.copyWith(
+      groupAdmin: state.groupAdmin,
+      groupMember: state.groupMember,
+      isMoreGroupAdmin: state.isMoreGroupAdmin,
+      isMoreGroupMember: state.isMoreGroupMember,
+      memberQuestionList: state.memberQuestionList,
+      groupFeed: state.groupFeed,
+      yourGroup: state.yourGroup,
+      groupDiscover: state.groupDiscover,
+      groupInvitedRequest: state.groupInvitedRequest,
+      groupDetail: state.groupDetail,
+      contentReported: state.contentReported,
+      waitingApproval: newApprovalList,
+      requestMember: state.requestMember,
+      notiApproval: state.notiApproval,
+      groupPost: state.groupPost,
+      groupPins: state.groupPins,
+      groupRoleMember: state.groupRoleMember,
+      groupRoleFriend: state.groupRoleFriend,
+      groupRoleAdmin: state.groupRoleAdmin,
+      groupRoleMorderator: state.groupRoleMorderator,
+      groupImage: state.groupImage,
+      groupAlbum: state.groupAlbum,
+      groupDetailAlbum: state.groupDetailAlbum,
+      groupOther: state.groupOther,
+      groupInviteAdmin: state.groupInviteAdmin,
+      groupInviteMember: state.groupInviteMember,
+      groupInviteJoin: state.groupInviteJoin,
+    );
+  }
+
   getListGroupAdminMember(params) async {
     String tab = params['tab'];
     int limit = params['limit'];
@@ -363,37 +397,39 @@ class GroupListController extends StateNotifier<GroupListState> {
 
   getGroupDetail(id) async {
     resetGroupDetail();
-    var response = await GroupApi().fetchGroupDetail(id);
-    if (response != null) {
-      state = state.copyWith(
-        groupAdmin: state.groupAdmin,
-        groupMember: state.groupMember,
-        isMoreGroupAdmin: state.isMoreGroupAdmin,
-        isMoreGroupMember: state.isMoreGroupMember,
-        memberQuestionList: state.memberQuestionList,
-        groupFeed: state.groupFeed,
-        yourGroup: state.yourGroup,
-        groupDiscover: state.groupDiscover,
-        groupInvitedRequest: state.groupInvitedRequest,
-        groupDetail: response,
-        contentReported: state.contentReported,
-        waitingApproval: state.waitingApproval,
-        requestMember: state.requestMember,
-        notiApproval: state.notiApproval,
-        groupPost: state.groupPost,
-        groupPins: state.groupPins,
-        groupRoleMember: state.groupRoleMember,
-        groupRoleFriend: state.groupRoleFriend,
-        groupRoleAdmin: state.groupRoleAdmin,
-        groupRoleMorderator: state.groupRoleMorderator,
-        groupImage: state.groupImage,
-        groupAlbum: state.groupAlbum,
-        groupDetailAlbum: state.groupDetailAlbum,
-        groupOther: state.groupOther,
-        groupInviteAdmin: state.groupInviteAdmin,
-        groupInviteMember: state.groupInviteMember,
-        groupInviteJoin: state.groupInviteJoin,
-      );
+    if (state.groupDetail['id'] != id) {
+      var response = await GroupApi().fetchGroupDetail(id);
+      if (response != null) {
+        state = state.copyWith(
+          groupAdmin: state.groupAdmin,
+          groupMember: state.groupMember,
+          isMoreGroupAdmin: state.isMoreGroupAdmin,
+          isMoreGroupMember: state.isMoreGroupMember,
+          memberQuestionList: state.memberQuestionList,
+          groupFeed: state.groupFeed,
+          yourGroup: state.yourGroup,
+          groupDiscover: state.groupDiscover,
+          groupInvitedRequest: state.groupInvitedRequest,
+          groupDetail: response,
+          contentReported: state.contentReported,
+          waitingApproval: state.waitingApproval,
+          requestMember: state.requestMember,
+          notiApproval: state.notiApproval,
+          groupPost: state.groupPost,
+          groupPins: state.groupPins,
+          groupRoleMember: state.groupRoleMember,
+          groupRoleFriend: state.groupRoleFriend,
+          groupRoleAdmin: state.groupRoleAdmin,
+          groupRoleMorderator: state.groupRoleMorderator,
+          groupImage: state.groupImage,
+          groupAlbum: state.groupAlbum,
+          groupDetailAlbum: state.groupDetailAlbum,
+          groupOther: state.groupOther,
+          groupInviteAdmin: state.groupInviteAdmin,
+          groupInviteMember: state.groupInviteMember,
+          groupInviteJoin: state.groupInviteJoin,
+        );
+      }
     }
   }
 
@@ -811,7 +847,7 @@ class GroupListController extends StateNotifier<GroupListState> {
         yourGroup: state.yourGroup,
         groupDiscover: state.groupDiscover,
         groupInvitedRequest: state.groupInvitedRequest,
-        groupDetail: [],
+        groupDetail: {},
         contentReported: [],
         waitingApproval: [],
         requestMember: [],
@@ -973,7 +1009,6 @@ class GroupListController extends StateNotifier<GroupListState> {
 
   getGroupJoinRequest(params) async {
     var response = await GroupApi().fetchListJoinRequest(params);
-    print("response getGroupJoinRequest ${jsonEncode(response)}");
     if (response != null) {
       state = state.copyWith(
         groupAdmin: state.groupAdmin,

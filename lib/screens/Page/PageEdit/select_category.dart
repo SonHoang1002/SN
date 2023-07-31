@@ -135,7 +135,7 @@ class _SelectCategoryState extends ConsumerState<SelectCategory> {
                       height: 10,
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.78,
+                      height: MediaQuery.sizeOf(context).height * 0.78,
                       child: ListView.builder(
                         shrinkWrap: true,
                         padding: EdgeInsets.zero,
