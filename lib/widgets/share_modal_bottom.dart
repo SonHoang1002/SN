@@ -125,7 +125,7 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
             "group_id": shareGroupSelected['id'],
             ...renderParams(widget.type),
           });
-          if (res["group"]["post_approval_setting"].toString() != "NONE") {
+          if (res["status_code"] == 422) {
             checkShareGroupAdmin = true;
           }
           break;
@@ -835,7 +835,7 @@ class _ShareGroupState extends ConsumerState<ShareGroup> {
   @override
   Widget build(BuildContext context) {
     List shareGroup = ref.watch(shareControllerProvider).shareGroup;
-
+    print("aaaaaaa ${shareGroup.length}");
     return Scaffold(
         appBar: AppBar(
           title: const AppBarTitle(title: 'Nhóm'),

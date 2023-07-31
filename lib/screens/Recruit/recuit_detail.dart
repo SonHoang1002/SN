@@ -318,8 +318,10 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                           backgroundColor: Theme.of(context)
                                               .scaffoldBackgroundColor,
                                           context: context,
-                                          builder: (context) =>
-                                              const InviteFriend());
+                                          builder: (context) => InviteFriend(
+                                                id: recruitDetail['id'],
+                                                type: 'recruit',
+                                              ));
                                     },
                                     child: Container(
                                         height: 35,
@@ -333,10 +335,10 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                                 BorderRadius.circular(4),
                                             border: Border.all(
                                                 width: 0.2, color: greyColor)),
-                                        child: Row(
+                                        child: const Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: const [
+                                            children: [
                                               Text(
                                                 'Mời',
                                                 textAlign: TextAlign.center,
@@ -381,14 +383,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                                     child: InkWell(
                                                       onTap: () {
                                                         Navigator.pop(context);
-                                                        if (iconActionEllipsis[
-                                                                        index]
-                                                                    ['key'] !=
-                                                                'save' &&
-                                                            iconActionEllipsis[
-                                                                        index]
-                                                                    ['key'] !=
-                                                                'copy') {
+                                                        if (iconActionEllipsis[index]['key'] !='copy') {
                                                           showBarModalBottomSheet(
                                                               backgroundColor:
                                                                   Theme.of(
@@ -405,7 +400,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                                                             menuSelected: iconActionEllipsis[
                                                                                 index],
                                                                             type:
-                                                                                'event',
+                                                                                'recruit',
                                                                             data:
                                                                                 recruitDetail),
                                                                       ));
@@ -413,15 +408,18 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                                                 index]['key'] ==
                                                             'copy') {
                                                           Clipboard.setData(ClipboardData(
-                                                              text: recruitDetail
-                                                                  ? 'https://sn.emso.vn/event/${recruitDetail['id']}/about'
-                                                                  : 'https://sn.emso.vn/event/${recruitDetail['id']}/discussion'));
+                                                              text: recruitDetail.isNotEmpty
+                                                                  ? 'https://sn.emso.vn/recruit/${recruitDetail['id']}/about'
+                                                                  : 'https://sn.emso.vn/recruit/${recruitDetail['id']}/discussion'));
                                                           ScaffoldMessenger.of(
                                                                   context)
                                                               .showSnackBar(
                                                                   const SnackBar(
                                                             content: Text(
-                                                                'Sao chép thành công'),
+                                                                'Sao chép thành công', style: TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),),
                                                             duration: Duration(
                                                                 seconds: 3),
                                                             backgroundColor:
