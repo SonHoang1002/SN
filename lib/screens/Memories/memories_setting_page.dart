@@ -87,6 +87,8 @@ class _MemoriesSettingState extends State<MemoriesSetting> {
                             style: const TextStyle(
                                 fontSize: 15, color: greyColor)),
                         value: option.key,
+                        fillColor: MaterialStateColor.resolveWith(
+                            (states) => secondaryColor),
                         groupValue: _selectedOption,
                         activeColor: Colors.blue,
                         onChanged: (value) {
