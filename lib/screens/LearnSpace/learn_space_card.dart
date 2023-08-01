@@ -290,9 +290,10 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                                     topLeft: Radius.circular(15),
                                     topRight: Radius.circular(15)),
                                 child: ExtendedImage.network(
-                                  course[index]['banner'] != null
-                                      ? course[index]['banner']['url']
-                                      : linkBannerDefault,
+                                  ((course[index]?['banner']?['url']) ??
+                                      (course[index]?['banner']
+                                          ?['preview_url']) ??
+                                      linkBannerDefault),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -319,7 +320,7 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                                   Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: Text(
-                                      course[index]['title'],
+                                      (course[index]?['title']) ?? "--",
                                       maxLines: 2,
                                       style: const TextStyle(
                                         fontSize: 16.0,
@@ -331,7 +332,9 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                                   Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: Text(
-                                      course[index]['account']['display_name'],
+                                      (course[index]?['account']
+                                              ?['display_name']) ??
+                                          "--",
                                       style: const TextStyle(
                                         fontSize: 13.0,
                                         color: greyColor,
@@ -344,7 +347,7 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                                     child: Text(
                                       course[index]['free'] == true
                                           ? 'Miễn phí'
-                                          : '${convertNumberToVND(course[index]['price'] ~/ 1)} VNĐ',
+                                          : '${(convertNumberToVND(course[index]?['price']) ~/ 1)} VNĐ',
                                       style: const TextStyle(
                                         fontSize: 13.0,
                                         color: secondaryColor,
@@ -364,9 +367,9 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                                     alignment: Alignment.bottomLeft,
                                     child: InkWell(
                                       onTap: () {
-                                        if (course[index]
-                                                    ['course_relationships']
-                                                ['follow_course'] ==
+                                        if ((course[index]
+                                                    ?['course_relationships']
+                                                ?['follow_course']) ==
                                             true) {
                                           ref
                                               .read(
@@ -383,8 +386,8 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                                               );
                                           setState(() {
                                             course[index]
-                                                    ['course_relationships']
-                                                ['follow_course'] = false;
+                                                    ?['course_relationships']
+                                                ?['follow_course'] = false;
                                           });
                                         } else {
                                           ref
@@ -402,8 +405,8 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                                               );
                                           setState(() {
                                             course[index]
-                                                    ['course_relationships']
-                                                ['follow_course'] = true;
+                                                    ?['course_relationships']
+                                                ?['follow_course'] = true;
                                           });
                                         }
                                       },
@@ -411,9 +414,9 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                                         height: 32,
                                         width: width * 0.7,
                                         decoration: BoxDecoration(
-                                            color: course[index]
-                                                        ['course_relationships']
-                                                    ['follow_course']
+                                            color: course[index]?[
+                                                        'course_relationships']
+                                                    ?['follow_course']
                                                 ? secondaryColor
                                                 : const Color.fromARGB(
                                                     189, 202, 202, 202),
@@ -426,9 +429,9 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Icon(FontAwesomeIcons.solidStar,
-                                                color: course[index][
+                                                color: course[index]?[
                                                             'course_relationships']
-                                                        ['follow_course']
+                                                        ?['follow_course']
                                                     ? Colors.white
                                                     : Colors.black,
                                                 size: 14),
@@ -440,9 +443,9 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontSize: 12.0,
-                                                color: course[index][
+                                                color: course[index]?[
                                                             'course_relationships']
-                                                        ['follow_course']
+                                                        ?['follow_course']
                                                     ? Colors.white
                                                     : Colors.black,
                                                 fontWeight: FontWeight.w700,

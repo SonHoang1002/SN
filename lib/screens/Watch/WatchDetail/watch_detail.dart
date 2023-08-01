@@ -147,7 +147,15 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
               });
             },
             child: Hero(
-                tag: widget.media['remote_url'] ?? widget.media['url'],
+                tag: ((widget.post?['media_attachments']?[0]?['remote_url']) ??
+                        (widget.post?['media_attachments']?[0]?['url'])) ??
+                    (widget.media?['remote_url']) ??
+                    (widget.media?['url']),
+                // tag: (widget.media?['remote_url']) ??
+                //               (widget.media[0]?['url']) ??
+                //               (widget.post?['"media_attachments'][0]
+                //                   ['remote_url']) ??
+                //               (widget.post?['"media_attachments'][0]['url']),
                 child: isHiddenAction
                     ? Center(
                         child: VideoPlayerHasController(

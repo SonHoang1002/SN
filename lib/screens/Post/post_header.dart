@@ -174,6 +174,9 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
             splashColor: transparent,
             onTap: () {
               if (widget.type != postDetail && widget.type != 'edit_post') {
+          
+                                                
+                                              
                 pushCustomCupertinoPageRoute(
                     context,
                     PostDetail(

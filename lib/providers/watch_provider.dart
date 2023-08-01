@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/a_TEST/fake_video_data.dart';
 import 'package:social_network_app_mobile/apis/watch_api.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
@@ -13,23 +14,31 @@ class WatchState {
   //Position video is playing
   final int position;
   final dynamic mediaSelected;
+  final bool isMoreSuggest;
+  final bool isMoreFollow;
 
   const WatchState(
       {this.watchSuggest = const [],
       this.watchFollow = const [],
       this.position = 0,
-      this.mediaSelected});
+      this.mediaSelected,
+      this.isMoreFollow = true,
+      this.isMoreSuggest = true});
 
   WatchState copyWith(
       {List watchSuggest = const [],
       List watchFollow = const [],
       int position = 0,
-      dynamic mediaSelected}) {
+      dynamic mediaSelected,
+      bool isMoreSuggest = true,
+      bool isMoreFollow = true}) {
     return WatchState(
         watchSuggest: watchSuggest,
         watchFollow: watchFollow,
         position: position,
-        mediaSelected: mediaSelected);
+        mediaSelected: mediaSelected,
+        isMoreFollow: isMoreFollow,
+        isMoreSuggest: isMoreSuggest);
   }
 }
 
@@ -47,18 +56,28 @@ class WatchController extends StateNotifier<WatchState> {
   }
 
   getListWatchFollow(params) async {
+    final limit = params['limit'];
     List response = await WatchApi().getListWatchFollow(params) ?? [];
     if (mounted) {
       state = state.copyWith(
           mediaSelected: state.mediaSelected,
           position: state.position,
-          watchFollow: state.watchFollow + response,
+          watchFollow: checkObjectUniqueInList(
+              [...state.watchFollow, ...response], 'id'),
+          isMoreFollow: limit != null
+              ? response.length < limit
+                  ? false
+                  : true
+              : state.isMoreFollow,
+          isMoreSuggest: state.isMoreSuggest,
           watchSuggest: state.watchSuggest);
     }
   }
 
   getListWatchSuggest(params) async {
+    final limit = params['limit'];
     List response = await WatchApi().getListWatchSuggest(params) ?? [];
+    response.addAll(fakeDatas);
     if (mounted) {
       final newWatch =
           response.where((item) => !state.watchSuggest.contains(item)).toList();
@@ -69,7 +88,13 @@ class WatchController extends StateNotifier<WatchState> {
           watchSuggest: params.containsKey('max_id')
               ? checkObjectUniqueInList(
                   [...state.watchSuggest, ...newWatch], 'id')
-              : newWatch);
+              : newWatch,
+          isMoreSuggest: limit != null
+              ? response.length < limit
+                  ? false
+                  : true
+              : state.isMoreSuggest,
+          isMoreFollow: state.isMoreFollow);
     }
   }
 
@@ -98,9 +123,10 @@ class WatchController extends StateNotifier<WatchState> {
               ? state.watchSuggest.sublist(0, indexSuggest) +
                   [newWatch] +
                   state.watchSuggest.sublist(indexSuggest + 1)
-              : state.watchSuggest);
+              : state.watchSuggest,
+          isMoreFollow: state.isMoreFollow,
+          isMoreSuggest: state.isMoreSuggest);
     }
-    print("newWatch ${jsonEncode(newWatch)}");
   }
 
   updatePositionPlaying(position) {
@@ -109,7 +135,9 @@ class WatchController extends StateNotifier<WatchState> {
         state = state.copyWith(
             watchSuggest: state.watchSuggest,
             watchFollow: state.watchFollow,
-            position: position);
+            position: position,
+            isMoreFollow: state.isMoreFollow,
+            isMoreSuggest: state.isMoreSuggest);
       }
     });
   }
@@ -121,7 +149,9 @@ class WatchController extends StateNotifier<WatchState> {
             mediaSelected: media,
             watchSuggest: state.watchSuggest,
             watchFollow: state.watchFollow,
-            position: state.position);
+            position: state.position,
+            isMoreFollow: state.isMoreFollow,
+            isMoreSuggest: state.isMoreSuggest);
       }
     });
   }

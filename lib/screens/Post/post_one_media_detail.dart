@@ -572,12 +572,18 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                                             Row(
                                               children: [
                                                 Text(
-                                                  GetTimeAgo.parse(
-                                                      DateTime.parse(userData?[
-                                                              'created_at'] ??
-                                                          userData?[
+                                                  GetTimeAgo.parse((userData?[
+                                                                  'created_at']) !=
+                                                              null ||
+                                                          (userData?[
                                                                   'avatar_media']
-                                                              ?['created_at'])),
+                                                              ?['created_at'])
+                                                      ? DateTime.parse((userData?[
+                                                              'created_at']) ??
+                                                          (userData?[
+                                                                  'avatar_media']
+                                                              ?['created_at']))
+                                                      : DateTime.now()),
                                                   style: const TextStyle(
                                                       color: greyColor,
                                                       fontSize: 12),
