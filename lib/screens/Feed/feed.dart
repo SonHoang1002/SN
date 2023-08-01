@@ -332,7 +332,8 @@ class _FeedState extends ConsumerState<Feed> {
                     )
                   : const SliverToBoxAdapter(child: SizedBox()),
               isMore
-                  ? SliverToBoxAdapter(
+                  ?
+                   SliverToBoxAdapter(
                       child:
                           Center(child: SkeletonCustom().postSkeleton(context)))
                   : SliverToBoxAdapter(

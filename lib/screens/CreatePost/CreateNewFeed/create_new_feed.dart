@@ -59,7 +59,6 @@ import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/grid_layout_image.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
-
 import '../../../providers/create_feed/feed_draft_provider.dart';
 
 const EDIT_POST = "edit_post";

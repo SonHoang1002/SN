@@ -6,10 +6,10 @@ Decoration myBoxDec(animation, {isCircle = false}) {
     gradient: LinearGradient(
       begin: Alignment.centerLeft,
       end: Alignment.centerRight,
-      colors: [
-        const Color(0xfff6f7f9),
-        const Color(0xffe9ebee),
-        const Color(0xfff6f7f9),
+      colors: const [
+          Color(0xfff6f7f9),
+          Color(0xffe9ebee),
+          Color(0xfff6f7f9),
         // Color(0xfff6f7f9),
       ],
       stops: [

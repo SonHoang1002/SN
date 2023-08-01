@@ -1162,11 +1162,12 @@ class _EditImageMainState extends State<EditImageMain> {
                     child: GridView.builder(
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisSpacing: 8,
-                                mainAxisSpacing: 8,
-                                crossAxisCount: 6,
+                                crossAxisSpacing: 25,
+                                mainAxisSpacing: 25,
+                                crossAxisCount: 4,
                                 childAspectRatio: 1.0),
-                        padding: const EdgeInsets.only(top: 20),
+                        padding:
+                            const EdgeInsets.only(top: 20, right: 10, left: 10),
                         shrinkWrap: true,
                         physics: const AlwaysScrollableScrollPhysics(),
                         itemCount: emojis.length,
@@ -1179,9 +1180,13 @@ class _EditImageMainState extends State<EditImageMain> {
                             child: SizedBox(
                               height: 50,
                               width: 50,
-                              child: ExtendedImage.network(
-                                emojiData['url'],
-                              ),
+                              child: emojiData['url'] != null
+                                  ? ExtendedImage.network(
+                                      emojiData['url'],
+                                    )
+                                  : ExtendedImage.asset(
+                                      emojiData['asset'],
+                                    ),
                             ),
                           );
                         })))
@@ -1198,8 +1203,9 @@ class _EditImageMainState extends State<EditImageMain> {
       _overlayWidget.add({
         "key": "emoji",
         'visible': true,
-        "widget":
-            ExtendedImage.network(emojis[index]['url'], height: 50, width: 50)
+        "widget": emojis[index]['url'] != null
+            ? ExtendedImage.network(emojis[index]['url'], height: 70, width: 70)
+            : ExtendedImage.asset(emojis[index]['asset'], height: 70, width: 70)
       });
       notifiers.add(ValueNotifier(Matrix4.identity()));
       _selectedOverlayObject = _dataProperties.last;

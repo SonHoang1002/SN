@@ -100,9 +100,10 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                                     topLeft: Radius.circular(15),
                                     topRight: Radius.circular(15)),
                                 child: ExtendedImage.network(
-                                  recruits[index]['banner'] != null
-                                      ? recruits[index]['banner']['url']
-                                      : linkBannerDefault,
+                                  (recruits[index]?['banner']?['url']) ??
+                                      (recruits[index]?['banner']
+                                          ?['preview_url']) ??
+                                      linkAvatarDefault,
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -126,7 +127,7 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                                   Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: Text(
-                                      recruits[index]['title'],
+                                      (recruits[index]?['title']) ?? "--",
                                       maxLines: 2,
                                       style: const TextStyle(
                                         fontSize: 16.0,
@@ -138,8 +139,9 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                                   Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: Text(
-                                      recruits[index]['account']
-                                          ['display_name'],
+                                      (recruits[index]?['account']
+                                              ?['display_name']) ??
+                                          "--",
                                       style: const TextStyle(
                                         fontSize: 12.0,
                                         color: greyColor,
@@ -150,9 +152,9 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                                   Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: Text(
-                                      '${convertNumberToVND(recruits[index]['salary_min'] ~/ 1)}'
+                                      '${(convertNumberToVND(recruits[index]?['salary_min']) ~/ 1)}'
                                       ' - '
-                                      '${convertNumberToVND(recruits[index]['salary_max'] ~/ 1)} VNĐ',
+                                      '${(convertNumberToVND(recruits[index]?['salary_max']) ~/ 1)} VNĐ',
                                       style: const TextStyle(
                                         fontSize: 12.0,
                                         color: greyColor,
@@ -172,21 +174,21 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                                     alignment: Alignment.bottomLeft,
                                     child: InkWell(
                                       onTap: () {
-                                        if (recruits[index]
-                                                    ['recruit_relationships']
-                                                ['follow_recruit'] ==
+                                        if ((recruits[index]
+                                                    ?['recruit_relationships']
+                                                ?['follow_recruit']) ==
                                             true) {
                                           ref
                                               .read(recruitControllerProvider
                                                   .notifier)
                                               .updateStatusRecruit(
                                                 false,
-                                                recruits[index]['id'],
+                                                recruits[index]?['id'],
                                               );
                                           setState(() {
                                             recruits[index]
-                                                    ['recruit_relationships']
-                                                ['follow_recruit'] = false;
+                                                    ?['recruit_relationships']
+                                                ?['follow_recruit'] = false;
                                           });
                                         } else {
                                           ref
@@ -196,8 +198,8 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                                                   true, recruits[index]['id']);
                                           setState(() {
                                             recruits[index]
-                                                    ['recruit_relationships']
-                                                ['follow_recruit'] = true;
+                                                    ?['recruit_relationships']
+                                                ?['follow_recruit'] = true;
                                           });
                                         }
                                       },
@@ -208,9 +210,9 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                                           height: 32,
                                           width: width * 0.7,
                                           decoration: BoxDecoration(
-                                              color: recruits[index][
+                                              color: recruits[index]?[
                                                           'recruit_relationships']
-                                                      ['follow_recruit']
+                                                      ?['follow_recruit']
                                                   ? secondaryColor
                                                   : const Color.fromARGB(
                                                       189, 202, 202, 202),
@@ -224,9 +226,9 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Icon(FontAwesomeIcons.solidStar,
-                                                  color: recruits[index][
+                                                  color: recruits[index]?[
                                                               'recruit_relationships']
-                                                          ['follow_recruit']
+                                                          ?['follow_recruit']
                                                       ? Colors.white
                                                       : Colors.black,
                                                   size: 14),
@@ -238,9 +240,9 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   fontSize: 12.0,
-                                                  color: recruits[index][
+                                                  color: recruits[index]?[
                                                               'recruit_relationships']
-                                                          ['follow_recruit']
+                                                          ?['follow_recruit']
                                                       ? Colors.white
                                                       : Colors.black,
                                                   fontWeight: FontWeight.w700,
@@ -285,10 +287,10 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                                                 BorderRadius.circular(6),
                                             border: Border.all(
                                                 width: 0.2, color: greyColor)),
-                                        child: Row(
+                                        child: const Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
-                                          children: const [
+                                          children: [
                                             Icon(FontAwesomeIcons.share,
                                                 color: Colors.black, size: 14),
                                           ],

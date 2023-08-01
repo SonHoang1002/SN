@@ -1,5 +1,272 @@
 List emojis = [
   {
+    "id": 1,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/1.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 2,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/2.png",
+    "data_type": "emoji",
+    "parent": null
+  }, 
+   {
+    "id": 3,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/3.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+   {
+    "id": 4,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/4.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+   {
+    "id": 5,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/5.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+   {
+    "id": 6,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/6.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 7,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/7.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 8,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/8.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 9,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/9.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 10,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/10.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 11,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/11.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 12,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/12.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 13,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/13.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 14,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/14.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 15,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/15.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 16,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/16.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 17,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/17.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 18,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/18.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 19,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/19.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 20,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/20.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 21,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/21.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 22,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/22.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 23,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/23.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+
+{
+    "id": 24,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/24.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 25,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/25.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 26,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/26.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 27,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/27.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 28,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/28.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 29,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/29.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 30,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/30.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 31,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/31.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 32,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/32.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 33,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/33.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 34,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/34.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 35,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/35.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 36,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/36.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 37,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/37.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
+    "id": 38,
+    "name": "VUI VẺ",
+    'asset':"assets/test_emojis/38.png",
+    "data_type": "emoji",
+    "parent": null
+  },
+  {
     "id": 366,
     "name": "vui vẻ",
     "url":

@@ -88,11 +88,11 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                       itemCount: grows.length,
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, indexInteresting) {
-                        var valueLinearProgressBar = ((grows[indexInteresting]
+                        var valueLinearProgressBar = ((grows[indexInteresting]?
                                         ['real_value'] ??
                                     0 - 0) *
                                 100) /
-                            (grows[indexInteresting]['target_value'] ?? 0 - 0);
+                            (grows[indexInteresting]?['target_value'] ?? 0 - 0);
                         return Padding(
                           padding: const EdgeInsets.only(
                               top: 8.0, left: 8.0, right: 8.0, bottom: 8.0),
@@ -105,9 +105,11 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                                     topLeft: Radius.circular(15),
                                     topRight: Radius.circular(15)),
                                 child: ExtendedImage.network(
-                                  grows[indexInteresting]['banner'] != null
-                                      ? grows[indexInteresting]['banner']['url']
-                                      : linkBannerDefault,
+                                  ((grows[indexInteresting]?['banner']
+                                          ?['url']) ??
+                                      (grows[indexInteresting]?['banner']
+                                          ?['preview_url']) ??
+                                      linkBannerDefault),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -131,7 +133,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                                   Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: Text(
-                                      grows[indexInteresting]['title'].trim(),
+                                      (grows[indexInteresting]?['title']??"--").trim(),
                                       maxLines: 2,
                                       style: const TextStyle(
                                         fontSize: 16.0,
@@ -143,7 +145,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                                   Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: Text(
-                                      'Cam kết mục tiêu ${convertNumberToVND(grows[indexInteresting]['target_value'] ~/ 1)} VNĐ',
+                                      'Cam kết mục tiêu ${(convertNumberToVND(grows[indexInteresting]?['target_value'] )~/ 1)} VNĐ',
                                       style: const TextStyle(
                                         fontSize: 12.0,
                                         color: greyColor,
@@ -154,7 +156,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                                   Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: Text(
-                                      '${grows[indexInteresting]['followers_count'].toString()} người quan tâm · ${grows[indexInteresting]['backers_count'].toString()} người ủng hộ',
+                                      '${(grows[indexInteresting]?['followers_count']).toString()} người quan tâm · ${grows[indexInteresting]['backers_count'].toString()} người ủng hộ',
                                       style: const TextStyle(
                                         fontSize: 12.0,
                                         color: greyColor,
@@ -249,22 +251,24 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                                     alignment: Alignment.bottomLeft,
                                     child: InkWell(
                                       onTap: () {
-                                        if (grows[indexInteresting]
-                                                    ['project_relationship']
-                                                ['follow_project'] ==
+                                        if ((grows[indexInteresting]
+                                                    ?['project_relationship']
+                                                ?['follow_project']) ==
                                             true) {
                                           ref
                                               .read(growControllerProvider
                                                   .notifier)
                                               .updateStatusGrow(
-                                                  grows[indexInteresting]['id'],
+                                                  grows[indexInteresting]
+                                                      ?['id'],
                                                   false);
                                         } else {
                                           ref
                                               .read(growControllerProvider
                                                   .notifier)
                                               .updateStatusGrow(
-                                                  grows[indexInteresting]['id'],
+                                                  grows[indexInteresting]
+                                                      ?['id'],
                                                   true);
                                         }
                                       },
@@ -275,9 +279,9 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                                           height: 32,
                                           width: width * 0.7,
                                           decoration: BoxDecoration(
-                                              color: grows[indexInteresting][
+                                              color: grows[indexInteresting]?[
                                                               'project_relationship']
-                                                          ['follow_project'] ==
+                                                          ?['follow_project'] ==
                                                       true
                                                   ? secondaryColor
                                                   : const Color.fromARGB(
@@ -293,9 +297,9 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                                             children: [
                                               Icon(FontAwesomeIcons.solidStar,
                                                   color: grows[indexInteresting]
-                                                                  [
+                                                                  ?[
                                                                   'project_relationship']
-                                                              [
+                                                              ?[
                                                               'follow_project'] ==
                                                           true
                                                       ? Colors.white
@@ -310,9 +314,9 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                                                 style: TextStyle(
                                                   fontSize: 12.0,
                                                   color: grows[indexInteresting]
-                                                                  [
+                                                                  ?[
                                                                   'project_relationship']
-                                                              [
+                                                              ?[
                                                               'follow_project'] ==
                                                           true
                                                       ? Colors.white
