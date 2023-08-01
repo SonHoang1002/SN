@@ -30,7 +30,7 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'Standards_Violation.dart';
+import 'standards_violation.dart';
 
 class Home extends ConsumerStatefulWidget {
   final int? selectedIndex;
@@ -256,12 +256,12 @@ class _HomeState extends ConsumerState<Home>
     if (type == 'favourite') {
       return {
         'textNone':
-            ' đã bày tỏ cảm xúc về ${status['in_reply_to_parent_id'] != null || status['in_reply_to_id'] != null ? 'bình luận' : 'bài viết'} ${status['page_owner'] == null && status['account']?['id'] == ref.watch(meControllerProvider)[0]['id'] ? 'của bạn' : ''} ${status['content'] ?? ""}'
+            ' đã bày tỏ cảm xúc về ${status?['in_reply_to_parent_id'] != null || status?['in_reply_to_id'] != null ? 'bình luận' : 'bài viết'} ${status?['page_owner'] == null && status?['account']?['id'] == ref.watch(meControllerProvider)[0]['id'] ? 'của bạn' : ''} ${status?['content'] ?? ""}'
       };
       
     }else if (type == 'bad_status') {
       return {
-        'textNone': ' , bài viết của bạn đã vi phạm tiểu chuẩn cộng đồng'
+        'textNone': ' , bài viết của bạn đã vi phạm tiêu chuẩn cộng đồng'
       };
     }  else if (type == 'status') {
       if (status['reblog'] != null) {

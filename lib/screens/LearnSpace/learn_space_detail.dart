@@ -41,6 +41,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   String courseMenu = 'intro';
   String currentMenu = 'intro';
   String menuCourse = '';
+  bool checkDiscussion = false;
   final scrollController = ScrollController();
   @override
   void initState() {
@@ -868,6 +869,11 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                           setState(() {
                                             courseMenu =
                                                 itemChipCourse[index]['key'];
+                                            if (itemChipCourse[index]['key'] == "discussion") {
+                                              checkDiscussion = true;
+                                            } else {
+                                              checkDiscussion = false;
+                                            }
                                             if (itemChipCourse[index]['key'] !=
                                                 'more') {
                                               currentMenu =
@@ -954,9 +960,22 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                 ? LearnSpaceDiscusstion(postDiscussion: {
                                     "course_id": courseDetail['id']
                                   })
-                                : const SizedBox.shrink(),
+                                : checkDiscussion == true
+                                    ? Container(
+                                        alignment: Alignment.center,
+                                        padding: const EdgeInsets.only(top: 20),
+                                        child: Text(
+                                            courseDetail["course_relationships"]["participant_course"] == true?"Khóa học này không cho phép thảo luận!": "Bạn cần tham gia khóa học để có thể thảo luận!",
+                                            style: TextStyle(
+                                              color: colorWord(context),
+                                              fontWeight: FontWeight.bold,
+                                            ))
+                                      )
+                                    : const SizedBox.shrink(),
                             currentMenu == 'course'
-                                ? LearnSpaceCourse(id: courseDetail['id'], scrollController: scrollController)
+                                ? LearnSpaceCourse(
+                                    id: courseDetail['id'],
+                                    scrollController: scrollController)
                                 : const SizedBox.shrink(),
                             menuCourse == 'faq'
                                 ? LearnSpaceFAQ(courseDetail: courseDetail)
