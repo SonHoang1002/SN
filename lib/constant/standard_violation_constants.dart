@@ -1,4 +1,4 @@
-class Post_violation_constants {
+class PostViolationConstants {
   static String POST_VIOLATION_TITLE = "Bài viết của bạn vi phạm tiêu chuẩn cộng đồng của chúng tôi về ảnh khỏa thân hoặc hoạt động tình dục";
   static List<String> POST_VIOLATION_CONTENT = [
     "Bài viết của bạn không hiển thị với bất kỳ ai khác",
@@ -7,7 +7,7 @@ class Post_violation_constants {
   static String COMPLETE_POST_VIOLATION = 'Tiếp tục';
 }
 
-class How_to_decide{
+class HowToDecide{
   static String HOW_TO_DECISION_TITLE = "Cách chúng tôi quyết định";
   static List<String> NOTICE_HOW_TO_DECIDE = [
     "Tiêu chuẩn cộng đông chung của chúng tôi áp dụng cho tất cả mọi người trên Emso.",
@@ -17,7 +17,7 @@ class How_to_decide{
   static String COMPLETE_POST_VIOLATION = 'Tiếp tục';
 }
 
-class Decision_criteria{
+class DecisionCriteria{
   static String POST_DECISION_STANDARDS_TITLE = "Tiêu chuẩn của chúng tôi về ảnh khỏa thân và hoạt động tình dục";
   static String POST_DECISIONZ_STANDARDS_CONTENT = "Chúng tôi đặt ra một bộ tiêu chuẩn để tất cả mọi người trên Emso đều cảm thấy hoàn nghênh.";
   static List<String> STANDARDS_DECISION = [
@@ -44,7 +44,7 @@ class Decision{
   static String COMPLETE_POST_VIOLATION = 'Tiếp tục';
 }
 
-class Accept_Decision{
+class AcceptDecision{
   static String POST_ACCEPT_DECISION_TITLE = "Chấp nhận quyết định?";
   static String POST_ACCEPT_DECISION_CONTENT = "Bài viết của bạn sẽ không hiển thị với bất kỳ ai khác do phạm vi tiêu chuẩn cộng đồng của chúng tôi về ảnh khỏa thân hoặc hoạt động tình dục";
   static List<String> NOTICE_OF_ACCEPT_THE_DECISION = [
@@ -55,7 +55,7 @@ class Accept_Decision{
   static String COMPLETE_POST_VIOLATION = 'Chấp nhận quyết định';
 }
 
-class Not_accept_decision{
+class NotAcceptDecision{
   static String POST_ACCEPT_DECISION_TITLE = "Bạn không chấp nhận quyết định của chúng tôi";
   static List<String> NOTICE_OF_ACCEPT_THE_DECISION = [
     "Nếu sau này vẫn đăng nội dung vi phạm tiêu chuẩn của chúng tôi, khả năng đăng bài hoặc bình luận của bạn có thể bị hạn chế.", 

@@ -35,7 +35,7 @@ class AlertDialogUtils {
                         fontWeight: FontWeight.bold),
                     children: <TextSpan>[
                       TextSpan(
-                        text: Post_violation_constants.POST_VIOLATION_TITLE,
+                        text: PostViolationConstants.POST_VIOLATION_TITLE,
                       ),
                     ],
                   ),
@@ -56,9 +56,9 @@ class AlertDialogUtils {
               style: const TextStyle(color: Colors.black, fontSize: 15),
               children: <TextSpan>[
                 TextSpan(
-                  text: Post_violation_constants.POST_VIOLATION_CONTENT[0],
+                  text: PostViolationConstants.POST_VIOLATION_CONTENT[0],
                 ),
-                TextSpan(text: Post_violation_constants.POST_VIOLATION_CONTENT[1]),
+                TextSpan(text: PostViolationConstants.POST_VIOLATION_CONTENT[1]),
               ],
             ),
           ),
@@ -167,7 +167,7 @@ class AlertDialogUtils {
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
-                        text: How_to_decide.HOW_TO_DECISION_TITLE),
+                        text: HowToDecide.HOW_TO_DECISION_TITLE),
                   ),
                   Divider(),
                 ],
@@ -189,7 +189,7 @@ class AlertDialogUtils {
                           text: TextSpan(
                               style: const TextStyle(
                                   color: Colors.black, fontSize: 15),
-                              text: How_to_decide.NOTICE_HOW_TO_DECIDE[0]),
+                              text: HowToDecide.NOTICE_HOW_TO_DECIDE[0]),
                         ),
                       )
                     ],
@@ -208,7 +208,7 @@ class AlertDialogUtils {
                           text: TextSpan(
                               style: const TextStyle(
                                   color: Colors.black, fontSize: 15),
-                              text: How_to_decide.NOTICE_HOW_TO_DECIDE[1]),
+                              text: HowToDecide.NOTICE_HOW_TO_DECIDE[1]),
                         ),
                       ),
                     ],
@@ -227,7 +227,7 @@ class AlertDialogUtils {
                           text: TextSpan(
                               style: const TextStyle(
                                   color: Colors.black, fontSize: 15),
-                              text: How_to_decide.NOTICE_HOW_TO_DECIDE[2]),
+                              text: HowToDecide.NOTICE_HOW_TO_DECIDE[2]),
                         ),
                       )
                     ],
@@ -281,7 +281,7 @@ class AlertDialogUtils {
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
-                        text: Decision_criteria.POST_DECISION_STANDARDS_TITLE),
+                        text: DecisionCriteria.POST_DECISION_STANDARDS_TITLE),
                   ),
                   const Divider(),
                 ],
@@ -297,22 +297,22 @@ class AlertDialogUtils {
                             const TextStyle(color: Colors.black, fontSize: 15),
                         children: <TextSpan>[
                           TextSpan(
-                              text: Decision_criteria
+                              text: DecisionCriteria
                                   .POST_DECISIONZ_STANDARDS_CONTENT),
                           TextSpan(
-                            text: Decision_criteria.STANDARDS_DECISION[0],
+                            text: DecisionCriteria.STANDARDS_DECISION[0],
                           ),
                           TextSpan(
-                            text: Decision_criteria.STANDARDS_DECISION[1],
+                            text: DecisionCriteria.STANDARDS_DECISION[1],
                           ),
                           TextSpan(
-                            text: Decision_criteria.STANDARDS_DECISION[2],
+                            text: DecisionCriteria.STANDARDS_DECISION[2],
                           ),
                           TextSpan(
-                            text: Decision_criteria.STANDARDS_DECISION[3],
+                            text: DecisionCriteria.STANDARDS_DECISION[3],
                           ),
                           TextSpan(
-                            text: Decision_criteria.STANDARDS_DECISION[4],
+                            text: DecisionCriteria.STANDARDS_DECISION[4],
                           ),
                         ],
                       )),
@@ -518,7 +518,7 @@ class AlertDialogUtils {
                       ),
                       children: <TextSpan>[
                         TextSpan(
-                          text: Accept_Decision.POST_ACCEPT_DECISION_TITLE,
+                          text: AcceptDecision.POST_ACCEPT_DECISION_TITLE,
                         ),
                       ],
                     ),
@@ -536,7 +536,7 @@ class AlertDialogUtils {
                       style: const TextStyle(color: Colors.black, fontSize: 15),
                       children: <TextSpan>[
                         TextSpan(
-                          text: Accept_Decision.POST_ACCEPT_DECISION_CONTENT,
+                          text: AcceptDecision.POST_ACCEPT_DECISION_CONTENT,
                         ),
                       ],
                     ),
@@ -564,16 +564,16 @@ class AlertDialogUtils {
                                   color: Colors.black, fontSize: 15),
                               children: <TextSpan>[
                                 TextSpan(
-                                    text: Accept_Decision
+                                    text: AcceptDecision
                                         .NOTICE_OF_ACCEPT_THE_DECISION[0],
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold)),
                                 TextSpan(
-                                  text: Accept_Decision
+                                  text: AcceptDecision
                                       .NOTICE_OF_ACCEPT_THE_DECISION[1],
                                 ),
                                 TextSpan(
-                                    text: Accept_Decision
+                                    text: AcceptDecision
                                         .NOTICE_OF_ACCEPT_THE_DECISION[2],
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold))
@@ -629,7 +629,7 @@ class AlertDialogUtils {
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
-                        text: Not_accept_decision.POST_ACCEPT_DECISION_TITLE),
+                        text: NotAcceptDecision.POST_ACCEPT_DECISION_TITLE),
                   ),
                   Divider(),
                 ],
@@ -644,11 +644,11 @@ class AlertDialogUtils {
                       style: const TextStyle(color: Colors.black, fontSize: 15),
                       children: <TextSpan>[
                         TextSpan(
-                          text: Not_accept_decision
+                          text: NotAcceptDecision
                               .NOTICE_OF_ACCEPT_THE_DECISION[0],
                         ),
                         TextSpan(
-                            text: Not_accept_decision
+                            text: NotAcceptDecision
                                 .NOTICE_OF_ACCEPT_THE_DECISION[1]),
                       ],
                     ),

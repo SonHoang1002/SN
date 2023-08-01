@@ -332,9 +332,8 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
                                                             text:
                                                                 'Bạn có muốn đăng ký khoá học ',
                                                             style:
-                                                                const TextStyle(
-                                                                    color: Colors
-                                                                        .black),
+                                                                 TextStyle(
+                                                                    color: colorWord(context)),
                                                             children: [
                                                           TextSpan(
                                                               text: courseInvitations[

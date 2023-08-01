@@ -38,9 +38,11 @@ class LearnSpaceDetail extends ConsumerStatefulWidget {
 class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   dynamic courseDetail = {};
   bool isCourseInterested = false;
+  bool hostCourse = false;
   String courseMenu = 'intro';
   String currentMenu = 'intro';
   String menuCourse = '';
+  bool checkDiscussion = false;
   final scrollController = ScrollController();
   @override
   void initState() {
@@ -59,8 +61,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   void loadData() async {
     if (courseDetail.isEmpty && (widget.isUseLearnData == true)) {
       courseDetail = widget.data;
-      isCourseInterested =
-          courseDetail['course_relationships']['follow_course'];
+      isCourseInterested = courseDetail['course_relationships']['follow_course'];
     } else {
       await ref
           .read(learnSpaceStateControllerProvider.notifier)
@@ -71,6 +72,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
               ref.read(learnSpaceStateControllerProvider).detailCourse;
           isCourseInterested =
               courseDetail['course_relationships']['follow_course'];
+          hostCourse = courseDetail['course_relationships']['host_course'];
         });
       });
     }
@@ -868,6 +870,11 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                           setState(() {
                                             courseMenu =
                                                 itemChipCourse[index]['key'];
+                                            if (itemChipCourse[index]['key'] == "discussion") {
+                                              checkDiscussion = true;
+                                            } else {
+                                              checkDiscussion = false;
+                                            }
                                             if (itemChipCourse[index]['key'] !=
                                                 'more') {
                                               currentMenu =
@@ -886,17 +893,13 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                         : Colors.white,
                                                 builder: (context) => SizedBox(
                                                     height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.25,
+                                                    hostCourse?
+                                                        MediaQuery.of(context).size.height *0.25:
+                                                        MediaQuery.of(context).size.height *0.18,
                                                     child: ListView.builder(
-                                                        itemCount: itemChipCourse
-                                                            .sublist(
-                                                                4,
-                                                                itemChipCourse
-                                                                    .length)
-                                                            .length,
+                                                        itemCount: hostCourse? 
+                                                           itemChipCourse.sublist(4,itemChipCourse.length).length 
+                                                           : itemChipCourse.sublist(4,itemChipCourse.length-1).length,
                                                         itemBuilder:
                                                             (_, newIndex) =>
                                                                 ListTile(
@@ -954,9 +957,22 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                 ? LearnSpaceDiscusstion(postDiscussion: {
                                     "course_id": courseDetail['id']
                                   })
-                                : const SizedBox.shrink(),
+                                : checkDiscussion == true
+                                    ? Container(
+                                        alignment: Alignment.center,
+                                        padding: const EdgeInsets.only(top: 20),
+                                        child: Text(
+                                            courseDetail["course_relationships"]["participant_course"] == true?"Khóa học này không cho phép thảo luận!": "Bạn cần tham gia khóa học để có thể thảo luận!",
+                                            style: TextStyle(
+                                              color: colorWord(context),
+                                              fontWeight: FontWeight.bold,
+                                            ))
+                                      )
+                                    : const SizedBox.shrink(),
                             currentMenu == 'course'
-                                ? LearnSpaceCourse(id: courseDetail['id'], scrollController: scrollController)
+                                ? LearnSpaceCourse(
+                                    id: courseDetail['id'],
+                                    scrollController: scrollController)
                                 : const SizedBox.shrink(),
                             menuCourse == 'faq'
                                 ? LearnSpaceFAQ(courseDetail: courseDetail)
