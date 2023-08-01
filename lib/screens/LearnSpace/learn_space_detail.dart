@@ -38,6 +38,7 @@ class LearnSpaceDetail extends ConsumerStatefulWidget {
 class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   dynamic courseDetail = {};
   bool isCourseInterested = false;
+  bool hostCourse = false;
   String courseMenu = 'intro';
   String currentMenu = 'intro';
   String menuCourse = '';
@@ -60,8 +61,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
   void loadData() async {
     if (courseDetail.isEmpty && (widget.isUseLearnData == true)) {
       courseDetail = widget.data;
-      isCourseInterested =
-          courseDetail['course_relationships']['follow_course'];
+      isCourseInterested = courseDetail['course_relationships']['follow_course'];
     } else {
       await ref
           .read(learnSpaceStateControllerProvider.notifier)
@@ -72,6 +72,7 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
               ref.read(learnSpaceStateControllerProvider).detailCourse;
           isCourseInterested =
               courseDetail['course_relationships']['follow_course'];
+          hostCourse = courseDetail['course_relationships']['host_course'];
         });
       });
     }
@@ -892,17 +893,13 @@ class _LearnSpaceDetailState extends ConsumerState<LearnSpaceDetail> {
                                                         : Colors.white,
                                                 builder: (context) => SizedBox(
                                                     height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.25,
+                                                    hostCourse?
+                                                        MediaQuery.of(context).size.height *0.25:
+                                                        MediaQuery.of(context).size.height *0.18,
                                                     child: ListView.builder(
-                                                        itemCount: itemChipCourse
-                                                            .sublist(
-                                                                4,
-                                                                itemChipCourse
-                                                                    .length)
-                                                            .length,
+                                                        itemCount: hostCourse? 
+                                                           itemChipCourse.sublist(4,itemChipCourse.length).length 
+                                                           : itemChipCourse.sublist(4,itemChipCourse.length-1).length,
                                                         itemBuilder:
                                                             (_, newIndex) =>
                                                                 ListTile(
