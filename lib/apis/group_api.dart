@@ -9,8 +9,8 @@ class GroupApi {
     return await Api().getRequestBase('/api/v1/groups/$id', null);
   }
 
-  Future fetchGroupRole(params, id) async {
-    return await Api().getRequestBase('/api/v1/groups/$id/accounts', params);
+  Future fetchGroupRole(id) async {
+    return await Api().getRequestBase('/api/v1/groups/$id/accounts',null);
   }
 
   Future fetchCategories(params) async {

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -152,9 +153,9 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                                   Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: Text(
-                                      '${(convertNumberToVND(recruits[index]?['salary_min']) ~/ 1)}'
+                                      '${convertNumberToVND(recruits[index]?['salary_min'] ~/ 1)}'
                                       ' - '
-                                      '${(convertNumberToVND(recruits[index]?['salary_max']) ~/ 1)} VNĐ',
+                                      '${convertNumberToVND(recruits[index]?['salary_max'] ~/ 1)} VNĐ',
                                       style: const TextStyle(
                                         fontSize: 12.0,
                                         color: greyColor,

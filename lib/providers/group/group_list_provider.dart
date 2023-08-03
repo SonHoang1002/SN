@@ -798,7 +798,7 @@ class GroupListController extends StateNotifier<GroupListState> {
   getGroupRole(params, id) async {
     String role = params['role'];
 
-    List response = await GroupApi().fetchGroupRole(params, id) ?? [];
+    List response = await GroupApi().fetchGroupRole(id) ?? [];
     if (response.isNotEmpty) {
       state = state.copyWith(
         groupAdmin: state.groupAdmin,

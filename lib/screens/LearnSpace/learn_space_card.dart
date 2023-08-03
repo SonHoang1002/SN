@@ -347,7 +347,7 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                                     child: Text(
                                       course[index]['free'] == true
                                           ? 'Miễn phí'
-                                          : '${(convertNumberToVND(course[index]?['price']) ~/ 1)} VNĐ',
+                                          : '${convertNumberToVND(course[index]?['price'] ~/ 1)} VNĐ',
                                       style: const TextStyle(
                                         fontSize: 13.0,
                                         color: secondaryColor,
