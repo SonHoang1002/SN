@@ -1,14 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:market_place/helpers/format_currency.dart';
+import 'package:market_place/screens/MarketPlace/screen/shop_page.dart';
 import 'package:market_place/screens/MarketPlace/widgets/voucher_widget.dart';
 import 'package:market_place/theme/colors.dart';
 import 'package:market_place/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:market_place/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:market_place/widgets/image_cache.dart';
 
-Widget buildReviewShop(BuildContext context, dynamic pageData) {
+Widget buildReviewShop(BuildContext context, dynamic pageData,
+    {bool isHaveVoucherWidget = true}) {
   return Padding(
     padding: const EdgeInsets.only(
       top: 10,
@@ -36,7 +39,7 @@ Widget buildReviewShop(BuildContext context, dynamic pageData) {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.5,
+                      width: MediaQuery.sizeOf(context).width * 0.5,
                       child: buildTextContent(pageData?['title'] ?? "--", false,
                           fontSize: 14,
                           maxLines: 1,
@@ -64,7 +67,12 @@ Widget buildReviewShop(BuildContext context, dynamic pageData) {
                 ),
               ],
             ),
-            SizedBox(width: 100, child: buildSingleButton(context, "Xem Shop")),
+            SizedBox(
+                width: 100,
+                child: _buildSingleButton(context, "Xem Shop", function: () {
+                  Navigator.of(context).push(CupertinoPageRoute(
+                      builder: (ctx) => ShopPage(pageData: pageData)));
+                })),
           ],
         ),
         buildSpacer(height: 10),
@@ -77,30 +85,37 @@ Widget buildReviewShop(BuildContext context, dynamic pageData) {
             _buildDescription('96%', "phản hồi chat"),
           ],
         ),
-        buildSpacer(height: 10),
-        Container(
-          alignment: Alignment.centerLeft,
-          child: buildNonImageVoucherWidget(
-              "Giảm 6%",
-              "Đơn tối thiểu ₫${formatCurrency(120000)}. Giảm tối da ₫${formatCurrency(12000088)}",
-              DateFormat("dd-MM-yyyy").format(DateTime.now())),
-        ),
-        buildSpacer(height: 10),
-        buildTextContent("* Áp dụng cho tất cả sản phẩm của Shop", false,
-            colorWord: greyColor, fontSize: 13)
+        isHaveVoucherWidget
+            ? Column(
+                children: [
+                  buildSpacer(height: 10),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: buildNonImageVoucherWidget(
+                        "Giảm 6%",
+                        "Đơn tối thiểu ₫${formatCurrency(120000)}. Giảm tối da ₫${formatCurrency(12000088)}",
+                        DateFormat("dd-MM-yyyy").format(DateTime.now())),
+                  ),
+                  buildSpacer(height: 10),
+                  buildTextContent(
+                      "* Áp dụng cho tất cả sản phẩm của Shop", false,
+                      colorWord: greyColor, fontSize: 13)
+                ],
+              )
+            : SizedBox()
       ],
     ),
   );
 }
 
-Widget buildSingleButton(BuildContext context, String title,
+Widget _buildSingleButton(BuildContext context, String title,
     {double? width, Function? function}) {
   return GestureDetector(
     onTap: () {
       function != null ? function() : null;
     },
     child: Container(
-      width: width ?? MediaQuery.of(context).size.width * 0.43,
+      width: width ?? MediaQuery.sizeOf(context).width * 0.43,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         border: Border.all(color: greyColor, width: 0.4),

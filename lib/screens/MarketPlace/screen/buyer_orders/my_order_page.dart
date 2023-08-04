@@ -310,7 +310,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     // if (_returnList != null && _returnList!.isEmpty) {
@@ -720,7 +720,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
 
   Widget _buildEmptyMessageAndSuggestList() {
     return listSuggestProduct != null && listSuggestProduct!.isNotEmpty
-        ? buildSuggestListComponent(
+        ? SuggestListComponent(
             context: context,
             controller: _suggestScrollController,
             isLoading: true,

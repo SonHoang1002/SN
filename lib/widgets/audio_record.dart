@@ -23,7 +23,7 @@ class _AudioRecordState extends State<AudioRecord> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -60,7 +60,7 @@ class _AudioRecordState extends State<AudioRecord> {
                   ),
                 ),
                 AudioWaveforms(
-                    size: Size(MediaQuery.of(context).size.width - 200, 20.0),
+                    size: Size(MediaQuery.sizeOf(context).width - 200, 20.0),
                     recorderController: recorderController,
                     backgroundColor: Colors.black,
                     waveStyle: const WaveStyle(

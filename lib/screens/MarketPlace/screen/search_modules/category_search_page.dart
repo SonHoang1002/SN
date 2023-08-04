@@ -73,7 +73,7 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     Future.wait([_initData()]);
@@ -129,7 +129,7 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
             height: 5,
           ),
           suggestList != null
-              ? buildSuggestListComponent(
+              ? SuggestListComponent(
                   context: context,
                   title: buildTitleAndSeeAll(
                     "Có thể bạn sẽ thích",

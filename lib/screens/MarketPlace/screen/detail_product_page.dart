@@ -164,7 +164,7 @@ class _DetailProductMarketPageComsumerState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     _detailData ??= widget.simpleData;
@@ -741,7 +741,7 @@ class _DetailProductMarketPageComsumerState
                 _listProductOfPage != null && _listProductOfPage!.isNotEmpty
                     ? Padding(
                         padding: const EdgeInsets.only(top: 10),
-                        child: buildSuggestListComponent(
+                        child: SuggestListComponent(
                             context: context,
                             axis: Axis.horizontal,
                             title: Flex(
@@ -763,7 +763,7 @@ class _DetailProductMarketPageComsumerState
                       )
                     : const SizedBox(),
                 buildSpacer(height: 15),
-                buildSuggestListComponent(
+                SuggestListComponent(
                     context: context,
                     title: Flex(
                       direction: Axis.horizontal,
@@ -845,7 +845,7 @@ class _DetailProductMarketPageComsumerState
                                     ),
                                     buildSpacer(height: 3),
                                     buildTextContent("Thêm vào giỏ", false,
-                                        fontSize: 9)
+                                        fontSize: 9, isCenterLeft: false)
                                   ],
                                   isVertical: true,
                                   radiusValue: 0,
