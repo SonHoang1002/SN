@@ -34,8 +34,8 @@ class ProductsController extends StateNotifier<ProductsState> {
         isMore: response.isNotEmpty);
   }
 
-  getUserProductList(dynamic pageId) async {
-    List<dynamic> response = await ProductsApi().getUserProductList(pageId);
+  getShopProducts(dynamic pageId, dynamic params) async {
+    List<dynamic> response = await ProductsApi().getShopProducts(pageId,params);
     state = state.copyWith(list: response, isMore: response.isNotEmpty);
   }
 
@@ -48,7 +48,7 @@ class ProductsController extends StateNotifier<ProductsState> {
   }
 
   dynamic createProduct(dynamic data) async {
-     final response = await ProductsApi().postCreateProductApi(data);
+    final response = await ProductsApi().postCreateProductApi(data);
     return response;
   }
 }

@@ -12,6 +12,18 @@ String formatTimeMediaPlayer(Duration duration) {
   return [if (duration.inHours > 0) hours, minutes, seconds].join(':');
 }
 
+String shortenNumber(int num) {
+  if (num >= 1000000000) {
+    return '${(num / 1000000000).toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '')}B';
+  } else if (num >= 1000000 && num < 1000000000) {
+    return '${(num / 1000000).toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '')}M';
+  } else if (num >= 1000 && num < 1000000) {
+    return '${(num / 1000).toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '')}K';
+  } else {
+    return num.toString();
+  }
+}
+
 classifyTypeMessage(message) {
   if (message['urls'] != null && message['urls'].length > 0) {
     if (message['urls'].elementAt(0)["headers"] != null &&

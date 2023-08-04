@@ -121,7 +121,7 @@ class _OrderProductMarketPageState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     colorTheme = ThemeMode.dark == true
@@ -147,15 +147,15 @@ class _OrderProductMarketPageState
                   const BackIconAppbar(),
                   const AppBarTitle(title: "Danh sách đơn hàng"),
                   InkWell(
-              onTap: () {
-                pushToNextScreen(context, NotificationMarketPage());
-              },
-              child: const Icon(
-                FontAwesomeIcons.bell,
-                size: 18,
-                color: Colors.black,
-              ),
-            )
+                    onTap: () {
+                      pushToNextScreen(context, NotificationMarketPage());
+                    },
+                    child: const Icon(
+                      FontAwesomeIcons.bell,
+                      size: 18,
+                      color: Colors.black,
+                    ),
+                  )
                 ],
               ),
               bottom: TabBar(

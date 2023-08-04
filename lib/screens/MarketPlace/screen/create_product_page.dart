@@ -190,7 +190,7 @@ class _DemoCreateProductMarketPageState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     Future.wait([_initSelections()]);
@@ -218,8 +218,8 @@ class _DemoCreateProductMarketPageState
               const AppBarTitle(title: "Tạo sản phẩm"),
               InkWell(
                 onTap: () {
-                pushToNextScreen(context, NotificationMarketPage());
-              },
+                  pushToNextScreen(context, NotificationMarketPage());
+                },
                 child: const Icon(
                   FontAwesomeIcons.bell,
                   size: 18,
@@ -977,7 +977,7 @@ class _DemoCreateProductMarketPageState
     _validatorSelectionList["image"] = true;
     _validatorSelectionList["page"] = true;
     _validatorSelectionList['weight'] = true;
-    _validatorSelectionList['description'] = true; 
+    _validatorSelectionList['description'] = true;
     if (_listCategoriesSelectedValue.any((element) => element.isEmpty)) {
       _validatorSelectionList["category"] = false;
     }

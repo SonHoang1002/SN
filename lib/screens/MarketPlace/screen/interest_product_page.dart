@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -73,9 +75,10 @@ class _InterestProductMarketPageState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
+    print("_interestProductList ${jsonEncode(_interestProductList)}");
     _initData();
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -143,7 +146,10 @@ class _InterestProductMarketPageState
                       fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 buildSpacer(height: 7),
-                buildTextContent("Nguyễn Đình Đạt", false, fontSize: 15),
+                buildTextContent(
+                    "${data['page']?['title'] != null ? "${data['page']?['title']} -" : ""} ${data['followers_count']} người quan tâm",
+                    false,
+                    fontSize: 15),
                 buildSpacer(height: 7),
                 Container(
                     padding: const EdgeInsets.all(5),
@@ -190,8 +196,9 @@ class _InterestProductMarketPageState
                       ],
                       width: width * 0.6,
                       function: () async {
-                        _concernList![index] = !_concernList![index];
-                        setState(() {});
+                        setState(() {
+                          _concernList![index] = !_concernList![index];
+                        });
                         if (_concernList![index]) {
                           await FollwerProductsApi()
                               .postFollwerProductsApi(data["id"]);
@@ -213,7 +220,7 @@ class _InterestProductMarketPageState
                       bgColor: greyColor,
                       width: 30,
                       function: () {
-                        showCustomBottomSheet(context, 210,
+                        showCustomBottomSheet(context, 250,
                             title: "Quan tâm",
                             bgColor: bgColor,
                             widget: ListView.builder(
@@ -254,7 +261,7 @@ class _InterestProductMarketPageState
                                         function: () {
                                           data[index]["title"] == "Chia sẻ"
                                               ? showCustomBottomSheet(
-                                                  context, 300,
+                                                  context, 350,
                                                   title: "Chia sẻ sản phẩm",
                                                   iconData: FontAwesomeIcons
                                                       .chevronLeft,

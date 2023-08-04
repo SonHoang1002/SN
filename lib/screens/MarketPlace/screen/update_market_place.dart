@@ -130,10 +130,10 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
-    final a = _initData();
+    final a = _initData(); 
     return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
@@ -1869,7 +1869,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
             [
               buildTextContent(title, false,
                   colorWord: greyColor, fontSize: 14),
-              _categoryData!["loai_1"]["name"].text.trim() != ""
+              _categoryData?["loai_1"]?["name"].text.trim() != ""
                   ? Container(
                       padding: const EdgeInsets.only(top: 5),
                       child: Column(

@@ -57,14 +57,14 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     _seeMoreProductList = ref.watch(productsProvider).list;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title:   Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const BackIconAppbar(),
@@ -84,7 +84,7 @@ class _SeeMoreMarketPageState extends ConsumerState<SeeMoreMarketPage> {
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: buildSuggestListComponent(
+        child: SuggestListComponent(
             context: context,
             title: const SizedBox(),
             controller: _scrollController,

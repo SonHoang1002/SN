@@ -6,7 +6,7 @@ import 'package:market_place/widgets/GeneralWidget/text_content_widget.dart';
 
 buildMessageDialog(BuildContext context, String title,
     {bool? oneButton = false, Function? oKFunction}) {
-  final width = MediaQuery.of(context).size.width;
+  final width = MediaQuery.sizeOf(context).width;
   showDialog(
       barrierDismissible: false,
       context: context,

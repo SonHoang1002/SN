@@ -54,7 +54,7 @@ class _SeeReviewShopMarketPageComsumerState
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
     // Future<int> a = _initData();
@@ -63,21 +63,21 @@ class _SeeReviewShopMarketPageComsumerState
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          title:   Row(
+          title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const BackIconAppbar(),
               const AppBarTitle(title: "Đánh giá Shop của bạn"),
               InkWell(
-              onTap: () {
-                pushToNextScreen(context, NotificationMarketPage());
-              },
-              child: const Icon(
-                FontAwesomeIcons.bell,
-                size: 18,
-                color: Colors.black,
-              ),
-            )
+                onTap: () {
+                  pushToNextScreen(context, NotificationMarketPage());
+                },
+                child: const Icon(
+                  FontAwesomeIcons.bell,
+                  size: 18,
+                  color: Colors.black,
+                ),
+              )
             ],
           ),
         ),

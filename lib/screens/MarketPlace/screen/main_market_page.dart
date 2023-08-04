@@ -204,7 +204,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
 
   @override
   Widget build(BuildContext context) {
-    size ??= MediaQuery.of(context).size;
+    size ??= MediaQuery.sizeOf(context);
     getCategoriesName();
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -484,7 +484,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
                               //   categoryId: product_categories[index]["id"],
                               // )
                               FilterPage(
-                                categoryId: product_categories[index]["id"],
+                                categoryData: product_categories[index],
                               ));
                         }),
                       );
