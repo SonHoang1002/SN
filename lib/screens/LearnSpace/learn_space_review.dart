@@ -84,11 +84,10 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
           "media_ids": [mediaUploadResult['id']],
         },
       );
-
       if (response == null) {
         message = 'Có lỗi xảy ra trong quá trình đăng';
-      } else if (response['error'] != null) {
-        message = response['error'];
+      } else if (response?["content"]?['error'] != null) {
+        message = response?["content"]?['error'];
       } else {
         ref
             .read(learnSpaceStateControllerProvider.notifier)
@@ -109,16 +108,17 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
 
       if (response == null) {
         message = 'Có lỗi xảy ra trong quá trình đăng, hãy xem lại bài viết';
-      } else if (response['error'] != null) {
-        message = response['error'];
+      } else if (response?["content"]?['error'] != null){
+        message = response?["content"]?['error'];
       } else {
         ref
             .read(learnSpaceStateControllerProvider.notifier)
             .getListCourseReview(widget.courseDetail['id']);
+            print("response ${jsonEncode(response)}");
         message = 'Đăng bài đánh giá thành công!';
       }
     }
-
+    
     return message;
   }
 
