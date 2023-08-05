@@ -36,7 +36,8 @@ class SearchItem extends StatelessWidget {
                   ),
                 ))
             : item['page_relationship']?['like'] == true ||
-                    item['page_relationship']?['following'] == true
+                    item['page_relationship']?['following'] == true ||
+                    item?["page_relationship"] != null
                 ? Navigator.push(
                     context,
                     MaterialPageRoute(

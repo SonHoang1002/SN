@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,8 +27,9 @@ import 'package:social_network_app_mobile/widgets/header_tabs.dart';
 class PageDetail extends ConsumerStatefulWidget {
   final dynamic pageData;
   final dynamic pageId;
-
-  const PageDetail({super.key, this.pageData, this.pageId});
+  final bool isInPage;
+  const PageDetail(
+      {super.key, this.pageData, this.pageId, this.isInPage = true});
 
   @override
   ConsumerState<PageDetail> createState() => _PageDetailState();
@@ -260,6 +259,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
               const SizedBox(height: 8),
               const PagePinPost(),
               FeedPage(
+                isInPage: widget.isInPage,
                 pageData: data,
                 isUser: isUser,
               ),

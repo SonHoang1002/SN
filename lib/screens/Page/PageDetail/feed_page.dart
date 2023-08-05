@@ -11,7 +11,9 @@ import 'package:social_network_app_mobile/widgets/text_description.dart';
 class FeedPage extends ConsumerStatefulWidget {
   final dynamic pageData;
   final bool? isUser;
-  const FeedPage({Key? key, this.pageData, this.isUser}) : super(key: key);
+  final bool isInPage;
+  const FeedPage({Key? key, this.pageData, this.isUser, this.isInPage = false})
+      : super(key: key);
 
   @override
   ConsumerState<FeedPage> createState() => _FeedPageState();
@@ -84,7 +86,11 @@ class _FeedPageState extends ConsumerState<FeedPage> {
           itemCount: feedPage.length + 1,
           itemBuilder: (context, index) {
             if (index < feedPage.length) {
-              return Post(type: postPage, post: feedPage[index],);
+              return Post(
+                isInGroup: widget.isInPage,
+                type: postPage,
+                post: feedPage[index],
+              );
             } else {
               return isMoreFeed == true
                   ? Center(child: SkeletonCustom().postSkeleton(context))

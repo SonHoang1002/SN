@@ -174,9 +174,6 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
             splashColor: transparent,
             onTap: () {
               if (widget.type != postDetail && widget.type != 'edit_post') {
-          
-                                                
-                                              
                 pushCustomCupertinoPageRoute(
                     context,
                     PostDetail(
@@ -553,7 +550,8 @@ class _BlockNamePostState extends ConsumerState<BlockNamePost> {
     } else if (widget.page != null) {
       return widget.post['place']?['id'] != widget.page['id']
           ? (widget.page["page_relationship"] != null &&
-                  widget.page["page_relationship"]?["like"] == true)
+                      widget.page["page_relationship"]?["like"] == true) ||
+                  widget.isInGroup == true
               ? const TextSpan()
               : TextSpan(
                   text: " ·  Theo dõi",
