@@ -1,29 +1,10 @@
-// const baseRoot = 'https://snapi.emso.asia';
-// const baseRootPtube = 'https://pt3.emso.vn';
-// const baseRootNovu = 'NQdDh27Faz0F';
-// const socketNovuUrl = 'wss://notification-ws.emso.vn/socket.io';
-// const getTokenNovuUrl = 'https://notification-api.emso.vn';
-
-// const tokenVideoUpload = '21fbd3b2e427d9b9bae405e6480695e6bd233e44';
-// // const userToken = '3cp6cSCoQqMK9HWCasDyyICcy52EfdVXVo_gx21I6ks';
-// // const userToken = '2SeHv0_XX2DjiYhAoEqzdwSiSRSCCSOLhQgCLRP4eIA';
-// //a Luu
-// // const userToken = 'zRo-Aka_TJvXPzLJdfbHTs6SnLPEU8cHalDViC2Aixs';
-// //a Dat
-// const userToken = '1WJ_KeBJDF9pLtaUeV33sXjCshUzEDcanptxXD0Vn7A';
-
-// const urlWebEmso = 'https://sn.emso.vn';
-// ===============
-
-const baseRoot = 'https://cmc-sn.emso.vn';
-const baseRootPtube = 'https://pt.emso.vn';
-const baseRootNovu = '-LgRoNshFiyj';
-const socketNovuUrl = 'wss://cmc-notification-ws.emso.vn/socket.io';
-const getTokenNovuUrl = 'https://cmc-notification-api.emso.vn';
-// const BASE_ROOT = 'https://mxh.emso.asia';
+const baseRoot = 'https://snapi.emso.asia';
+const baseRootPtube = 'https://pt3.emso.vn';
+const baseRootNovu = 'NQdDh27Faz0F';
+const socketNovuUrl = 'wss://notification-ws.emso.vn/socket.io';
+const getTokenNovuUrl = 'https://notification-api.emso.vn';
 
 const tokenVideoUpload = '21fbd3b2e427d9b9bae405e6480695e6bd233e44';
-
 // const userToken = '3cp6cSCoQqMK9HWCasDyyICcy52EfdVXVo_gx21I6ks';
 // const userToken = '2SeHv0_XX2DjiYhAoEqzdwSiSRSCCSOLhQgCLRP4eIA';
 //a Luu
@@ -31,7 +12,26 @@ const tokenVideoUpload = '21fbd3b2e427d9b9bae405e6480695e6bd233e44';
 //a Dat
 const userToken = '1WJ_KeBJDF9pLtaUeV33sXjCshUzEDcanptxXD0Vn7A';
 
-const urlWebEmso = 'https://cmc-fe.emso.vn';
+const urlWebEmso = 'https://sn.emso.vn';
+// ===============
+
+// const baseRoot = 'https://cmc-sn.emso.vn';
+// const baseRootPtube = 'https://pt.emso.vn';
+// const baseRootNovu = '-LgRoNshFiyj';
+// const socketNovuUrl = 'wss://cmc-notification-ws.emso.vn/socket.io';
+// const getTokenNovuUrl = 'https://cmc-notification-api.emso.vn';
+// // const BASE_ROOT = 'https://mxh.emso.asia';
+
+// const tokenVideoUpload = '21fbd3b2e427d9b9bae405e6480695e6bd233e44';
+
+// // const userToken = '3cp6cSCoQqMK9HWCasDyyICcy52EfdVXVo_gx21I6ks';
+// // const userToken = '2SeHv0_XX2DjiYhAoEqzdwSiSRSCCSOLhQgCLRP4eIA';
+// //a Luu
+// // const userToken = 'zRo-Aka_TJvXPzLJdfbHTs6SnLPEU8cHalDViC2Aixs';
+// //a Dat
+// const userToken = '1WJ_KeBJDF9pLtaUeV33sXjCshUzEDcanptxXD0Vn7A';
+
+// const urlWebEmso = 'https://cmc-fe.emso.vn';
 
 // //=============KHONG COMMENT KHOI BEN DUOI===========
 const gifKey = "sXpGFDGZs0Dv1mmNFvYaGUvYwKX0PWIh";

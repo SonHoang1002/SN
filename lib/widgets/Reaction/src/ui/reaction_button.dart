@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 
 import 'package:social_network_app_mobile/widgets/Reaction/src/ui/test/show_position_fill.dart';
-import '../../../../providers/posts/reaction_message_content.dart';
 import '../models/reaction.dart';
 import '../utils/extensions.dart';
 import '../utils/reactions_position.dart';
@@ -223,4 +221,4 @@ class CustomNotification extends Notification {
 
   CustomNotification({required this.name, required this.data});
 }
-typedef void OnLongPressCallback(DragUpdateDetails details);
+typedef OnLongPressCallback = void Function(DragUpdateDetails details);

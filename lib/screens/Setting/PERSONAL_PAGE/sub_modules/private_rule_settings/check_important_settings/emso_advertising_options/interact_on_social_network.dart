@@ -26,9 +26,9 @@ class InteractOnSocialNetworksPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             AppBarTitle(
                 title: InteractOnSocialNetworksConstants
@@ -50,7 +50,7 @@ class InteractOnSocialNetworksPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [
                   // title
                   buildTextContent(
@@ -72,7 +72,7 @@ class InteractOnSocialNetworksPage extends StatelessWidget {
                   Container(
                     // height: 500,
                     width: width * 0.8,
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       color: Colors.grey[300],
@@ -108,7 +108,7 @@ class InteractOnSocialNetworksPage extends StatelessWidget {
                         prefixWidget: Container(
                             height: 40,
                             width: 40,
-                            margin: EdgeInsets.only(right: 10),
+                            margin: const EdgeInsets.only(right: 10),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.asset(
@@ -133,10 +133,10 @@ class InteractOnSocialNetworksPage extends StatelessWidget {
                         suffixWidget: Container(
                           height: 40,
                           width: 40,
-                          margin: EdgeInsets.only(right: 10),
-                          padding: EdgeInsets.all(10),
+                          margin: const EdgeInsets.only(right: 10),
+                          padding: const EdgeInsets.all(10),
                           child: SvgPicture.asset(
-                            SettingConstants.PATH_ICON + "bell_icon.svg",
+                            "${SettingConstants.PATH_ICON}bell_icon.svg",
                             // InteractOnSocialNetworksConstants
                             //         .INTERACT_ON_SOCIAL_NETWORK_PAGE_CONTENTS[
                             //     "data"]["icon"],
@@ -147,7 +147,7 @@ class InteractOnSocialNetworksPage extends StatelessWidget {
                         borderRadiusValue: 10,
                       ),
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
+                        margin: const EdgeInsets.only(bottom: 10),
                         height: 200,
                         color: Colors.red,
                       )
@@ -167,7 +167,7 @@ class InteractOnSocialNetworksPage extends StatelessWidget {
                         )
                       ],
                       changeBackground: Colors.transparent,
-                      prefixWidget: Card(),
+                      prefixWidget: const Card(),
                       suffixFlexValue: 20,
                       suffixWidget: Container(
                         child: GeneralComponent(
@@ -182,7 +182,7 @@ class InteractOnSocialNetworksPage extends StatelessWidget {
                           prefixWidget: Container(
                             height: 30,
                             width: 30,
-                            margin: EdgeInsets.only(right: 10),
+                            margin: const EdgeInsets.only(right: 10),
                             child: SvgPicture.asset(
                               InteractOnSocialNetworksConstants
                                       .INTERACT_ON_SOCIAL_NETWORK_CONTENTS[
@@ -192,7 +192,7 @@ class InteractOnSocialNetworksPage extends StatelessWidget {
                           suffixWidget: Container(
                             height: 30,
                             width: 30,
-                            margin: EdgeInsets.all(5),
+                            margin: const EdgeInsets.all(5),
                             child: SvgPicture.asset(
                               InteractOnSocialNetworksConstants
                                       .INTERACT_ON_SOCIAL_NETWORK_CONTENTS[

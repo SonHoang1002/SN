@@ -18,9 +18,9 @@ class EmsoPayPage extends StatelessWidget {
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: Row(
+          title: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               BackIconAppbar(),
               AppBarTitle(title: "EMSOPAY"),
               SizedBox()

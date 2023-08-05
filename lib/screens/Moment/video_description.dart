@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +48,7 @@ class _VideoDescriptionState extends ConsumerState<VideoDescription> {
   }
 
   checkMomentFollow() async {
-    var type;
+    String type;
     var id;
     if (widget.moment['page'] != null &&
         widget.moment['page_owner']['id'] != widget.moment['page']['id']) {

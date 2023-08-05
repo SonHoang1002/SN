@@ -13,6 +13,8 @@ import 'authenticate_two_factors_modules/authenticate_two_factors.dart';
 import 'protect_your_account_constants.dart';
 
 class PasswordPage extends StatefulWidget {
+  const PasswordPage({super.key});
+
   @override
   State<PasswordPage> createState() => _PasswordPageState();
 }
@@ -42,9 +44,9 @@ class _PasswordPageState extends State<PasswordPage> {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             AppBarTitle(title: PasswordConstants.PASSWORD_APPAR_TITLE),
             SizedBox(),
@@ -64,12 +66,12 @@ class _PasswordPageState extends State<PasswordPage> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [
                   // title
                   buildTextContent(PasswordConstants.PASSWORD_TITLE, true,
                       fontSize: 22),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   //subTitle
@@ -78,7 +80,7 @@ class _PasswordPageState extends State<PasswordPage> {
                     fontSize: 15,
                     // colorWord: Colors.grey
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   // change password  bien mat khi click vao nut nay
@@ -91,20 +93,20 @@ class _PasswordPageState extends State<PasswordPage> {
                                 isClickForChangePasswordButton = true;
                               });
                             },
-                            child: Text(
-                              PasswordConstants.PASSWORD_CHANGE_PASSWORD,
-                              style: TextStyle(color: white, fontSize: 17),
-                            ),
                             style: ElevatedButton.styleFrom(
                                 fixedSize: Size(width * 0.9, 40),
                                 backgroundColor: Colors.blue),
+                            child: const Text(
+                              PasswordConstants.PASSWORD_CHANGE_PASSWORD,
+                              style: TextStyle(color: white, fontSize: 17),
+                            ),
                           ),
                         )
                       // change password component hien ra khi nut doi mat khau bien mat
                       : Column(
                           children: [
                             Container(
-                              margin: EdgeInsets.only(bottom: 10),
+                              margin: const EdgeInsets.only(bottom: 10),
                               child: GeneralComponent(
                                 [
                                   buildTextContent(
@@ -113,7 +115,7 @@ class _PasswordPageState extends State<PasswordPage> {
                                     true,
                                     fontSize: 20,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 5,
                                   ),
                                   Container(
@@ -135,11 +137,11 @@ class _PasswordPageState extends State<PasswordPage> {
                                                     colorWord: Colors.grey),
                                               ],
                                               prefixWidget: Container(
-                                                  margin: EdgeInsets.only(
+                                                  margin: const EdgeInsets.only(
                                                       right: 10),
                                                   height: 7,
                                                   width: 7,
-                                                  decoration: BoxDecoration(
+                                                  decoration: const BoxDecoration(
                                                       color: Colors.blue,
                                                       borderRadius:
                                                           BorderRadius.all(
@@ -151,10 +153,9 @@ class _PasswordPageState extends State<PasswordPage> {
                                           })))
                                 ],
                                 prefixWidget: Container(
-                                  padding: EdgeInsets.only(right: 15),
+                                  padding: const EdgeInsets.only(right: 15),
                                   child: SvgPicture.asset(
-                                    SettingConstants.PATH_ICON +
-                                        "bell_icon.svg",
+                                    "${SettingConstants.PATH_ICON}bell_icon.svg",
                                     height: 20,
                                     // color:  white,
                                   ),
@@ -181,13 +182,13 @@ class _PasswordPageState extends State<PasswordPage> {
                             //save change
                             ElevatedButton(
                               onPressed: () {},
-                              child: Text(
-                                PasswordConstants.PASSWORD_SAVE_CHANGE,
-                                style: TextStyle(color: white, fontSize: 17),
-                              ),
                               style: ElevatedButton.styleFrom(
                                   fixedSize: Size(width * 0.9, 40),
                                   backgroundColor: Colors.blue),
+                              child: const Text(
+                                PasswordConstants.PASSWORD_SAVE_CHANGE,
+                                style: TextStyle(color: white, fontSize: 17),
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 10.0),
@@ -219,26 +220,26 @@ class _PasswordPageState extends State<PasswordPage> {
 _buildInput(double width, TextEditingController controller, IconData iconData,
     String hintText) {
   return Container(
-    margin: EdgeInsets.symmetric(vertical: 2.5, horizontal: 5),
+    margin: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 5),
     height: 50,
     width: width * 0.9,
     child: TextFormField(
       // style: TextStyle(color:  white),
       controller: controller,
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(0, 10, 10, 10),
-          enabledBorder: OutlineInputBorder(
+          contentPadding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+          enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey),
               borderRadius: BorderRadius.all(
                 Radius.circular(5),
               )),
-          focusedBorder: OutlineInputBorder(
+          focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.blue),
               borderRadius: BorderRadius.all(
                 Radius.circular(5),
               )),
           hintText: hintText,
-          hintStyle: TextStyle(color: Colors.grey, fontSize: 17),
+          hintStyle: const TextStyle(color: Colors.grey, fontSize: 17),
           prefixIcon: Padding(
             padding: const EdgeInsets.all(5.0),
             child: Icon(

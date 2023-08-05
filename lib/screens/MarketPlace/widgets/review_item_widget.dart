@@ -29,7 +29,7 @@ Widget buildReviewItemWidget(BuildContext context, dynamic data,
           : null;
   String inputTime = data["comment"]["created_at"] ?? "";
   String postTime = '';
-  if (inputTime != null && inputTime != "") {
+  if (inputTime != "") {
     DateTime dataTime = DateTime.parse(inputTime);
     String hour = DateFormat("HH:mm").format(dataTime);
     String date = DateFormat("dd-MM-yyyy").format(dataTime);

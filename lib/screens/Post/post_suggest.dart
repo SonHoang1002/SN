@@ -1,8 +1,5 @@
-import 'dart:isolate';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:get_time_ago/get_time_ago.dart';
@@ -108,43 +105,43 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
           (TextSpan(text: widget.post?['account']['display_name'], style: bold))
         ];
       }
-      dynamic _checkVideoImage =
-          checkVideoImage(widget.post?['media_attachments']);
-      if ((_checkVideoImage["video"] != null &&
-              _checkVideoImage["video"] != 0) &&
-          (_checkVideoImage["image"] != null &&
-              _checkVideoImage["image"] != 0)) {
+      dynamic checkVideoImage =
+          _checkVideoImage(widget.post?['media_attachments']);
+      if ((checkVideoImage["video"] != null &&
+              checkVideoImage["video"] != 0) &&
+          (checkVideoImage["image"] != null &&
+              checkVideoImage["image"] != 0)) {
         listContent.addAll([
           const TextSpan(
             text: ' đã thêm ',
           ),
-          TextSpan(text: '${_checkVideoImage['image']}', style: bold),
+          TextSpan(text: '${checkVideoImage['image']}', style: bold),
           const TextSpan(
             text: ' ảnh và ',
           ),
-          TextSpan(text: '${_checkVideoImage['video']}', style: bold),
+          TextSpan(text: '${checkVideoImage['video']}', style: bold),
           const TextSpan(
             text: ' video mới',
           )
         ]);
-      } else if (_checkVideoImage["image"] != null &&
-          _checkVideoImage["image"] != 0) {
+      } else if (checkVideoImage["image"] != null &&
+          checkVideoImage["image"] != 0) {
         listContent.addAll([
           const TextSpan(
             text: ' đã thêm ',
           ),
-          TextSpan(text: '${_checkVideoImage['image']}', style: bold),
+          TextSpan(text: '${checkVideoImage['image']}', style: bold),
           const TextSpan(
             text: ' ảnh mới',
           ),
         ]);
-      } else if (_checkVideoImage["video"] != null &&
-          _checkVideoImage["video"] != 0) {
+      } else if (checkVideoImage["video"] != null &&
+          checkVideoImage["video"] != 0) {
         listContent.addAll([
           const TextSpan(
             text: ' đã thêm ',
           ),
-          TextSpan(text: '${_checkVideoImage['video']}', style: bold),
+          TextSpan(text: '${checkVideoImage['video']}', style: bold),
           const TextSpan(
             text: ' video mới',
           ),
@@ -291,7 +288,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
     }
   }
 
-  static dynamic checkVideoImage(List<dynamic> data) {
+  static dynamic _checkVideoImage(List<dynamic> data) {
     int imageLength = data.map((e) => e["type"] == "image").toList().length;
     return {
       "image": imageLength,

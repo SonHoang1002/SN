@@ -96,10 +96,10 @@ class _GroupApproval extends ConsumerState<GroupApproval> {
                   buildDivider(
                     color: colorWord(context),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
-                  Container(
+                  SizedBox(
                     height: MediaQuery.sizeOf(context).height - 98,
                     child: listWaitingApproval!.isNotEmpty
                         ? ListView.builder(

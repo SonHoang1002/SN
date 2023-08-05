@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -316,14 +315,14 @@ class _PostDetailState extends ConsumerState<PostDetail> {
       } else if (post['in_reply_to_id'] != null) {
         // cap nhat so luong khi xoa cmt con
 
-        postComment.forEach((element) {
+        for (var element in postComment) {
           if (element['id'] == post['in_reply_to_id']) {
             setState(() {
               postComment = postComment;
             });
             _updatePostCount(subIfChild: 1);
           }
-        });
+        }
       }
     }
   }
@@ -333,9 +332,9 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     int countSubIfChild = subIfChild ?? 0;
     dynamic updateCountPostData = postData;
     dynamic count = postComment.length;
-    postComment.forEach((element) {
+    for (var element in postComment) {
       count += element["replies_total"];
-    });
+    }
     updateCountPostData['replies_total'] =
         count + countAdditionalIfChild - countSubIfChild;
     ref
@@ -393,15 +392,15 @@ class _PostDetailState extends ConsumerState<PostDetail> {
   }
 
   checkPreType() {
-    dynamic _preType = widget.preType;
-    if (_preType != null) {
-      if (_preType == postPageUser) {
+    dynamic preType = widget.preType;
+    if (preType != null) {
+      if (preType == postPageUser) {
         return postDetailFromUserPage;
       }
-      if (_preType == feedPost) {
+      if (preType == feedPost) {
         return postDetailFromFeed;
       }
-      return _preType;
+      return preType;
     } else {
       return null;
     }

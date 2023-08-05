@@ -14,6 +14,8 @@ import 'emso_advertising_options_constants.dart';
 class RecommendAdvertisementOnEmsoPage extends StatelessWidget {
   late double width = 0;
   late double height = 0;
+
+  RecommendAdvertisementOnEmsoPage({super.key});
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -23,9 +25,9 @@ class RecommendAdvertisementOnEmsoPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             AppBarTitle(
                 title: RecommendAdvertisementOnEmsoConstants
@@ -47,7 +49,7 @@ class RecommendAdvertisementOnEmsoPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [
                   // title
                   buildTextContent(
@@ -115,10 +117,10 @@ class RecommendAdvertisementOnEmsoPage extends StatelessWidget {
                     prefixWidget: Container(
                       height: 40,
                       width: 40,
-                      margin: EdgeInsets.only(right: 10),
-                      padding: EdgeInsets.all(10),
+                      margin: const EdgeInsets.only(right: 10),
+                      padding: const EdgeInsets.all(10),
                       child: SvgPicture.asset(
-                        SettingConstants.PATH_ICON + "bell_icon.svg",
+                        "${SettingConstants.PATH_ICON}bell_icon.svg",
                         color: Colors.blue,
                       ),
                     ),

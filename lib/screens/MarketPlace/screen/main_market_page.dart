@@ -26,8 +26,6 @@ import 'package:social_network_app_mobile/screens/MarketPlace/widgets/cart_widge
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/category_product_item.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/title_and_see_all.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/circular_progress_indicator.dart';
-import 'package:social_network_app_mobile/widgets/Market/show_market_bottom_sheet.dart';
-import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
@@ -364,7 +362,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
+        SizedBox(
           height: 50,
           // color: _isScrolled
           //     ? Theme.of(context).scaffoldBackgroundColor
@@ -598,7 +596,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
                               //   categoryId: product_categories[index]["id"],
                               // )
                               FilterPage(
-                                categoryId: product_categories[index]["id"],
+                                categoryData: product_categories[index],
                               ));
                         }),
                       );

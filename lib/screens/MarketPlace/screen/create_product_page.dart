@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -136,7 +134,7 @@ class _DemoCreateProductMarketPageState
   dynamic _preOderSelectedValue;
   dynamic _statusProductSelectedValue;
   final int _preOrderTimeSelectedValue = 7;
-  TextEditingController _createOptionController =
+  final TextEditingController _createOptionController =
       TextEditingController(text: "");
 
   @override
@@ -1638,9 +1636,9 @@ class _DemoCreateProductMarketPageState
       );
       if (pickedImages.isNotEmpty) {
         setState(() {
-          pickedImages.forEach((element) {
+          for (var element in pickedImages) {
             _imgFiles.add(File(element!.name!));
-          });
+          }
         });
       } else {
         // Xử lý khi người dùng không chọn ảnh"
@@ -2143,7 +2141,7 @@ class _DemoCreateProductMarketPageState
                                                                                         _listDetailInforData = categoryAttributes;
                                                                                         _listDetailInforSelectedValue = [];
 
-                                                                                        _listDetailInforData.forEach((element) {
+                                                                                        for (var element in _listDetailInforData) {
                                                                                           _listDetailInforSelectedValue.add({
                                                                                             "id": element['id'],
                                                                                             "product_attribute_id": element['product_attribute']['id'],
@@ -2151,7 +2149,7 @@ class _DemoCreateProductMarketPageState
                                                                                             "value": [],
                                                                                             "unit": ""
                                                                                           });
-                                                                                        });
+                                                                                        }
                                                                                       }
                                                                                     }
                                                                                     _brandListFromCategory = await BrandProductApi().getBrandProduct({
@@ -2261,9 +2259,7 @@ class _DemoCreateProductMarketPageState
 
   Widget _buildClassifyWidget(
     BuildContext context,
-    String title, {
-    String? titleForBottomSheet,
-  }) {
+    String title) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       child: Column(
@@ -2296,7 +2292,7 @@ class _DemoCreateProductMarketPageState
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(22),
                   color: greyColor[400]),
-              child: Icon(
+              child: const Icon(
                 FontAwesomeIcons.list,
                 size: 18,
               ),
@@ -2342,7 +2338,7 @@ class _DemoCreateProductMarketPageState
       child: TextFormField(
         controller: controller,
         maxLines: 1,
-        keyboardType: keyboardType != null ? keyboardType : TextInputType.text,
+        keyboardType: keyboardType ?? TextInputType.text,
         maxLength: maxLength,
         validator: (value) {
           switch (hintText) {
@@ -2394,6 +2390,7 @@ class _DemoCreateProductMarketPageState
             // }
           }
           additionalFunction != null ? additionalFunction() : null;
+          return null;
         },
         onChanged: (value) {
           setState(() {});

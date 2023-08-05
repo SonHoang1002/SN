@@ -73,8 +73,8 @@ class _PageDetailState extends ConsumerState<PageDetail> {
         // ignore: use_build_context_synchronously
         arguments = ModalRoute.of(context)?.settings.arguments;
         Future.delayed(Duration.zero, () async {
-          final _pageDetail = ref.read(pageControllerProvider).pageDetail;
-          if (arguments != null && arguments != _pageDetail?['id']) {
+          final pageDetail = ref.read(pageControllerProvider).pageDetail;
+          if (arguments != null && arguments != pageDetail?['id']) {
             await ref.read(pageControllerProvider.notifier).reset();
           }
         });

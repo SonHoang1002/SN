@@ -33,7 +33,7 @@ class CreateEventConstants {
 class DetailEventConstants {
   static const String DETAIL_EVENT_TITLE = "Chi tiết sự kiện";
   static List<dynamic> USER_EXAMPLE = [
-    EventConstants.PATH_IMG + "cat_1.png",
+    "${EventConstants.PATH_IMG}cat_1.png",
     "User_Name",
     "Trang cá nhân"
   ];
@@ -73,42 +73,42 @@ class DetailEventConstants {
 
   static List<List<dynamic>> SELECTION_FOR_CHOOSE_GROUP_EVENT = [
     [
-      EventConstants.PATH_IMG + "cat_1.png",
+      "${EventConstants.PATH_IMG}cat_1.png",
       "Hoạt Hình Trung Quốc - Chinese Animation",
       "Có Nguyen van a va nhưng nguoi khac"
     ],
     [
-      EventConstants.PATH_IMG + "cat_2.png",
+      "${EventConstants.PATH_IMG}cat_2.png",
       "Nhóm thông tin sinh viên NEU",
       "Nơi các bạn sinh viên có quyền chia sẻ tất tần tật mọi thứ."
     ],
     [
-      EventConstants.PATH_IMG + "cat_3.png",
+      "${EventConstants.PATH_IMG}cat_3.png",
       "Mobile Development Jobs VN",
       "Đăng tin tuyển dụng/tim việc về Mobile Place to post Mobile Development related job-ads"
     ],
     [
-      EventConstants.PATH_IMG + "cat_4.png",
+      "${EventConstants.PATH_IMG}cat_4.png",
       "Tuyển dụng Flutter tại Việt Nam",
       "Chỉ thành viên mới nhìn thấy mọi người trong nhóm và những gì họ đăng."
     ],
     [
-      EventConstants.PATH_IMG + "cat_1.png",
+      "${EventConstants.PATH_IMG}cat_1.png",
       "Hoạt Hình Trung Quốc - Chinese Animation",
       "Có Nguyen van a va nhưng nguoi khac"
     ],
     [
-      EventConstants.PATH_IMG + "cat_2.png",
+      "${EventConstants.PATH_IMG}cat_2.png",
       "Nhóm thông tin sinh viên NEU",
       "Nơi các bạn sinh viên có quyền chia sẻ tất tần tật mọi thứ."
     ],
     [
-      EventConstants.PATH_IMG + "cat_3.png",
+      "${EventConstants.PATH_IMG}cat_3.png",
       "Mobile Development Jobs VN",
       "Đăng tin tuyển dụng/tim việc về Mobile Place to post Mobile Development related job-ads"
     ],
     [
-      EventConstants.PATH_IMG + "cat_4.png",
+      "${EventConstants.PATH_IMG}cat_4.png",
       "Tuyển dụng Flutter tại Việt Nam",
       "Chỉ thành viên mới nhìn thấy mọi người trong nhóm và những gì họ đăng."
     ],
@@ -122,12 +122,12 @@ class LocationEventConstants {
       "Chọn cách tham gia sự kiện online của bạn";
 
   static List<dynamic> MEETING_ROOM_COMPONENT = [
-    EventConstants.PATH_ICON + "camera_plus_icon.svg",
+    "${EventConstants.PATH_ICON}camera_plus_icon.svg",
     "Phòng họp mặt trên Messenger",
     "Họp mặt qua tính năng chat video. Mọi người có thể tham gia phòng họp mặt ngay tạitrang sự kiện",
   ];
   static List<dynamic> Emso_LIVE_COMPONENT = [
-    EventConstants.PATH_ICON + "camera_eye_icon.svg",
+    "${EventConstants.PATH_ICON}camera_eye_icon.svg",
     "Emso Live",
     "Lên lịch phát trực tiếp sự kiện của bạn bằng Emso Live để mọi người cùng xem",
   ];
@@ -137,12 +137,12 @@ class LocationEventConstants {
 
   static List<List<dynamic>> DIFFERENT_SELECTION_COMPONENT = [
     [
-      EventConstants.PATH_ICON + "link_icon.svg",
+      "${EventConstants.PATH_ICON}link_icon.svg",
       "Liên kết bên ngoài",
       "Thêm liên kết đẻ mọi người biết cần truy cập vào đâi khi sự kiện bắt đầu"
     ],
     [
-      EventConstants.PATH_ICON + "more_icon.svg",
+      "${EventConstants.PATH_ICON}more_icon.svg",
       "Khác",
       "Thêm hướng dẫn vào phần chi tiết sự kiện để chỉ rõ cách tham gia"
     ],
@@ -151,17 +151,17 @@ class LocationEventConstants {
   static const String EVENT_WITH_Emso_LIVE_TITLE = "Sự kiện với Emso Live";
   static List<dynamic> EVENT_WITH_Emso_LIVE_CONTENT_LIST = [
     [
-      EventConstants.PATH_ICON + "camera_eye_icon.svg",
+      "${EventConstants.PATH_ICON}camera_eye_icon.svg",
       "Phát trực tiếp ngay trong sự kiện",
       "Bắt đầu video trực tiếp của bạn và mọi người có thể xem ngay trong sự kiện",
     ],
     [
-      EventConstants.PATH_ICON + "bell_icon.svg",
+      "${EventConstants.PATH_ICON}bell_icon.svg",
       "Chúng tôi sẽ nhắc bạn",
       "Ít lâu trước khi sự kiện bắt đầu, chúng tôi sẽ gửi thông báo để nhắc bạn",
     ],
     [
-      EventConstants.PATH_ICON + "group_icon.svg",
+      "${EventConstants.PATH_ICON}group_icon.svg",
       "Chỉ mình bạn có thể phát trực tiếp",
       "Người đồng tổ chức có thể yêu cầu tham gia buổi phát trực tiếp nhưng chỉ bạn mới có thể bắt đầu phát",
     ]
@@ -203,7 +203,7 @@ class ReviewEventConstants {
       "CONTENT_DESCRIPTION_PART",
     ],
     [
-      EventConstants.PATH_ICON + "camera_plus_icon.svg",
+      "${EventConstants.PATH_ICON}camera_plus_icon.svg",
       "Vị trí",
       "Online - Phòng hợp mặt trên Messenger",
     ],

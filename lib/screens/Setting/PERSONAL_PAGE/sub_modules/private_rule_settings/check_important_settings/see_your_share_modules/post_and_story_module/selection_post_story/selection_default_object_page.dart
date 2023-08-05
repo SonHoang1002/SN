@@ -27,9 +27,9 @@ class SelectionDefaultObjectPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             AppBarTitle(
                 title: SelectionDefaultObjectConstants
@@ -49,7 +49,7 @@ class SelectionDefaultObjectPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [
                   // title
                   _buildDivider(),
@@ -81,7 +81,7 @@ class SelectionDefaultObjectPage extends StatelessWidget {
                           data[index]["icon"],
                           data[index]["title"],
                           data[index]["subTitle"],
-                          iconData: data[index]["iconNext"] ?? null,
+                          iconData: data[index]["iconNext"],
                         );
                       }))
                 ],
@@ -97,8 +97,8 @@ class SelectionDefaultObjectPage extends StatelessWidget {
 }
 
 _buildDivider() {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 5.0, top: 5),
+  return const Padding(
+    padding: EdgeInsets.only(bottom: 5.0, top: 5),
     child: Divider(
       height: 10,
       color: Colors.white,
@@ -117,7 +117,7 @@ _buildSelectionComponent(String iconPath, String title, String subTitle,
         children: [
           Row(
             children: [
-              Container(
+              SizedBox(
                 height: 30,
                 width: 30,
                 child: Radio(
@@ -126,7 +126,7 @@ _buildSelectionComponent(String iconPath, String title, String subTitle,
               Container(
                 height: 40,
                 width: 40,
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: SvgPicture.asset(
                   iconPath,
                   // color: Colors.white,
@@ -142,7 +142,7 @@ _buildSelectionComponent(String iconPath, String title, String subTitle,
                     fontSize: 16,
                     // colorWord: Colors.white,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   buildTextContent(subTitle, false,
@@ -158,7 +158,7 @@ _buildSelectionComponent(String iconPath, String title, String subTitle,
                     //  color: Colors.grey
                   ),
                 )
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
       _buildDivider()

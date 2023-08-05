@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -14,7 +13,6 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
@@ -39,15 +37,15 @@ class _ReviewProductMarketPageState
     extends ConsumerState<ReviewProductMarketPage> {
   late double width = 0;
   late double height = 0;
-  List<int>? _starQualityList = [];
-  List<int>? _starServiceList = [];
-  List<int>? _starTranferList = [];
+  final List<int> _starQualityList = [];
+  final List<int> _starServiceList = [];
+  final List<int> _starTranferList = [];
   List<TextEditingController>? reviewControllerList = [];
 
-  List<String>? _selectedSizeList = [];
-  List<List<File>>? _imgFileList = [];
-  List<bool>? _showSwitchList = [];
-  List _videoFileList = [];
+  final List<String> _selectedSizeList = [];
+  final List<List<File>> _imgFileList = [];
+  final List<bool> _showSwitchList = [];
+  final List _videoFileList = [];
   Color? colorTheme;
   bool _isLoading = false;
   @override
@@ -58,14 +56,14 @@ class _ReviewProductMarketPageState
 
   void _initData() {
     for (var element in widget.completeProductList!) {
-      _starQualityList!.add(0);
-      _starServiceList!.add(0);
-      _starTranferList!.add(0);
+      _starQualityList.add(0);
+      _starServiceList.add(0);
+      _starTranferList.add(0);
       reviewControllerList!.add(TextEditingController(text: ""));
-      _selectedSizeList!.add("");
-      _imgFileList!.add([]);
+      _selectedSizeList.add("");
+      _imgFileList.add([]);
       _videoFileList.add(null);
-      _showSwitchList!.add(false);
+      _showSwitchList.add(false);
     }
     setState(() {});
   }
@@ -171,15 +169,15 @@ class _ReviewProductMarketPageState
     List<List<String>> imgIdList = [];
     List<String> videoIdList = [];
 
-    for (var element in _imgFileList!) {
+    for (var element in _imgFileList) {
       imgIdList.add([]);
     }
-    for (int i = 0; i < _imgFileList!.length; i++) {
-      if (_imgFileList!.isEmpty) {
+    for (int i = 0; i < _imgFileList.length; i++) {
+      if (_imgFileList.isEmpty) {
         imgIdList[i] = [];
       } else {
-        imgIdList[i] = (await Future.wait(_imgFileList![i].map((element) async {
-          if (element == null || element == "") {
+        imgIdList[i] = (await Future.wait(_imgFileList[i].map((element) async {
+          if (element == "") {
             return "";
           }
           String fileName = element.path.split('/').last;
@@ -209,9 +207,9 @@ class _ReviewProductMarketPageState
     List<Map<String, dynamic>> reviewProductData = [];
     for (int i = 0; i < reviewControllerList!.length; i++) {
       List<String> mediaList = [];
-      imgIdList[i].forEach((element) {
+      for (var element in imgIdList[i]) {
         mediaList.add(element);
-      });
+      }
       if (videoIdList[i] != null || videoIdList[i] != "") {
         mediaList.add(videoIdList[i]);
       }
@@ -220,7 +218,7 @@ class _ReviewProductMarketPageState
         "product_variant_id": widget.completeProductList![i]["product_variant"]
             ["id"],
         "status": reviewControllerList![i].text.trim(),
-        "rating_point": _starQualityList![i]
+        "rating_point": _starQualityList[i]
       });
     }
     var response;
@@ -363,7 +361,7 @@ class _ReviewProductMarketPageState
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          child: _imgFileList![mediaIndex].isEmpty
+          child: _imgFileList[mediaIndex].isEmpty
               ? _buildSelectImageVideo(
                   mediaIndex,
                   "Thêm hình ảnh",
@@ -373,8 +371,8 @@ class _ReviewProductMarketPageState
                   scrollDirection: Axis.horizontal,
                   child: Row(
                       children: List.generate(
-                          _imgFileList![mediaIndex].length + 1, (index) {
-                    if (index < _imgFileList![mediaIndex].length) {
+                          _imgFileList[mediaIndex].length + 1, (index) {
+                    if (index < _imgFileList[mediaIndex].length) {
                       return Container(
                         margin: const EdgeInsets.only(right: 10, top: 10),
                         height: 100,
@@ -387,7 +385,7 @@ class _ReviewProductMarketPageState
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(7),
                                 child: Image.file(
-                                  _imgFileList![mediaIndex][index],
+                                  _imgFileList[mediaIndex][index],
                                   fit: BoxFit.fitHeight,
                                 ),
                               ),
@@ -399,8 +397,8 @@ class _ReviewProductMarketPageState
                                 children: [
                                   InkWell(
                                     onTap: () {
-                                      _imgFileList![mediaIndex].remove(
-                                          _imgFileList![mediaIndex][index]);
+                                      _imgFileList[mediaIndex].remove(
+                                          _imgFileList[mediaIndex][index]);
                                       setState(() {});
                                     },
                                     child: Container(
@@ -523,10 +521,10 @@ class _ReviewProductMarketPageState
           child: Switch(
             onChanged: (value) {
               setState(() {
-                _showSwitchList![index] = value as bool;
+                _showSwitchList[index] = value;
               });
             },
-            value: _showSwitchList![index],
+            value: _showSwitchList[index],
           )),
       changeBackground: transparent,
     );
@@ -539,13 +537,13 @@ class _ReviewProductMarketPageState
     int value;
     switch (key) {
       case "quality":
-        value = _starQualityList![index];
+        value = _starQualityList[index];
         break;
       case "service":
-        value = _starServiceList![index];
+        value = _starServiceList[index];
         break;
       default:
-        value = _starTranferList![index];
+        value = _starTranferList[index];
         break;
     }
     switch (value) {
@@ -592,13 +590,13 @@ class _ReviewProductMarketPageState
             onTap: () {
               switch (key) {
                 case "quality":
-                  _starQualityList![index] = indexList + 1;
+                  _starQualityList[index] = indexList + 1;
                   break;
                 case "service":
-                  _starServiceList![index] = indexList + 1;
+                  _starServiceList[index] = indexList + 1;
                   break;
                 default:
-                  _starTranferList![index] = indexList + 1;
+                  _starTranferList[index] = indexList + 1;
                   break;
               }
               setState(() {});
@@ -606,10 +604,10 @@ class _ReviewProductMarketPageState
             child: Icon(
               Icons.star,
               color: (key == "quality"
-                              ? _starQualityList![index]
+                              ? _starQualityList[index]
                               : key == "service"
-                                  ? _starServiceList![index]
-                                  : _starTranferList![index]) -
+                                  ? _starServiceList[index]
+                                  : _starTranferList[index]) -
                           1 >=
                       indexList
                   ? Colors.yellow[700]
@@ -668,7 +666,9 @@ class _ReviewProductMarketPageState
         controller: controller,
         maxLines: 10,
         keyboardType: keyboardType ?? TextInputType.text,
-        validator: (value) {},
+        validator: (value) {
+          return null;
+        },
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20, 10, 10, 10),
             border: InputBorder.none,
@@ -726,7 +726,7 @@ class _ReviewProductMarketPageState
     selectedImage = await ImagePicker().pickImage(source: src);
     if (selectedImage != null) {
       setState(() {
-        _imgFileList![index].add(File(selectedImage!.path));
+        _imgFileList[index].add(File(selectedImage!.path));
       });
     }
   }

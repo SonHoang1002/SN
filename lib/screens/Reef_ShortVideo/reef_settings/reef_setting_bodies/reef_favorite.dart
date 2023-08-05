@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +36,7 @@ class _ReefFavoriteState extends State<ReefFavorite> {
   String _tabCurrent = tabsTitles[0];
   List<dynamic>? _friendList;
   List<dynamic>? _pageList;
-  bool _isLoading = true;
+  final bool _isLoading = true;
   @override
   void initState() {
     super.initState();
@@ -173,14 +172,14 @@ class _ReefFavoriteState extends State<ReefFavorite> {
     );
   }
 
-  Widget _buildSelectionWidget(dynamic data, {Function? function}) {
-    dynamic _data = data ?? {};
+  Widget _buildSelectionWidget(dynamic data) {
+    dynamic data0 = data ?? {};
     return GeneralComponent(
       [
         buildTextContent(
-            _data["display_name"] ??
-                _data["username"] ??
-                _data["title"] ??
+            data0["display_name"] ??
+                data0["username"] ??
+                data0["title"] ??
                 "---",
             true,
             fontSize: 14),
@@ -196,9 +195,9 @@ class _ReefFavoriteState extends State<ReefFavorite> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
-          child: _data["avatar_media"] != null
+          child: data0["avatar_media"] != null
               ? ImageCacheRender(
-                  path: _data["avatar_media"]["url"],
+                  path: data0["avatar_media"]["url"],
                 )
               : Image.asset("assets/images/cat_1.png"),
         ),

@@ -8,7 +8,6 @@ import 'package:social_network_app_mobile/widgets/FeedVideo/custom_video_element
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'package:social_network_app_mobile/widgets/FeedVideo/custom_video_elements/center_play_button.dart';
 
 class VideoPlayerHasController extends ConsumerStatefulWidget {
   final dynamic media;
@@ -97,12 +96,12 @@ class _VideoPlayerHasControllerState
         ? WidgetsBinding.instance.removeObserver(this)
         : null;
 
-    // if (betterPlayer!.videoPlayerController != null &&
-    //     betterPlayer!.videoId != widget.media['id']) {
-    //   chewieController!.pause();
-    //   videoPlayerController?.dispose();
-    //   chewieController?.dispose();
-    // }
+    if (betterPlayer!.videoPlayerController != null &&
+        betterPlayer!.videoId != widget.media['id']) {
+      chewieController!.pause();
+      videoPlayerController?.dispose();
+      chewieController?.dispose();
+    }
     super.dispose();
   }
 
@@ -146,8 +145,8 @@ class _VideoPlayerHasControllerState
   Widget build(BuildContext context) {
     final selectedVideo = ref.watch(selectedVideoProvider);
     // widget.isFocus == true
-    //     ? chewieController!.videoPlayerController.play()
-    //     : chewieController!.videoPlayerController.pause();
+    //     ? chewieController?.videoPlayerController.setVolume(5)
+    //     : chewieController?.videoPlayerController.setVolume(0); 
     return AspectRatio(
       aspectRatio:
           //  videoPlayerController!.value.aspectRatio > 1
@@ -211,7 +210,7 @@ class _VideoPlayerHasControllerState
                                     Material(
                                         child: Chewie(
                                             controller: chewieController!)),
-                                    widget.handleAction != null 
+                                    widget.handleAction != null
                                         ? Positioned.fill(
                                             child: GestureDetector(
                                             onTap: () {

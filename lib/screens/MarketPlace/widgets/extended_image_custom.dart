@@ -31,6 +31,7 @@ class ExtendedImageNetWorkCustom extends StatelessWidget {
             color: greyColor,
           );
         }
+        return null;
       },
     );
   }

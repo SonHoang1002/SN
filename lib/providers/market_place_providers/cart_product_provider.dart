@@ -1,7 +1,5 @@
-import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_network_app_mobile/apis/market_place_apis/cart_apis.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/cart_apis.dart';
 
 final cartProductsProvider =
@@ -36,9 +34,9 @@ class CartProductsController extends StateNotifier<CartProductsState> {
 
   dynamic getCartCounter(List<dynamic> cartList) {
     dynamic counter = 0;
-    cartList.forEach((element) {
+    for (var element in cartList) {
       counter += element["items"].length;
-    });
+    }
     return counter;
   }
 }

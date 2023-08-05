@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -10,7 +9,6 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
-import 'package:social_network_app_mobile/widgets/chip_menu.dart';
 
 import '../../theme/colors.dart';
 

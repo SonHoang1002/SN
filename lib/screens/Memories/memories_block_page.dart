@@ -1,10 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/screens/Page/PageCreate/CreateStep/settting_page_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 
 class MemoriesBlocked extends StatefulWidget {
@@ -106,7 +103,7 @@ class _MemoriesSettingState extends State<MemoriesBlocked> {
           ),
           textFieldController.text.isNotEmpty
               ? Container(
-                  margin: EdgeInsets.only(top: 50),
+                  margin: const EdgeInsets.only(top: 50),
                   child: Column(
                     children: [
                       const Icon(

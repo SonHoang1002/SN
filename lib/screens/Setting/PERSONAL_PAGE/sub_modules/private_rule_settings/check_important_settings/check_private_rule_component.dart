@@ -17,7 +17,7 @@ import 'protect_account/protect_your_account_constants.dart';
 import 'see_your_share_modules/information_personal_page.dart';
 
 class CheckPrivateRuleComponentPage extends StatelessWidget {
-  CheckPrivateRuleComponentPage({required this.path, required this.name});
+  CheckPrivateRuleComponentPage({super.key, required this.path, required this.name});
   String path;
   String name;
 
@@ -33,9 +33,9 @@ class CheckPrivateRuleComponentPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             SizedBox(),
             SizedBox(),
@@ -75,7 +75,6 @@ class CheckPrivateRuleComponentPage extends StatelessWidget {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       fixedSize: Size(width * 0.9, 40)),
-                  child: const Text("Tiep tuc"),
                   onPressed: (() {
                     Widget nextRoute;
                     switch (name) {
@@ -97,6 +96,7 @@ class CheckPrivateRuleComponentPage extends StatelessWidget {
                     }
                     pushToNextScreen(context, nextRoute);
                   }),
+                  child: const Text("Tiep tuc"),
                 ),
               ))
             ]),
@@ -109,7 +109,7 @@ class CheckPrivateRuleComponentPage extends StatelessWidget {
   Widget _buildContent(String path, String name) {
     String title = "";
     String subTitle = "";
-    var contents;
+    Map<String, dynamic> contents;
 
     switch (name) {
       case "who_can_see_what_you_share":

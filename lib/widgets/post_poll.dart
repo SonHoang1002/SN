@@ -3,9 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import 'package:helpers/helpers/extensions/extensions.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 
 // FlutterPolls widget.
 // This widget is used to display a poll.
@@ -312,7 +310,7 @@ class FlutterPolls extends HookWidget {
       } else {
         // nguoi dung muon vote
         if (pollOption.votes == 0) {
-          bool _pollOptionsIsEmpty = votedOptions.value!.isEmpty;
+          bool pollOptionsIsEmpty = votedOptions.value!.isEmpty;
           if (votedOptions.value!.isEmpty) {
             totalVotes.value != 0 ? totalVotes.value++ : null;
           }
@@ -328,7 +326,7 @@ class FlutterPolls extends HookWidget {
           if (success) {
             pollOption.votes++;
             userHasVoted.value = true;
-            _pollOptionsIsEmpty
+            pollOptionsIsEmpty
                 ? signPollPostFunction != null
                     ? signPollPostFunction!({
                         'choices': votedOptions.value!.map((e) => e.id).toList()

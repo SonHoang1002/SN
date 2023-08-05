@@ -10,17 +10,17 @@ class HowPeopleCanFindYouOnEmsoConstants {
     "data": [
       {
         "key": "add_friend_request",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Lời mời kết bạn"
       },
       {
         "key": "phone_and_email",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Số điện thoại và email"
       },
       {
         "key": "search_tool",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Công cụ tìm kiếm"
       }
     ]
@@ -48,7 +48,7 @@ class AddFriendRequestConstants {
   static const Map<String, dynamic> ADD_FRIEND_REQUEST_CONTENT = {
     "key": "add_friend_request_tip",
     "data": {
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Ai có thể gửi cho bạn lời mời kết bạn ?",
       "content": "Mọi người"
     }
@@ -56,7 +56,7 @@ class AddFriendRequestConstants {
   static const Map<String, dynamic> ADD_FRIEND_REQUEST_TIP = {
     "key": "add_friend_request_tip",
     "data": {
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title":
           "Mẹo: Nếu nhận được quá nhiều lời mời kết bạn không mong muốn, bạn có thể đặt tùy chọn này thành Bạn của bạn bè."
     }
@@ -71,7 +71,7 @@ class PhoneAndEmailConstants {
   static const Map<String, dynamic> PHONE_AND_EMAIL_TIP = {
     "key": "phone_and_email_tip",
     "data": {
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title":
           "Mẹo: Do có nhiều người trùng tên nhau nên chúng tôi cung cấp một vài cách để mọi người tìm thấy nhau trên Emso."
     }
@@ -84,13 +84,13 @@ class PhoneAndEmailConstants {
     "data": [
       {
         "key": "phone",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Số điện thoại",
         "content": "Mọi người",
       },
       {
         "key": "email",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Email",
         "content": "Mọi người",
       },

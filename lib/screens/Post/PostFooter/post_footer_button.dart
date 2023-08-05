@@ -717,14 +717,14 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
         return;
       } else if (post['in_reply_to_id'] != null) {
         // cap nhat so luong khi xoa cmt con
-        postComment.forEach((element) {
+        for (var element in postComment) {
           if (element['id'] == post['in_reply_to_id']) {
             setState(() {
               postComment = postComment;
             });
             _updatePostCount(subIfChild: 1);
           }
-        });
+        }
       }
     }
   }
@@ -734,9 +734,9 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
     int countSubIfChild = subIfChild ?? 0;
     dynamic updateCountPostData = postData;
     dynamic count = updateCountPostData['replies_total'];
-    postComment.forEach((element) {
+    for (var element in postComment) {
       count += element["replies_total"];
-    });
+    }
     updateCountPostData['replies_total'] =
         count + countAdditionalIfChild - countSubIfChild;
     ref

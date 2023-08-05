@@ -15,8 +15,8 @@ class DeletedStatus extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Row(
-          children: const [
+        title: const Row(
+          children: [
             BackIconAppbar(),
             SizedBox(width: 10.0),
             AppBarTitle(title: "Bài viết"),

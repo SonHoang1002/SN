@@ -24,11 +24,11 @@ class CustomTextSelectionControls extends TextSelectionControls {
 
   @override
   Offset getHandleAnchor(TextSelectionHandleType type, double textLineHeight) {
-    return Offset(0, 0);
+    return const Offset(0, 0);
   }
 
   @override
   Size getHandleSize(double textLineHeight) {
-    return Size(0, 0);
+    return const Size(0, 0);
   }
 }

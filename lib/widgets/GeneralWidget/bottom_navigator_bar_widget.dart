@@ -23,13 +23,13 @@ Widget buildBottomNavigatorBarWidget(BuildContext context) {
                 Provider.of<RouteProvider>(context, listen: false)
                     .setRouteProvider(index);
               }),
-              child: Container(
+              child: SizedBox(
                 height: 50,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       item[0] is IconData
-                          ? Container(
+                          ? SizedBox(
                               height: Provider.of<RouteProvider>(
                                 context,
                               ).getRouteList[index]
@@ -61,8 +61,8 @@ Widget buildBottomNavigatorBarWidget(BuildContext context) {
                               ).getRouteList[index]
                                   ? 35
                                   : 30,
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
+                              padding: const EdgeInsets.all(5),
+                              decoration: const BoxDecoration(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15))),
                               child: Image.asset(

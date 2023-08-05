@@ -13,7 +13,6 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/general_componen
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
-import 'package:social_network_app_mobile/widgets/button_primary.dart';
 
 import '../../../../theme/colors.dart';
 
@@ -53,11 +52,11 @@ class _ChooseAddressPageState extends ConsumerState<ChooseAddressPage> {
         idList!.add(_addressList![i]["id"]);
       }
       if (currentSelectedAddress.isNotEmpty) {
-        idList!.forEach((element) {
+        for (var element in idList!) {
           if (element == currentSelectedAddress["id"]) {
             selectedId ??= idList![idList!.indexOf(element)];
           }
-        });
+        }
       } else {
         selectedId ??= idList![0];
       }

@@ -12,7 +12,6 @@ import 'package:social_network_app_mobile/widgets/chip_menu.dart';
 import 'package:social_network_app_mobile/widgets/page_item.dart';
 import 'package:social_network_app_mobile/widgets/skeleton.dart';
 
-import '../MarketPlace/widgets/circular_progress_indicator.dart';
 
 class PageGeneral extends ConsumerStatefulWidget {
   const PageGeneral({Key? key}) : super(key: key);

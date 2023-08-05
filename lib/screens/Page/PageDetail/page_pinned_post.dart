@@ -36,8 +36,8 @@ class _PagePinPostState extends ConsumerState<PagePinPost> {
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 15.0),
                 padding: const EdgeInsets.only(top: 12),
-                child: Row(
-                  children: const [
+                child: const Row(
+                  children: [
                     Icon(
                       FontAwesomeIcons.thumbtack,
                       size: 18,

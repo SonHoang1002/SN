@@ -10,6 +10,6 @@ class MusicSpaceRender extends StatefulWidget {
 class MusicSpaceRenderState extends State<MusicSpaceRender> {
   @override
   Widget build(BuildContext context) {
-    return Column();
+    return const Column();
   }
 }

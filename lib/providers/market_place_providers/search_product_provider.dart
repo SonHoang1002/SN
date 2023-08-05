@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/search_product_api.dart';

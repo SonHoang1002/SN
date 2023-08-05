@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:badges/badges.dart' as ChipNoti;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pv;

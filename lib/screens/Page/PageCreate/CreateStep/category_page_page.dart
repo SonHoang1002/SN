@@ -97,9 +97,9 @@ class _CategoryPageState extends State<CategoryPage> {
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: Row(
+          title: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               BackIconAppbar(),
               SizedBox(),
             ],
@@ -210,10 +210,10 @@ class _CategoryPageState extends State<CategoryPage> {
                               Container(
                                 padding:
                                     const EdgeInsets.only(left: 10, top: 10),
-                                child: Row(
+                                child: const Row(
                                   // ignore: prefer_const_literals_to_create_immutables
                                   children: [
-                                    const Text(
+                                    Text(
                                       CategoryPageConstants.TITLE,
                                       style: TextStyle(fontSize: 15),
                                     ),

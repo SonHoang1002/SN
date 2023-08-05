@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -607,7 +606,7 @@ class _CropImageScreenState extends State<CropImageScreen> {
 void showSnackBar(BuildContext context, String message) {
   final snackBar = SnackBar(
     content: Text(message),
-    duration: Duration(seconds: 3), // Thời gian hiển thị Snackbar
+    duration: const Duration(seconds: 3), // Thời gian hiển thị Snackbar
     // Các tùy chọn thêm nếu cần thiết, ví dụ: action, backgroundColor, behavior, v.v.
   );
 

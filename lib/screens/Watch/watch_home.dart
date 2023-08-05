@@ -11,7 +11,12 @@ import 'package:visibility_detector/visibility_detector.dart';
 class WatchHome extends ConsumerStatefulWidget {
   final String type;
   final Function fetchDataWatch;
-  const WatchHome({Key? key, required this.type, required this.fetchDataWatch})
+  final bool? isFocus;
+  const WatchHome(
+      {Key? key,
+      required this.type,
+      required this.fetchDataWatch,
+      this.isFocus})
       : super(key: key);
 
   @override
@@ -75,6 +80,7 @@ class _WatchHomeState extends ConsumerState<WatchHome>
 
     // [110687626644559367, 110568916833729667, 110568899606375321,
     // 110568797742857620, 110568789090500908, 110512206994112364]
+    print(widget.type.toString() + widget.isFocus.toString());
     return Expanded(
         child: watchData.isNotEmpty
             ? Column(
@@ -103,8 +109,11 @@ class _WatchHomeState extends ConsumerState<WatchHome>
                                         Random().nextInt(10000).toString()),
                                     post: watchData[index],
                                     type: postWatch,
-                                    isFocus: focusIdNotifier!.value ==
-                                        watchData[index]['id'],
+                                    isFocus:
+                                        // widget.isFocus == true && (
+                                        focusIdNotifier!.value ==
+                                            watchData[index]['id'],
+                                    // ),
                                     preType: widget.type == 'watch_home'
                                         ? "suggest"
                                         : "follow"),

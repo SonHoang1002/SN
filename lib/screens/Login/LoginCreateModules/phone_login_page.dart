@@ -26,8 +26,8 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
   late double height = 0;
   bool _onPhoneScreen = false;
 
-  TextEditingController _phoneController = TextEditingController(text: "");
-  TextEditingController _emailController = TextEditingController(text: "");
+  final TextEditingController _phoneController = TextEditingController(text: "");
+  final TextEditingController _emailController = TextEditingController(text: "");
   String textValidEmail = '';
   List<String> _countryNumberCode = ["VN", "+84"];
   checkIsValid() {
@@ -196,8 +196,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
       Function handleUpdate, String placeHolder,
       {double? borderRadius = 5,
       bool? isHavePrefix = false,
-      bool? numberType = false,
-      bool? emailType = false}) {
+      bool? numberType = false}) {
     return SizedBox(
       height: 40,
       child: TextFormField(

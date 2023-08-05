@@ -10,7 +10,7 @@ import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 
 class SeeAllBookmark extends ConsumerStatefulWidget {
-  SeeAllBookmark({super.key});
+  const SeeAllBookmark({super.key});
   @override
   SeeAllBookmarkState createState() => SeeAllBookmarkState();
 }
@@ -77,7 +77,7 @@ class SeeAllBookmarkState extends ConsumerState<SeeAllBookmark> {
               ),
             ),
             isLoading
-                ? Center(child: BookmarkListSkeleton())
+                ? const Center(child: BookmarkListSkeleton())
                 : allBookmark.isEmpty
                     ? Column(
                         children: [

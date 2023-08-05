@@ -21,6 +21,7 @@ import 'package:social_network_app_mobile/widgets/EditImage/drag_object/matrix_g
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/search_input.dart';
 
 import 'draw_image/sketcher.dart';
@@ -114,47 +115,6 @@ class _EditImageMainState extends State<EditImageMain> {
     },
   ];
 
-  List<Color> drawColorList = [
-    Colors.transparent,
-    Colors.black,
-    Colors.white,
-    Colors.red,
-    Colors.redAccent,
-    Colors.pink,
-    Colors.pinkAccent,
-    Colors.purple,
-    Colors.purpleAccent,
-    Colors.deepPurple,
-    Colors.deepPurpleAccent,
-    Colors.indigo,
-    Colors.indigoAccent,
-    Colors.blue,
-    Colors.blueAccent,
-    Colors.lightBlue,
-    Colors.lightBlueAccent,
-    Colors.cyan,
-    Colors.cyanAccent,
-    Colors.teal,
-    Colors.tealAccent,
-    Colors.green,
-    Colors.greenAccent,
-    Colors.lightGreen,
-    Colors.lightGreenAccent,
-    Colors.lime,
-    Colors.limeAccent,
-    Colors.yellow,
-    Colors.yellowAccent,
-    Colors.amber,
-    Colors.amberAccent,
-    Colors.orange,
-    Colors.orangeAccent,
-    Colors.deepOrange,
-    Colors.deepOrangeAccent,
-    Colors.brown,
-    Colors.grey,
-    Colors.blueGrey,
-  ];
-
   final List<dynamic> selectionFrameList = [
     null,
     "assets/effect_frame/effect_frame_1.png",
@@ -163,6 +123,7 @@ class _EditImageMainState extends State<EditImageMain> {
     "assets/effect_frame/effect_frame_4.png",
     "assets/effect_frame/effect_frame_5.png",
   ];
+
   bool? _musicSelection;
   bool? _tagsSelection;
   bool? _cropSelection;
@@ -203,6 +164,7 @@ class _EditImageMainState extends State<EditImageMain> {
   // animation and frame property
   String? _selectedFrame;
   bool _isOpenAnimationSelections = false;
+  // List emojis = [];
 
   chooseMenu(dynamic key, {int index = -1}) async {
     hiddenKeyboard(context);
@@ -611,6 +573,12 @@ class _EditImageMainState extends State<EditImageMain> {
       _imageData = widget.imageData;
     }
     super.initState();
+    // emojis = [...faceTexts, ...stickers, ...thumpFlags, ...animals];
+
+    // emojis.addAll(animals);
+    // emojis.addAll(faceTexts);
+    // emojis.addAll(stickers);
+    // emojis.addAll(thumpFlags);
   }
 
   @override
@@ -1159,53 +1127,69 @@ class _EditImageMainState extends State<EditImageMain> {
               children: [
                 buildSpacer(height: 10),
                 Flexible(
-                    child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisSpacing: 25,
-                                mainAxisSpacing: 25,
-                                crossAxisCount: 4,
-                                childAspectRatio: 1.0),
-                        padding:
-                            const EdgeInsets.only(top: 20, right: 10, left: 10),
-                        shrinkWrap: true,
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        itemCount: emojis.length,
-                        itemBuilder: ((context, index) {
-                          final emojiData = emojis[index];
-                          return GestureDetector(
-                            onTap: () {
-                              chooseEmojiItem(index);
-                            },
-                            child: SizedBox(
-                              height: 50,
-                              width: 50,
-                              child: emojiData['url'] != null
-                                  ? ExtendedImage.network(
-                                      emojiData['url'],
-                                    )
-                                  : ExtendedImage.asset(
-                                      emojiData['asset'],
-                                    ),
-                            ),
-                          );
-                        })))
+                    child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      renderGridView(faceTexts, 3),
+                      const CrossBar(
+                        height: 5,
+                        opacity: .2,
+                      ),
+                      renderGridView(
+                          [...stickers, ...thumpFlags, ...animals], 6),
+                    ],
+                  ),
+                ))
               ],
             ),
           );
         });
   }
 
-  chooseEmojiItem(int index) {
+  Widget renderGridView(List emojiList, int crossAxisCount) {
+    return GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisSpacing: 25,
+            mainAxisSpacing: 25,
+            crossAxisCount: crossAxisCount,
+            childAspectRatio: 1.0),
+        padding: const EdgeInsets.only(top: 20, right: 10, left: 10),
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: emojiList.length,
+        itemBuilder: ((context, index) {
+          final emojiData = emojiList[index];
+          return GestureDetector(
+            onTap: () {
+              chooseEmojiItem(emojiData);
+            },
+            child: SizedBox(
+              height: 50,
+              width: 50,
+              child: emojiData['url'] != null
+                  ? ExtendedImage.network(
+                      emojiData['url'],
+                    )
+                  : ExtendedImage.asset(
+                      emojiData['asset'],
+                    ),
+            ),
+          );
+        }));
+  }
+
+  chooseEmojiItem(dynamic emojiData) {
     setState(() {
-      _emojiSelectionItems!.add([index]);
-      _dataProperties.add({"key": "emoji", "id": emojis[index]['id']});
+      _emojiSelectionItems!.add([emojiData]);
+      _dataProperties
+          .add({"key": "emoji", "id": "${emojiData['id']}-${emojiData['id']}"});
       _overlayWidget.add({
         "key": "emoji",
         'visible': true,
-        "widget": emojis[index]['url'] != null
-            ? ExtendedImage.network(emojis[index]['url'], height: 70, width: 70)
-            : ExtendedImage.asset(emojis[index]['asset'], height: 70, width: 70)
+        "widget": emojiData?['url'] != null
+            ? ExtendedImage.network(emojiData?['url'], height: 70, width: 70)
+            : ExtendedImage.asset(emojiData?['asset'], height: 70, width: 70)
       });
       notifiers.add(ValueNotifier(Matrix4.identity()));
       _selectedOverlayObject = _dataProperties.last;

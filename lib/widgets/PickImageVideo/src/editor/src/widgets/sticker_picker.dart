@@ -214,7 +214,7 @@ class _StickersTabState extends State<StickersTab>
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
         child: Text(
           widget.label,
-          style: Theme.of(context).textTheme.button?.copyWith(
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 color: Colors.white,
               ),
         ),

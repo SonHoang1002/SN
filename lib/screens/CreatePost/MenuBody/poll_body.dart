@@ -221,7 +221,7 @@ class _PollBodyState extends State<PollBody> {
 
   Widget _buildInputPoll(
       int index, TextEditingController controller, String hintText,
-      {double? height, TextInputType? keyboardType, Function? suffixFunction}) {
+      {double? height, TextInputType? keyboardType}) {
     return Row(
       children: [
         Flexible(

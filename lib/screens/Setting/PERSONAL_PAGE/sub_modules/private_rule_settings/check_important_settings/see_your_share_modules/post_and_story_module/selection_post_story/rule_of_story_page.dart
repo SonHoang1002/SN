@@ -10,6 +10,8 @@ import 'rule_of_story_constants.dart';
 class SelectionPrivateRuleOfStoryPage extends StatelessWidget {
   late double width = 0;
   late double height = 0;
+
+  SelectionPrivateRuleOfStoryPage({super.key});
 ///////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////
   /// chua lam phan man hinh tiep theo cho an tin voi va tin ban da tat
@@ -30,11 +32,11 @@ class SelectionPrivateRuleOfStoryPage extends StatelessWidget {
           children: [
             GestureDetector(
                 onTap: () => Navigator.of(context).pop(),
-                child: AppBarTitle(title: "Hủy")),
-            AppBarTitle(title: "Cài đặt"),
+                child: const AppBarTitle(title: "Hủy")),
+            const AppBarTitle(title: "Cài đặt"),
             GestureDetector(
                 onTap: () => Navigator.of(context).pop(),
-                child: AppBarTitle(title: "Lưu")),
+                child: const AppBarTitle(title: "Lưu")),
             // MenuIconAppbar(),
           ],
         ),
@@ -50,7 +52,7 @@ class SelectionPrivateRuleOfStoryPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [
                   // title
                   _buildDivider(),
@@ -99,14 +101,14 @@ class SelectionPrivateRuleOfStoryPage extends StatelessWidget {
                               prefixWidget: Container(
                                 height: 40,
                                 width: 40,
-                                padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.only(right: 10),
+                                padding: const EdgeInsets.all(10),
+                                margin: const EdgeInsets.only(right: 10),
                                 child: SvgPicture.asset(
                                   data[index]["icon"],
                                   // color: Colors.white,
                                 ),
                               ),
-                              suffixWidget: Container(
+                              suffixWidget: SizedBox(
                                   height: 30,
                                   width: 30,
                                   child: data[index]["iconNext"] == ""
@@ -114,7 +116,7 @@ class SelectionPrivateRuleOfStoryPage extends StatelessWidget {
                                           value: true,
                                           groupValue: true,
                                           onChanged: (value) {})
-                                      : Icon(
+                                      : const Icon(
                                           SettingConstants.NEXT_ICON_DATA,
                                           // color: Colors.white,
                                           size: 20,
@@ -132,7 +134,7 @@ class SelectionPrivateRuleOfStoryPage extends StatelessWidget {
                           .SELECTION_PRIVATE_RULE_OF_STORY_TITLE[1],
                       true,
                       fontSize: 15),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   ListView.builder(
@@ -165,20 +167,20 @@ class SelectionPrivateRuleOfStoryPage extends StatelessWidget {
                               prefixWidget: Container(
                                 height: 40,
                                 width: 40,
-                                padding: EdgeInsets.all(10),
-                                margin: EdgeInsets.only(right: 10),
+                                padding: const EdgeInsets.all(10),
+                                margin: const EdgeInsets.only(right: 10),
                                 child: SvgPicture.asset(
                                   data[index]["icon"],
                                   // color: Colors.white,
                                 ),
                               ),
-                              suffixWidget: Container(
+                              suffixWidget: SizedBox(
                                   height: 30,
                                   width: 30,
                                   child: data[index]["iconNext"] == ""
                                       ? Checkbox(
                                           value: true, onChanged: (value) {})
-                                      : Icon(
+                                      : const Icon(
                                           SettingConstants.NEXT_ICON_DATA,
                                           // color: Colors.white,
                                           size: 20,
@@ -203,8 +205,8 @@ class SelectionPrivateRuleOfStoryPage extends StatelessWidget {
 }
 
 _buildDivider() {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 5.0, top: 5),
+  return const Padding(
+    padding: EdgeInsets.only(bottom: 5.0, top: 5),
     child: Divider(
       height: 10,
       color: Colors.white,

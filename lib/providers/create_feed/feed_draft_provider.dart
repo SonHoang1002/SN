@@ -12,16 +12,16 @@ class DraftFeed {
       {this.gifLink = "",
       this.files = const [],
       this.content = "",
-      this.checkin = null,
-      this.previewUrlData = null,
-      this.poll = null});
+      this.checkin,
+      this.previewUrlData,
+      this.poll});
   DraftFeed copyWith({
     String gifLink = "",
     List files = const [],
     String content = "",
-    dynamic checkin = null,
-    dynamic previewUrlData = null,
-    dynamic poll = null
+    dynamic checkin,
+    dynamic previewUrlData,
+    dynamic poll
   }) {
     return DraftFeed(
       gifLink: gifLink,

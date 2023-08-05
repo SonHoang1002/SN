@@ -7,7 +7,6 @@ import 'package:social_network_app_mobile/screens/MarketPlace/widgets/cart_widge
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
@@ -16,7 +15,7 @@ import 'package:social_network_app_mobile/widgets/messenger_app_bar/app_bar_titl
 
 import '../../../widgets/GeneralWidget/general_component.dart';
 
-const List<String> tabList = ["Thông báo của tôi", "Cập nhật Người bán"];
+const List<String> tabList = ["Thông báo của tôi", "Cập nhật Người bán"]; 
 
 // ignore: must_be_immutable
 class NotificationMarketPage extends StatelessWidget {
@@ -433,8 +432,8 @@ class NotificationMarketPage extends StatelessWidget {
                 fontSize: 12,
                 colorWord: greyColor),
             buildSpacer(height: 5),
-            Row(
-              children: const [
+            const Row(
+              children: [
                 Expanded(
                   child: ImageCacheRender(
                     path:

@@ -10,35 +10,35 @@ class SelectionDefaultObjectConstants {
     "data": [
       {
         "key": "public",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Công khai",
         "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
         // "iconNext": SettingConstants.NEXT_ICON_DATA,
       },
       {
         "key": "friend",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Bạn bè",
         "subTitle": "Bạn bè của bạn trên Emso",
         // "iconNext": "",
       },
       {
         "key": "friend_exception",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Bạn bè ngoại trừ",
         "subTitle": "Không hiển thị với một số bạn bè",
         "iconNext": SettingConstants.NEXT_ICON_DATA,
       },
       {
         "key": "specific_friends",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Bạn bè cụ thể",
         "subTitle": "Chỉ hiển thị với một số bạn bè",
         "iconNext": SettingConstants.NEXT_ICON_DATA
       },
       {
         "key": "private",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Chỉ mình tôi",
         "subTitle": "Chỉ mình tôi",
         // "iconNext": ""

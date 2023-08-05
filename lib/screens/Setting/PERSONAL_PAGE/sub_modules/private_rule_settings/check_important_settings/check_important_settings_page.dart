@@ -10,6 +10,8 @@ class CheckImportantSettingsPage extends StatelessWidget {
   late double width = 0;
   late double height = 0;
 
+  CheckImportantSettingsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -19,9 +21,9 @@ class CheckImportantSettingsPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             CloseIconAppbar(),
             // AppBarTitle(title: "Cài đặt"),
             MenuIconAppbar(),

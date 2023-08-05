@@ -114,9 +114,9 @@ class _LifeEventCategoriesState extends State<LifeEventCategories> {
                         const SizedBox(
                           height: 8.0,
                         ),
-                        Row(
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Icon(
                               FontAwesomeIcons.pen,
                               size: 16,

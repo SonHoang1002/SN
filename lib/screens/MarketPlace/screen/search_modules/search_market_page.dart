@@ -1,14 +1,11 @@
-import 'dart:convert';
 
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/product_categories_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/search_product_provider.dart';
-import 'package:social_network_app_mobile/screens/MarketPlace/screen/detail_product_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/search_modules/category_search_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/cart_widget.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/search_product_api.dart';
@@ -19,7 +16,6 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.da
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import '../../../../theme/colors.dart';
 
 class SearchMarketPage extends ConsumerStatefulWidget {
@@ -36,7 +32,7 @@ class _SearchMarketPageState extends ConsumerState<SearchMarketPage> {
   List _historyProductList = [];
   final TextEditingController _searchController =
       TextEditingController(text: "");
-  FocusNode _focusNode = FocusNode();
+  final FocusNode _focusNode = FocusNode();
   bool _isExpand = false;
   var paramConfig = {"entity_type": "Product", "limit": 10};
   @override

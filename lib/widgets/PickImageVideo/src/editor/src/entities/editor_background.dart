@@ -199,7 +199,7 @@ class _EntityBGViewState extends State<_EntityBGView> {
       return Center(
         child: Text(
           'Un-supported background!',
-          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: Colors.white,
               ),
         ),
@@ -218,7 +218,7 @@ class _EntityBGViewState extends State<_EntityBGView> {
           return Center(
             child: Text(
               'Failed to load background!',
-              style: Theme.of(context).textTheme.subtitle1?.copyWith(
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Colors.white,
                   ),
             ),

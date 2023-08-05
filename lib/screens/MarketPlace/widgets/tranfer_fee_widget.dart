@@ -23,7 +23,7 @@ Widget buildTranferFee(BuildContext context) {
           color: Colors.green,
         ),
         changeBackground: transparent,
-        padding: EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.only(bottom: 10),
       ),
       GeneralComponent(
         [
