@@ -28,8 +28,8 @@ class DefaultSocialTextFieldController extends StatefulWidget {
       detectionBuilders;
   final bool willResizeChild;
   final DetectionPresentationMode detectionPresentationMode;
-  DefaultSocialTextFieldController(
-      {required this.child,
+  const DefaultSocialTextFieldController(
+      {super.key, required this.child,
       required this.textEditingController,
       required this.focusNode,
       this.detectionBuilders,
@@ -49,7 +49,7 @@ class _DefaultSocialTextFieldControllerState
 
   StreamSubscription<SocialContentDetection>? _streamSubscription;
 
-  Map<DetectedType, double> heightMap = Map();
+  Map<DetectedType, double> heightMap = {};
 
   var animationDuration = const Duration(milliseconds: 200);
 
@@ -64,7 +64,7 @@ class _DefaultSocialTextFieldControllerState
     super.initState();
     _streamSubscription =
         widget.textEditingController.subscribeToDetection(onDetectContent);
-    DetectedType.values.forEach((type) {
+    for (var type in DetectedType.values) {
       if (widget.detectionBuilders?.containsKey(type) ?? false) {
         heightMap[type] =
             widget.detectionBuilders?[type]!(context).preferredSize.height ??
@@ -72,7 +72,7 @@ class _DefaultSocialTextFieldControllerState
       } else {
         heightMap[type] = 0;
       }
-    });
+    }
   }
 
   @override
@@ -98,7 +98,7 @@ class _DefaultSocialTextFieldControllerState
           widget.textEditingController.selection.baseOffset >= 0) {
         var baseText = widget.textEditingController.text
             .substring(0, widget.textEditingController.selection.baseOffset);
-        var defaultTextStyle = TextStyle();
+        var defaultTextStyle = const TextStyle();
         if (widget.textEditingController.detectionTextStyles
             .containsKey(DetectedType.plain_text)) {
           defaultTextStyle = widget.textEditingController
@@ -149,7 +149,7 @@ class _DefaultSocialTextFieldControllerState
 
   double findAndGetTextFieldTopPosition() {
     var renderObject = widget.focusNode.context?.findRenderObject();
-    if (!(renderObject is RenderBox)) {
+    if (renderObject is! RenderBox) {
       return 0.0;
     }
     RenderBox box = renderObject;
@@ -161,10 +161,10 @@ class _DefaultSocialTextFieldControllerState
   ///returns detected content
   PreferredSize getDetectionContent() {
     if (!(widget.detectionBuilders?.containsKey(_detectedType) ?? false)) {
-      return PreferredSize(child: Container(), preferredSize: Size.zero);
+      return PreferredSize(preferredSize: Size.zero, child: Container());
     }
     return widget.detectionBuilders?[_detectedType]!(context) ??
-        PreferredSize(child: Container(), preferredSize: Size.zero);
+        PreferredSize(preferredSize: Size.zero, child: Container());
   }
 
   @override

@@ -46,8 +46,8 @@ class _LogoutAllDeviceLoginPageState extends State<LogoutAllDeviceLoginPage> {
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   BackIconAppbar(),
                   SizedBox(
                     width: 5,
@@ -160,7 +160,7 @@ class _LogoutAllDeviceLoginPageState extends State<LogoutAllDeviceLoginPage> {
                                   width: width,
                                   function: () {
                                     pushToNextScreen(
-                                        context, NewPasswordLoginPage());
+                                        context, const NewPasswordLoginPage());
                                   }),
                             ],
                           ),

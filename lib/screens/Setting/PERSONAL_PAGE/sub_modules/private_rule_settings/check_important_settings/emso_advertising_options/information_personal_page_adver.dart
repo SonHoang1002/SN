@@ -25,9 +25,9 @@ class InformationOnPersonalAdverPagePage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             AppBarTitle(
                 title: InformationOnPersonalAdverConstants
@@ -50,7 +50,7 @@ class InformationOnPersonalAdverPagePage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [
                   // title
                   buildTextContent(
@@ -82,7 +82,7 @@ class InformationOnPersonalAdverPagePage extends StatelessWidget {
                                   [
                                     buildTextContent(data[index]['title'], true)
                                   ],
-                                  suffixWidget: Container(
+                                  suffixWidget: SizedBox(
                                     height: 50,
                                     width: 50,
                                     child: Checkbox(
@@ -90,7 +90,7 @@ class InformationOnPersonalAdverPagePage extends StatelessWidget {
                                       onChanged: (value) {},
                                     ),
                                   ),
-                                  padding: EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(5),
                                   changeBackground: Colors.transparent,
                                 ),
                                 index == 0
@@ -124,13 +124,13 @@ class InformationOnPersonalAdverPagePage extends StatelessWidget {
                       prefixWidget: Container(
                         height: 40,
                         width: 40,
-                        padding: EdgeInsets.all(7),
-                        margin: EdgeInsets.only(right: 10),
-                        decoration: BoxDecoration(
+                        padding: const EdgeInsets.all(7),
+                        margin: const EdgeInsets.only(right: 10),
+                        decoration: const BoxDecoration(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         child: SvgPicture.asset(
-                          SettingConstants.PATH_ICON + "bell_icon.svg",
+                          "${SettingConstants.PATH_ICON}bell_icon.svg",
                           color: Colors.blue,
                         ),
                       ),
@@ -152,7 +152,7 @@ class InformationOnPersonalAdverPagePage extends StatelessWidget {
 }
 
 _buildDivider() {
-  return Padding(
+  return const Padding(
     padding: EdgeInsets.only(bottom: 0),
     child: Divider(
       height: 10,

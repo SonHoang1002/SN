@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_network_app_mobile/apis/post_api.dart';
-import 'package:social_network_app_mobile/apis/user_page_api.dart';
-import 'package:social_network_app_mobile/constant/post_type.dart';
-import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/providers/me_provider.dart';
 
 @immutable
 class PostCurrentState {

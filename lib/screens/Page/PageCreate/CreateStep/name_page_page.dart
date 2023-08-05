@@ -108,8 +108,8 @@ class _NamePagePageState extends State<NamePagePage> {
                   ),
                 ),
               ),
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Text(
                     'Mô tả về Trang của bạn.',
                     style: TextStyle(

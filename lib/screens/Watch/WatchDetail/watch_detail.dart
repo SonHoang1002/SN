@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -17,7 +16,6 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
-import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_content.dart';
 import 'package:social_network_app_mobile/screens/Post/comment_tree.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
@@ -195,14 +193,14 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
         return;
       } else if (post['in_reply_to_id'] != null) {
         // cap nhat so luong khi xoa cmt con
-        postComment.forEach((element) {
+        for (var element in postComment) {
           if (element['id'] == post['in_reply_to_id']) {
             setState(() {
               postComment = postComment;
             });
             _updatePostCount(subIfChild: 1);
           }
-        });
+        }
       }
     }
   }
@@ -493,9 +491,9 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
       int countSubIfChild = subIfChild ?? 0;
       dynamic updateCountPostData = widget.post;
       dynamic count = updateCountPostData['replies_total'];
-      postComment.forEach((element) {
+      for (var element in postComment) {
         count += element["replies_total"];
-      });
+      }
       updateCountPostData['replies_total'] =
           count + countAdditionalIfChild - countSubIfChild;
       ref
@@ -886,6 +884,7 @@ class _BottomActionState extends State<BottomAction> {
                                                   ? widget
                                                       .handleAdditionalAction!(el)
                                                   : null;
+                                              return null;
                                             },
                                           )),
                                       // widget.media['status_media']['viewer_reaction'] == el

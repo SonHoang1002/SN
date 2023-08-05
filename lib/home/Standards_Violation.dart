@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../constant/common.dart';
@@ -22,7 +21,7 @@ class AlertDialogUtils {
                 Icons.warning_amber,
                 color: primaryColor,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Flexible(
@@ -43,7 +42,7 @@ class AlertDialogUtils {
               )
             ],
           ),
-          Divider(),
+          const Divider(),
         ],
       ),
               content: Column(
@@ -62,11 +61,11 @@ class AlertDialogUtils {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.blue, width: 2),
               borderRadius: BorderRadius.circular(10),
@@ -127,7 +126,7 @@ class AlertDialogUtils {
                 ),
                 Text(
                   dataFilter[0]["status"]["content"],
-                  style: TextStyle(fontWeight: FontWeight.w500),
+                  style: const TextStyle(fontWeight: FontWeight.w500),
                 )
               ],
             ),
@@ -169,7 +168,7 @@ class AlertDialogUtils {
                             fontWeight: FontWeight.bold),
                         text: HowToDecide.HOW_TO_DECISION_TITLE),
                   ),
-                  Divider(),
+                  const Divider(),
                 ],
               ),
               content: Column(
@@ -241,7 +240,7 @@ class AlertDialogUtils {
               actions: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: const Color(0xFFB0B2B5), // Đặt màu cho nút
+                    backgroundColor: const Color(0xFFB0B2B5), // Đặt màu cho nút
                     // Các thuộc tính khác của nút như textColor, textStyle, padding, borderRadius, v.v. cũng có thể được chỉnh sửa ở đây nếu cần.
                   ),
                   child: const Text("Quay lại"),
@@ -325,7 +324,7 @@ class AlertDialogUtils {
               actions: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: const Color(0xFFB0B2B5), // Đặt màu cho nút
+                    backgroundColor: const Color(0xFFB0B2B5), // Đặt màu cho nút
                     // Các thuộc tính khác của nút như textColor, textStyle, padding, borderRadius, v.v. cũng có thể được chỉnh sửa ở đây nếu cần.
                   ),
                   child: const Text("Quay lại"),
@@ -393,7 +392,7 @@ class AlertDialogUtils {
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Column(
                     children: <Widget>[
                       Container(
@@ -470,7 +469,7 @@ class AlertDialogUtils {
               actions: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: const Color(0xFFB0B2B5), // Đặt màu cho nút
+                    backgroundColor: const Color(0xFFB0B2B5), // Đặt màu cho nút
                     // Các thuộc tính khác của nút như textColor, textStyle, padding, borderRadius, v.v. cũng có thể được chỉnh sửa ở đây nếu cần.
                   ),
                   child: const Text("Quay lại"),
@@ -541,9 +540,9 @@ class AlertDialogUtils {
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Container(
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.red, width: 2),
                         borderRadius: BorderRadius.circular(10)),
@@ -553,7 +552,7 @@ class AlertDialogUtils {
                           Icons.dangerous_outlined,
                           color: Colors.red,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         Flexible(
@@ -590,7 +589,7 @@ class AlertDialogUtils {
               actions: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: Color(0xFFB0B2B5), // Đặt màu cho nút
+                    backgroundColor: const Color(0xFFB0B2B5), // Đặt màu cho nút
                     // Các thuộc tính khác của nút như textColor, textStyle, padding, borderRadius, v.v. cũng có thể được chỉnh sửa ở đây nếu cần.
                   ),
                   child: const Text("Quay lại"),
@@ -631,7 +630,7 @@ class AlertDialogUtils {
                             fontWeight: FontWeight.bold),
                         text: NotAcceptDecision.POST_ACCEPT_DECISION_TITLE),
                   ),
-                  Divider(),
+                  const Divider(),
                 ],
               ),
               content: Column(
@@ -653,7 +652,7 @@ class AlertDialogUtils {
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   const Divider()
@@ -661,7 +660,7 @@ class AlertDialogUtils {
               ),
               actions: [
                 ElevatedButton(
-                  child: Text("Đóng"),
+                  child: const Text("Đóng"),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

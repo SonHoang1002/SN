@@ -36,7 +36,7 @@ final searchControllerProvider =
         (ref) => SearchController());
 
 class SearchController extends StateNotifier<SearchState> {
-  SearchController() : super(SearchState());
+  SearchController() : super(const SearchState());
 
   getSearchHistory(params) async {
     List response = await SearchApi().getListSearchHistoriesApi(params);

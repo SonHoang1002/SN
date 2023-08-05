@@ -20,7 +20,7 @@ Widget buildVoucherWidget() {
         Expanded(
             child: Row(
           children: [
-              ImageCacheRender(
+              const ImageCacheRender(
               path:
                   "https://snapi.emso.asia/system/media_attachments/files/110/055/464/740/764/326/original/503d539ce0be36c0.jpg",
               width: 100.0,

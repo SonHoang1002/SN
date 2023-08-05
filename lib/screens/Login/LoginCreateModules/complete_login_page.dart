@@ -24,7 +24,7 @@ class CompleteLoginPage extends StatefulWidget {
 }
 
 class _CompleteLoginPageState extends State<CompleteLoginPage> {
-  bool _isLoading = false;
+  final bool _isLoading = false;
 
   handleRegisteration() async {
     context.loaderOverlay.show();

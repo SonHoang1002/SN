@@ -8,7 +8,6 @@ import 'package:social_network_app_mobile/apis/emoji_sticky_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/data/gif.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'package:social_network_app_mobile/widgets/search_input.dart';
 
 class EmojiModalBottom extends StatefulWidget {

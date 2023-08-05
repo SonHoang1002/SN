@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -77,7 +76,7 @@ class WatchController extends StateNotifier<WatchState> {
   getListWatchSuggest(params) async {
     final limit = params['limit'];
     List response = await WatchApi().getListWatchSuggest(params) ?? [];
-    response.addAll(fakeDatas);
+    response.addAll(fakeWatchDatas);
     if (mounted) {
       final newWatch =
           response.where((item) => !state.watchSuggest.contains(item)).toList();

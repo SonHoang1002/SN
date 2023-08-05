@@ -9,6 +9,8 @@ class BeginAuthenticateTwoFactorsPage extends StatelessWidget {
   late double width = 0;
   late double height = 0;
 
+  BeginAuthenticateTwoFactorsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -23,15 +25,15 @@ class BeginAuthenticateTwoFactorsPage extends StatelessWidget {
         child: Column(children: [
           // pop icon and search setting input
           Container(
-            margin: EdgeInsets.only(top: 60, bottom: 10),
+            margin: const EdgeInsets.only(top: 60, bottom: 10),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(left: 10),
+                    margin: const EdgeInsets.only(left: 10),
                     child: GestureDetector(
                       onTap: () => Navigator.of(context).pop(),
-                      child: Icon(
+                      child: const Icon(
                         SettingConstants.BACK_ICON_DATA,
                         color: Colors.white,
                         size: 25,
@@ -51,20 +53,20 @@ class BeginAuthenticateTwoFactorsPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [
                   Column(children: [
                     // img
                     Container(
                       height: 100,
                       width: 250,
-                      margin: EdgeInsets.only(bottom: 15),
+                      margin: const EdgeInsets.only(bottom: 15),
                       child: Image.asset(
-                        SettingConstants.PATH_IMG + "cat_1.png",
+                        "${SettingConstants.PATH_IMG}cat_1.png",
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(bottom: 5),
+                      margin: const EdgeInsets.only(bottom: 5),
                       child: buildTextContent(
                           AuthenticateTwoFactorsConstants
                               .AUTHENTICATE_TWO_FACTOR_PROTECT_ACCOUNT_TITLE,
@@ -77,11 +79,11 @@ class BeginAuthenticateTwoFactorsPage extends StatelessWidget {
                         false,
                         fontSize: 18,
                         colorWord: Colors.grey),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     Container(
-                      margin: EdgeInsets.only(bottom: 5),
+                      margin: const EdgeInsets.only(bottom: 5),
                       child: buildTextContent(
                           AuthenticateTwoFactorsConstants
                               .AUTHENTICATE_TWO_FACTOR_CHOOSE_A_SECURITY_METHOD_TITLE,
@@ -115,9 +117,9 @@ class BeginAuthenticateTwoFactorsPage extends StatelessWidget {
                                   value: true,
                                   onChanged: ((value) {}),
                                 )),
-                                padding: EdgeInsets.fromLTRB(0, 10, 5, 5),
+                                padding: const EdgeInsets.fromLTRB(0, 10, 5, 5),
                               ),
-                              Divider(
+                              const Divider(
                                 height: 10,
                                 color: Colors.white,
                               )
@@ -133,7 +135,7 @@ class BeginAuthenticateTwoFactorsPage extends StatelessWidget {
             height: 70,
             color: Colors.transparent,
             child: Column(children: [
-              Divider(
+              const Divider(
                 height: 10,
                 color: Colors.white,
               ),
@@ -142,8 +144,8 @@ class BeginAuthenticateTwoFactorsPage extends StatelessWidget {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       fixedSize: Size(width * 0.9, 40)),
-                  child: Text("Tiep tuc"),
                   onPressed: (() {}),
+                  child: const Text("Tiep tuc"),
                 ),
               ))
             ]),
@@ -161,19 +163,19 @@ class BeginAuthenticateTwoFactorsPage extends StatelessWidget {
         Container(
           height: 100,
           width: 250,
-          margin: EdgeInsets.only(bottom: 15),
+          margin: const EdgeInsets.only(bottom: 15),
           child: Image.asset(path),
         ),
         Container(
-          margin: EdgeInsets.only(bottom: 5),
+          margin: const EdgeInsets.only(bottom: 5),
           child: buildTextContent(title, true, fontSize: 24),
         ),
         buildTextContent(subTitle, false, fontSize: 18, colorWord: Colors.grey),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Container(
-          margin: EdgeInsets.only(bottom: 5),
+          margin: const EdgeInsets.only(bottom: 5),
           child: buildTextContent(title, true, fontSize: 24),
         ),
         buildTextContent(subTitle, false, fontSize: 18, colorWord: Colors.grey),

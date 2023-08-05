@@ -1,7 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/category_product_apis.dart';
-import 'package:social_network_app_mobile/apis/market_place_apis/product_categories_api.dart';
-import 'package:social_network_app_mobile/data/market_place_datas/product_categories_data.dart';
 
 class ProductParentCategoriesState {
   List<dynamic> parentList;

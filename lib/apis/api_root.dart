@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
-import 'package:logger/logger.dart';
 import 'package:social_network_app_mobile/apis/config.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 

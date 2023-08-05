@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -403,7 +402,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   dynamic _createFakeData() {
     dynamic meData = ref.watch(meControllerProvider)[0];
-    dynamic _fakeData = {
+    dynamic fakeData = {
       "created_at": "${DateTime.now()}+07:00",
       "backdated_time": "${DateTime.now()}+07:00",
       "processing": "isProcessing",
@@ -421,7 +420,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       },
     };
     if (widget.pageData != null) {
-      _fakeData['page'] = {
+      fakeData['page'] = {
         "id": widget.pageData['id'],
         'title': widget.pageData['title'],
         'username': widget.pageData['username'],
@@ -433,37 +432,37 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         'page_categories': widget.pageData['page_categories'],
         'banner': widget.pageData['banner'],
       };
-      _fakeData['page_owner'] = _fakeData['page'];
+      fakeData['page_owner'] = fakeData['page'];
     }
     if (previewUrlData != null) {
-      _fakeData['card'] = previewUrlData;
+      fakeData['card'] = previewUrlData;
     }
     if (files.isNotEmpty) {
-      _fakeData['media_attachments'] = files;
+      fakeData['media_attachments'] = files;
     }
     if (checkin != null) {
-      _fakeData['place'] = checkin;
+      fakeData['place'] = checkin;
     }
     if (statusActivity != null) {
-      _fakeData['status_activity'] = statusActivity;
+      fakeData['status_activity'] = statusActivity;
     }
-    _fakeData['content'] = content;
+    fakeData['content'] = content;
     if (gifLink != "") {
-      _fakeData['card']['link'] = gifLink;
+      fakeData['card']['link'] = gifLink;
     }
     if (backgroundSelected != null) {
-      _fakeData['status_background'] = backgroundSelected;
+      fakeData['status_background'] = backgroundSelected;
     }
     if (visibility != null) {
-      _fakeData['visibility'] = visibility['key'];
+      fakeData['visibility'] = visibility['key'];
     }
     if (lifeEvent != null) {
-      _fakeData['life_event'] = lifeEvent;
+      fakeData['life_event'] = lifeEvent;
     }
     if (poll != null) {
-      _fakeData['poll'] = poll;
+      fakeData['poll'] = poll;
     }
-    return _fakeData;
+    return fakeData;
   }
 
   handleCreatePost() async {

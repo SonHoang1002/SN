@@ -295,10 +295,10 @@ class _EventHostState extends ConsumerState<EventHost> {
                                                   border: Border.all(
                                                       width: 0.2,
                                                       color: greyColor)),
-                                              child: Row(
+                                              child: const Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
-                                                children: const [
+                                                children: [
                                                   Padding(
                                                     padding: EdgeInsets.only(
                                                         bottom: 1.0),
@@ -363,10 +363,10 @@ class _EventHostState extends ConsumerState<EventHost> {
                                                 border: Border.all(
                                                     width: 0.2,
                                                     color: greyColor)),
-                                            child: Row(
+                                            child: const Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
-                                              children: const [
+                                              children: [
                                                 Icon(FontAwesomeIcons.share,
                                                     color: Colors.black,
                                                     size: 14),
@@ -498,10 +498,10 @@ class _EventHostState extends ConsumerState<EventHost> {
                                                   border: Border.all(
                                                       width: 0.2,
                                                       color: greyColor)),
-                                              child: Row(
+                                              child: const Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
-                                                children: const [
+                                                children: [
                                                   Padding(
                                                     padding: EdgeInsets.only(
                                                         bottom: 1.0),
@@ -566,10 +566,10 @@ class _EventHostState extends ConsumerState<EventHost> {
                                                 border: Border.all(
                                                     width: 0.2,
                                                     color: greyColor)),
-                                            child: Row(
+                                            child: const Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
-                                              children: const [
+                                              children: [
                                                 Icon(FontAwesomeIcons.share,
                                                     color: Colors.black,
                                                     size: 14),

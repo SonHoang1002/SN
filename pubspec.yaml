@@ -181,7 +181,11 @@ flutter:
   assets:
   
     - assets/audio/
-    - assets/test_emojis/
+    - assets/emojis/
+    - assets/emojis/animals/
+    - assets/emojis/face_text/
+    - assets/emojis/stickers/
+    - assets/emojis/thump_flag/
     - assets/images/
     - assets/effect_frame/
     - assets/sounds/

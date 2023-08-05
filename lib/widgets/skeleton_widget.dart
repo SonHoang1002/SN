@@ -102,7 +102,7 @@ class _CardSkeletonState extends State<CardSkeleton>
                     const SizedBox(
                       width: 20,
                     ),
-                    Container(
+                    SizedBox(
                       height: width * 0.13,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -264,7 +264,7 @@ class _DarkCardSkeletonState extends State<DarkCardSkeleton>
                     const SizedBox(
                       width: 20,
                     ),
-                    Container(
+                    SizedBox(
                       height: width * 0.13,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -459,7 +459,7 @@ class _CardProfileSkeletonState extends State<CardProfileSkeleton>
                           const SizedBox(
                             width: 20,
                           ),
-                          Container(
+                          SizedBox(
                             height: width * 0.13,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -608,7 +608,7 @@ class _DarkCardProfileSkeletonState extends State<DarkCardProfileSkeleton>
                           const SizedBox(
                             width: 20,
                           ),
-                          Container(
+                          SizedBox(
                             height: width * 0.13,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -922,7 +922,7 @@ class _DarkCardSkeletonInListState extends State<DarkCardSkeletonInList>
                   const SizedBox(
                     width: 20,
                   ),
-                  Container(
+                  SizedBox(
                     height: width * 0.13,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1053,7 +1053,7 @@ class _CardSkeletonInListState extends State<CardSkeletonInList>
                   const SizedBox(
                     width: 20,
                   ),
-                  Container(
+                  SizedBox(
                     height: width * 0.13,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

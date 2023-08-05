@@ -15,8 +15,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
-import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/custom_video_elements/center_play_button.dart';
 import 'package:video_player/video_player.dart';
 

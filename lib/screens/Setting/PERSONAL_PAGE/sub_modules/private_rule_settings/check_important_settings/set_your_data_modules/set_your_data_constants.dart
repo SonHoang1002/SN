@@ -12,12 +12,12 @@ class SetYourDataOnEmsoConstants {
     "data": [
       {
         "key": "application_and_website",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Ứng dụng và trang web"
       },
       {
         "key": "location",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Vị trí"
       },
     ]
@@ -35,23 +35,23 @@ class ApplicationAndWebsiteConstants {
     "data": [
       {
         // "key": "application_and_website",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Duo Lingo",
       },
       {
         // "key": "location",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Liên quân mô bai -  thắng bại tại wifi",
       },
       {
         // "key": "location",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Spotify",
       },
     ]
   };
   static const Map<String, dynamic> APPLICATION_AND_WEBSITE_TIP = {
-    "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+    "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
     "content":
         "Bí quyết: Bạn có thể thay đổi thông tin mình đang chia sẻ bất cứ lúc nào trong phần cài đặt. Bạn cũng có thể xem lại các ứng dụng đã gỡ hoặc đã hết hạn.",
   };
@@ -68,12 +68,12 @@ class ApplicationAndWebsiteConstants {
             "Hành động này có thê xóa tài khoản và hoạt động của bạn trên Duo lingo có thể vẫn có quyền truy cập vào thông tin mà trước đó bạn chia sẻ, nhưng không thể hận bất kỳ thông tin không công khai nào khác.",
       },
       {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title":
             "Xóa tất cả bài viết, ảnh và video mà Duo lingo đã đăng lên dòng thời thoi gian của bạn.",
       },
       {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title":
             "Gửi thông báo cho Duo Lingo rằng bạn đã gỡ ứng dụng/trang web này. Họ có thể sẽ hướng dẫn bạn cách đăng nhập khác.",
       },
@@ -108,7 +108,7 @@ class LocationConstants {
   };
   static const LOCATION_GO_TO_SETTING = "Đi đến phần Cài đặt thiết bị";
   static const Map<String, dynamic> LOCATION_TIP = {
-    "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+    "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
     "content":
         "Bí quyết: Hãy xem lại phần Cài đặt vị trí để tìm thêm các tùy chọn kiểm soát khác,chẳng hạn như Lịch sử vị trí."
   };
@@ -124,12 +124,12 @@ class AllComplete4Constants {
     "data": [
       {
         // "key": "application_and_website",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Ứng dụng và trang web"
       },
       {
         // "key": "location",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Vị trí"
       },
     ]

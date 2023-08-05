@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -408,9 +407,9 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                       widget.groupDetail?['group_relationship']?['admin'] ||
                               widget.groupDetail?['group_relationship']
                                   ?['moderator']
-                          ?   Column(
+                          ?   const Column(
                               children: [
-                                const Divider(
+                                Divider(
                                   height: 20,
                                   thickness: 1,
                                 ),

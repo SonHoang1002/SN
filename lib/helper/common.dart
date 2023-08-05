@@ -100,13 +100,14 @@ String? handleTimeShow(String value) {
     );
 
     if (diffInDays < 7) {
-      return '${diffInDays} ngày';
+      return '$diffInDays ngày';
     } else if (diffInDays >= 7 && diffInDays < 14) {
-      return '${diffInDays} tuần';
+      return '$diffInDays tuần';
     } else if (diffInDays >= 14) {
       return '${(diffInDays / 7).floor()} tuần';
     }
   }
+  return null;
 }
 
 String formatDateTimeToStringDateTimeYear(DateTime dateTime) {
@@ -126,6 +127,8 @@ String formatTimeMediaPlayer(Duration duration) {
 
   return [if (duration.inHours > 0) hours, minutes, seconds].join(':');
 }
+
+ 
 
 classifyTypeMessage(message) {
   if (message['urls'] != null && message['urls'].length > 0) {

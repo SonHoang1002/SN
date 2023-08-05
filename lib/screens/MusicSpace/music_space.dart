@@ -13,7 +13,7 @@ class MusicSpaceState extends State<MusicSpace>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return NotificationListener<ScrollNotification>(
+    return const NotificationListener<ScrollNotification>(
       child: Scaffold(body: MusicSpaceRender()),
     );
   }

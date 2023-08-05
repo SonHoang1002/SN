@@ -11,17 +11,17 @@ class WhoCanSeeYourShareConstants {
     "data": [
       {
         "key": "information_on_personal_page",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Thông tin trên trang cá nhân"
       },
       {
         "key": "post_and_story",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Bài viết và tin"
       },
       {
         "key": "block",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Chặn"
       }
     ]
@@ -105,21 +105,21 @@ class InformationOnPersonalPageConstants {
       INFORMATION_ON_PERSONAL_PAGE_CHOOSE_PHONE_STATUS = [
     {
       "key": "public",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Công khai",
       "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
       "isCheck": true
     },
     {
       "key": "friend",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Bạn bè",
       "subTitle": "Bạn bè của bạn trên Emso",
       "isCheck": false
     },
     {
       "key": "private",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Chỉ mình tôi",
       "subTitle": "Chỉ mình tôi",
       "isCheck": false
@@ -129,21 +129,21 @@ class InformationOnPersonalPageConstants {
       INFORMATION_ON_PERSONAL_PAGE_CHOOSE_EMAIL_STATUS = [
     {
       "key": "public",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Công khai",
       "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
       "isCheck": true
     },
     {
       "key": "friend",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Bạn bè",
       "subTitle": "Bạn bè của bạn trên Emso",
       "isCheck": false
     },
     {
       "key": "private",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Chỉ mình tôi",
       "subTitle": "Chỉ mình tôi",
       "isCheck": false
@@ -153,28 +153,28 @@ class InformationOnPersonalPageConstants {
       INFORMATION_ON_PERSONAL_PAGE_CHOOSE_BIRTHDAY_STATUS = [
     {
       "key": "public",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Công khai",
       "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
       "isCheck": true
     },
     {
       "key": "friend_of_friend",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Bạn của bạn bè",
       "subTitle": "Bạn của bạn bè",
       "isCheck": false
     },
     {
       "key": "friend",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Bạn bè",
       "subTitle": "Bạn bè của bạn trên Emso",
       "isCheck": false
     },
     {
       "key": "private",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Chỉ mình tôi",
       "subTitle": "Chỉ mình tôi",
       "isCheck": false
@@ -184,21 +184,21 @@ class InformationOnPersonalPageConstants {
       INFORMATION_ON_PERSONAL_PAGE_CHOOSE_PROVINCE_STATUS = [
     {
       "key": "public",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Công khai",
       "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
       "isCheck": true
     },
     {
       "key": "friend",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Bạn bè",
       "subTitle": "Bạn bè của bạn trên Emso",
       "isCheck": false
     },
     {
       "key": "private",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Chỉ mình tôi",
       "subTitle": "Chỉ mình tôi",
       "isCheck": false
@@ -208,21 +208,21 @@ class InformationOnPersonalPageConstants {
       INFORMATION_ON_PERSONAL_PAGE_CHOOSE_RELATIONSHIP_STATUS = [
     {
       "key": "public",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Công khai",
       "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
       "isCheck": true
     },
     {
       "key": "friend",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Bạn bè",
       "subTitle": "Bạn bè của bạn trên Emso",
       "isCheck": false
     },
     {
       "key": "private",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Chỉ mình tôi",
       "subTitle": "Chỉ mình tôi",
       "isCheck": false
@@ -233,35 +233,35 @@ class InformationOnPersonalPageConstants {
       INFORMATION_ON_PERSONAL_PAGE_CHOOSE_FRIEND_AND_FOLLOW_STATUS = [
     {
       "key": "public",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Công khai",
       "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
       "isCheck": true
     },
     {
       "key": "friend",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Bạn bè",
       "subTitle": "Bạn bè của bạn trên Emso",
       "isCheck": false
     },
     {
       "key": "friends_except",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Bạn bè ngoại trừ",
       "subTitle": "Không hiển thị với một số bạn bè",
       "isCheck": false
     },
     {
       "key": "specific_friends",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Bạn bè cụ thể",
       "subTitle": "Chỉ hiển thị với một số bạn bè",
       "isCheck": false
     },
     {
       "key": "private",
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title": "Chỉ mình tôi",
       "subTitle": "Chỉ mình tôi",
       "isCheck": false
@@ -279,7 +279,7 @@ class BlockConstants {
   static const Map<String, dynamic> BLOCK_ADD_TO_BLOCK_LIST = {
     "key": "add_to_block_list",
     "title": "Thêm vào danh sách chặn",
-    "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+    "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
     // "data": [
     //   {"name": "abc"},
     //   {"name": "sdfh"},
@@ -289,7 +289,7 @@ class BlockConstants {
   static const Map<String, dynamic> BLOCK_SEE_BLOCK_LIST = {
     "key": "see_block_list",
     "title": "Xem danh sách chặn của bạn",
-    "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+    "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
     "data": [
       {"name": "abc"},
       {"name": "sdfh"},

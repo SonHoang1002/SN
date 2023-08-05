@@ -18,11 +18,13 @@ class InformationOnPersonalPagePage extends StatelessWidget {
   late double width = 0;
   late double height = 0;
 
-  String _selectedBottomNavigator = "Trang chủ";
+  final String _selectedBottomNavigator = "Trang chủ";
   final listChooseObject = InformationOnPersonalPageConstants
       .INFORMATION_ON_PERSONAL_PAGE_CHOOSE_PHONE_STATUS
       .map((e) => e["title"])
       .toList();
+
+  InformationOnPersonalPagePage({super.key});
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -36,9 +38,9 @@ class InformationOnPersonalPagePage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             AppBarTitle(
                 title: InformationOnPersonalPageConstants
@@ -59,7 +61,7 @@ class InformationOnPersonalPagePage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [
                   // title
                   buildTextContent(
@@ -190,14 +192,14 @@ _buildContentForBottomSheet(
             prefixWidget: Container(
               height: 40,
               width: 40,
-              margin: EdgeInsets.only(right: 10),
-              padding: EdgeInsets.all(5),
+              margin: const EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.all(5),
               child: SvgPicture.asset(
                 data[index]["icon"],
                 //  color: Colors.white
               ),
             ),
-            suffixWidget: Container(
+            suffixWidget: SizedBox(
               height: 30,
               width: 30,
               child: Radio(
@@ -215,7 +217,7 @@ _buildContentForBottomSheet(
                     );
                   })),
             ),
-            padding: EdgeInsets.all(5),
+            padding: const EdgeInsets.all(5),
           );
         }));
   }));

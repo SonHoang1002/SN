@@ -29,7 +29,7 @@ class SearchAccountLoginPage extends StatelessWidget {
             Expanded(
                 child: SearchInput(
               handleSearchClick: () {
-                pushToNextScreen(context, ConfirmLoginPage());
+                pushToNextScreen(context, const ConfirmLoginPage());
               },
               title: "Số điện thoại hoặc email",
             ))

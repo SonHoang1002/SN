@@ -73,42 +73,42 @@ class RequestFriendsGroupConstants {
   ];
   static List<List<dynamic>> SELECTION_FOR_CHOOSE_GROUP_GROUP = [
     [
-      GroupConstants.PATH_IMG + "cat_1.png",
+      "${GroupConstants.PATH_IMG}cat_1.png",
       "Hoạt Hình Trung Quốc - Chinese Animation",
       "Nhóm riêng tư - 4,9K thành viên",
     ],
     [
-      GroupConstants.PATH_IMG + "cat_2.png",
+      "${GroupConstants.PATH_IMG}cat_2.png",
       "Nhóm thông tin sinh viên NEU",
       "Nhóm công khai - 9K thành viên",
     ],
     [
-      GroupConstants.PATH_IMG + "cat_3.png",
+      "${GroupConstants.PATH_IMG}cat_3.png",
       "Mobile Development Jobs VN",
       "Nhóm riêng tư - 5K thành viên",
     ],
     [
-      GroupConstants.PATH_IMG + "cat_4.png",
+      "${GroupConstants.PATH_IMG}cat_4.png",
       "Tuyển dụng Flutter tại Việt Nam",
       "Nhóm công khai - 4K thành viên",
     ],
     [
-      GroupConstants.PATH_IMG + "cat_1.png",
+      "${GroupConstants.PATH_IMG}cat_1.png",
       "Hoạt Hình Trung Quốc - Chinese Animation",
       "Nhóm riêng tư - 4,9K thành viên",
     ],
     [
-      GroupConstants.PATH_IMG + "cat_2.png",
+      "${GroupConstants.PATH_IMG}cat_2.png",
       "Nhóm thông tin sinh viên NEU",
       "Nhóm riêng tư - 100K thành viên",
     ],
     [
-      GroupConstants.PATH_IMG + "cat_3.png",
+      "${GroupConstants.PATH_IMG}cat_3.png",
       "Mobile Development Jobs VN",
       "Nhóm công khai - 4K thành viên",
     ],
     [
-      GroupConstants.PATH_IMG + "cat_4.png",
+      "${GroupConstants.PATH_IMG}cat_4.png",
       "Tuyển dụng Flutter tại Việt Nam",
       "Nhóm riêng tư - 854 thành viên",
     ],
@@ -206,18 +206,18 @@ class CreatePostGroupConstants {
     "Viết bài để nêu cao tinh thần của nhóm và chào mừng thành viên mới"
   ];
   static List<String> ICON_PATH_LIST = [
-    GroupConstants.PATH_ICON + "img_icon.svg",
-    GroupConstants.PATH_ICON + "camera_icon.svg",
-    GroupConstants.PATH_ICON + "tag_icon.svg",
-    GroupConstants.PATH_ICON + "live_icon.svg",
-    GroupConstants.PATH_ICON + "background_color_icon.svg",
-    GroupConstants.PATH_ICON + "checkin_icon.svg",
-    GroupConstants.PATH_ICON + "gif_file_icon.svg",
-    GroupConstants.PATH_ICON + "probe_icon.svg",
-    GroupConstants.PATH_ICON + "meeting_icon.svg",
-    GroupConstants.PATH_ICON + "tag_icon.svg",
-    GroupConstants.PATH_ICON + "event_icon.svg",
-    GroupConstants.PATH_ICON + "emotion_icon.svg",
+    "${GroupConstants.PATH_ICON}img_icon.svg",
+    "${GroupConstants.PATH_ICON}camera_icon.svg",
+    "${GroupConstants.PATH_ICON}tag_icon.svg",
+    "${GroupConstants.PATH_ICON}live_icon.svg",
+    "${GroupConstants.PATH_ICON}background_color_icon.svg",
+    "${GroupConstants.PATH_ICON}checkin_icon.svg",
+    "${GroupConstants.PATH_ICON}gif_file_icon.svg",
+    "${GroupConstants.PATH_ICON}probe_icon.svg",
+    "${GroupConstants.PATH_ICON}meeting_icon.svg",
+    "${GroupConstants.PATH_ICON}tag_icon.svg",
+    "${GroupConstants.PATH_ICON}event_icon.svg",
+    "${GroupConstants.PATH_ICON}emotion_icon.svg",
   ];
   static const List<String> CONTENT_LIST = [
     "Ảnh/Video",

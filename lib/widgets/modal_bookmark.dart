@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/bookmark_api.dart';
-import 'package:social_network_app_mobile/model/bookmark.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
-import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:provider/provider.dart' as pv;
 
 class ModalBookmark extends StatefulWidget {
@@ -16,7 +14,7 @@ class ModalBookmark extends StatefulWidget {
 class ModalBookmarkState extends State<ModalBookmark> {
   List<dynamic> collections = [];
   String _bookmarkCollectionId = "";
-  var _controller = TextEditingController();
+  final _controller = TextEditingController();
 
   void getBookmarkCollection() async {
     var result = await BookmarkApi().fetchBookmarkCollection();

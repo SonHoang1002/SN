@@ -12,6 +12,8 @@ import 'private_rule_settings_constants.dart';
 import 'check_important_settings/check_important_settings_page.dart';
 
 class PrivateRulesSettingPage extends StatefulWidget {
+  const PrivateRulesSettingPage({super.key});
+
   @override
   State<PrivateRulesSettingPage> createState() =>
       _PrivateRulesSettingPageState();
@@ -21,7 +23,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
   late double width = 0;
   late double height = 0;
 
-  String _selectedBottomNavigator = "Trang chủ";
+  final String _selectedBottomNavigator = "Trang chủ";
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +34,9 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             AppBarTitle(title: PersonalPageConstants.PRIVATE_APPBAR_TITLE),
             SizedBox(),
@@ -55,11 +57,11 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   // color: Colors.grey[900],
                   child: ListView(
-                    padding: EdgeInsets.symmetric(vertical: 5),
+                    padding: const EdgeInsets.symmetric(vertical: 5),
                     children: [
                       // PRIVATE_RULE_SHORTCUT
                       Container(
-                        margin: EdgeInsets.only(top: 10),
+                        margin: const EdgeInsets.only(top: 10),
                         child: Column(children: [
                           // title
                           buildTextContent(
@@ -69,10 +71,10 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                               fontSize: 20),
                           // content
                           Container(
-                            margin: EdgeInsets.only(top: 10),
+                            margin: const EdgeInsets.only(top: 10),
                             child: ListView.builder(
                                 shrinkWrap: true,
-                                padding: EdgeInsets.symmetric(vertical: 5),
+                                padding: const EdgeInsets.symmetric(vertical: 5),
                                 itemCount: PrivateRuleSettingsCommons
                                     .PRIVATE_RULE_SHORTCUT["data"].length,
                                 itemBuilder: ((context, index) {
@@ -96,7 +98,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                                     "data"][index]["subTitle"],
                                                 true,
                                                 fontSize: 17),
-                                            SizedBox(
+                                            const SizedBox(
                                               height: 5,
                                             ),
                                             buildTextContent(
@@ -119,10 +121,10 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                           ),
                                           changeBackground: transparent,
                                           padding:
-                                              EdgeInsets.symmetric(vertical: 5),
+                                              const EdgeInsets.symmetric(vertical: 5),
                                         ),
                                       ),
-                                      Divider(
+                                      const Divider(
                                         height: 10,
                                         color: white,
                                       )
@@ -134,7 +136,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                       ),
                       // ACTIVITY_OF_YOU
                       Container(
-                        margin: EdgeInsets.only(top: 10),
+                        margin: const EdgeInsets.only(top: 10),
                         child: Column(children: [
                           // title
                           buildTextContent(
@@ -144,10 +146,10 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                           ),
                           // content
                           Container(
-                            margin: EdgeInsets.only(top: 10),
+                            margin: const EdgeInsets.only(top: 10),
                             child: ListView.builder(
                                 shrinkWrap: true,
-                                padding: EdgeInsets.symmetric(vertical: 5),
+                                padding: const EdgeInsets.symmetric(vertical: 5),
                                 itemCount: PrivateRuleSettingsCommons
                                     .ACTIVITY_OF_YOU["data"].length,
                                 itemBuilder: ((context, index) {
@@ -170,7 +172,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                               ? Container()
                                               : Column(
                                                   children: [
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       height: 5,
                                                     ),
                                                     buildTextContent(
@@ -196,9 +198,9 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                         ),
                                         changeBackground: transparent,
                                         padding:
-                                            EdgeInsets.symmetric(vertical: 5),
+                                            const EdgeInsets.symmetric(vertical: 5),
                                       ),
-                                      Divider(
+                                      const Divider(
                                         height: 10,
                                         color: white,
                                       )
@@ -210,7 +212,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                       ),
                       // WAY_TO_FIND_AND_CONTACT_WITH_YOU
                       Container(
-                        margin: EdgeInsets.only(top: 10),
+                        margin: const EdgeInsets.only(top: 10),
                         child: Column(children: [
                           // title
                           buildTextContent(
@@ -221,10 +223,10 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                           ),
                           // content
                           Container(
-                            margin: EdgeInsets.only(top: 10),
+                            margin: const EdgeInsets.only(top: 10),
                             child: ListView.builder(
                                 shrinkWrap: true,
-                                padding: EdgeInsets.symmetric(vertical: 5),
+                                padding: const EdgeInsets.symmetric(vertical: 5),
                                 itemCount: PrivateRuleSettingsCommons
                                     .WAY_TO_FIND_AND_CONTACT_WITH_YOU["data"]
                                     .length,
@@ -250,7 +252,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                                   false,
                                                   // colorWord:  white,
                                                   fontSize: 16)
-                                              : SizedBox(),
+                                              : const SizedBox(),
                                           PrivateRuleSettingsCommons
                                                           .WAY_TO_FIND_AND_CONTACT_WITH_YOU[
                                                       "data"][index]["content"] ==
@@ -258,7 +260,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                               ? Container()
                                               : Column(
                                                   children: [
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       height: 5,
                                                     ),
                                                     buildTextContent(
@@ -283,9 +285,9 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                                         ),
                                         changeBackground: transparent,
                                         padding:
-                                            EdgeInsets.symmetric(vertical: 5),
+                                            const EdgeInsets.symmetric(vertical: 5),
                                       ),
-                                      Divider(
+                                      const Divider(
                                         height: 10,
                                         color: white,
                                       )
@@ -295,7 +297,7 @@ class _PrivateRulesSettingPageState extends State<PrivateRulesSettingPage> {
                           ),
                         ]),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 37,
                       )
                     ],

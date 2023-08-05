@@ -9,7 +9,7 @@ import 'package:social_network_app_mobile/apis/market_place_apis/follwer_product
 import 'package:social_network_app_mobile/apis/market_place_apis/products_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/get_min_max_price.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart'; 
 import 'package:social_network_app_mobile/providers/market_place_providers/cart_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/detail_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/interest_product_provider.dart';
@@ -17,6 +17,7 @@ import 'package:social_network_app_mobile/providers/market_place_providers/produ
 import 'package:social_network_app_mobile/providers/market_place_providers/review_product_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/review_all_product.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/transfer_order_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/preview_video_image.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/cart_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/classify_category_conponent.dart';
@@ -33,8 +34,8 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_shee
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/widgets/cross_bar.dart';
-import 'package:social_network_app_mobile/widgets/video_player.dart';
+import 'package:social_network_app_mobile/widgets/Market/video_render_player.dart';
+import 'package:social_network_app_mobile/widgets/cross_bar.dart'; 
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../theme/colors.dart';
@@ -50,7 +51,9 @@ const configReviewParams = {"limit": 1};
 class DetailProductMarketPage extends ConsumerStatefulWidget {
   final dynamic simpleData;
   final dynamic id;
-  const DetailProductMarketPage({super.key, required this.id, this.simpleData});
+  final String? heroImageLink;
+  DetailProductMarketPage(
+      {super.key, required this.id, this.simpleData, this.heroImageLink});
   @override
   ConsumerState<DetailProductMarketPage> createState() =>
       _DetailProductMarketPageComsumerState();
@@ -66,8 +69,8 @@ class _DetailProductMarketPageComsumerState
   List<dynamic>? _listComment;
   List<dynamic>? _listPrice;
   bool _isLoading = true;
-  List<dynamic> _listCheckedColor = [];
-  List<dynamic> _listCheckedSize = [];
+  final List<dynamic> _listCheckedColor = [];
+  final List<dynamic> _listCheckedSize = [];
   dynamic _selectedColorValue;
   dynamic _selectedSizeValue;
   String? _priceTitle;
@@ -140,7 +143,6 @@ class _DetailProductMarketPageComsumerState
           });
         }
       });
-    ;
   }
 
   @override
@@ -738,7 +740,7 @@ class _DetailProductMarketPageComsumerState
                 _listProductOfPage != null && _listProductOfPage!.isNotEmpty
                     ? Padding(
                         padding: const EdgeInsets.only(top: 10),
-                        child: buildSuggestListComponent(
+                        child: SuggestListComponent(
                             context: context,
                             axis: Axis.horizontal,
                             title: Flex(
@@ -760,7 +762,7 @@ class _DetailProductMarketPageComsumerState
                       )
                     : const SizedBox(),
                 buildSpacer(height: 15),
-                buildSuggestListComponent(
+                SuggestListComponent(
                     context: context,
                     title: Flex(
                       direction: Axis.horizontal,
@@ -842,7 +844,7 @@ class _DetailProductMarketPageComsumerState
                                     ),
                                     buildSpacer(height: 3),
                                     buildTextContent("Thêm vào giỏ", false,
-                                        fontSize: 9,isCenterLeft: false)
+                                        fontSize: 9, isCenterLeft: false)
                                   ],
                                   isVertical: true,
                                   radiusValue: 0,
@@ -1167,7 +1169,7 @@ class _DetailProductMarketPageComsumerState
                                     height: 30,
                                     width: 30,
                                     child: buildTextContent(
-                                        "${productNumber}", true,
+                                        "$productNumber", true,
                                         isCenterLeft: false),
                                   ),
                                   InkWell(

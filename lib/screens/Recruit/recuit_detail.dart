@@ -206,9 +206,9 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                   color: Colors.black.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(width: 0.2, color: greyColor)),
-              child: Column(
+              child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(FontAwesomeIcons.angleLeft,
                       color: Colors.white, size: 16),
                 ],
@@ -570,10 +570,10 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                                 BorderRadius.circular(4),
                                             border: Border.all(
                                                 width: 0.2, color: greyColor)),
-                                        child: Row(
+                                        child: const Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: const [
+                                            children: [
                                               Icon(FontAwesomeIcons.ellipsis,
                                                   size: 14, color: Colors.black)
                                             ])),

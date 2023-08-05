@@ -17,7 +17,7 @@ class SocialTextSpanBuilder {
 
   final Map<DetectedType, RegExp> regularExpressions;
 
-  Map<DetectedType, List<RegExpMatch>?> allMatches = Map();
+  Map<DetectedType, List<RegExpMatch>?> allMatches = {};
 
   SocialTextSpanBuilder(
       {required this.regularExpressions,
@@ -33,7 +33,7 @@ class SocialTextSpanBuilder {
     TextStyle? textStyle;
     DetectedType detectedType = DetectedType.plain_text;
     String text = "";
-    allMatches.keys.forEach((type) {
+    for (var type in allMatches.keys) {
       var index = allMatches[type]!
           .indexWhere((match) => match.start == start && match.end == end);
 
@@ -55,11 +55,11 @@ class SocialTextSpanBuilder {
           textStyle = detectionTextStyles[type];
           detectedType = type;
         }
-        return;
+        continue;
       }
-    });
+    }
     return MatchSearchResult(
-        textStyle ?? defaultTextStyle ?? TextStyle(), detectedType, text);
+        textStyle ?? defaultTextStyle ?? const TextStyle(), detectedType, text);
   }
 
   ///returns TextSpan containing all formatted content.
@@ -68,9 +68,9 @@ class SocialTextSpanBuilder {
   ///[includeOnlyCases] optional, when set, only values found in this array will be detected, other values be treated as Plain Text
   TextSpan build(String text,
       {List<String>? ignoreCases, List<String>? includeOnlyCases}) {
-    regularExpressions.keys.forEach((type) {
+    for (var type in regularExpressions.keys) {
       allMatches[type] = regularExpressions[type]!.allMatches(text).toList();
-    });
+    }
     if (allMatches.isEmpty) {
       return TextSpan(text: text, style: defaultTextStyle);
     }
@@ -81,7 +81,7 @@ class SocialTextSpanBuilder {
     if (orderedMatches.isEmpty) {
       return TextSpan(text: text, style: defaultTextStyle);
     }
-    TextSpan root = TextSpan();
+    TextSpan root = const TextSpan();
     int cursorPosition = 0;
     for (int i = 0; i < orderedMatches.length; i++) {
       var match = orderedMatches[i];

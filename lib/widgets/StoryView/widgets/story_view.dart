@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/data/me_data.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
@@ -467,9 +466,9 @@ class StoryViewState extends ConsumerState<StoryView>
     final firstPage = widget.storyItems.firstWhereOrNull((it) => !it!.shown);
 
     if (firstPage == null) {
-      widget.storyItems.forEach((it2) {
+      for (var it2 in widget.storyItems) {
         it2!.shown = false;
-      });
+      }
     } else {
       final lastShownPos = widget.storyItems.indexOf(firstPage);
       widget.storyItems.sublist(lastShownPos).forEach((it) {
@@ -571,9 +570,9 @@ class StoryViewState extends ConsumerState<StoryView>
     }
 
     if (widget.repeat) {
-      widget.storyItems.forEach((it) {
+      for (var it in widget.storyItems) {
         it!.shown = false;
-      });
+      }
 
       _beginPlay();
     }
@@ -604,11 +603,11 @@ class StoryViewState extends ConsumerState<StoryView>
       _animationController!.stop();
 
       // get last showing
-      final _last = _currentStory;
+      final last = _currentStory;
 
-      if (_last != null) {
-        _last.shown = true;
-        if (_last != widget.storyItems.last) {
+      if (last != null) {
+        last.shown = true;
+        if (last != widget.storyItems.last) {
           _beginPlay();
         }
       }

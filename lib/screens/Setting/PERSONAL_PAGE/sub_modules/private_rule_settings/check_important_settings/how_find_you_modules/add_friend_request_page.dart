@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/how_find_you_modules/how_find_you_constants.dart';
 import 'package:social_network_app_mobile/screens/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/how_find_you_modules/phone_and_email_page.dart';
 import 'package:social_network_app_mobile/screens/Setting/setting_constants/general_settings_constants.dart';
@@ -15,6 +14,8 @@ import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 class AddFriendRequestPage extends StatelessWidget {
   late double width = 0;
   late double height = 0;
+
+  AddFriendRequestPage({super.key});
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -24,9 +25,9 @@ class AddFriendRequestPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             AppBarTitle(
                 title:
@@ -48,13 +49,13 @@ class AddFriendRequestPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [
                   // title
                   buildTextContent(
                       AddFriendRequestConstants.ADD_FRIEND_REQUEST_TITLE, true,
                       fontSize: 16),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   // content
@@ -63,7 +64,7 @@ class AddFriendRequestPage extends StatelessWidget {
                       Flexible(
                         flex: 4,
                         child: Container(
-                          margin: EdgeInsets.only(right: 10),
+                          margin: const EdgeInsets.only(right: 10),
                           child: buildTextContent(
                             AddFriendRequestConstants
                                 .ADD_FRIEND_REQUEST_CONTENT["data"]["title"],
@@ -75,7 +76,7 @@ class AddFriendRequestPage extends StatelessWidget {
                       ),
                       Flexible(
                         flex: 3,
-                        child: Container(
+                        child: SizedBox(
                           width: 200,
                           child: GestureDetector(
                             onTap: (() {
@@ -94,7 +95,7 @@ class AddFriendRequestPage extends StatelessWidget {
                               prefixWidget: Container(
                                 height: 15,
                                 width: 15,
-                                margin: EdgeInsets.only(right: 10),
+                                margin: const EdgeInsets.only(right: 10),
                                 child: SvgPicture.asset(
                                   AddFriendRequestConstants
                                           .ADD_FRIEND_REQUEST_CONTENT["data"]
@@ -102,7 +103,7 @@ class AddFriendRequestPage extends StatelessWidget {
                                   // color: Colors.grey[200],
                                 ),
                               ),
-                              suffixWidget: Container(
+                              suffixWidget: const SizedBox(
                                 height: 20,
                                 width: 20,
                                 child: Icon(
@@ -118,7 +119,7 @@ class AddFriendRequestPage extends StatelessWidget {
                       )
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   GeneralComponent(
@@ -134,8 +135,8 @@ class AddFriendRequestPage extends StatelessWidget {
                     prefixWidget: Container(
                       height: 40,
                       width: 40,
-                      margin: EdgeInsets.only(right: 10),
-                      padding: EdgeInsets.all(10),
+                      margin: const EdgeInsets.only(right: 10),
+                      padding: const EdgeInsets.all(10),
                       child: SvgPicture.asset(
                         AddFriendRequestConstants.ADD_FRIEND_REQUEST_TIP["data"]
                             ["icon"],

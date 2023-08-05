@@ -107,11 +107,11 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
           widget.indexImagePost != null &&
           newList.isNotEmpty) {
         int sumComment = postComment.length;
-        newList.forEach((element) {
+        for (var element in newList) {
           sumComment += int.parse(
               ((element?['replies_count']) ?? (element?['replies_total']))
                   .toString());
-        });
+        }
         currentPost?['media_attachments']?[widget.indexImagePost]
             ?['status_media']?['replies_total'] = sumComment;
         ref
@@ -568,14 +568,14 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
           return;
         } else if (post['in_reply_to_id'] != null) {
           // cap nhat so luong khi xoa cmt con
-          postComment.forEach((element) {
+          for (var element in postComment) {
             if (element['id'] == post['in_reply_to_id']) {
               setState(() {
                 postComment = postComment;
               });
               _updatePostCount(subIfChild: 1);
             }
-          });
+          }
         }
       } else {
         if (postComment.map((e) => e['id']).toList().contains(post['id'])) {
@@ -589,14 +589,14 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
           return;
         } else if (post['in_reply_to_id'] != null) {
           // cap nhat so luong khi xoa cmt con
-          postComment.forEach((element) {
+          for (var element in postComment) {
             if (element['id'] == post['in_reply_to_id']) {
               setState(() {
                 postComment = postComment;
               });
               _updatePostCount(subIfChild: 1);
             }
-          });
+          }
         }
       }
     }
@@ -631,11 +631,11 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
     } else {
       dynamic updateCountPostData = widget.post;
       dynamic count = postComment.length;
-      postComment.forEach((element) {
+      for (var element in postComment) {
         if (element?["replies_total"] != null) {
           count += element?["replies_total"];
         }
-      });
+      }
       updateCountPostData['replies_total'] =
           count + addtionalIfChild - subIfChild;
       ref
@@ -649,16 +649,16 @@ class _CommentPostModalState extends ConsumerState<CommentPostModal> {
   }
 
   checkPreType() {
-    dynamic _preType = widget.preType;
+    dynamic preType = widget.preType;
 
-    if (_preType != null) {
-      if (_preType == postPageUser) {
+    if (preType != null) {
+      if (preType == postPageUser) {
         return postDetailFromUserPage;
       }
-      if (_preType == feedPost) {
+      if (preType == feedPost) {
         return postDetailFromFeed;
       }
-      return _preType;
+      return preType;
     } else {
       return null;
     }

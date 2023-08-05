@@ -31,7 +31,7 @@ class _SeeReviewShopMarketPageComsumerState
   late double height = 0;
   int mediaIndex = 0;
   bool _isMainLoading = true;
-  bool _isDetailLoading = false;
+  final bool _isDetailLoading = false;
   List<dynamic>? mediaList;
   List<dynamic>? reviewList = [];
   dynamic _imgChildLink;

@@ -173,8 +173,8 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
                                           0);
                                     });
                                   },
-                                  child: Row(
-                                    children: const [
+                                  child: const Row(
+                                    children: [
                                       Padding(
                                         padding: EdgeInsets.only(bottom: 2.0),
                                         child: Icon(
@@ -230,8 +230,8 @@ class _DatePickerCustomState extends State<DatePickerCustom> {
                                     isEndDate = false;
                                   });
                                 },
-                                child: Row(
-                                  children: const [
+                                child: const Row(
+                                  children: [
                                     Padding(
                                       padding: EdgeInsets.only(bottom: 2.0),
                                       child: Icon(

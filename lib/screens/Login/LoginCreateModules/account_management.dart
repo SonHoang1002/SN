@@ -5,19 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/home/PreviewScreen.dart';
-import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/setting_login_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
-import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
 import '../../../theme/colors.dart';
-import '../../../widgets/GeneralWidget/spacer_widget.dart';
 import '../../../widgets/back_icon_appbar.dart';
-import 'begin_join_login_page.dart';
-import 'main_login_page.dart';
 
 // ignore: must_be_immutable
 class AccountManagerment extends StatefulWidget {
@@ -76,7 +70,7 @@ class _AccountManagerment extends State<AccountManagerment> {
               children: [
                 const BackIconAppbar(),
                 Container(
-                  child: Text("Quản lý trang cá nhân"),
+                  child: const Text("Quản lý trang cá nhân"),
                 ),
                 Container()
               ],
@@ -98,7 +92,7 @@ class _AccountManagerment extends State<AccountManagerment> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Center(

@@ -9,7 +9,7 @@ buildStageNavigatorBar(
     Function? function,
     int? currentPage = 0,
     bool? isHaveStageNavigatorBar = true}) {
-  return Container(
+  return SizedBox(
     height: 85,
     child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       isHaveStageNavigatorBar!
@@ -22,7 +22,7 @@ buildStageNavigatorBar(
                   // ),
                   buildSpacer(height: 10),
                   Center(
-                      child: Container(
+                      child: SizedBox(
                     height: 6,
                     width: width * 0.9,
                     child: ListView.builder(

@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/products_api.dart';
@@ -34,8 +33,8 @@ class ProductsController extends StateNotifier<ProductsState> {
         isMore: response.isNotEmpty);
   }
 
-  getUserProductList(dynamic pageId) async {
-    List<dynamic> response = await ProductsApi().getUserProductList(pageId);
+  getShopProducts(dynamic pageId, dynamic params) async {
+    List<dynamic> response = await ProductsApi().getShopProducts(pageId,params);
     state = state.copyWith(list: response, isMore: response.isNotEmpty);
   }
 
@@ -48,7 +47,7 @@ class ProductsController extends StateNotifier<ProductsState> {
   }
 
   dynamic createProduct(dynamic data) async {
-     final response = await ProductsApi().postCreateProductApi(data);
+    final response = await ProductsApi().postCreateProductApi(data);
     return response;
   }
 }

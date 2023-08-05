@@ -1,4 +1,4 @@
-dynamic fakeDatas = [
+dynamic fakeWatchDatas = [
   {
     "id": "110338066264395010",
     "created_at": "2023-05-09T16:41:18.835+07:00",
@@ -1104,5 +1104,601 @@ dynamic fakeDatas = [
       "color": null
     },
     "status_target": null
+  }
+];
+
+dynamic fakePostDatas = [
+  {
+    "id": "110792927931430174",
+    "created_at": "2023-07-29T00:38:36.965+07:00",
+    "backdated_time": "2023-07-29T00:38:36.965+07:00",
+    "in_reply_to_id": null,
+    "in_reply_to_account_id": null,
+    "sensitive": false,
+    "spoiler_text": "",
+    "visibility": "public",
+    "language": "vi",
+    "post_type": null,
+    "replies_count": 0,
+    "off_comment": false,
+    "reblogs_count": 0,
+    "post_category_id": 288,
+    "favourites_count": 0,
+    "reactions": [
+      {"type": "like", "likes_count": 0},
+      {"type": "haha", "hahas_count": 0},
+      {"type": "angry", "angrys_count": 0},
+      {"type": "love", "loves_count": 0},
+      {"type": "sad", "sads_count": 0},
+      {"type": "wow", "wows_count": 0},
+      {"type": "yay", "yays_count": 0}
+    ],
+    "replies_total": 0,
+    "score": "110792927931430174",
+    "hidden": false,
+    "notify": false,
+    "processing": "done",
+    "view_3s": 0,
+    "source_deleted": false,
+    "comment_moderation": "public",
+    "viewer_reaction": null,
+    "reblogged": false,
+    "muted": false,
+    "bookmarked": false,
+    "pinned": null,
+    "content": "a",
+    "card": null,
+    "in_reply_to_parent_id": null,
+    "uuid": "110792927931430174",
+    "reblog": null,
+    "application": {"name": "Web", "website": null},
+    "account": {
+      "id": "107847827158179141",
+      "username": "tatu2004",
+      "display_name": "Thắng Hoà",
+      "avatar_static": "https://cmc-sn.emso.vn/avatars/original/missing.png",
+      "gender": null,
+      "earn_money": false,
+      "certified": true,
+      "relationships": {
+        "following": true,
+        "friendship_status": "ARE_FRIENDS",
+        "mutual_friend_count": 1
+      },
+      "avatar_media": {
+        "id": "108950613403177340",
+        "type": "image",
+        "url":
+            "https://cdn.emso.vn/sn-web/media_attachments/files/108/950/613/403/177/340/original/e3c9bd5b8977a02d.jpg",
+        "meta": {
+          "original": {
+            "width": 956,
+            "height": 1276,
+            "size": "956x1276",
+            "aspect": 0.7492163009404389,
+            "average_color": "#7e7b66"
+          },
+          "small": {
+            "width": 346,
+            "height": 462,
+            "size": "346x462",
+            "aspect": 0.7489177489177489,
+            "average_color": "#7e7b66"
+          }
+        },
+        "preview_url":
+            "https://cdn.emso.vn/sn-web/media_attachments/files/108/950/613/403/177/340/small/e3c9bd5b8977a02d.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/108/950/613/476/100/305/original/72147d22ed0d9e45.jpeg",
+        "status_id": "108950613407078297",
+        "description": "",
+        "position": null,
+        "created_at": "2022-09-06T15:53:48.146+07:00",
+        "frame": null,
+        "status_media": {
+          "id": "108950613407078297",
+          "favourites_count": 9,
+          "reblogs_count": 0,
+          "replies_total": 1,
+          "post_type": "account_avatar",
+          "reactions": [
+            {"type": "like", "likes_count": 5},
+            {"type": "haha", "hahas_count": 0},
+            {"type": "angry", "angrys_count": 0},
+            {"type": "love", "loves_count": 3},
+            {"type": "sad", "sads_count": 0},
+            {"type": "wow", "wows_count": 0},
+            {"type": "yay", "yays_count": 1}
+          ]
+        }
+      },
+      "banner": null
+    },
+    "status_background": null,
+    "status_activity": null,
+    "tagable_page": null,
+    "place": null,
+    "page_owner": null,
+    "album": null,
+    "event": null,
+    "project": null,
+    "course": null,
+    "series": null,
+    "shared_event": null,
+    "shared_project": null,
+    "shared_recruit": null,
+    "shared_course": null,
+    "shared_product": null,
+    "shared_page": null,
+    "shared_group": null,
+    "shared_music": null,
+    "target_account": {
+      "id": "109386980909989531",
+      "username": "ht1311x1012",
+      "display_name": "Hoàng Thanh",
+      "avatar_static": "https://cmc-sn.emso.vn/avatars/original/missing.png",
+      "gender": null,
+      "earn_money": false,
+      "certified": false,
+      "relationships": {
+        "following": false,
+        "friendship_status": "CAN_REQUEST",
+        "mutual_friend_count": null
+      },
+      "avatar_media": {
+        "id": "109387293028182871",
+        "type": "image",
+        "url":
+            "https://cdn.emso.vn/sn-web/media_attachments/files/109/387/293/028/182/871/original/94ae18079fe362e1.jpg",
+        "meta": {
+          "original": {
+            "width": 320,
+            "height": 320,
+            "size": "320x320",
+            "aspect": 1.0,
+            "average_color": "#5c4c47"
+          },
+          "small": {
+            "width": 320,
+            "height": 320,
+            "size": "320x320",
+            "aspect": 1.0,
+            "average_color": "#5c4c47"
+          }
+        },
+        "preview_url":
+            "https://cdn.emso.vn/sn-web/media_attachments/files/109/387/293/028/182/871/small/94ae18079fe362e1.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/387/293/099/483/986/original/a182874f6bdd7309.jpeg",
+        "status_id": "109387293031783233",
+        "description": "",
+        "position": null,
+        "created_at": "2022-11-22T18:47:10.432+07:00",
+        "frame": null,
+        "status_media": {
+          "id": "109387293031783233",
+          "favourites_count": 0,
+          "reblogs_count": 0,
+          "replies_total": 0,
+          "post_type": "account_avatar",
+          "reactions": [
+            {"type": "like", "likes_count": 0},
+            {"type": "haha", "hahas_count": 0},
+            {"type": "angry", "angrys_count": 0},
+            {"type": "love", "loves_count": 0},
+            {"type": "sad", "sads_count": 0},
+            {"type": "wow", "wows_count": 0},
+            {"type": "yay", "yays_count": 0}
+          ]
+        }
+      },
+      "banner": {
+        "id": "109387293658322530",
+        "type": "image",
+        "url":
+            "https://cdn.emso.vn/sn-web/media_attachments/files/109/387/293/658/322/530/original/0471143c107d7b78.jpg",
+        "meta": {
+          "original": {
+            "width": 1663,
+            "height": 1247,
+            "size": "1663x1247",
+            "aspect": 1.3336006415396953,
+            "average_color": "#5e8e87"
+          },
+          "small": {
+            "width": 461,
+            "height": 346,
+            "size": "461x346",
+            "aspect": 1.3323699421965318,
+            "average_color": "#5e8e87"
+          }
+        },
+        "preview_url":
+            "https://cdn.emso.vn/sn-web/media_attachments/files/109/387/293/658/322/530/small/0471143c107d7b78.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/387/293/876/122/669/original/70949e4cf611cc5d.jpeg",
+        "status_id": "109387293748976858",
+        "description": "",
+        "position": null,
+        "created_at": "2022-11-22T18:47:20.048+07:00",
+        "frame": null,
+        "status_media": {
+          "id": "109387293748976858",
+          "favourites_count": 0,
+          "reblogs_count": 0,
+          "replies_total": 0,
+          "post_type": "account_banner",
+          "reactions": [
+            {"type": "like", "likes_count": 0},
+            {"type": "haha", "hahas_count": 0},
+            {"type": "angry", "angrys_count": 0},
+            {"type": "love", "loves_count": 0},
+            {"type": "sad", "sads_count": 0},
+            {"type": "wow", "wows_count": 0},
+            {"type": "yay", "yays_count": 0}
+          ]
+        }
+      }
+    },
+    "media_attachments": [],
+    "mentions": [],
+    "tags": [],
+    "replies": [],
+    "favourites": [],
+    "emojis": [],
+    "status_tags": [],
+    "poll": null,
+    "life_event": null,
+    "status_question": {
+      "content": "Hãy viết câu hỏi của bạn...",
+      "color": null
+    },
+    "status_target": null,
+    "visible": true
+  },
+  {
+    "id": "110812267398888713",
+    "created_at": "2023-08-01T10:36:53.000+07:00",
+    "backdated_time": "2023-08-01T10:36:53.000+07:00",
+    "in_reply_to_id": null,
+    "in_reply_to_account_id": null,
+    "sensitive": false,
+    "spoiler_text": "",
+    "visibility": "public",
+    "language": "vi",
+    "post_type": null,
+    "replies_count": 0,
+    "off_comment": false,
+    "reblogs_count": 0,
+    "post_category_id": 288,
+    "favourites_count": 0,
+    "reactions": [
+      {"type": "like", "likes_count": 0},
+      {"type": "haha", "hahas_count": 0},
+      {"type": "angry", "angrys_count": 0},
+      {"type": "love", "loves_count": 0},
+      {"type": "sad", "sads_count": 0},
+      {"type": "wow", "wows_count": 0},
+      {"type": "yay", "yays_count": 0}
+    ],
+    "replies_total": 0,
+    "score": "110812267398888713",
+    "hidden": false,
+    "notify": false,
+    "processing": "done",
+    "view_3s": 0,
+    "source_deleted": false,
+    "comment_moderation": "public",
+    "viewer_reaction": null,
+    "reblogged": false,
+    "muted": false,
+    "bookmarked": false,
+    "pinned": null,
+    "content":
+        "Hậu quả khi về già với những người nâng mũi: Giờ nhìn đẹp thôi, vài năm nữa mới 'thấm thía' 👇👇",
+    "card": null,
+    "in_reply_to_parent_id": null,
+    "uuid": "110812267398888713",
+    "reblog": null,
+    "application": {"name": "Web", "website": null},
+    "account": {
+      "id": "109307596693229606",
+      "username": "thuytrang",
+      "display_name": "Trang Thùy",
+      "avatar_static": "https://cmc-sn.emso.vn/avatars/original/missing.png",
+      "gender": null,
+      "earn_money": false,
+      "certified": false,
+      "relationships": {
+        "following": false,
+        "friendship_status": "CAN_REQUEST",
+        "mutual_friend_count": 2
+      },
+      "avatar_media": {
+        "id": "109311682380490462",
+        "type": "image",
+        "url":
+            "https://cdn.emso.vn/sn-web/media_attachments/files/109/311/682/380/490/462/original/e692f50e243bd484.png",
+        "meta": {
+          "original": {
+            "width": 398,
+            "height": 552,
+            "size": "398x552",
+            "aspect": 0.7210144927536232,
+            "average_color": "#b8b0ab"
+          },
+          "small": {
+            "width": 340,
+            "height": 471,
+            "size": "340x471",
+            "aspect": 0.721868365180467,
+            "average_color": "#b8b0ab"
+          }
+        },
+        "preview_url":
+            "https://cdn.emso.vn/sn-web/media_attachments/files/109/311/682/380/490/462/small/e692f50e243bd484.png",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/823/503/906/022/652/original/a93dc6a056a3789f.jpeg",
+        "status_id": "109311682386053463",
+        "description": "",
+        "position": null,
+        "created_at": "2022-11-09T10:18:23.507+07:00",
+        "frame": null,
+        "status_media": {
+          "id": "109311682386053463",
+          "favourites_count": 0,
+          "reblogs_count": 0,
+          "replies_total": 0,
+          "post_type": "account_avatar",
+          "reactions": [
+            {"type": "like", "likes_count": 0},
+            {"type": "haha", "hahas_count": 0},
+            {"type": "angry", "angrys_count": 0},
+            {"type": "love", "loves_count": 0},
+            {"type": "sad", "sads_count": 0},
+            {"type": "wow", "wows_count": 0},
+            {"type": "yay", "yays_count": 0}
+          ]
+        }
+      },
+      "banner": {
+        "id": "109494582722904284",
+        "type": "image",
+        "url":
+            "https://cdn.emso.vn/sn-web/media_attachments/files/109/494/582/722/904/284/original/a1f8b15f3cbf3749.jpg",
+        "meta": {
+          "original": {
+            "width": 1920,
+            "height": 815,
+            "size": "1920x815",
+            "aspect": 2.355828220858896,
+            "average_color": "#3c2c2a"
+          },
+          "small": {
+            "width": 614,
+            "height": 261,
+            "size": "614x261",
+            "aspect": 2.3524904214559386,
+            "average_color": "#3c2c2a"
+          }
+        },
+        "preview_url":
+            "https://cdn.emso.vn/sn-web/media_attachments/files/109/494/582/722/904/284/small/a1f8b15f3cbf3749.jpg",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/494/583/063/671/067/original/9a3f55a2236156e0.jpeg",
+        "status_id": "109494582925813671",
+        "description": "",
+        "position": null,
+        "created_at": "2022-12-11T17:32:21.252+07:00",
+        "frame": null,
+        "status_media": {
+          "id": "109494582925813671",
+          "favourites_count": 1,
+          "reblogs_count": 0,
+          "replies_total": 3,
+          "post_type": "account_banner",
+          "reactions": [
+            {"type": "like", "likes_count": 0},
+            {"type": "haha", "hahas_count": 0},
+            {"type": "angry", "angrys_count": 0},
+            {"type": "love", "loves_count": 1},
+            {"type": "sad", "sads_count": 0},
+            {"type": "wow", "wows_count": 0},
+            {"type": "yay", "yays_count": 0}
+          ]
+        }
+      }
+    },
+    "status_background": {
+      "id": 258,
+      "name": "10_100",
+      "url":
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/11/10-100.jpg",
+      "style": {"fontSize": "40px", "fontColor": "#FFFFFF", "fontWeight": 700},
+      "category_name": "Phổ biến"
+    },
+    "status_activity": null,
+    "tagable_page": null,
+    "place": null,
+    "group": null,
+    "page": {
+      "id": "108277159419223656",
+      "title": "Blog Tâm Sự",
+      "username": "blogtamsu.fanpage",
+      "avatar_media": {
+        "id": "109511658123360732",
+        "type": "image",
+        "url":
+            "https://cdn.emso.vn/sn-web/media_attachments/files/109/511/658/123/360/732/original/0d861fc515492145.png",
+        "preview_url":
+            "https://cdn.emso.vn/sn-web/media_attachments/files/109/511/658/123/360/732/small/0d861fc515492145.png",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 601,
+            "height": 601,
+            "size": "601x601",
+            "aspect": 1.0,
+            "average_color": "#de7b6d"
+          },
+          "small": {
+            "width": 400,
+            "height": 400,
+            "size": "400x400",
+            "aspect": 1.0,
+            "average_color": "#de7b6d"
+          }
+        },
+        "description": null,
+        "position": null,
+        "blurhash": "URP:xOS5verrWZW=V@M|qsNJ%fj@RjenkptQ",
+        "status_id": "109511658131119502",
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/511/658/224/533/042/original/3390ca9d83256609.jpeg",
+        "created_at": "2022-12-14T17:54:51.239+07:00",
+        "frame": null,
+        "status_media": {
+          "id": "109511658131119502",
+          "favourites_count": 0,
+          "reblogs_count": 0,
+          "replies_total": 0,
+          "post_type": "page_avatar",
+          "reactions": [
+            {"type": "like", "likes_count": 0},
+            {"type": "haha", "hahas_count": 0},
+            {"type": "angry", "angrys_count": 0},
+            {"type": "love", "loves_count": 0},
+            {"type": "sad", "sads_count": 0},
+            {"type": "wow", "wows_count": 0},
+            {"type": "yay", "yays_count": 0}
+          ]
+        }
+      },
+      "location": null,
+      "follow_count": 5,
+      "rating_product_count": 0,
+      "earn_money": false,
+      "identity_verification": false,
+      "certified": false,
+      "page_relationship": {
+        "following": true,
+        "like": true,
+        "block_page": false,
+        "role": ""
+      },
+      "page_categories": [
+        {"id": "43", "text": "Trang web tin tức & truyền thông"}
+      ],
+      "banner": null
+    },
+    "page_owner": {
+      "id": "108277159419223656",
+      "title": "Blog Tâm Sự",
+      "username": "blogtamsu.fanpage",
+      "avatar_media": {
+        "id": "109511658123360732",
+        "type": "image",
+        "url":
+            "https://cdn.emso.vn/sn-web/media_attachments/files/109/511/658/123/360/732/original/0d861fc515492145.png",
+        "preview_url":
+            "https://cdn.emso.vn/sn-web/media_attachments/files/109/511/658/123/360/732/small/0d861fc515492145.png",
+        "remote_url": null,
+        "preview_remote_url": null,
+        "text_url": null,
+        "meta": {
+          "original": {
+            "width": 601,
+            "height": 601,
+            "size": "601x601",
+            "aspect": 1.0,
+            "average_color": "#de7b6d"
+          },
+          "small": {
+            "width": 400,
+            "height": 400,
+            "size": "400x400",
+            "aspect": 1.0,
+            "average_color": "#de7b6d"
+          }
+        },
+        "description": null,
+        "position": null,
+        "blurhash": "URP:xOS5verrWZW=V@M|qsNJ%fj@RjenkptQ",
+        "status_id": "109511658131119502",
+        "show_url":
+            "https://snapi.emso.asia/system/media_attachments/files/109/511/658/224/533/042/original/3390ca9d83256609.jpeg",
+        "created_at": "2022-12-14T17:54:51.239+07:00",
+        "frame": null,
+        "status_media": {
+          "id": "109511658131119502",
+          "favourites_count": 0,
+          "reblogs_count": 0,
+          "replies_total": 0,
+          "post_type": "page_avatar",
+          "reactions": [
+            {"type": "like", "likes_count": 0},
+            {"type": "haha", "hahas_count": 0},
+            {"type": "angry", "angrys_count": 0},
+            {"type": "love", "loves_count": 0},
+            {"type": "sad", "sads_count": 0},
+            {"type": "wow", "wows_count": 0},
+            {"type": "yay", "yays_count": 0}
+          ]
+        }
+      },
+      "location": null,
+      "follow_count": 5,
+      "rating_product_count": 0,
+      "earn_money": false,
+      "identity_verification": false,
+      "certified": false,
+      "page_relationship": {
+        "following": true,
+        "like": true,
+        "block_page": false,
+        "role": ""
+      },
+      "page_categories": [
+        {"id": "43", "text": "Trang web tin tức & truyền thông"}
+      ],
+      "banner": null
+    },
+    "album": null,
+    "event": null,
+    "project": null,
+    "course": null,
+    "series": null,
+    "shared_event": null,
+    "shared_project": null,
+    "shared_recruit": null,
+    "shared_course": null,
+    "shared_product": null,
+    "shared_page": null,
+    "shared_group": null,
+    "shared_music": null,
+    "target_account": null,
+    "media_attachments": [],
+    "mentions": [],
+    "tags": [],
+    "replies": [],
+    "favourites": [],
+    "emojis": [],
+    "status_tags": [],
+    "poll": null,
+    "status_question": null,
+    "status_target": null,
+    "visible": true
   }
 ];

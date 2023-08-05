@@ -316,7 +316,7 @@ class _PageLikedState extends ConsumerState<PageLiked> {
                                 spreadRadius: 1,
                                 blurRadius: 5,
                                 offset:
-                                    Offset(0, 0), // changes position of shadow
+                                    const Offset(0, 0), // changes position of shadow
                               ),
                             ],
                             color: Theme.of(context).scaffoldBackgroundColor),

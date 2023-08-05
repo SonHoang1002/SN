@@ -1,7 +1,7 @@
 part of social_mention;
 
 class FlutterMentions extends StatefulWidget {
-  FlutterMentions(
+  const FlutterMentions(
       {required this.mentions,
       Key? key,
       this.defaultText,
@@ -259,7 +259,7 @@ class FlutterMentionsState extends State<FlutterMentions> {
     final data = <String, Annotation>{};
 
     // Loop over all the mention items and generate a suggestions matching list
-    widget.mentions.forEach((element) {
+    for (var element in widget.mentions) {
       // if matchAll is set to true add a general regex patteren to match with
       if (element.matchAll) {
         data['${element.trigger}([A-Za-z0-9])*'] = Annotation(
@@ -272,8 +272,8 @@ class FlutterMentionsState extends State<FlutterMentions> {
         );
       }
 
-      element.data.forEach(
-        (e) => data["${element.trigger}${e['name']}"] = e['style'] != null
+      for (var e in element.data) {
+        data["${element.trigger}${e['name']}"] = e['style'] != null
             ? Annotation(
                 style: e['style'],
                 id: e['username'],
@@ -289,9 +289,9 @@ class FlutterMentionsState extends State<FlutterMentions> {
                 trigger: element.trigger,
                 disableMarkup: element.disableMarkup,
                 markupBuilder: element.markupBuilder,
-              ),
-      );
-    });
+              );
+      }
+    }
 
     return data;
   }
@@ -303,14 +303,14 @@ class FlutterMentionsState extends State<FlutterMentions> {
       _selectedMention = null;
     });
 
-    final _list = widget.mentions
+    final list0 = widget.mentions
         .firstWhere((element) => selectedMention.str.contains(element.trigger));
 
     // find the text by range and replace with the new value.
     controller!.text = controller!.value.text.replaceRange(
       selectedMention.start,
       selectedMention.end,
-      "${_list.trigger}${value['name']}${widget.appendSpaceOnAdd ? ' ' : ''}",
+      "${list0.trigger}${value['name']}${widget.appendSpaceOnAdd ? ' ' : ''}",
     );
 
     if (widget.onMentionAdd != null) widget.onMentionAdd!(value);
@@ -332,7 +332,7 @@ class FlutterMentionsState extends State<FlutterMentions> {
     final cursorPos = controller!.selection.baseOffset;
 
     if (cursorPos >= 0) {
-      var _pos = 0;
+      var pos = 0;
 
       final lengthMap = <LengthMap>[];
 
@@ -344,17 +344,17 @@ class FlutterMentionsState extends State<FlutterMentions> {
 
       List triggerList = widget.mentions.map((e) => e.trigger).toList();
 
-      triggerList.forEach((element) {
+      for (var element in triggerList) {
         var triggerIndex = textList.lastIndexWhere((e) => e.contains(element));
         if (triggerIndex > mentionIndex) {
           mentionIndex = triggerIndex;
         }
-      });
+      }
 
       if (textList.length - 1 > mentionIndex && mentionIndex != -1) {
         var nextWordIndex = mentionIndex + 1;
 
-        var mention = textList[mentionIndex] + ' ' + textList[nextWordIndex];
+        var mention = '${textList[mentionIndex]} ${textList[nextWordIndex]}';
 
         _pattern = widget.mentions.map((e) => e.trigger).join('|');
 
@@ -378,7 +378,7 @@ class FlutterMentionsState extends State<FlutterMentions> {
           // If the word is exist on the next index then concatenate it otherwise break the loop
           if (textList.length - 1 > nextWordIndex) {
             // concatenate the next word to the mention and again iterate the while loop with condition of check weather the mention is available or in the list or  not
-            mention = mention + ' ' + textList[++nextWordIndex];
+            mention = '$mention ${textList[++nextWordIndex]}';
           } else {
             break;
           }
@@ -388,12 +388,12 @@ class FlutterMentionsState extends State<FlutterMentions> {
       // Remove all the null entries from the list
       textList.removeWhere((element) => element == "null");
 
-      textList.forEach((element) {
+      for (var element in textList) {
         lengthMap.add(
-            LengthMap(str: element, start: _pos, end: _pos + element.length));
+            LengthMap(str: element, start: pos, end: pos + element.length));
 
-        _pos = _pos + element.length + 1;
-      });
+        pos = pos + element.length + 1;
+      }
 
       final val = lengthMap.indexWhere((element) {
         _pattern = widget.mentions.map((e) => e.trigger).join('|');
@@ -509,7 +509,6 @@ class FlutterMentionsState extends State<FlutterMentions> {
         if (widget.realTextController?.text == '') {
           controller?.clear();
         }
-        ;
       });
     }
 

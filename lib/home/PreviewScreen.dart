@@ -46,10 +46,6 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +54,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
         child: Container(
           color: Theme.of(context).scaffoldBackgroundColor,
           child:
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: const [
+              const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text(
               "Emso",
               style: TextStyle(

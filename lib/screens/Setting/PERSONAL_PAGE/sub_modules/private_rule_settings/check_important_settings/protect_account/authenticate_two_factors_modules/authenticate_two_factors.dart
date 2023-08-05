@@ -27,9 +27,9 @@ class MainAuthenticateTwoFactorsPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             AppBarTitle(
                 title: AuthenticateTwoFactorsConstants
@@ -52,7 +52,7 @@ class MainAuthenticateTwoFactorsPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [
                   // title
                   buildTextContent(
@@ -60,7 +60,7 @@ class MainAuthenticateTwoFactorsPage extends StatelessWidget {
                           .AUTHENTICATE_TWO_FACTOR_TITLE,
                       true,
                       fontSize: 22),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   //subTitle
@@ -71,14 +71,14 @@ class MainAuthenticateTwoFactorsPage extends StatelessWidget {
                     fontSize: 15,
                     // colorWord: Colors.grey
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   // change password component hien ra khi nut doi mat khau bien mat
                   Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(bottom: 10),
+                        margin: const EdgeInsets.only(bottom: 10),
                         child: GeneralComponent(
                           [
                             buildTextContent(
@@ -87,7 +87,7 @@ class MainAuthenticateTwoFactorsPage extends StatelessWidget {
                               true,
                               fontSize: 20,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
                             Container(
@@ -109,15 +109,15 @@ class MainAuthenticateTwoFactorsPage extends StatelessWidget {
                                             fontSize: 15,
                                             // colorWord: Colors.grey
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 5,
                                           )
                                         ],
                                         prefixWidget: Container(
-                                            margin: EdgeInsets.only(right: 10),
+                                            margin: const EdgeInsets.only(right: 10),
                                             height: 7,
                                             width: 7,
-                                            decoration: BoxDecoration(
+                                            decoration: const BoxDecoration(
                                                 color: Colors.blue,
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(3.5)))),
@@ -127,9 +127,9 @@ class MainAuthenticateTwoFactorsPage extends StatelessWidget {
                                     })))
                           ],
                           prefixWidget: Container(
-                            padding: EdgeInsets.only(right: 15),
+                            padding: const EdgeInsets.only(right: 15),
                             child: SvgPicture.asset(
-                              SettingConstants.PATH_ICON + "bell_icon.svg",
+                              "${SettingConstants.PATH_ICON}bell_icon.svg",
                               height: 20,
                               // color: Colors.white,
                             ),
@@ -142,27 +142,27 @@ class MainAuthenticateTwoFactorsPage extends StatelessWidget {
                           pushToNextScreen(
                               context, BeginAuthenticateTwoFactorsPage());
                         },
-                        child: Text(
+                        style: ElevatedButton.styleFrom(
+                            fixedSize: Size(width * 0.9, 40),
+                            backgroundColor: Colors.blue),
+                        child: const Text(
                           AuthenticateTwoFactorsConstants
                               .AUTHENTICATE_TWO_FACTORS_BEGIN_BUTTON,
                           style: TextStyle(color: Colors.white, fontSize: 17),
                         ),
-                        style: ElevatedButton.styleFrom(
-                            fixedSize: Size(width * 0.9, 40),
-                            backgroundColor: Colors.blue),
                       ),
                       ElevatedButton(
                         onPressed: () {
                           // push to learn more screen
                         },
-                        child: Text(
+                        style: ElevatedButton.styleFrom(
+                            fixedSize: Size(width * 0.9, 40),
+                            backgroundColor: Colors.blue),
+                        child: const Text(
                           AuthenticateTwoFactorsConstants
                               .AUTHENTICATE_TWO_FACTORS_LEARN_MORE_BUTTON,
                           style: TextStyle(color: Colors.white, fontSize: 17),
                         ),
-                        style: ElevatedButton.styleFrom(
-                            fixedSize: Size(width * 0.9, 40),
-                            backgroundColor: Colors.blue),
                       ),
                     ],
                   )

@@ -6,7 +6,6 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/WebView/my_web_view.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 // ignore: must_be_immutable
 class PostCard extends StatelessWidget {

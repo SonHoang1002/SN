@@ -253,9 +253,9 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                     borderRadius: BorderRadius.circular(6),
                                     border: Border.all(
                                         width: 0.2, color: greyColor)),
-                                child: Row(
+                                child: const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
+                                  children: [
                                     Icon(
                                       FontAwesomeIcons.user,
                                       size: 14,
@@ -616,10 +616,10 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                                     border: Border.all(
                                                         width: 0.2,
                                                         color: greyColor)),
-                                                child: Row(
+                                                child: const Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     Icon(FontAwesomeIcons.share,
                                                         color: Colors.black,
                                                         size: 14),
@@ -911,10 +911,10 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                                     border: Border.all(
                                                         width: 0.2,
                                                         color: greyColor)),
-                                                child: Row(
+                                                child: const Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     Icon(FontAwesomeIcons.share,
                                                         color: Colors.black,
                                                         size: 14),

@@ -9,17 +9,17 @@ class HowToProtectYourAccountConstants {
     "data": [
       {
         "key": "turn_on_login_warning",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Bật cảnh báo đăng nhập"
       },
       {
         "key": "OK_password",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Mật khẩu OK"
       },
       {
         "key": "turn_on_2-factor_authentication",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Bật tính năng xác thực 2 yếu tố"
       }
     ]
@@ -44,13 +44,13 @@ class LoginWarningConstants {
     "data": [
       {
         "key": "Emso",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Emso",
         "subTitle": "Chúng tôi sẽ gửi cho bạn thông báo trên Emso",
       },
       {
         "key": "email",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Email",
         "subTitle": "Chúng tôi sẽ gửi cảnh báo đến a@gmail.com",
       },
@@ -100,7 +100,7 @@ class AuthenticateTwoFactorsConstants {
 
   // next part
   static const AUTHENTICATE_TWO_FACTOR_IMG =
-      SettingConstants.PATH_IMG + "back_1.jpg";
+      "${SettingConstants.PATH_IMG}back_1.jpg";
   static const AUTHENTICATE_TWO_FACTOR_PROTECT_ACCOUNT_TITLE =
       "Giúp bảo vệ tài khoản của bạn";
   static const AUTHENTICATE_TWO_FACTOR_PROTECT_ACCOUNT_SUBTITLE =

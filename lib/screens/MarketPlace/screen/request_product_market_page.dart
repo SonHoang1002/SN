@@ -37,9 +37,9 @@ class _RequestProductMarketPageState extends State<RequestProductMarketPage> {
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: Row(
+          title: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               BackIconAppbar(),
               AppBarTitle(title: "Lời mời"),
               Icon(

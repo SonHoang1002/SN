@@ -6,7 +6,6 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
-import 'package:social_network_app_mobile/home/PreviewScreen.dart';
 import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/setting_login_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';

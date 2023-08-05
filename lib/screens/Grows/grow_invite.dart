@@ -385,10 +385,10 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                                               border: Border.all(
                                                   width: 0.2,
                                                   color: greyColor)),
-                                          child: Row(
+                                          child: const Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: const [
+                                            children: [
                                               Icon(FontAwesomeIcons.share,
                                                   color: Colors.black,
                                                   size: 14),
@@ -729,11 +729,11 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                                                           )
                                                         ],
                                                       )
-                                                    : Row(
+                                                    : const Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
                                                                 .center,
-                                                        children: const [
+                                                        children: [
                                                           Padding(
                                                             padding:
                                                                 EdgeInsets.only(
@@ -803,10 +803,10 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                                               border: Border.all(
                                                   width: 0.2,
                                                   color: greyColor)),
-                                          child: Row(
+                                          child: const Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: const [
+                                            children: [
                                               Icon(FontAwesomeIcons.share,
                                                   color: Colors.black,
                                                   size: 14),

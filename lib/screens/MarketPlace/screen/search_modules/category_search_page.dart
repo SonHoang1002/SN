@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +6,6 @@ import 'package:loader_skeleton/loader_skeleton.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/category_product_apis.dart';
 import 'package:social_network_app_mobile/apis/market_place_apis/products_api.dart';
 
-import 'package:social_network_app_mobile/data/market_datas/list_category.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/see_more_page.dart';
@@ -16,7 +14,6 @@ import 'package:social_network_app_mobile/screens/MarketPlace/widgets/cart_widge
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/category_product_item.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/classify_category_conponent.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/product_item_widget.dart';
-import 'package:social_network_app_mobile/apis/market_place_apis/search_product_api.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/title_and_see_all.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
@@ -125,7 +122,7 @@ class _CategorySearchPageState extends ConsumerState<CategorySearchPage> {
             height: 5,
           ),
           suggestList != null
-              ? buildSuggestListComponent(
+              ? SuggestListComponent(
                   context: context,
                   title: buildTitleAndSeeAll(
                     "Có thể bạn sẽ thích",

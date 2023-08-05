@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/protect_account/password_page.dart';
 import 'package:social_network_app_mobile/screens/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/protect_account/protect_your_account_constants.dart';
-import 'package:social_network_app_mobile/screens/Setting/setting_constants/general_settings_constants.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/bottom_navigator_bar_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/bottom_navigator_dot_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
@@ -16,6 +14,8 @@ class LoginWarningPage extends StatelessWidget {
   late double width = 0;
   late double height = 0;
 
+  LoginWarningPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -25,9 +25,9 @@ class LoginWarningPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             AppBarTitle(title: LoginWarningConstants.LOGIN_WARNING_APPAR_TITLE),
             SizedBox(),
@@ -46,13 +46,13 @@ class LoginWarningPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [
                   // title
                   buildTextContent(
                       LoginWarningConstants.LOGIN_WARNING_TITLE, true,
                       fontSize: 22),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   buildTextContent(
@@ -83,17 +83,17 @@ class LoginWarningPage extends StatelessWidget {
                             prefixWidget: Container(
                                 height: 40,
                                 width: 40,
-                                margin: EdgeInsets.only(right: 10),
-                                decoration: BoxDecoration(
+                                margin: const EdgeInsets.only(right: 10),
+                                decoration: const BoxDecoration(
                                     // color: Colors.grey[800],
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(20))),
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 child: SvgPicture.asset(
                                   data[index]["icon"],
                                   // color:  white,
                                 )),
-                            suffixWidget: Container(
+                            suffixWidget: SizedBox(
                               height: 30,
                               width: 30,
                               child: Checkbox(
@@ -111,7 +111,7 @@ class LoginWarningPage extends StatelessWidget {
           ),
           // navigator
           buildBottomNavigatorDotWidget(
-              context, 3, 1, "Bỏ qua", PasswordPage()),
+              context, 3, 1, "Bỏ qua", const PasswordPage()),
 
           buildBottomNavigatorBarWidget(context)
         ]),

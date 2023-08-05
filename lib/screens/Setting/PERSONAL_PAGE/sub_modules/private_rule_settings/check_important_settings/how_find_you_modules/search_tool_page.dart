@@ -1,11 +1,8 @@
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/all_completed_page.dart';
 import 'package:social_network_app_mobile/screens/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/how_find_you_modules/how_find_you_constants.dart';
-import 'package:social_network_app_mobile/screens/Setting/setting_constants/general_settings_constants.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/bottom_navigator_bar_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/bottom_navigator_dot_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
@@ -15,6 +12,8 @@ import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 class SearchToolPage extends StatelessWidget {
   late double width = 0;
   late double height = 0;
+
+  SearchToolPage({super.key});
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -24,9 +23,9 @@ class SearchToolPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             AppBarTitle(title: SearchToolConstants.SEARCH_TOOL_APPBAR_TITLE),
             SizedBox(),
@@ -46,9 +45,9 @@ class SearchToolPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   // title
@@ -67,7 +66,7 @@ class SearchToolPage extends StatelessWidget {
                       );
                     }),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Row(

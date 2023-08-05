@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -7,12 +6,9 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
-import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_content.dart';
 import 'package:social_network_app_mobile/screens/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
-import 'package:social_network_app_mobile/screens/Post/post_suggest.dart';
-import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_controller.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
@@ -137,7 +133,7 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
                             ?['remote_url']) ??
                         (widget.post?['media_attachments']?[0]?['url']),
                     child: VideoPlayerHasController(
-                      media: widget.media,
+                      media: widget.media, 
                       onDoubleTapAction: () { 
                       },
                     ),

@@ -21,7 +21,7 @@ class SettingConstants {
     [Icons.food_bank_outlined, "MarketPlace"],
     [Icons.personal_injury, "Trang cá nhân"],
     [Icons.notifications_active, "Thông báo"],
-    [PATH_IMG + "cat_7.png", "Menu"],
+    ["${PATH_IMG}cat_7.png", "Menu"],
   ];
 
   // trang ca nhan
@@ -30,7 +30,7 @@ class SettingConstants {
   static const PERSONAL_PAGE_DESCRIPTION =
       "Kiểm soát các tùy chọn của trang cá nhân này như quyền riêng tư, thông báo và các cài đặt khác";
   static List<dynamic> USER_EXAMPLE = [
-    PATH_IMG + "cat_7.png",
+    "${PATH_IMG}cat_7.png",
     "Cài đặt trang cá nhân",
     "Dành cho USER_NAME"
   ];
@@ -44,7 +44,7 @@ class SettingConstants {
     {
       "key": "acount_information",
       "data": {
-        "icon": PATH_ICON + "bell_icon.svg",
+        "icon": "${PATH_ICON}bell_icon.svg",
         "title": "Thông tin cá nhân",
         "subTitle":
             "Cập nhật tên và thông tin liên hệ mà bạn kết nối với tài khoản Emso của mình"
@@ -53,7 +53,7 @@ class SettingConstants {
     {
       "key": "tranlate_post",
       "data": {
-        "icon": PATH_ICON + "bell_icon.svg",
+        "icon": "${PATH_ICON}bell_icon.svg",
         "title": "Dịch bài viết",
         "subTitle":
             "Hãy cho chúng tôi biết tùy chọn dịch mà bạn muốn áp dụng cho bài viết của bạn bè và bài viết song ngữ"
@@ -62,7 +62,7 @@ class SettingConstants {
     {
       "key": "tranlate_post",
       "data": {
-        "icon": PATH_ICON + "bell_icon.svg",
+        "icon": "${PATH_ICON}bell_icon.svg",
         "title": "Thanh toán quảng cáo",
         "subTitle": "Thanh toán hoặc chỉnh sửa cài đặt thanh toán của bạn"
       }
@@ -70,7 +70,7 @@ class SettingConstants {
     {
       "key": "pay_advertisement",
       "data": {
-        "icon": PATH_ICON + "bell_icon.svg",
+        "icon": "${PATH_ICON}bell_icon.svg",
         "title": "Emso Pay",
         "subTitle":
             "Quản lý cài đạt thanh toán, xem lịch sử thanh toán và nhận hỗ trợ qua tính năng chat trực tiếp"
@@ -79,7 +79,7 @@ class SettingConstants {
     {
       "key": "access_and_control_rule",
       "data": {
-        "icon": PATH_ICON + "bell_icon.svg",
+        "icon": "${PATH_ICON}bell_icon.svg",
         "title": "Quyền truy cập và kiểm soát",
         "subTitle":
             "Quản lý dữ liệu, sửa đổi người liên hệ thừa kế, vô hiệu hóa hoặc xóa tài khoản của bạn, vv"
@@ -96,7 +96,7 @@ class SettingConstants {
     {
       "key": "security_and_login",
       "data": {
-        "icon": PATH_ICON + "bell_icon.svg",
+        "icon": "${PATH_ICON}bell_icon.svg",
         "title": "Bảo mật vằ đăng nhập",
         "subTitle":
             "Cập nhật cài đặt đăng nhập và quản lý game/ ứng dụng kết nối với tài khoản của bạn"
@@ -105,7 +105,7 @@ class SettingConstants {
     {
       "key": "location",
       "data": {
-        "icon": PATH_ICON + "bell_icon.svg",
+        "icon": "${PATH_ICON}bell_icon.svg",
         "title": "Vị trí",
         "subTitle": "Quản lý cài đặt vị trí của bạn"
       }
@@ -113,7 +113,7 @@ class SettingConstants {
     {
       "key": "application_website",
       "data": {
-        "icon": PATH_ICON + "bell_icon.svg",
+        "icon": "${PATH_ICON}bell_icon.svg",
         "title": "Ứng dụng và trang web",
         "subTitle":
             "Quản lý thông tin bạn chia sẻ với các ứng dụng và trang web bạn đã đăng nhập bằng Emso"
@@ -122,7 +122,7 @@ class SettingConstants {
     {
       "key": "outside_activity_Emso",
       "data": {
-        "icon": PATH_ICON + "bell_icon.svg",
+        "icon": "${PATH_ICON}bell_icon.svg",
         "title": "Hoạt động bên ngoài Emso",
         "subTitle":
             "Xem hoặc xóa hoạt động từ các doanh nghiệp và tổ chức mà bạn truy cập ngoài Emso"
@@ -131,7 +131,7 @@ class SettingConstants {
     {
       "key": "business_integrations",
       "data": {
-        "icon": PATH_ICON + "bell_icon.svg",
+        "icon": "${PATH_ICON}bell_icon.svg",
         "title": "Tiện ích tích hợp cho doanh nghiệp",
         "subTitle":
             "Xem và gỡ các tiện ích tích hợp cho doanh nghiệp mà bạn kết nối với tài khoản của mình để quản lý quảng cáo, trang cá nhân cùng thông tin doanh nghiệp khác"
@@ -146,7 +146,7 @@ class SettingConstants {
     {
       "key": "advertisement_settings",
       "data": {
-        "icon": PATH_ICON + "bell_icon.svg",
+        "icon": "${PATH_ICON}bell_icon.svg",
         "title": "Tùy chọn nâng cao",
         "subTitle":
             "Kiểm soát xem dữ liệu ảnh hưởng đến quảng cáo bạn nhìn thấy như thế nào và tìm hiểu thêm về cách quảng cáo hoạt động."

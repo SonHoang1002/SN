@@ -40,9 +40,9 @@ class _PreviewVideoImageComsumerState extends State<PreviewVideoImage> {
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: Row(
+          title: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [BackIconAppbar(), SizedBox()],
+            children: [BackIconAppbar(), SizedBox()],
           ),
         ),
         body: _buildReviewBody());

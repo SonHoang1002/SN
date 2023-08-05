@@ -1,6 +1,5 @@
 // ignore_for_file: unused_field
 
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -16,6 +15,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/config.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
@@ -258,7 +258,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
         postRender?['url'] ??
         (postRender?['avatar_media']?['url']) ??
         postRender?['banner']?['preview_url'] ??
-        linkSocialNetwork;
+        linkBannerDefault;
     final size = MediaQuery.sizeOf(context);
     return WillPopScope(
       onWillPop: () async {
@@ -351,7 +351,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                                 (postRender?['id']) ??
                                 index,
                             child: ExtendedImage.network(
-                              pathImg,
+                              pathImg ,
                               fit: BoxFit.contain,
                               mode: ExtendedImageMode.gesture,
                               initGestureConfigHandler: (handler) {

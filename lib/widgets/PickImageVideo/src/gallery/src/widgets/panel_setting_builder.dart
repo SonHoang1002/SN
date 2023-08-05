@@ -25,15 +25,15 @@ class PanelSettingBuilder extends StatelessWidget {
         final mediaQuery = MediaQuery.of(context);
         final size = constraints.biggest;
         final isFullScreen = size.height == mediaQuery.size.height;
-        final ps = setting ?? const PanelSetting();
-        final _panelMaxHeight = ps.maxHeight ??
+        final ps = this.setting ?? const PanelSetting();
+        final panelMaxHeight = ps.maxHeight ??
             size.height - (isFullScreen ? mediaQuery.padding.top : 0);
-        final _panelMinHeight = ps.minHeight ?? _panelMaxHeight * _defaultMin;
-        final _setting = ps.copyWith(
-          maxHeight: _panelMaxHeight,
-          minHeight: _panelMinHeight,
+        final panelMinHeight = ps.minHeight ?? panelMaxHeight * _defaultMin;
+        final setting = ps.copyWith(
+          maxHeight: panelMaxHeight,
+          minHeight: panelMinHeight,
         );
-        return builder(_setting);
+        return builder(setting);
       },
     );
   }

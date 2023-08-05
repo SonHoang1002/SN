@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/common.api.dart';
 import 'package:social_network_app_mobile/data/emoji_activity.dart';
+import 'package:social_network_app_mobile/data/old_emoji_activity.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/search_input.dart';
@@ -51,7 +52,7 @@ class _EmojiActivityState extends State<EmojiActivity>
 
   @override
   Widget build(BuildContext context) {
-    List listEmojis = emojis
+    List listEmojis = oldEmojis
         .where((element) => element['name'].contains(textSearch))
         .toList();
     List listActivities = activities
@@ -269,6 +270,7 @@ class _ItemState extends State<Item> {
                           borderRadius: BorderRadius.circular(10.0)),
                     );
                   }
+                  return null;
                 }),
                 const SizedBox(
                   width: 8,

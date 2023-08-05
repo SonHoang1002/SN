@@ -114,6 +114,8 @@ class ContentPlaceholder extends StatelessWidget {
 }
 
 class CollectionRowSkeleton extends StatelessWidget {
+  const CollectionRowSkeleton({super.key});
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
@@ -144,6 +146,8 @@ class CollectionRowSkeleton extends StatelessWidget {
 }
 
 class CollectionListSkeleton extends StatelessWidget {
+  const CollectionListSkeleton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
@@ -159,17 +163,17 @@ class CollectionListSkeleton extends StatelessWidget {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 14.0),
               width: double.infinity,
-              child: CollectionRowSkeleton(),
+              child: const CollectionRowSkeleton(),
             ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 14.0),
               width: double.infinity,
-              child: CollectionRowSkeleton(),
+              child: const CollectionRowSkeleton(),
             ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 14.0),
               width: double.infinity,
-              child: CollectionRowSkeleton(),
+              child: const CollectionRowSkeleton(),
             ),
           ],
         ),
@@ -179,6 +183,8 @@ class CollectionListSkeleton extends StatelessWidget {
 }
 
 class BookmarkListSkeleton extends StatelessWidget {
+  const BookmarkListSkeleton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
@@ -235,6 +241,8 @@ class BookmarkListSkeleton extends StatelessWidget {
 }
 
 class SavedWaitingSkeleton extends StatelessWidget {
+  const SavedWaitingSkeleton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
@@ -273,13 +281,13 @@ class SavedWaitingSkeleton extends StatelessWidget {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 14.0),
               width: double.infinity,
-              child: CollectionRowSkeleton(),
+              child: const CollectionRowSkeleton(),
             ),
             const SizedBox(height: 10.0),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 14.0),
               width: double.infinity,
-              child: CollectionRowSkeleton(),
+              child: const CollectionRowSkeleton(),
             ),
           ],
         ),

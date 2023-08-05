@@ -99,7 +99,7 @@ class BookmarkItemState extends ConsumerState<BookmarkItem> {
             Expanded(
               flex: 6,
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
+                padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -157,7 +157,7 @@ class BookmarkItemState extends ConsumerState<BookmarkItem> {
                                   builder: ((context) {
                                     return CupertinoAlertDialog(
                                       content: Container(
-                                        margin: EdgeInsets.only(top: 8.0),
+                                        margin: const EdgeInsets.only(top: 8.0),
                                         child: const Text(
                                           "Bạn có chắc chắn muốn bỏ lưu mục đã chọn không?",
                                           style: TextStyle(fontSize: 14.0),

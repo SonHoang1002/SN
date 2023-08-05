@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -5,7 +7,6 @@ import 'package:social_network_app_mobile/apis/market_place_apis/follwer_product
 import 'package:social_network_app_mobile/constant/get_min_max_price.dart';
 import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/interest_product_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/detail_product_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
@@ -13,7 +14,6 @@ import 'package:social_network_app_mobile/screens/MarketPlace/widgets/market_but
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/share_and_search.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/Market/show_market_bottom_sheet.dart';
@@ -76,7 +76,7 @@ class _InterestProductMarketPageState
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     width = size.width;
-    height = size.height;
+    height = size.height; 
     _initData();
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -144,7 +144,10 @@ class _InterestProductMarketPageState
                       fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 buildSpacer(height: 7),
-                buildTextContent("Nguyễn Đình Đạt", false, fontSize: 15),
+                buildTextContent(
+                    "${data['page']?['title'] != null ? "${data['page']?['title']} -" : ""} ${data['followers_count']} người quan tâm",
+                    false,
+                    fontSize: 15),
                 buildSpacer(height: 7),
                 Container(
                     padding: const EdgeInsets.all(5),
@@ -191,8 +194,9 @@ class _InterestProductMarketPageState
                       ],
                       width: width * 0.6,
                       function: () async {
-                        _concernList![index] = !_concernList![index];
-                        setState(() {});
+                        setState(() {
+                          _concernList![index] = !_concernList![index];
+                        });
                         if (_concernList![index]) {
                           await FollwerProductsApi()
                               .postFollwerProductsApi(data["id"]);

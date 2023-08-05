@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
@@ -46,6 +45,7 @@ class WebSocketService {
       setupPeriodicSending();
       return webSocketChannel!;
     }
+    return null;
   }
 
   void setupPeriodicSending() {
