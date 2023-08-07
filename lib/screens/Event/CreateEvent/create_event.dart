@@ -11,12 +11,13 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/apis/events_api.dart';
 import 'package:social_network_app_mobile/screens/Event/CreateEvent/date_picker.dart';
+import 'package:social_network_app_mobile/screens/Event/CreateEvent/event_category.dart';
 import 'package:social_network_app_mobile/screens/Event/CreateEvent/event_publish.dart';
 import 'package:social_network_app_mobile/screens/Event/event_detail.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/CustomCropImage/crop_your_image.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
-
+import 'package:extended_image/extended_image.dart' as img;
 import '../../../widgets/appbar_title.dart';
 import '../../../widgets/back_icon_appbar.dart';
 import 'event_meeting.dart';
@@ -46,8 +47,9 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
   bool eventDateEnd = false;
   List checkin = [];
   File? files;
-  String privateEvent = '';
+  String privateEvent = 'public';
   List checkinSelected = [];
+  List categorySelected = [];
   bool isCropping = false;
   bool formLoading = false;
   Future<Uint8List> _load(File imageFile) async {
@@ -57,7 +59,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
 
   void _updateCheckinSelected(List<dynamic> newSelected) {
     setState(() {
-      checkinSelected = newSelected;
+      categorySelected = newSelected;
     });
   }
 
@@ -378,7 +380,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                                     ]),
                                   ),
                             const SizedBox(height: 16),
-                            InkWell(
+                            /* InkWell(
                               onTap: () {
                                 showModalBottomSheet(
                                     isScrollControlled: true,
@@ -415,6 +417,57 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                                     labelText: !checkinSelected.isNotEmpty
                                         ? 'Đây là sự kiện gặp mặt trực tiếp hay trên mạng'
                                         : 'Trực tiếp',
+                                  ),
+                                ),
+                              ),
+                            ), */
+                            InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                    isScrollControlled: true,
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(16))),
+                                    context: context,
+                                    builder: (context) => SizedBox(
+                                        height:
+                                            MediaQuery.sizeOf(context).height *
+                                                0.8,
+                                        child: GetEventCategory(
+                                            categorySelected: categorySelected,
+                                            onCategorySelectedChanged:
+                                                _updateCheckinSelected)));
+                              },
+                              child: IgnorePointer(
+                                child: TextFormField(
+                                  key: UniqueKey(),
+                                  readOnly: true,
+                                  //enabled: false,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Vui lòng nhập thông tin hạng mục.';
+                                    }
+                                    return null;
+                                  },
+                                  initialValue: categorySelected.isNotEmpty
+                                      ? '${categorySelected[0]["text"]}'
+                                      : '',
+                                  decoration: InputDecoration(
+                                    prefixIcon: categorySelected.isNotEmpty &&
+                                            categorySelected[0]['icon'] != null
+                                        ? Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: img.ExtendedImage.network(
+                                              categorySelected[0]['icon'],
+                                              width: 20,
+                                              height: 20,
+                                            ),
+                                          )
+                                        : null,
+                                    border: OutlineInputBorder(),
+                                    labelText: "Hạng mục",
                                   ),
                                 ),
                               ),

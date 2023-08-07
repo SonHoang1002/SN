@@ -9,6 +9,8 @@ import 'package:social_network_app_mobile/screens/Page/PageDetail/page_search.da
 import 'package:social_network_app_mobile/screens/Page/PageEdit/page_action.dart';
 import 'package:social_network_app_mobile/screens/Page/PageEdit/page_activity.dart';
 import 'package:social_network_app_mobile/screens/Page/PageEdit/page_edit.dart';
+import 'package:social_network_app_mobile/screens/Page/PageSettings/page_message_setting.dart';
+import 'package:social_network_app_mobile/screens/Page/page_settings.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
@@ -59,11 +61,6 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
                     "key": "action",
                     "label": "Thêm nút hành động",
                     "icon": "assets/pages/addAction.png",
-                  },
-                  {
-                    "key": "activity",
-                    "label": "Nhật ký hoạt động",
-                    "icon": "assets/pages/activityLog.png",
                   },
                   {
                     "key": "setting",
@@ -227,11 +224,11 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
                     handleChangeDependencies:
                         widget.handleChangeDependencies)));
         break;
-      case 'activity':
+      case 'setting':
         Navigator.push(
             context,
             CupertinoPageRoute(
-                builder: (context) => PageActivity(
+                builder: (context) => PageSettings(
                       data: widget.data,
                     )));
         break;
