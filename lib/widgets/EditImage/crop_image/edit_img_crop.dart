@@ -1,14 +1,12 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/CustomCropImage/crop_your_image.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
-import 'package:social_network_app_mobile/widgets/button_primary.dart';
 
 
 class CreateEvents extends ConsumerStatefulWidget {

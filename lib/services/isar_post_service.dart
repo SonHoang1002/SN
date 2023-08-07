@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:isar/isar.dart';
-import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/model/post_model.dart';
 import 'package:social_network_app_mobile/services/isar_service.dart';
 
@@ -21,22 +20,22 @@ class IsarPostService {
   }
 
   Future<int> getCountPostIsar() async {
-    final _instance = await IsarService.instance;
-    final count = await _instance.postModels.count();
+    final instance = await IsarService.instance;
+    final count = await instance.postModels.count();
     return count;
   }
 
   Future<List> getAllPostsFromIsar() async {
-    final _instance = await IsarService.instance;
-    final postsModelIsar = await _instance.postModels.where().findAll();
+    final instance = await IsarService.instance;
+    final postsModelIsar = await instance.postModels.where().findAll();
     return postsModelIsar.map((e) => jsonDecode(e.objectPost!)).toList();
   }
 
   addPostIsar(List listPost) async {
-    final _instance = await IsarService.instance;
-    await _instance.writeTxn(() async {
+    final instance = await IsarService.instance;
+    await instance.writeTxn(() async {
       for (var newPost in listPost) {
-        await _instance.postModels.put(PostModel()
+        await instance.postModels.put(PostModel()
           ..objectPost = jsonEncode(newPost)
           ..postId = (newPost['id']));
       }
@@ -44,10 +43,10 @@ class IsarPostService {
   }
 
   resetPostIsar() async {
-    final _instance = await IsarService.instance;
-    if (_instance.isOpen == true) {
-      _instance.writeTxn(() async {
-        await _instance.postModels.where().deleteAll();
+    final instance = await IsarService.instance;
+    if (instance.isOpen == true) {
+      instance.writeTxn(() async {
+        await instance.postModels.where().deleteAll();
       });
     }
   }

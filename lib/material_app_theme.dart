@@ -7,7 +7,6 @@ import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 
 import 'home/PreviewScreen.dart';

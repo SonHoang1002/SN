@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,11 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
-import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/screens/Page/PageCreate/page_create.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/skeleton.dart';
 

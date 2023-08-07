@@ -307,7 +307,7 @@ class SeeCollectionBookmarkState extends ConsumerState<SeeCollectionBookmark> {
               ),
             ),
             isLoading
-                ? Center(child: BookmarkListSkeleton())
+                ? const Center(child: BookmarkListSkeleton())
                 : cltBookmarks.isEmpty
                     ? Column(
                         children: [

@@ -9,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 const double _kBackGestureWidth = 20.0;
@@ -386,8 +385,7 @@ class _PageBasedCustomOpaqueCupertinoPageRoute<T> extends PageRoute<T>
   _PageBasedCustomOpaqueCupertinoPageRoute({
     required CupertinoPage<T> page,
     super.allowSnapshotting = true,
-  })  : assert(page != null),
-        super(settings: page) {
+  })  : super(settings: page) {
     assert(opaque);
   }
 
@@ -437,9 +435,7 @@ class CupertinoPage<T> extends Page<T> {
     super.name,
     super.arguments,
     super.restorationId,
-  })  : assert(child != null),
-        assert(maintainState != null),
-        assert(fullscreenDialog != null);
+  });
 
   /// The content to be shown in the [Route] created by this page.
   final Widget child;
@@ -482,8 +478,7 @@ class CupertinoPageTransition extends StatelessWidget {
     required Animation<double> secondaryRouteAnimation,
     required this.child,
     required bool linearTransition,
-  })  : assert(linearTransition != null),
-        _primaryPositionAnimation = (linearTransition
+  })  : _primaryPositionAnimation = (linearTransition
                 ? primaryRouteAnimation
                 : CurvedAnimation(
                     // The curves below have been rigorously derived from plots of native
@@ -617,9 +612,7 @@ class _CupertinoBackGestureDetector<T> extends StatefulWidget {
     required this.enabledCallback,
     required this.onStartPopGesture,
     required this.child,
-  })  : assert(enabledCallback != null),
-        assert(onStartPopGesture != null),
-        assert(child != null);
+  });
 
   final Widget child;
 
@@ -751,8 +744,7 @@ class _CupertinoBackGestureController<T> {
   _CupertinoBackGestureController({
     required this.navigator,
     required this.controller,
-  })  : assert(navigator != null),
-        assert(controller != null) {
+  }) {
     navigator.didStartUserGesture();
   }
 
@@ -882,7 +874,6 @@ class _CupertinoEdgeShadowDecoration extends Decoration {
     _CupertinoEdgeShadowDecoration? b,
     double t,
   ) {
-    assert(t != null);
     if (a == null && b == null) {
       return null;
     }
@@ -958,8 +949,7 @@ class _CupertinoEdgeShadowPainter extends BoxPainter {
   _CupertinoEdgeShadowPainter(
     this._decoration,
     super.onChange,
-  )   : assert(_decoration != null),
-        assert(_decoration._colors == null || _decoration._colors!.length > 1);
+  )   : assert(_decoration._colors == null || _decoration._colors!.length > 1);
 
   final _CupertinoEdgeShadowDecoration _decoration;
 
@@ -1233,7 +1223,6 @@ Future<T?> showCupertinoModalPopup<T>({
   RouteSettings? routeSettings,
   Offset? anchorPoint,
 }) {
-  assert(useRootNavigator != null);
   return Navigator.of(context, rootNavigator: useRootNavigator).push(
     CupertinoModalPopupRoute<T>(
       builder: builder,
@@ -1342,8 +1331,6 @@ Future<T?> showCupertinoDialog<T>({
   RouteSettings? routeSettings,
   Offset? anchorPoint,
 }) {
-  assert(builder != null);
-  assert(useRootNavigator != null);
 
   return Navigator.of(context, rootNavigator: useRootNavigator)
       .push<T>(CupertinoDialogRoute<T>(
@@ -1408,8 +1395,7 @@ class CupertinoDialogRoute<T> extends RawDialogRoute<T> {
     super.transitionBuilder = _buildCupertinoDialogTransitions,
     super.settings,
     super.anchorPoint,
-  })  : assert(barrierDismissible != null),
-        super(
+  })  : super(
           pageBuilder: (BuildContext context, Animation<double> animation,
               Animation<double> secondaryAnimation) {
             return builder(context);

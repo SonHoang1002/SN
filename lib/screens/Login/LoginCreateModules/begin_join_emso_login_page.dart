@@ -13,6 +13,8 @@ import 'name_login_page.dart';
 class BeginJoinEmsoLoginPage extends StatelessWidget {
   late double width = 0;
   late double height = 0;
+
+  BeginJoinEmsoLoginPage({super.key});
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -68,7 +70,7 @@ class BeginJoinEmsoLoginPage extends StatelessWidget {
                                   bgColor: secondaryColor,
                                   width: width,
                                   function: () {
-                                    pushToNextScreen(context, NameLoginPage());
+                                    pushToNextScreen(context, const NameLoginPage());
                                   }),
                               buildSpacer(height: 15),
                             ],
@@ -78,7 +80,7 @@ class BeginJoinEmsoLoginPage extends StatelessWidget {
                     ),
                   ),
                   buildHaveAccountWidget(function: () {
-                    pushToNextScreen(context, MainLoginPage(null));
+                    pushToNextScreen(context, const MainLoginPage(null));
                   })
                 ],
               ),

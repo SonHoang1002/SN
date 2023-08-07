@@ -9,7 +9,7 @@ class PersonalPageConstants {
     {
       "key": "private_rule",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Quyền riêng tư",
         "subTitle":
             "Kiểm soát ai có thể kết bạn, liên hệ và xem trang cá nhân của bạn"
@@ -18,7 +18,7 @@ class PersonalPageConstants {
     {
       "key": "personal_page_and_tag",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Trang cá nhân và gắn thẻ",
         "subTitle":
             "Quyết định người có thể tương tác với trang cá nhân và các bài viết của bạn trên Emso"
@@ -27,7 +27,7 @@ class PersonalPageConstants {
     {
       "key": "public_post",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Bài viết công khai",
         "subTitle":
             "Quản lý những ai có thể theo dõi trang cá nhân và bình luận về bài viết công khai của bạn"
@@ -36,7 +36,7 @@ class PersonalPageConstants {
     {
       "key": "block",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Chặn",
         "subTitle": "Xem lại những người mà bạn đã chặn trước đó"
       }
@@ -44,7 +44,7 @@ class PersonalPageConstants {
     {
       "key": "activity_status",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Trạng thái hoạt động",
         "subTitle": "Hiển thị khi bạn hoạt động"
       }
@@ -59,7 +59,7 @@ class PersonalPageConstants {
     {
       "key": "notification_setting",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Cài đặt thông báo",
         "subTitle": "Chọn thông báo bạn muốn nhận và nới nhận thông báo"
       }
@@ -67,7 +67,7 @@ class PersonalPageConstants {
     {
       "key": "text_messaging",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Nhắn tin văn bản",
         "subTitle": "Chỉnh sửa tùy chọn gửi và nhận tin nhắn văn bản"
       }
@@ -75,7 +75,7 @@ class PersonalPageConstants {
     {
       "key": "email",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Email",
         "subTitle": "Quản lý thông báo qua email của bạn"
       }
@@ -83,7 +83,7 @@ class PersonalPageConstants {
     {
       "key": "message_preview",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Bản xem trước tin nhắn",
         "subTitle":
             "Chỉnh sửa các tùy chọn nhận bản xem trước tin nhắn trong ứng dụng và lời nhắc từ Messenger"
@@ -92,7 +92,7 @@ class PersonalPageConstants {
     {
       "key": "notification_dot",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Dấu chấm thông báo",
         "subTitle":
             "Chỉnh sửa tùy chọn hiển thị dấu chấm thông báo trên lối tắt"
@@ -109,7 +109,7 @@ class PersonalPageConstants {
     {
       "key": "access_information_on_Emso",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Truy cập thông tin trên trang cá nhân",
         "subTitle": "Xem thông tin trên trang cá nhân của bạn theo hạng mục."
       }
@@ -117,7 +117,7 @@ class PersonalPageConstants {
     {
       "key": "activity_diary",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Nhật ký hoạt động",
         "subTitle": "Xem và quản lý hoạt động trên trang cá nhân của bạn."
       }
@@ -125,7 +125,7 @@ class PersonalPageConstants {
     {
       "key": "download_information_on_personal_page",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Tải xuống thông tin trên trang cá nhân",
         "subTitle":
             "Tải xuống bản sao thông tin trên trang cá nhân của bạn để lưu giữ hoặc chuyển sang dịch vụ khác."
@@ -134,7 +134,7 @@ class PersonalPageConstants {
     {
       "key": "transfer_a_copy_of_your_information",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Chuyển bản sao thông tin của bạn",
         "subTitle":
             "Sao chép ảnh, video, bài viết hoặc thông tin khác sang dịch vụ khác."
@@ -150,7 +150,7 @@ class PersonalPageConstants {
     {
       "key": "video_and_image",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Video và ảnh",
         "subTitle": "Quản lý tùy chọn của bạn về tải lên và phát lại."
       }
@@ -158,7 +158,7 @@ class PersonalPageConstants {
     {
       "key": "sound",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Âm thanh",
         "subTitle":
             "Quản lý tùy chọn của bạn về âm thanh video và trong ứng dụng."
@@ -167,7 +167,7 @@ class PersonalPageConstants {
     {
       "key": "browser",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Trình duyệt",
         "subTitle":
             "Ngắt lịch sử trang web mà bạn đã truy cập khi lướt xem trên Emso bằng điện thoại.  "
@@ -176,7 +176,7 @@ class PersonalPageConstants {
     {
       "key": "upload_contact",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Tải danh ba lên",
         "subTitle": "Liên tục tải lên người liên hệ mới thêm và mới cập nhật."
       }
@@ -191,7 +191,7 @@ class PersonalPageConstants {
     {
       "key": "feed_table_setting",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Tùy chọn Bảng feed",
         "subTitle": "Kiểm soát và tùy chỉnh Bảng feed."
       }
@@ -199,7 +199,7 @@ class PersonalPageConstants {
     {
       "key": "emotion_setting",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Tùy chọn về cảm xúc",
         "subTitle":
             "Kiểm soát xem có hiển thị tổng số cảm xúc về bài viết trên Emso hay không."
@@ -214,7 +214,7 @@ class PersonalPageConstants {
     {
       "key": "story_setting",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Cài đặt tin",
         "subTitle": "Chọn ai có thể xem tin của bạn và quản lý kho lưu trữ tin."
       }
@@ -229,7 +229,7 @@ class PersonalPageConstants {
     {
       "key": "shortCut_bar",
       "data": {
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "title": "Thanh lối tắt",
         "subTitle":
             "Quyết định xem Emso có thể thêm lối tắt nào vào thanh lối tắt của bạn."

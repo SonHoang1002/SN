@@ -113,9 +113,9 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                   color: Colors.black.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(width: 0.2, color: greyColor)),
-              child: Column(
+              child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(FontAwesomeIcons.angleLeft,
                       color: Colors.white, size: 16),
                 ],
@@ -284,7 +284,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                                   : Colors
                                                                       .white,
                                                             ),
-                                                            SizedBox(
+                                                            const SizedBox(
                                                               width: 5.0,
                                                             ),
                                                             Text(
@@ -656,10 +656,10 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                 border: Border.all(
                                                     width: 0.2,
                                                     color: greyColor)),
-                                            child: Column(
+                                            child: const Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
-                                              children: const [
+                                              children: [
                                                 Icon(FontAwesomeIcons.ellipsis,
                                                     size: 14),
                                               ],
@@ -794,15 +794,15 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                             ],
                                           ),
                                         ),
-                                        Padding(
+                                        const Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 8.0),
+                                              EdgeInsets.only(top: 8.0),
                                           child: Row(
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
-                                                children: const [
+                                                children: [
                                                   Icon(
                                                       FontAwesomeIcons
                                                           .earthAmericas,
@@ -1019,7 +1019,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                         'interested'
                                                     ? Colors.black
                                                     : Colors.white),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 5.0,
                                         ),
                                         Text(
@@ -1204,9 +1204,9 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                       borderRadius: BorderRadius.circular(4),
                                       border: Border.all(
                                           width: 0.2, color: greyColor)),
-                                  child: Column(
+                                  child: const Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
+                                    children: [
                                       Icon(FontAwesomeIcons.ellipsis, size: 14),
                                     ],
                                   ),

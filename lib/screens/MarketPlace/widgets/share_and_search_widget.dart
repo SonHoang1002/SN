@@ -60,7 +60,7 @@ class _ShareAndSearchWidgetState extends State<ShareAndSearchWidget> {
             margin: const EdgeInsets.only(right: 10),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: ImageCacheRender(
+              child: const ImageCacheRender(
                 height: 40.0,
                 width: 40.0,
                 path:
@@ -96,7 +96,7 @@ class _ShareAndSearchWidgetState extends State<ShareAndSearchWidget> {
           ),
         ),
         // list
-        Container(
+        SizedBox(
             height: 376,
             child: ListView.builder(
                 padding: EdgeInsets.zero,
@@ -136,10 +136,10 @@ class _ShareAndSearchWidgetState extends State<ShareAndSearchWidget> {
                             _filterData[index]["icon"],
                           ),
                         ),
-                        suffixWidget: Container(
+                        suffixWidget: const SizedBox(
                             height: 30,
                             width: 30,
-                            child: const Icon(
+                            child: Icon(
                               FontAwesomeIcons.chevronRight,
                               size: 17,
                             )),
@@ -165,7 +165,7 @@ class _ShareAndSearchWidgetState extends State<ShareAndSearchWidget> {
               .contains((value as String).toLowerCase()) ||
           widget.data["data"][i]["title"]
               .toUpperCase()
-              .contains((value as String).toUpperCase())) {
+              .contains((value).toUpperCase())) {
         dataList.add(widget.data["data"][i]);
       }
     }

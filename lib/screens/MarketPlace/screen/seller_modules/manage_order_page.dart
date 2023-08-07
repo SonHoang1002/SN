@@ -68,7 +68,7 @@ class _OrderProductMarketPageState
 
   Future<int> _initData() async {
     if (_pageList.isEmpty) {
-      _pageList = await ref.watch(pageListProvider).listPage;
+      _pageList = ref.watch(pageListProvider).listPage;
     }
     if (_selectedPage == null) {
       if (_pageList.isNotEmpty) {
@@ -85,13 +85,13 @@ class _OrderProductMarketPageState
             return {"key": e["key"], "title": e["title"], "data": []};
           },
         ).toList();
-        _orderData?.forEach((_orderDataElement) {
-          dynamic openOrderDataElement = _orderDataElement;
+        _orderData?.forEach((orderDataElement) {
+          dynamic openOrderDataElement = orderDataElement;
           openOrderDataElement["open"] =
-              _orderDataElement["order_items"].length > 1 ? false : null;
+              orderDataElement["order_items"].length > 1 ? false : null;
           for (dynamic _filteredOrderDataElement in _filteredOrderData!) {
             if (_filteredOrderDataElement["key"] ==
-                _orderDataElement["status"]) {
+                orderDataElement["status"]) {
               _filteredOrderData![_filteredOrderData!
                       .indexOf(_filteredOrderDataElement)]['data']
                   .add(openOrderDataElement);
@@ -108,7 +108,7 @@ class _OrderProductMarketPageState
 
   Future _initPageList() async {
     if (_pageList.isEmpty) {
-      _pageList = await ref.watch(pageListProvider).listPage;
+      _pageList = ref.watch(pageListProvider).listPage;
     }
     if (_selectedPage == null || _selectedPage!.isEmpty) {
       if (_pageList.isEmpty) {
@@ -683,7 +683,7 @@ class _OrderProductMarketPageState
         width: width * 0.4,
         contents: [buildTextContent("Chuẩn bị hàng", false, fontSize: 13)],
         function: () {
-          pushToNextScreen(context, PrepareProductMarketPage());
+          pushToNextScreen(context, const PrepareProductMarketPage());
         });
   }
 

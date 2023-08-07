@@ -50,7 +50,7 @@ class SavedState extends ConsumerState<Saved> {
     double width,
     ThemeManager theme,
   ) {
-    return Container(
+    return SizedBox(
       height: height > width
           ? collections.length <= 2
               ? height * 0.2
@@ -129,7 +129,7 @@ class SavedState extends ConsumerState<Saved> {
   }
 
   Widget _buildBookmarks(bookmarks, double height, double width) {
-    return Container(
+    return SizedBox(
       height: height > width
           ? height * 0.38 * getRateListView(bookmarks.length)
           : height * 0.75 * getRateListView(bookmarks.length),
@@ -187,7 +187,7 @@ class SavedState extends ConsumerState<Saved> {
       padding: const EdgeInsets.symmetric(horizontal: 12.5, vertical: 8.0),
       child: SingleChildScrollView(
         child: isLoading
-            ? Center(child: SavedWaitingSkeleton())
+            ? const Center(child: SavedWaitingSkeleton())
             : bookmarks.isEmpty && collections.isEmpty
                 ? Column(
                     children: [
@@ -228,7 +228,7 @@ class SavedState extends ConsumerState<Saved> {
                             Navigator.push(
                               context,
                               CupertinoPageRoute(
-                                builder: (context) => SeeAllBookmark(),
+                                builder: (context) => const SeeAllBookmark(),
                               ),
                             );
                           }, theme),

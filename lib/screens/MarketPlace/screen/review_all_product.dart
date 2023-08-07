@@ -4,7 +4,8 @@ import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/review_item_widget.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
+
+import 'notification_market_page.dart';
 
 import 'notification_market_page.dart';
 

@@ -15,7 +15,9 @@ class PersonalSettingsPage extends StatelessWidget {
 
   late double height = 0;
 
-  String _selectedBottomNavigator = "Trang chủ";
+  final String _selectedBottomNavigator = "Trang chủ";
+
+  PersonalSettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class PersonalSettingsPage extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            BackIconAppbar(),
+            const BackIconAppbar(),
             Expanded(
                 child: SearchInput(
               handleSearch: demoFunction,
@@ -57,7 +59,7 @@ class PersonalSettingsPage extends StatelessWidget {
                       TitleDescriptionAndContentListWidget(
                           title: PersonalPageConstants.PRIVATE_TITLE,
                           subTitle: PersonalPageConstants.PRIVATE_DESCRIPTION,
-                          listView: Container(
+                          listView: SizedBox(
                             height: 305,
                             child: ListView.builder(
                                 padding: EdgeInsets.zero,
@@ -77,14 +79,14 @@ class PersonalSettingsPage extends StatelessWidget {
                                             Navigator.of(context).push(
                                                 MaterialPageRoute(
                                                     builder: (_) =>
-                                                        PrivateRulesSettingPage()));
+                                                        const PrivateRulesSettingPage()));
                                             break;
                                           }
                                         case "personal_page_and_tag":
                                           {
                                             {
                                               ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
+                                                  .showSnackBar(const SnackBar(
                                                       content: Text(
                                                           "Trang ca nhan ...")));
                                               break;
@@ -94,7 +96,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                           {
                                             {
                                               ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
+                                                  .showSnackBar(const SnackBar(
                                                       content: Text(
                                                           "Bài viết công khai ...")));
                                               break;
@@ -104,7 +106,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                           {
                                             {
                                               ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
+                                                  .showSnackBar(const SnackBar(
                                                       content: Text(
                                                           "Bài viết công khai ...")));
                                               break;
@@ -113,7 +115,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                         default:
                                           {
                                             ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
+                                                .showSnackBar(const SnackBar(
                                                     content: Text(
                                                         "Trạng thái hoạt động ...")));
                                             break;
@@ -126,7 +128,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                             PersonalPageConstants
                                                     .PRIVATE_INFORMATION_LIST[
                                                 index]["data"]["title"],
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold,
                                               // color:  white
@@ -135,7 +137,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                             PersonalPageConstants
                                                     .PRIVATE_INFORMATION_LIST[
                                                 index]["data"]["subTitle"],
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 15,
                                               // color: Colors.grey
                                             )),
@@ -143,9 +145,9 @@ class PersonalSettingsPage extends StatelessWidget {
                                       prefixWidget: Container(
                                         height: 40,
                                         width: 40,
-                                        padding: EdgeInsets.all(7),
-                                        margin: EdgeInsets.only(right: 10),
-                                        decoration: BoxDecoration(
+                                        padding: const EdgeInsets.all(7),
+                                        margin: const EdgeInsets.only(right: 10),
+                                        decoration: const BoxDecoration(
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(20))),
                                         child: SvgPicture.asset(
@@ -156,7 +158,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                         ),
                                       ),
                                       changeBackground: transparent,
-                                      padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
+                                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                                     ),
                                   );
                                 })),
@@ -166,7 +168,7 @@ class PersonalSettingsPage extends StatelessWidget {
                         title: PersonalPageConstants.NOTIFICATION_TITLE,
                         subTitle:
                             PersonalPageConstants.NOTIFICATION_DESCRIPTION,
-                        listView: Container(
+                        listView: SizedBox(
                           height: 340,
                           child: ListView.builder(
                               padding: EdgeInsets.zero,
@@ -183,7 +185,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                           PersonalPageConstants
                                                   .NOTIFICATION_INFORMATION_LIST[
                                               index]["data"]["title"],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold,
                                             // color:  white
@@ -192,7 +194,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                           PersonalPageConstants
                                                   .NOTIFICATION_INFORMATION_LIST[
                                               index]["data"]["subTitle"],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             // color: Colors.grey
                                           )),
@@ -200,9 +202,9 @@ class PersonalSettingsPage extends StatelessWidget {
                                     prefixWidget: Container(
                                       height: 40,
                                       width: 40,
-                                      padding: EdgeInsets.all(7),
-                                      margin: EdgeInsets.only(right: 10),
-                                      decoration: BoxDecoration(
+                                      padding: const EdgeInsets.all(7),
+                                      margin: const EdgeInsets.only(right: 10),
+                                      decoration: const BoxDecoration(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       child: SvgPicture.asset(
@@ -213,7 +215,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                       ),
                                     ),
                                     changeBackground: transparent,
-                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
+                                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                                   ),
                                 );
                               })),
@@ -225,7 +227,7 @@ class PersonalSettingsPage extends StatelessWidget {
                             .YOUR_INFORMATION_IN_Emso_TITLE,
                         subTitle: PersonalPageConstants
                             .YOUR_INFORMATION_IN_Emso_DESCRIPTION,
-                        listView: Container(
+                        listView: SizedBox(
                           height: 290,
                           child: ListView.builder(
                               padding: EdgeInsets.zero,
@@ -243,7 +245,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                           PersonalPageConstants
                                                   .YOUR_INFORMATION_IN_Emso_INFORMATION_LIST[
                                               index]["data"]["title"],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold,
                                             // color:  white
@@ -252,7 +254,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                           PersonalPageConstants
                                                   .YOUR_INFORMATION_IN_Emso_INFORMATION_LIST[
                                               index]["data"]["subTitle"],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             // color: Colors.grey
                                           )),
@@ -260,9 +262,9 @@ class PersonalSettingsPage extends StatelessWidget {
                                     prefixWidget: Container(
                                       height: 40,
                                       width: 40,
-                                      padding: EdgeInsets.all(7),
-                                      margin: EdgeInsets.only(right: 10),
-                                      decoration: BoxDecoration(
+                                      padding: const EdgeInsets.all(7),
+                                      margin: const EdgeInsets.only(right: 10),
+                                      decoration: const BoxDecoration(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       child: SvgPicture.asset(
@@ -273,7 +275,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                       ),
                                     ),
                                     changeBackground: transparent,
-                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
+                                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                                   ),
                                 );
                               })),
@@ -284,7 +286,7 @@ class PersonalSettingsPage extends StatelessWidget {
                         title: PersonalPageConstants.FEED_SETTINGS_TITLE,
                         subTitle:
                             PersonalPageConstants.FEED_SETTINGS_DESCRIPTION,
-                        listView: Container(
+                        listView: SizedBox(
                           height: 120,
                           child: ListView.builder(
                               padding: EdgeInsets.zero,
@@ -301,7 +303,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                           PersonalPageConstants
                                                   .FEED_SETTINGS_INFORMATION_LIST[
                                               index]["data"]["title"],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold,
                                             // color:  white
@@ -310,7 +312,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                           PersonalPageConstants
                                                   .FEED_SETTINGS_INFORMATION_LIST[
                                               index]["data"]["subTitle"],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             // color: Colors.grey
                                           )),
@@ -318,9 +320,9 @@ class PersonalSettingsPage extends StatelessWidget {
                                     prefixWidget: Container(
                                       height: 40,
                                       width: 40,
-                                      padding: EdgeInsets.all(7),
-                                      margin: EdgeInsets.only(right: 10),
-                                      decoration: BoxDecoration(
+                                      padding: const EdgeInsets.all(7),
+                                      margin: const EdgeInsets.only(right: 10),
+                                      decoration: const BoxDecoration(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       child: SvgPicture.asset(
@@ -331,7 +333,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                       ),
                                     ),
                                     changeBackground: transparent,
-                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
+                                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                                   ),
                                 );
                               })),
@@ -341,7 +343,7 @@ class PersonalSettingsPage extends StatelessWidget {
                       TitleDescriptionAndContentListWidget(
                         title: PersonalPageConstants.STORY_TITLE,
                         subTitle: PersonalPageConstants.STORY_DESCRIPTION,
-                        listView: Container(
+                        listView: SizedBox(
                           height: 70,
                           child: ListView.builder(
                               padding: EdgeInsets.zero,
@@ -358,7 +360,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                           PersonalPageConstants
                                                   .STORY_INFORMATION_LIST[index]
                                               ["data"]["title"],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold,
                                             // color:  white
@@ -367,7 +369,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                           PersonalPageConstants
                                                   .STORY_INFORMATION_LIST[index]
                                               ["data"]["subTitle"],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             // color: Colors.grey
                                           )),
@@ -375,9 +377,9 @@ class PersonalSettingsPage extends StatelessWidget {
                                     prefixWidget: Container(
                                       height: 40,
                                       width: 40,
-                                      padding: EdgeInsets.all(7),
-                                      margin: EdgeInsets.only(right: 10),
-                                      decoration: BoxDecoration(
+                                      padding: const EdgeInsets.all(7),
+                                      margin: const EdgeInsets.only(right: 10),
+                                      decoration: const BoxDecoration(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       child: SvgPicture.asset(
@@ -388,7 +390,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                       ),
                                     ),
                                     changeBackground: transparent,
-                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
+                                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                                   ),
                                 );
                               })),
@@ -398,7 +400,7 @@ class PersonalSettingsPage extends StatelessWidget {
                       TitleDescriptionAndContentListWidget(
                         title: PersonalPageConstants.SHORTCUT_TITLE,
                         subTitle: PersonalPageConstants.SHORTCUT_DESCRIPTION,
-                        listView: Container(
+                        listView: SizedBox(
                           height: 70,
                           child: ListView.builder(
                               padding: EdgeInsets.zero,
@@ -415,7 +417,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                           PersonalPageConstants
                                                   .SHORTCUT_INFORMATION_LIST[
                                               index]["data"]["title"],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold,
                                             // color:  white
@@ -424,7 +426,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                           PersonalPageConstants
                                                   .SHORTCUT_INFORMATION_LIST[
                                               index]["data"]["subTitle"],
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontSize: 15,
                                             // color: Colors.grey
                                           )),
@@ -432,9 +434,9 @@ class PersonalSettingsPage extends StatelessWidget {
                                     prefixWidget: Container(
                                       height: 40,
                                       width: 40,
-                                      padding: EdgeInsets.all(7),
-                                      margin: EdgeInsets.only(right: 10),
-                                      decoration: BoxDecoration(
+                                      padding: const EdgeInsets.all(7),
+                                      margin: const EdgeInsets.only(right: 10),
+                                      decoration: const BoxDecoration(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
                                       child: SvgPicture.asset(
@@ -445,7 +447,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                       ),
                                     ),
                                     changeBackground: transparent,
-                                    padding: EdgeInsets.fromLTRB(0, 5, 0, 7),
+                                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                                   ),
                                 );
                               })),

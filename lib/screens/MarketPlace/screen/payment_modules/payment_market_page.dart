@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/cart_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/delivery_addresses_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/repo_variables/order_data_saver.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/address_module/choose_address_page.dart';
@@ -92,12 +90,12 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
     _mainData = ref.watch(selectedAddressSaverProvider).selectedAddressSaver;
 
     if (listProduct!.isEmpty) {
-      listProduct = await widget.productDataList;
+      listProduct = widget.productDataList;
       _filterProduct();
     }
 
     if (_addressData == null || _addressData!.isEmpty) {
-      _addressData = await ref.watch(deliveryAddressProvider).addressList;
+      _addressData = ref.watch(deliveryAddressProvider).addressList;
     }
     _selectedAddress =
         ref.watch(selectedAddressSaverProvider).selectedAddressSaver;
@@ -129,35 +127,35 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
 
   double _caculateMoneyEveryShop(List<dynamic> data, dynamic shoppingFee) {
     double sum = 0;
-    data.forEach((element) {
+    for (var element in data) {
       sum = element["quantity"] * element["product_variant"]["price"];
-    });
+    }
     return sum + shoppingFee;
   }
 
   double _totalCoreProductMoney() {
     double sum = 0;
-    _filterProductList!.forEach((element) {
+    for (var element in _filterProductList!) {
       element["items"].forEach((element) {
         sum += element["quantity"] * element["product_variant"]["price"];
       });
-    });
+    }
     return sum;
   }
 
   double _totalAriseShipping() {
     double sum = 0;
-    _filterProductList!.forEach((element) {
+    for (var element in _filterProductList!) {
       sum += shoppingFee;
-    });
+    }
     return sum;
   }
 
   double _totalReduceShipping() {
     double sum = 0;
-    _filterProductList!.forEach((element) {
+    for (var element in _filterProductList!) {
       sum += reduceFree;
-    });
+    }
     return sum;
   }
 
@@ -339,9 +337,9 @@ class _PaymentMarketPageState extends ConsumerState<PaymentMarketPage> {
                                             vertical: 10), function: () {
                                       setStatefull(
                                         () {
-                                          paymentMethods.forEach((ele) {
+                                          for (var ele in paymentMethods) {
                                             ele["status"] = false;
-                                          });
+                                          }
                                           popToPreviousScreen(context);
                                           paymentMethods[index]["status"] =
                                               true;

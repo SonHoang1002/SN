@@ -147,9 +147,9 @@ class _PrepareProductMarketPageState
             padding: EdgeInsets.only(left: 10.0),
             child: SizedBox(),
           ),
-          suffixWidget: Column(
+          suffixWidget: const Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Icon(
                 FontAwesomeIcons.check,
                 size: 18,
@@ -205,7 +205,7 @@ class _PrepareProductMarketPageState
           padding: EdgeInsets.zero,
         ),
         Container(
-          margin: EdgeInsets.only(top: 10),
+          margin: const EdgeInsets.only(top: 10),
           height: 150,
           width: width,
           color: greyColor,

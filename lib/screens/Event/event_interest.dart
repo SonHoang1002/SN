@@ -366,10 +366,10 @@ class _EventInterestedState extends ConsumerState<EventInterested> {
                                                   width: 0.2,
                                                   color: greyColor)),
                                           child: statusEvent == 'interested'
-                                              ? Row(
+                                              ? const Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     Padding(
                                                       padding: EdgeInsets.only(
                                                           bottom: 3.0),
@@ -407,11 +407,11 @@ class _EventInterestedState extends ConsumerState<EventInterested> {
                                                   ],
                                                 )
                                               : statusEvent == 'going'
-                                                  ? Row(
+                                                  ? const Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
-                                                      children: const [
+                                                      children: [
                                                         Icon(
                                                             FontAwesomeIcons
                                                                 .circleCheck,
@@ -448,11 +448,11 @@ class _EventInterestedState extends ConsumerState<EventInterested> {
                                                         )
                                                       ],
                                                     )
-                                                  : Row(
+                                                  : const Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
                                                               .center,
-                                                      children: const [
+                                                      children: [
                                                         Padding(
                                                           padding:
                                                               EdgeInsets.only(
@@ -519,10 +519,10 @@ class _EventInterestedState extends ConsumerState<EventInterested> {
                                                 BorderRadius.circular(6),
                                             border: Border.all(
                                                 width: 0.2, color: greyColor)),
-                                        child: Row(
+                                        child: const Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
-                                          children: const [
+                                          children: [
                                             Icon(FontAwesomeIcons.share,
                                                 color: Colors.black, size: 14),
                                           ],

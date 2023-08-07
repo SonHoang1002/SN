@@ -8,16 +8,22 @@ import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/apis/search_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/friend/friend_provider.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_list_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_feed_status_header.dart';
+import 'package:social_network_app_mobile/screens/Friend/friend_render.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
+import 'package:social_network_app_mobile/widgets/friend_widget.dart';
 import 'package:social_network_app_mobile/widgets/group_item.dart';
+import 'package:social_network_app_mobile/widgets/modal_invite_friend.dart';
 import 'package:social_network_app_mobile/widgets/page_item.dart';
 import 'package:social_network_app_mobile/widgets/search_input.dart';
 
@@ -43,9 +49,11 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
   String content = '';
   dynamic groupShareSelected;
   dynamic pageShareSelected;
+  dynamic userShareSelected;
   String renderType = 'root';
   List groupsRender = [];
   List pagesRender = [];
+  List userRender = [];
   bool isSearch = false;
 
   @override
@@ -64,12 +72,26 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
             .read(groupListControllerProvider.notifier)
             .getListGroupAdminMember({'tab': 'member', 'limit': 20});
       }
+      if (ref.read(friendControllerProvider).friends.isEmpty) {
+        ref.read(friendControllerProvider.notifier).getListFriends(
+            ref.read(meControllerProvider)[0]?['id'], {'limit': 20});
+      }
     });
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  checkListRender() {
+    if (renderType == 'groups') {
+      return groupsRender;
+    } else if (renderType == 'pages') {
+      return pagesRender;
+    } else if (renderType == 'users') {
+      return userRender;
+    }
   }
 
   @override
@@ -88,6 +110,13 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
         });
         setState(() {
           pagesRender = ref.read(pageListControllerProvider).pageAdmin;
+        });
+      } else if (key == "share_user_page_other") { 
+        setState(() {
+          renderType = "users";
+        });
+        setState(() {
+          userRender = ref.read(friendControllerProvider).friends;
         });
       }
     }
@@ -109,6 +138,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
         setState(() {
           groupsRender = ref.read(groupListControllerProvider).groupMember;
           pagesRender = ref.read(pageListControllerProvider).pageAdmin;
+          userRender = ref.read(friendControllerProvider).friends;
         });
       }
       setState(() {
@@ -121,6 +151,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
         if (response != null) {
           List resGroups = response['groups'] ?? [];
           List resPages = response['pages'] ?? [];
+          
 
           setState(() {
             isSearch = false;
@@ -136,11 +167,19 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
         setState(() {
           groupShareSelected = {...entity, 'entityType': 'group'};
           pageShareSelected = null;
+          userShareSelected = null;
         });
-      } else {
+      } else if (renderType == 'pages') {
         setState(() {
           pageShareSelected = {...entity, 'entityType': 'page'};
           groupShareSelected = null;
+          userShareSelected = null;
+        });
+      } else if (renderType == 'users') {
+        setState(() {
+          userShareSelected = {...entity, 'entityType': 'user'};
+          groupShareSelected = null;
+          pageShareSelected = null;
         });
       }
 
@@ -252,7 +291,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
               automaticallyImplyLeading: false,
               title: const AppBarTitle(title: "Chia sẻ"),
               actions: [
-                if (!['groups', 'pages'].contains(renderType))
+                if (!['groups', 'pages',"users"].contains(renderType))
                   ButtonPrimary(
                     label: "Chia sẻ",
                     handlePress: handleShare,
@@ -264,7 +303,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
             body: Container(
               margin:
                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
-              child: ['groups', 'pages'].contains(renderType)
+              child: ['groups', 'pages',"users"].contains(renderType)
                   ? Column(
                       children: [
                         Row(
@@ -302,16 +341,11 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
                             : Expanded(
                                 child: ListView.builder(
                                     shrinkWrap: true,
-                                    itemCount: (renderType == 'groups'
-                                            ? groupsRender
-                                            : pagesRender)
-                                        .length,
+                                    itemCount: checkListRender().length,
                                     itemBuilder: (context, index) => InkWell(
                                           onTap: () {
                                             handleChooseEntity(
-                                                (renderType == 'groups'
-                                                    ? groupsRender
-                                                    : pagesRender)[index]);
+                                                checkListRender()[index]);
                                           },
                                           borderRadius:
                                               BorderRadius.circular(10.0),
@@ -321,10 +355,19 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
                                                 ? GroupItem(
                                                     group: groupsRender[index],
                                                   )
-                                                : PageItem(
-                                                    page: pagesRender[index],
-                                                    isActiveNewScreen: false,
-                                                  ),
+                                                : renderType == 'pages'
+                                                    ? PageItem(
+                                                        page:
+                                                            pagesRender[index],
+                                                        isActiveNewScreen:
+                                                            false,
+                                                      )
+                                                    : FriendItem(
+                                                        friend:
+                                                            userRender[index],
+                                                        isActiveNewScreen:
+                                                            false,
+                                                      ),
                                           ),
                                         )),
                               )
@@ -392,7 +435,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
                                           vertical: 4.0),
                                       child: Row(
                                         children: [
-                                          Container(
+                                          SizedBox(
                                             width: 25,
                                             height: 25,
                                             // decoration: BoxDecoration(

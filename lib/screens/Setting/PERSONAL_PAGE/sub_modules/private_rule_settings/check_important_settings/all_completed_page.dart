@@ -18,7 +18,7 @@ class AllCompletedPage extends StatelessWidget {
   late double height = 0;
 
   final String name;
-  AllCompletedPage({required this.name});
+  AllCompletedPage({super.key, required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +29,9 @@ class AllCompletedPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             SizedBox(),
             SizedBox(),
@@ -50,7 +50,7 @@ class AllCompletedPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [checkName(name)],
               ),
             ),
@@ -59,7 +59,7 @@ class AllCompletedPage extends StatelessWidget {
             height: name == "how_to_protect_your_account" ? 130 : 80,
             color: transparent,
             child: Column(children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(bottom: 0),
                 child: Divider(
                   height: 10,
@@ -75,24 +75,24 @@ class AllCompletedPage extends StatelessWidget {
                         fixedSize: Size(width * 0.9, 40),
                         // backgroundColor: Colors.blue
                       ),
-                      child: buildTextContent("Xem lại chủ đề khác", true,
-                          isCenterLeft: false),
                       onPressed: (() {
                         pushToNextScreen(context, CheckImportantSettingsPage());
                       }),
+                      child: buildTextContent("Xem lại chủ đề khác", true,
+                          isCenterLeft: false),
                     ),
                     name == "how_to_protect_your_account"
                         ? ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 fixedSize: Size(width * 0.9, 40),
                                 backgroundColor: Colors.grey[700]),
-                            child: buildTextContent("Sửa các lỗi còn lại", true,
-                                isCenterLeft: false),
                             onPressed: (() {
                               // pushToNextScreen(context, CheckImportantSettingsPage());
                             }),
+                            child: buildTextContent("Sửa các lỗi còn lại", true,
+                                isCenterLeft: false),
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                   ],
                 ),
               ))
@@ -111,16 +111,16 @@ class AllCompletedPage extends StatelessWidget {
         Container(
           height: 50,
           width: 50,
-          margin: EdgeInsets.only(bottom: 15),
-          child: Image.asset(SettingConstants.PATH_IMG + "cat_1.png"),
+          margin: const EdgeInsets.only(bottom: 15),
+          child: Image.asset("${SettingConstants.PATH_IMG}cat_1.png"),
         ),
         Container(
-          margin: EdgeInsets.only(bottom: 20),
+          margin: const EdgeInsets.only(bottom: 20),
           child: Wrap(
             children: [
               Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                     // color:  white,
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
@@ -133,7 +133,7 @@ class AllCompletedPage extends StatelessWidget {
           fontSize: 17,
           //  colorWord: Colors.grey[300]
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         ListView.builder(
@@ -149,7 +149,7 @@ class AllCompletedPage extends StatelessWidget {
                   )
                 ],
                 prefixWidget: Container(
-                  padding: EdgeInsets.only(right: 15),
+                  padding: const EdgeInsets.only(right: 15),
                   child: SvgPicture.asset(
                     contents["data"][index]["icon"],
                     height: 20,
@@ -157,7 +157,7 @@ class AllCompletedPage extends StatelessWidget {
                   ),
                 ),
                 changeBackground: transparent,
-                padding: EdgeInsets.fromLTRB(0, 10, 5, 5),
+                padding: const EdgeInsets.fromLTRB(0, 10, 5, 5),
               );
             })),
       ],

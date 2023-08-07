@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
 
 class Payment extends ConsumerStatefulWidget {
   const Payment({Key? key}) : super(key: key);
@@ -85,8 +84,8 @@ class _PaymentState extends ConsumerState<Payment> {
                   ),
                 ],
               ),
-             Row(
-               children: const [  Padding(
+             const Row(
+               children: [  Padding(
                  padding: EdgeInsets.only(left: 10.0),
                  child: Text('\$0', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),),
                ),
@@ -97,13 +96,13 @@ class _PaymentState extends ConsumerState<Payment> {
           ),
         ),
         const Spacer(),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 30.0),
+        const Padding(
+          padding: EdgeInsets.only(bottom: 30.0),
           child: Center(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 Text(
                   'FAQ',
                   textAlign: TextAlign.center,

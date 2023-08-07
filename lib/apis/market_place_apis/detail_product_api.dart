@@ -1,6 +1,4 @@
-import 'dart:convert';
 
-import 'package:flutter/services.dart';
 import 'package:social_network_app_mobile/apis/api_root.dart';
 
 class DetailProductApi {

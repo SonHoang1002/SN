@@ -1,14 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/shop_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/voucher_widget.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
-Widget buildReviewShop(BuildContext context, dynamic pageData) {
+Widget buildReviewShop(BuildContext context, dynamic pageData,
+    {bool isHaveVoucherWidget = true}) {
   return Padding(
     padding: const EdgeInsets.only(
       top: 10,
@@ -64,7 +67,12 @@ Widget buildReviewShop(BuildContext context, dynamic pageData) {
                 ),
               ],
             ),
-            SizedBox(width: 100, child: buildSingleButton(context, "Xem Shop")),
+            SizedBox(
+                width: 100,
+                child: _buildSingleButton(context, "Xem Shop", function: () {
+                  Navigator.of(context).push(CupertinoPageRoute(
+                      builder: (ctx) => ShopPage(pageData: pageData)));
+                })),
           ],
         ),
         buildSpacer(height: 10),
@@ -77,23 +85,30 @@ Widget buildReviewShop(BuildContext context, dynamic pageData) {
             _buildDescription('96%', "phản hồi chat"),
           ],
         ),
-        buildSpacer(height: 10),
-        Container(
-          alignment: Alignment.centerLeft,
-          child: buildNonImageVoucherWidget(
-              "Giảm 6%",
-              "Đơn tối thiểu ₫${formatCurrency(120000)}. Giảm tối da ₫${formatCurrency(12000088)}",
-              DateFormat("dd-MM-yyyy").format(DateTime.now())),
-        ),
-        buildSpacer(height: 10),
-        buildTextContent("* Áp dụng cho tất cả sản phẩm của Shop", false,
-            colorWord: greyColor, fontSize: 13)
+        isHaveVoucherWidget
+            ? Column(
+                children: [
+                  buildSpacer(height: 10),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: buildNonImageVoucherWidget(
+                        "Giảm 6%",
+                        "Đơn tối thiểu ₫${formatCurrency(120000)}. Giảm tối da ₫${formatCurrency(12000088)}",
+                        DateFormat("dd-MM-yyyy").format(DateTime.now())),
+                  ),
+                  buildSpacer(height: 10),
+                  buildTextContent(
+                      "* Áp dụng cho tất cả sản phẩm của Shop", false,
+                      colorWord: greyColor, fontSize: 13)
+                ],
+              )
+            : SizedBox()
       ],
     ),
   );
 }
 
-Widget buildSingleButton(BuildContext context, String title,
+Widget _buildSingleButton(BuildContext context, String title,
     {double? width, Function? function}) {
   return GestureDetector(
     onTap: () {

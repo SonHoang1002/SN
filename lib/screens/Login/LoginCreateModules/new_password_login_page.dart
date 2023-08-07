@@ -40,8 +40,8 @@ class _NewPasswordLoginPageState extends State<NewPasswordLoginPage> {
               onTap: () {
                 Navigator.pop(context);
               },
-              child: Row(
-                children: const [
+              child: const Row(
+                children: [
                   BackIconAppbar(),
                   SizedBox(
                     width: 5,
@@ -132,13 +132,15 @@ class _NewPasswordLoginPageState extends State<NewPasswordLoginPage> {
     TextEditingController controller,
     String placeHolder,
   ) {
-    return Container(
+    return SizedBox(
       height: 50,
       child: TextFormField(
           textAlign: TextAlign.center,
           controller: controller,
           onChanged: ((value) {}),
-          validator: (value) {},
+          validator: (value) {
+            return null;
+          },
           obscureText: true,
           decoration: InputDecoration(
             counterText: "",

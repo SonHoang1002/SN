@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:extended_image/extended_image.dart';
@@ -834,8 +833,7 @@ class _ShareGroupState extends ConsumerState<ShareGroup> {
 
   @override
   Widget build(BuildContext context) {
-    List shareGroup = ref.watch(shareControllerProvider).shareGroup;
-    print("aaaaaaa ${shareGroup.length}");
+    List shareGroup = ref.watch(shareControllerProvider).shareGroup; 
     return Scaffold(
         appBar: AppBar(
           title: const AppBarTitle(title: 'Nhóm'),

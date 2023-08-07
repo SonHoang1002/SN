@@ -140,9 +140,9 @@ class Setting extends StatelessWidget {
               child: Column(
                 children: [
                   // personal page description
-                  Wrap(
+                  const Wrap(
                     children: [
-                      const Text(
+                      Text(
                         SettingConstants.PERSONAL_PAGE_DESCRIPTION,
                         style: TextStyle(
                           // color: Colors.grey,
@@ -198,7 +198,7 @@ class Setting extends StatelessWidget {
             TitleDescriptionAndContentListWidget(
               title: SettingConstants.ACCOUNT_TITLE,
               subTitle: SettingConstants.ACCOUNT_DESCRIPTION,
-              listView: Container(
+              listView: SizedBox(
                 height: 380,
                 child: ListView.builder(
                     shrinkWrap: true,
@@ -250,7 +250,7 @@ class Setting extends StatelessWidget {
             TitleDescriptionAndContentListWidget(
               title: SettingConstants.SECURITY_TITLE,
               subTitle: SettingConstants.SECURITY_DESCRIPTION,
-              listView: Container(
+              listView: SizedBox(
                 height: 390,
                 child: ListView.builder(
                     shrinkWrap: true,
@@ -307,7 +307,7 @@ class Setting extends StatelessWidget {
             TitleDescriptionAndContentListWidget(
               title: SettingConstants.ADVERTISEMENT_TITLE,
               subTitle: SettingConstants.ADVERTISEMENT_DESCRIPTION,
-              listView: Container(
+              listView: SizedBox(
                 height: 90,
                 child: ListView.builder(
                     shrinkWrap: true,
@@ -365,9 +365,9 @@ class Setting extends StatelessWidget {
               child: Column(
                 children: [
                   // meta title
-                  Row(
+                  const Row(
                     children: [
-                      const Text(
+                      Text(
                         "Meta",
                         style: TextStyle(
                             // color:  white,
@@ -410,7 +410,7 @@ class Setting extends StatelessWidget {
             // privacy title
             TitleDescriptionAndContentListWidget(
               title: SettingConstants.POLICY_TITLE,
-              listView: Container(
+              listView: SizedBox(
                 height: 120,
                 child: ListView.builder(
                     shrinkWrap: true,

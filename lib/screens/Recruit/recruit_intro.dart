@@ -58,7 +58,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                   leadingIcon: Icons.access_alarm,
                   title: 'Mức lương',
                   subtitle:
-                      'Từ ${shortenNumber(recruitDetail['salary_min'] ~/ 1)} - ${shortenNumber(recruitDetail['salary_max'] ~/ 1)}',
+                      'Từ ${shortenNumber(recruitDetail?['salary_min'] ~/ 1)} - ${shortenNumber(recruitDetail?['salary_max'] ~/ 1)}',
                 ),
                 RecruitmentRow(
                   leadingIcon: Icons.access_time,
@@ -281,9 +281,9 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                     borderRadius: BorderRadius.circular(6),
                                     border: Border.all(
                                         width: 0.2, color: greyColor)),
-                                child: Row(
+                                child: const Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
+                                  children: [
                                     Icon(
                                       FontAwesomeIcons.user,
                                       size: 14,
@@ -587,10 +587,10 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                                     border: Border.all(
                                                         width: 0.2,
                                                         color: greyColor)),
-                                                child: Row(
+                                                child: const Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     Icon(FontAwesomeIcons.share,
                                                         color: Colors.black,
                                                         size: 14),
@@ -699,7 +699,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                           SizedBox(
                                             height: 30,
                                             child: Text(
-                                              '${recruitsSimilar[indexSimilar]['account']['display_name']}',
+                                              '${recruitsSimilar[indexSimilar]?['account']?['display_name']}',
                                               maxLines: 2,
                                               style: const TextStyle(
                                                 fontSize: 12.0,
@@ -711,9 +711,9 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                           SizedBox(
                                             height: 30,
                                             child: Text(
-                                              '${convertNumberToVND(recruitsSimilar[indexSimilar]['salary_min'] ~/ 1)}'
+                                              '${convertNumberToVND(recruitsSimilar[indexSimilar]?['salary_min'] ~/ 1)}'
                                               ' - '
-                                              '${convertNumberToVND(recruitsSimilar[indexSimilar]['salary_max'] ~/ 1)} VNĐ',
+                                              '${convertNumberToVND(recruitsSimilar[indexSimilar]?['salary_max'] ~/ 1)} VNĐ',
                                               maxLines: 2,
                                               style: const TextStyle(
                                                 fontSize: 12.0,
@@ -884,10 +884,10 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                                     border: Border.all(
                                                         width: 0.2,
                                                         color: greyColor)),
-                                                child: Row(
+                                                child: const Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
-                                                  children: const [
+                                                  children: [
                                                     Icon(FontAwesomeIcons.share,
                                                         color: Colors.black,
                                                         size: 14),

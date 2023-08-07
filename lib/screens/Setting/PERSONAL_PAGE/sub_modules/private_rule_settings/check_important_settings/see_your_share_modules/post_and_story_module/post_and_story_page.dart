@@ -3,7 +3,6 @@ import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/see_your_share_modules/block_page.dart';
 
 import 'package:social_network_app_mobile/screens/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/see_your_share_modules/who_see_share_constants.dart';
-import 'package:social_network_app_mobile/screens/Setting/setting_constants/general_settings_constants.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/bottom_navigator_dot_widget.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
@@ -19,7 +18,9 @@ class PostAndStoryPage extends StatelessWidget {
   late double width = 0;
   late double height = 0;
 
-  String _selectedBottomNavigator = "Trang chủ";
+  final String _selectedBottomNavigator = "Trang chủ";
+
+  PostAndStoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +31,9 @@ class PostAndStoryPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             AppBarTitle(
                 title: PostAndStoryConstants.POST_AND_STORY_APPBAR_TITLE),
@@ -94,15 +95,15 @@ class PostAndStoryPage extends StatelessWidget {
                               ),
                               ElevatedButton(
                                 onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                    fixedSize: Size(width, 40),
+                                    backgroundColor: Colors.grey[400]),
                                 child: const Text(
                                   "Giới hạn",
                                   style: TextStyle(
                                       // color: Colors.white,
                                       fontSize: 17),
                                 ),
-                                style: ElevatedButton.styleFrom(
-                                    fixedSize: Size(width, 40),
-                                    backgroundColor: Colors.grey[400]),
                               )
                             ]),
                           ));

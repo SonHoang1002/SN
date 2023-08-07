@@ -15,7 +15,7 @@ class AnimatedFlyIconWidget extends StatefulWidget {
 }
 
 class _AnimatedFlyIconWidgetState extends State<AnimatedFlyIconWidget> {
-  GlobalKey _animationKey = GlobalKey();
+  final GlobalKey _animationKey = GlobalKey();
   bool iconFlying = false;
   Offset? offset;
   bool isShowAnimatedReactionIcon = false;

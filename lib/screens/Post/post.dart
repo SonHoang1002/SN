@@ -219,7 +219,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                     ),
                     widget.waitingForApproval == true && widget.groupId != null
                         ? Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Flex(
                               direction: Axis.horizontal,
                               mainAxisAlignment: MainAxisAlignment.spaceAround,

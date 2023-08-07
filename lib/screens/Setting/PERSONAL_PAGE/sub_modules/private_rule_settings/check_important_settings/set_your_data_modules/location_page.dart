@@ -2,10 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/all_completed_page.dart';
 import 'package:social_network_app_mobile/screens/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/set_your_data_modules/set_your_data_constants.dart';
-import 'package:social_network_app_mobile/screens/Setting/setting_constants/general_settings_constants.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/bottom_navigator_bar_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -18,6 +16,8 @@ class LocationPage extends StatelessWidget {
   late double width = 0;
 
   late double height = 0;
+
+  LocationPage({super.key});
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -27,9 +27,9 @@ class LocationPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             AppBarTitle(title: LocationConstants.LOCATION_APPBAR_TITLE),
             SizedBox(),
@@ -43,8 +43,8 @@ class LocationPage extends StatelessWidget {
           FocusManager.instance.primaryFocus!.unfocus();
         }),
         child: Column(children: [
-          Padding(
-            padding: const EdgeInsets.all(5.0),
+          const Padding(
+            padding: EdgeInsets.all(5.0),
             child: Divider(
               height: 10,
               // color:  white,
@@ -56,7 +56,7 @@ class LocationPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [
                   // title
                   buildTextContent(
@@ -64,11 +64,11 @@ class LocationPage extends StatelessWidget {
                     fontSize: 17,
                     //  colorWord: Colors.grey[300]
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
+                  const Padding(
+                    padding: EdgeInsets.all(5.0),
                     child: Divider(
                       height: 10,
                       // color:  white,
@@ -89,7 +89,7 @@ class LocationPage extends StatelessWidget {
                               buildTextContent(data[index]["title"], true,
                                   // colorWord: Colors.grey[300],
                                   fontSize: 16),
-                              SizedBox(
+                              const SizedBox(
                                 height: 2,
                               ),
                               buildTextContent(data[index]["subTitle"], false,
@@ -97,7 +97,7 @@ class LocationPage extends StatelessWidget {
                                   fontSize: 16),
                             ],
                             changeBackground: Colors.grey[300],
-                            padding: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(5),
                           ),
                         );
                       })),
@@ -128,8 +128,8 @@ class LocationPage extends StatelessWidget {
                           fontSize: 16)
                     ],
                     prefixWidget: Container(
-                      padding: EdgeInsets.all(10),
-                      margin: EdgeInsets.only(right: 10),
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.only(right: 10),
                       child: SvgPicture.asset(
                         LocationConstants.LOCATION_TIP["icon"],
                         color: Colors.blue,
@@ -137,7 +137,7 @@ class LocationPage extends StatelessWidget {
                       ),
                     ),
                     changeBackground: Colors.grey[300],
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     borderRadiusValue: 7,
                   )
                 ],

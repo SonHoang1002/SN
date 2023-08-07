@@ -173,7 +173,7 @@ List demoProductCategories = [
   {
     "id": "7",
     "text": "Điện Thoại & Phụ Kiện",
-    "icon": "${path}Điện thoại & Phụ kiện.png",
+    "icon": "$pathĐiện thoại & Phụ kiện.png",
     "subcategories": [
       {"id": "88", "text": "Khác", "icon": "", "subcategories": []},
       {"id": "87", "text": "Bộ đàm", "icon": "", "subcategories": []},
@@ -225,7 +225,7 @@ List demoProductCategories = [
   {
     "id": "9",
     "text": "Đồng Hồ",
-    "icon": "${path}Đồng hồ.png",
+    "icon": "$pathĐồng hồ.png",
     "subcategories": [
       {"id": "104", "text": "Khác", "icon": "", "subcategories": []},
       {
@@ -247,7 +247,7 @@ List demoProductCategories = [
   {
     "id": "10",
     "text": "Thiết Bị Âm Thanh",
-    "icon": "${path}Đồ chơi.png",
+    "icon": "$pathĐồ chơi.png",
     "subcategories": [
       {"id": "111", "text": "Khác", "icon": "", "subcategories": []},
       {
@@ -677,7 +677,7 @@ List demoProductCategories = [
   {
     "id": "22",
     "text": "Mô tô, xe máy",
-    "icon": "${path}Ô tô & Xe máy & Xe đạp.png",
+    "icon": "$pathÔ tô & Xe máy & Xe đạp.png",
     "subcategories": [
       {"id": "220", "text": "Khác", "icon": "", "subcategories": []},
       {

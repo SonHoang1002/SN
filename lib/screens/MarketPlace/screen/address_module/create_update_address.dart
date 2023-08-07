@@ -15,8 +15,6 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dia
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
-import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 
 class AddressMarketPage extends ConsumerStatefulWidget {
   final dynamic oldData;
@@ -365,6 +363,7 @@ class _DemoAddressMarketPageState extends ConsumerState<AddressMarketPage> {
               return "Số điện thoại phải có 10 số";
             }
           }
+          return null;
         },
         onChanged: (value) {
           additionalFunction != null ? additionalFunction() : null;

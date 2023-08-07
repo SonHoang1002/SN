@@ -610,8 +610,8 @@ class _ManageProductMarketPageState
     await _initPageList();
     if (_selectedPage != null && _selectedPage!.isNotEmpty) {
       if (_productList == null || _productList!.isEmpty) {
-        _productList =
-            await ProductsApi().getUserProductList(_selectedPage!["id"]);
+        _productList = await ProductsApi()
+            .getShopProducts(_selectedPage!["id"], {"limit": 10});
       }
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -625,7 +625,7 @@ class _ManageProductMarketPageState
 
   Future _initPageList() async {
     if (_pageList == null || _pageList!.isEmpty) {
-      _pageList = await ref.watch(pageListProvider).listPage;
+      _pageList = ref.watch(pageListProvider).listPage;
       setState(() {});
     }
     if (_pageList!.isNotEmpty) {

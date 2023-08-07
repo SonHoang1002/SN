@@ -11,7 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_persistent_keyboard_height/flutter_persistent_keyboard_height.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
@@ -198,7 +197,7 @@ class _FeedState extends ConsumerState<Feed> {
 
   _jumpToOffsetFunction(Offset currentOffset) {
     double keyboardHeight = PersistentKeyboardHeight.of(context).keyboardHeight;
-    final screenHeight = MediaQuery.sizeOf(context).height; 
+    final screenHeight = MediaQuery.sizeOf(context).height;
     if (keyboardHeight == 0) {
       keyboardHeight = 320.3809523809524;
     }
@@ -228,6 +227,7 @@ class _FeedState extends ConsumerState<Feed> {
     bool isMore = ref.watch(postControllerProvider).isMore;
     theme ??= pv.Provider.of<ThemeManager>(context);
     posts = ref.read(postControllerProvider).posts;
+    print("posts ${jsonEncode(posts)}");
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(postControllerProvider.notifier).refreshListPost(paramsConfig);
@@ -252,15 +252,7 @@ class _FeedState extends ConsumerState<Feed> {
                                   .watch(momentControllerProvider)
                                   .momentSuggest
                                   .isNotEmpty
-                              ? const Column(
-                                  children: [
-                                    Reef(),
-                                    CrossBar(
-                                      height: 7,
-                                      opacity: 0.2,
-                                    ),
-                                  ],
-                                )
+                              ? const Reef()
                               : const SizedBox(),
                           _buildSuggestGroupWidget(),
                           _buildSuggestFriendsWidget()
@@ -287,15 +279,7 @@ class _FeedState extends ConsumerState<Feed> {
                           child: Column(
                             children: [
                               index == 4
-                                  ? const Column(
-                                      children: [
-                                        Reef(),
-                                        CrossBar(
-                                          height: 7,
-                                          opacity: 0.2,
-                                        ),
-                                      ],
-                                    )
+                                  ? const Reef()
                                   : const SizedBox(),
                               index == 19
                                   ? _buildSuggestGroupWidget()

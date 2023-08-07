@@ -35,82 +35,82 @@ class MainMarketPageConstants {
     "key": "main_marketplace_category_contents",
     "data": [
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Thời Trang và Phụ Kiện"
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Du Lịch & Hành Lý"
       },
-      {"icon": MarketPlaceConstants.PATH_IMG + "cat_1.png", "title": "Sắc Đẹp"},
+      {"icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png", "title": "Sắc Đẹp"},
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Thời Trang và Phụ Kiện"
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Thiết Bị Điện Gia Dụng"
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Giày Dép"
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Điện Thoại & Phụ kiện"
       },
-      {"icon": MarketPlaceConstants.PATH_IMG + "cat_1.png", "title": "Túi Ví"},
-      {"icon": MarketPlaceConstants.PATH_IMG + "cat_1.png", "title": "Đồng Hồ"},
+      {"icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png", "title": "Túi Ví"},
+      {"icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png", "title": "Đồng Hồ"},
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Thiết Bị Âm Thanh"
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Thực Phẩm Và Đồ Uống"
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Chăm Sóc Thú Cưng"
       },
-      {"icon": MarketPlaceConstants.PATH_IMG + "cat_1.png", "title": "Mẹ & Bé"},
+      {"icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png", "title": "Mẹ & Bé"},
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Thời Trang Trẻ Em & Trẻ Sơ Sinh"
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Cameras & FlyCam"
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Nhà Cửa & Đời Sống"
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Thể Thao & Dã Ngoại"
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Văn Phòng Phẩm"
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Sở Thích & Thực Phẩm"
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Sách & Tạp Chí"
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Máy Tính & Laptop"
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Moto & Xe Máy"
       },
-      {"icon": MarketPlaceConstants.PATH_IMG + "cat_1.png", "title": "Oto"},
+      {"icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png", "title": "Oto"},
     ]
   };
   static String MAIN_MARKETPLACE_BODY_SUGGEST_FOR_YOU_TITLE = "Gợi ý cho bạn";
@@ -469,80 +469,80 @@ class MainMarketPageConstants {
     "key": "",
     "data": [
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Bách hóa Online.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Bách hóa Online.png",
         "title": "Thời Trang và Phụ Kiện",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Balo & Túi ví Nam.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Balo & Túi ví Nam.png",
         "title": "Du Lịch & Hành Lý",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Sắc đẹp.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Sắc đẹp.png",
         "title": "Sắc đẹp",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Đồ chơi.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Đồ chơi.png",
         "title": "Sức khỏe",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Thiết bị điện gia dụng.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Thiết bị điện gia dụng.png",
         "title": "Thiết Bị Điện Gia Dụng",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Giày dép nam.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Giày dép nam.png",
         "title": "Giày Dép",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Điện thoại & Phụ kiện.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Điện thoại & Phụ kiện.png",
         "title": "Điện Thoại & Phụ kiện",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Máy ảnh & Máy quay phim.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Máy ảnh & Máy quay phim.png",
         "title": "Thiết Bị Âm Thanh",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Chăm sóc thú cưng.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Chăm sóc thú cưng.png",
         "title": "Thực Phẩm Và Đồ Uống",
       },
       {
         "icon":
-            MarketPlaceConstants.PATH_IMG + "Dụng cụ và thiết bị tiện ích.png",
+            "${MarketPlaceConstants.PATH_IMG}Dụng cụ và thiết bị tiện ích.png",
         "title": "Chăm Sóc Thú Cưng",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Máy tính & Laptop.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Máy tính & Laptop.png",
         "title": "Thời Trang Trẻ Em & Trẻ Sơ Sinh",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Máy ảnh & Máy quay phim.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Máy ảnh & Máy quay phim.png",
         "title": "Cameras & FlyCam",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Nhà cửa đời sống.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Nhà cửa đời sống.png",
         "title": "Nhà Cửa & Đời Sống",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Thể thao & Du lịch.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Thể thao & Du lịch.png",
         "title": "Thể Thao & Dã Ngoại",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Sức khỏe.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Sức khỏe.png",
         "title": "Văn Phòng Phẩm",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Thời trang trẻ em.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Thời trang trẻ em.png",
         "title": "Sở Thích & Thực Phẩm",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Nhà sách Online.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Nhà sách Online.png",
         "title": "Sách & Tạp Chí",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Máy tính & Laptop.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Máy tính & Laptop.png",
         "title": "Máy Tính & Laptop",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "Ô tô & Xe máy & Xe đạp.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}Ô tô & Xe máy & Xe đạp.png",
         "title": "Moto & Xe Máy"
       },
     ]
@@ -672,42 +672,42 @@ class DetailProductMarketConstants {
     "key": "",
     "data": [
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Hoạt Hình Trung Quốc - Chinese Animation",
         "susbTitle": "Nhóm riêng tư - 4,9K thành viên",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_2.png",
         "title": "Nhóm thông tin sinh viên NEU",
         "susbTitle": "Nhóm công khai - 9K thành viên",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_3.png",
         "title": "Mobile Development Jobs VN",
         "susbTitle": "Nhóm riêng tư - 5K thành viên",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_4.png",
         "title": "Tuyển dụng Flutter tại Việt Nam",
         "susbTitle": "Nhóm công khai - 4K thành viên",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Hoạt Hình Trung Quốc - Chinese Animation",
         "susbTitle": "Nhóm riêng tư - 4,9K thành viên",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_2.png",
         "title": "Nhóm thông tin sinh viên NEU",
         "susbTitle": "Nhóm công khai - 9K thành viên",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_3.png",
         "title": "Mobile Development Jobs VN",
         "susbTitle": "Nhóm riêng tư - 5K thành viên",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_4.png",
         "title": "Tuyển dụng Flutter tại Việt Nam",
         "susbTitle": "Nhóm công khai - 4K thành viên",
       },
@@ -717,42 +717,42 @@ class DetailProductMarketConstants {
     "key": "",
     "data": [
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Nguyên Văn A",
         "subTitle": ""
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_2.png",
         "title": "Nguyên Văn B",
         "subTitle": ""
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_3.png",
         "title": "Tuyển dụng Flutter tại Việt Nam",
         "subTitle": ""
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_4.png",
         "title": "Mobile Development Jobs VN",
         "subTitle": ""
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Nguyên Văn C",
         "subTitle": ""
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_2.png",
         "title": "Nguyên Văn D",
         "subTitle": ""
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_3.png",
         "title": "Tuyển dụng Flutter tại Việt Nam",
         "subTitle": ""
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_4.png",
         "title": "Mobile Development Jobs VN",
         "subTitle": ""
       },
@@ -1100,9 +1100,9 @@ class InterestProductMarketConstants {
   static Map<String, dynamic> INTEREST_PRODUCT_BOTTOM_SELECTIONS = {
     "key": "interest_product_bottom_selections",
     "data": [
-      {"icon": Icon(FontAwesomeIcons.envelope), "title": "Mời"},
-      {"icon": Icon(FontAwesomeIcons.share), "title": "Chia sẻ"},
-      {"icon": Icon(FontAwesomeIcons.copy), "title": "Sao chép"},
+      {"icon": const Icon(FontAwesomeIcons.envelope), "title": "Mời"},
+      {"icon": const Icon(FontAwesomeIcons.share), "title": "Chia sẻ"},
+      {"icon": const Icon(FontAwesomeIcons.copy), "title": "Sao chép"},
     ]
   };
   static const Map<String, dynamic> INTEREST_PRODUCT_BOTTOM_SHARE_SELECTIONS = {
@@ -1128,42 +1128,42 @@ class InterestProductMarketConstants {
     "key": "",
     "data": [
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Hoạt Hình Trung Quốc - Chinese Animation",
         "susbTitle": "Nhóm riêng tư - 4,9K thành viên",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_2.png",
         "title": "Nhóm thông tin sinh viên NEU",
         "susbTitle": "Nhóm công khai - 9K thành viên",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_3.png",
         "title": "Mobile Development Jobs VN",
         "susbTitle": "Nhóm riêng tư - 5K thành viên",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_4.png",
         "title": "Tuyển dụng Flutter tại Việt Nam",
         "susbTitle": "Nhóm công khai - 4K thành viên",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Hoạt Hình Trung Quốc - Chinese Animation",
         "susbTitle": "Nhóm riêng tư - 4,9K thành viên",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_2.png",
         "title": "Nhóm thông tin sinh viên NEU",
         "susbTitle": "Nhóm công khai - 9K thành viên",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_3.png",
         "title": "Mobile Development Jobs VN",
         "susbTitle": "Nhóm riêng tư - 5K thành viên",
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_4.png",
         "title": "Tuyển dụng Flutter tại Việt Nam",
         "susbTitle": "Nhóm công khai - 4K thành viên",
       },
@@ -1174,42 +1174,42 @@ class InterestProductMarketConstants {
     "key": "",
     "data": [
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Nguyên Văn A",
         "subTitle": ""
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_2.png",
         "title": "Nguyên Văn B",
         "subTitle": ""
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_3.png",
         "title": "Tuyển dụng Flutter tại Việt Nam",
         "subTitle": ""
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_4.png",
         "title": "Mobile Development Jobs VN",
         "subTitle": ""
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_1.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_1.png",
         "title": "Nguyên Văn C",
         "subTitle": ""
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_2.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_2.png",
         "title": "Nguyên Văn D",
         "subTitle": ""
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_3.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_3.png",
         "title": "Tuyển dụng Flutter tại Việt Nam",
         "subTitle": ""
       },
       {
-        "icon": MarketPlaceConstants.PATH_IMG + "cat_4.png",
+        "icon": "${MarketPlaceConstants.PATH_IMG}cat_4.png",
         "title": "Mobile Development Jobs VN",
         "subTitle": ""
       },
@@ -1378,37 +1378,37 @@ class OrderProductMarketConstant {
   static List<Map<String, dynamic>> ORDER_PRODUCT_MARKET_TAB_LIST = [
     {
       "key": "all",
-      "icon":MarketPlaceConstants.PATH_ICON + "pending.png",
+      "icon":"${MarketPlaceConstants.PATH_ICON}pending.png",
       "title": "Tất cả",
     },
     {
       "key": "pending",
-      "icon": MarketPlaceConstants.PATH_ICON + "pending.png",
+      "icon": "${MarketPlaceConstants.PATH_ICON}pending.png",
       "title": "Chờ xác nhận  ",
     },
     {
       "key": "delivered",
-      "icon": MarketPlaceConstants.PATH_ICON + "delivered.png",
+      "icon": "${MarketPlaceConstants.PATH_ICON}delivered.png",
       "title": "Vận chuyển",
     },
     {
       "key": "shipping",
-      "icon": MarketPlaceConstants.PATH_ICON + "shipping.png",
+      "icon": "${MarketPlaceConstants.PATH_ICON}shipping.png",
       "title": "Đang giao",
     },
     {
       "key": "finish",
-      "icon": MarketPlaceConstants.PATH_ICON + "finish.png",
+      "icon": "${MarketPlaceConstants.PATH_ICON}finish.png",
       "title": "Hoàn thành",
     },
     {
       "key": "cancelled",
-      "icon": MarketPlaceConstants.PATH_ICON + "cancelled.png",
+      "icon": "${MarketPlaceConstants.PATH_ICON}cancelled.png",
       "title": "Đã hủy        ",
     },
     {
       "key": "return",
-      "icon": MarketPlaceConstants.PATH_ICON + "return.png",
+      "icon": "${MarketPlaceConstants.PATH_ICON}return.png",
       "title": "Trả hàng/ Hoàn tiền"
     },
   ];

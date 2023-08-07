@@ -1,9 +1,9 @@
-import 'dart:convert';
 
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment.dart';
+import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch_suggest.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_controller.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
@@ -127,48 +127,92 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
               height: (medias[0]?['aspect'] ??
                           (medias[0]?['meta']?['small']?['aspect'])) <
                       1
-                  ? size.width / (medias[0]?['meta']?['small']?['aspect'])
-                  : null, 
+                  ? size.width /
+                      ((medias[0]?['aspect']) ??
+                          (medias[0]?['meta']?['small']?['aspect']))
+                  : null,
               width: size.width,
-              child: medias[0]['file'] != null
-                  ? VideoPlayerNoneController(
-                      path: medias[0]['file'].path,
-                      type: "local",
-                      isPause: (widget.isFocus != true ||
-                          widget.currentFocusVideoId != medias[0]['id']),
-                      onEnd: widget.onEnd != null ? widget.onEnd!() : null,
-                      // removeObserver: false
-                    )
-                  : Hero(
-                      tag: (medias[0]?['remote_url']) ?? (medias[0]?['url']),
-                      child: VideoPlayerHasController(
-                        media: medias[0],
-                        isFocus: (widget.isFocus == true),
-                        // (isFocus == true &&
-                        //     currentFocusVideoId == medias[0]['id']),
-                        handleTapAction: () {
-                          medias[0]['file']?.path != null
-                              ? null
-                              : widget.post != null &&
-                                      widget.post["post_type"] != null &&
-                                      widget.post["post_type"] == 'moment'
-                                  ? Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Moment(
-                                                dataAdditional: widget.post,
-                                                isBack: true,
-                                              )))
-                                  : Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => WatchSuggest(
-                                              post: widget.post,
-                                              preType: widget.preType,
-                                              media: medias[0])));
-                        },
-                      ),
-                    ));
+              child: Stack(
+                children: [
+                  medias[0]['file'] != null
+                      ? VideoPlayerNoneController(
+                          path: medias[0]['file'].path,
+                          type: "local",
+                          isPause: (widget.isFocus != true ||
+                              widget.currentFocusVideoId != medias[0]['id']),
+                          onEnd: widget.onEnd != null ? widget.onEnd!() : null,
+                          // removeObserver: false
+                        )
+                      : Hero(
+                          tag: (widget.post?['"media_attachments']?[0]
+                                  ?['remote_url']) ??
+                              (widget.post?['"media_attachments']?[0]?['url']) ??
+                              (medias[0]?['remote_url']) ??
+                              (medias[0]?['url']),
+                          child: VideoPlayerHasController(
+                            media: medias[0],
+                            isFocus: (widget.isFocus == true),
+                            // (isFocus == true &&
+                            //     currentFocusVideoId == medias[0]['id']),
+                            handleAction: () {
+                              medias[0]['file']?.path != null
+                                  ? null
+                                  : widget.post != null &&
+                                          widget.post["post_type"] != null &&
+                                          widget.post["post_type"] == 'moment'
+                                      ? Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                              builder: (context) => Moment(
+                                                    dataAdditional: widget.post,
+                                                    isBack: true,
+                                                  )))
+                                      : Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                              builder: (context) =>
+                                                  WatchSuggest(
+                                                      post: widget.post,
+                                                      preType: widget.preType,
+                                                      media: medias[0])));
+                            },
+                            onDoubleTapAction: () {
+                              Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => WatchDetail(
+                                            post: widget.post,
+                                            media: medias[0],
+                                            preType: widget.preType,
+                                          )));
+                            },
+                          ),
+                        ),
+                  // Positioned.fill(child: GestureDetector(
+                  //   onTap: () {
+                  //     medias[0]['file']?.path != null
+                  //         ? null
+                  //         : widget.post != null &&
+                  //                 widget.post["post_type"] != null &&
+                  //                 widget.post["post_type"] == 'moment'
+                  //             ? Navigator.push(
+                  //                 context,
+                  //                 CupertinoPageRoute(
+                  //                     builder: (context) => Moment(
+                  //                           dataAdditional: widget.post,
+                  //                           isBack: true,
+                  //                         )))
+                  //             : Navigator.push(
+                  //                 context,
+                  //                 CupertinoPageRoute(
+                  //                     builder: (context) => WatchSuggest(
+                  //                         post: widget.post,
+                  //                         preType: widget.preType,
+                  //                         media: medias[0])));
+                  //   },
+                  // ))
+                ],
+              ));
         }
       case 2:
         return GridViewBuilderMedia(

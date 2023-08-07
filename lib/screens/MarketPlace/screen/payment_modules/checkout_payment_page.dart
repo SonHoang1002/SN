@@ -99,7 +99,7 @@ class _CheckoutPaymentPageState extends ConsumerState<CheckoutPaymentPage> {
               padding: const EdgeInsets.symmetric(
                 horizontal: 10,
               ),
-              child: buildSuggestListComponent(
+              child: SuggestListComponent(
                   context: context,
                   title: Flex(
                     direction: Axis.horizontal,

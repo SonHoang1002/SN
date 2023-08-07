@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/set_your_data_modules/location_page.dart';
 import 'package:social_network_app_mobile/screens/Setting/PERSONAL_PAGE/sub_modules/private_rule_settings/check_important_settings/set_your_data_modules/set_your_data_constants.dart';
 import 'package:social_network_app_mobile/screens/Setting/setting_constants/general_settings_constants.dart';
@@ -17,6 +16,8 @@ class ApplicationAndWebsitePage extends StatelessWidget {
   late double width = 0;
 
   late double height = 0;
+
+  ApplicationAndWebsitePage({super.key});
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -26,9 +27,9 @@ class ApplicationAndWebsitePage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             AppBarTitle(
                 title: ApplicationAndWebsiteConstants
@@ -50,7 +51,7 @@ class ApplicationAndWebsitePage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [
                   // title
                   buildTextContent(
@@ -60,7 +61,7 @@ class ApplicationAndWebsitePage extends StatelessWidget {
                     fontSize: 16,
                     // colorWord: Colors.grey[300]
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Container(
@@ -85,9 +86,9 @@ class ApplicationAndWebsitePage extends StatelessWidget {
                                 )
                               ],
                               prefixWidget: Container(
-                                padding: EdgeInsets.only(right: 15),
+                                padding: const EdgeInsets.only(right: 15),
                                 child: Image.asset(
-                                  SettingConstants.PATH_IMG + "cat_1.png",
+                                  "${SettingConstants.PATH_IMG}cat_1.png",
                                   height: 40,
                                 ),
                               ),
@@ -140,7 +141,7 @@ class ApplicationAndWebsitePage extends StatelessWidget {
                                           })));
                                 }),
                                 child: Container(
-                                  padding: EdgeInsets.all(7),
+                                  padding: const EdgeInsets.all(7),
                                   decoration: BoxDecoration(
                                       // color: Colors.grey[700],
                                       borderRadius: BorderRadius.circular(7)),
@@ -167,8 +168,8 @@ class ApplicationAndWebsitePage extends StatelessWidget {
                             fontSize: 16)
                       ],
                       prefixWidget: Container(
-                        padding: EdgeInsets.all(10),
-                        margin: EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.only(right: 10),
                         child: SvgPicture.asset(
                           ApplicationAndWebsiteConstants
                               .APPLICATION_AND_WEBSITE_TIP["icon"],

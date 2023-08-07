@@ -1,10 +1,10 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 import '../../../providers/market_place_providers/campaine_provider.dart';
 
@@ -48,6 +48,8 @@ class CustomBannerState extends ConsumerState<CustomBanner> {
                 .read(campaineProvider)
                 .listCampaine
                 .map((e) => (e['banner']['url']))
+                .toList()
+                .where((ele) => ele != null)
                 .toList();
           });
         }

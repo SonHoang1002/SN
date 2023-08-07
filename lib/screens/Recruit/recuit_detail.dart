@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,13 +9,17 @@ import 'package:get_time_ago/get_time_ago.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/data/event.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/recruit/recruit_provider.dart';
+import 'package:social_network_app_mobile/screens/Recruit/recruit_cv.dart';
 import 'package:social_network_app_mobile/screens/Recruit/recruit_intro.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/icon_action_ellipsis.dart';
 import 'package:social_network_app_mobile/widgets/modal_invite_friend.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../apis/config.dart';
 import '../../constant/common.dart';
 import '../../widgets/Loading/tiktok_loading.dart';
 
@@ -35,7 +41,8 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
   final _scrollController = ScrollController();
   bool _isVisible = false;
   bool isExpired = false; // đã hết hạn nộp CV hay chưa (chỉ dành cho ứng viên)
-
+  final Completer<WebViewController> controller =
+      Completer<WebViewController>();
   @override
   void initState() {
     super.initState();
@@ -103,6 +110,77 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
   //   recruitDetail = ref.watch(recruitControllerProvider).detailRecruit;
   // }
 
+  void showAlertRecruitment (BuildContext context) {
+    String id = widget.data["id"];
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              actions: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          //Chuyển đến web để tạo CV và nộp luôn trên web
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SizedBox(
+                                width: MediaQuery.sizeOf(context).width,
+                                child: WebView(
+                                  initialUrl: '$urlWebEmso/recruit_detail/$id',
+                                  javascriptMode: JavascriptMode.unrestricted,
+                                  onWebViewCreated:
+                                      (WebViewController webViewController) {
+                                    controller.complete(webViewController);
+                                  },
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.note_add_outlined),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "Tạo CV",
+                              style: TextStyle(fontSize: 17),
+                            ),
+                          ],
+                        )),
+                    const Divider(),
+                    TextButton(
+                        onPressed: () {
+                          pushToNextScreen(
+                              context, RecruitCV(data: widget.data));
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.send_rounded),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text("Nộp CV", style: TextStyle(fontSize: 17)),
+                          ],
+                        ))
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = pv.Provider.of<ThemeManager>(context);
@@ -128,9 +206,9 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                   color: Colors.black.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(24),
                   border: Border.all(width: 0.2, color: greyColor)),
-              child: Column(
+              child: const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(FontAwesomeIcons.angleLeft,
                       color: Colors.white, size: 16),
                 ],
@@ -416,7 +494,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                                               .showSnackBar(
                                                                   const SnackBar(
                                                             content: Text(
-                                                                'Sao chép thành công', style: TextStyle(
+                                                              'Sao chép thành công', style: TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold),),
@@ -492,10 +570,10 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                                                 BorderRadius.circular(4),
                                             border: Border.all(
                                                 width: 0.2, color: greyColor)),
-                                        child: Row(
+                                        child: const Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
-                                            children: const [
+                                            children: [
                                               Icon(FontAwesomeIcons.ellipsis,
                                                   size: 14, color: Colors.black)
                                             ])),
@@ -584,9 +662,12 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                           ),
                           InkWell(
                               onTap: () {
-                                // if (!isExpired){
-                                //   // Nếu như không bị hết hạn thì handle
-                                // }
+                                if (!isExpired) {
+                                  // Nếu như không bị hết hạn thì handle
+                                  if (recruitDetail['recruit_relationships']['apply_recruit'] =='') {
+                                    showAlertRecruitment(context);
+                                  }
+                                }
                               },
                               child: Container(
                                 height: 32,

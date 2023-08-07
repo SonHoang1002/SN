@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -30,7 +29,6 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.da
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/Market/video_render_player.dart';
-import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/messenger_app_bar/app_bar_title.dart';
 
 import '../../../../theme/colors.dart';
@@ -57,7 +55,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
   Map<String, dynamic>? newData;
   dynamic _branchSelectedValue;
   List<dynamic>? imgLink = [];
-  List<dynamic>? _videoFiles = [];
+  final List<dynamic> _videoFiles = [];
 
   final Map<String, bool> _validatorSelectionList = {
     "category": true,
@@ -132,7 +130,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
     final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
-    final a = _initData();
+    final a = _initData(); 
     return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
@@ -557,7 +555,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
       }
       if (_oldData?["product_video"] != null &&
           _oldData?["product_video"].isNotEmpty) {
-        _videoFiles!.add(_oldData?["product_video"]["url"]);
+        _videoFiles.add(_oldData?["product_video"]["url"]);
       }
       if (_oldData?["weight_package"] != null) {
         _weightController.text = (_oldData?["weight_package"] ?? "").toString();
@@ -1719,7 +1717,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
                                                                                         categoryAttributes.sort((a, b) => (a['position']).compareTo(b['position']));
                                                                                         _listDetailInforData = categoryAttributes;
                                                                                         _listDetailInforSelectedValue = [];
-                                                                                        _listDetailInforData.forEach((element) {
+                                                                                        for (var element in _listDetailInforData) {
                                                                                           _listDetailInforSelectedValue.add({
                                                                                             "id": element['id'],
                                                                                             "product_attribute_id": element['product_attribute']['id'],
@@ -1727,7 +1725,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
                                                                                             "value": [],
                                                                                             "unit": ""
                                                                                           });
-                                                                                        });
+                                                                                        }
                                                                                       }
                                                                                     }
                                                                                     _brandListFromCategory = await BrandProductApi().getBrandProduct({
@@ -1857,9 +1855,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
 
   Widget _buildClassifyWidget(
     BuildContext context,
-    String title, {
-    String? titleForBottomSheet,
-  }) {
+    String title) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       child: Column(
@@ -1943,7 +1939,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
       child: TextFormField(
         controller: controller,
         maxLines: 1,
-        keyboardType: keyboardType != null ? keyboardType : TextInputType.text,
+        keyboardType: keyboardType ?? TextInputType.text,
         maxLength: maxLength,
         validator: (value) {
           switch (hintText) {
@@ -1994,6 +1990,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
           // kiem tra validator cho cac phan khuc san pham
 
           additionalFunction != null ? additionalFunction() : null;
+          return null;
         },
         onChanged: (value) {
           setState(() {});
@@ -2233,12 +2230,12 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
           height: 150,
           width: width * 0.9,
           margin: const EdgeInsets.only(top: 10),
-          decoration: _videoFiles!.isEmpty
+          decoration: _videoFiles.isEmpty
               ? BoxDecoration(
                   border: Border.all(color: greyColor, width: 0.4),
                   borderRadius: BorderRadius.circular(7))
               : null,
-          child: _videoFiles!.isEmpty
+          child: _videoFiles.isEmpty
               ? _iconAndAddImage("Thêm video", function: () {
                   dialogVideoSource();
                 })
@@ -2255,7 +2252,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(7),
                         child: VideoPlayerRender(
-                          path: _videoFiles![0],
+                          path: _videoFiles[0],
                         ),
                       ),
                     ),
@@ -2269,7 +2266,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
     return Container(
       padding: const EdgeInsets.only(left: 20.0, top: 10, right: 20),
       child: buildTextContent(
-          _videoFiles!.isEmpty
+          _videoFiles.isEmpty
               ? "Hãy chọn video mô tả sản phẩm của bạn(Lưu ý: dung lượng dưới 30Mb, thời gian giới hạn:10s-60s)"
               : "",
           false,
@@ -2729,8 +2726,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
     XFile selectedVideo = XFile("");
     selectedVideo = (await ImagePicker().pickVideo(source: src))!;
     setState(() {
-      _videoFiles!
-          .add(File(selectedVideo.path != null ? selectedVideo.path : ""));
+      _videoFiles.add(File(selectedVideo.path ?? ""));
     });
   }
 

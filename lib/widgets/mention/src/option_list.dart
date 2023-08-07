@@ -1,7 +1,7 @@
 part of social_mention;
 
 class OptionList extends StatelessWidget {
-  OptionList({
+  const OptionList({super.key, 
     required this.data,
     required this.onTap,
     required this.suggestionListHeight,
@@ -41,10 +41,10 @@ class OptionList extends StatelessWidget {
                                 ? suggestionBuilder!(data[index], index)
                                 : Container(
                                     color: Colors.blue,
-                                    padding: EdgeInsets.all(20.0),
+                                    padding: const EdgeInsets.all(20.0),
                                     child: Text(
                                       data[index]['name'],
-                                      style: TextStyle(fontSize: 12),
+                                      style: const TextStyle(fontSize: 12),
                                     ),
                                   ),
                           ))),

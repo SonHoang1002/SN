@@ -30,7 +30,7 @@ class SocialTextEditingController extends TextEditingController {
     super.dispose();
   }
 
-  final Map<DetectedType, TextStyle> detectionTextStyles = Map();
+  final Map<DetectedType, TextStyle> detectionTextStyles = {};
 
   final Map<DetectedType, RegExp> _regularExpressions = {
     DetectedType.mention: atSignRegExp,

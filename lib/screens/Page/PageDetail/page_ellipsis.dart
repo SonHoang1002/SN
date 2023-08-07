@@ -273,7 +273,7 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
             color: Theme.of(context).textTheme.titleLarge?.color,
           ),
         ),
-        shape: Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
+        shape: const Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
       ),
       body: Container(
         height: double.infinity,

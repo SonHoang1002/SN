@@ -497,10 +497,10 @@ class _AvatarWigetState extends State<AvatarWiget> {
           children: [
             Container(
               margin: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
+              child: const Column(
                 children: [
                   Row(
-                    children: const [
+                    children: [
                       Text(
                         "Chế độ hiển thị: ",
                         style: TextStyle(fontSize: 14),
@@ -518,10 +518,10 @@ class _AvatarWigetState extends State<AvatarWiget> {
                       Text("Công khai", style: TextStyle(fontSize: 14))
                     ],
                   ),
-                  const SizedBox(
+                  SizedBox(
                     height: 8.0,
                   ),
-                  const Text(
+                  Text(
                     "Ảnh đại diện của bạn sẽ được hiển thị công khai trên bảng tin của bạn bè và trên trang cá nhân của bạn. Việc này giúp bạn bè của bạn trên Emso có thể tìm thấy bạn.",
                     style: TextStyle(fontSize: 14, color: greyColor),
                   )

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../constant/common.dart';
@@ -22,7 +21,7 @@ class AlertDialogUtils {
                 Icons.warning_amber,
                 color: primaryColor,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
               Flexible(
@@ -35,7 +34,7 @@ class AlertDialogUtils {
                         fontWeight: FontWeight.bold),
                     children: <TextSpan>[
                       TextSpan(
-                        text: Post_violation_constants.POST_VIOLATION_TITLE,
+                        text: PostViolationConstants.POST_VIOLATION_TITLE,
                       ),
                     ],
                   ),
@@ -43,7 +42,7 @@ class AlertDialogUtils {
               )
             ],
           ),
-          Divider(),
+          const Divider(),
         ],
       ),
               content: Column(
@@ -56,17 +55,17 @@ class AlertDialogUtils {
               style: const TextStyle(color: Colors.black, fontSize: 15),
               children: <TextSpan>[
                 TextSpan(
-                  text: Post_violation_constants.POST_VIOLATION_CONTENT[0],
+                  text: PostViolationConstants.POST_VIOLATION_CONTENT[0],
                 ),
-                TextSpan(text: Post_violation_constants.POST_VIOLATION_CONTENT[1]),
+                TextSpan(text: PostViolationConstants.POST_VIOLATION_CONTENT[1]),
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Container(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.blue, width: 2),
               borderRadius: BorderRadius.circular(10),
@@ -127,7 +126,7 @@ class AlertDialogUtils {
                 ),
                 Text(
                   dataFilter[0]["status"]["content"],
-                  style: TextStyle(fontWeight: FontWeight.w500),
+                  style: const TextStyle(fontWeight: FontWeight.w500),
                 )
               ],
             ),
@@ -167,9 +166,9 @@ class AlertDialogUtils {
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
-                        text: How_to_decide.HOW_TO_DECISION_TITLE),
+                        text: HowToDecide.HOW_TO_DECISION_TITLE),
                   ),
-                  Divider(),
+                  const Divider(),
                 ],
               ),
               content: Column(
@@ -189,7 +188,7 @@ class AlertDialogUtils {
                           text: TextSpan(
                               style: const TextStyle(
                                   color: Colors.black, fontSize: 15),
-                              text: How_to_decide.NOTICE_HOW_TO_DECIDE[0]),
+                              text: HowToDecide.NOTICE_HOW_TO_DECIDE[0]),
                         ),
                       )
                     ],
@@ -208,7 +207,7 @@ class AlertDialogUtils {
                           text: TextSpan(
                               style: const TextStyle(
                                   color: Colors.black, fontSize: 15),
-                              text: How_to_decide.NOTICE_HOW_TO_DECIDE[1]),
+                              text: HowToDecide.NOTICE_HOW_TO_DECIDE[1]),
                         ),
                       ),
                     ],
@@ -227,7 +226,7 @@ class AlertDialogUtils {
                           text: TextSpan(
                               style: const TextStyle(
                                   color: Colors.black, fontSize: 15),
-                              text: How_to_decide.NOTICE_HOW_TO_DECIDE[2]),
+                              text: HowToDecide.NOTICE_HOW_TO_DECIDE[2]),
                         ),
                       )
                     ],
@@ -241,7 +240,7 @@ class AlertDialogUtils {
               actions: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: const Color(0xFFB0B2B5), // Đặt màu cho nút
+                    backgroundColor: const Color(0xFFB0B2B5), // Đặt màu cho nút
                     // Các thuộc tính khác của nút như textColor, textStyle, padding, borderRadius, v.v. cũng có thể được chỉnh sửa ở đây nếu cần.
                   ),
                   child: const Text("Quay lại"),
@@ -281,7 +280,7 @@ class AlertDialogUtils {
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
-                        text: Decision_criteria.POST_DECISION_STANDARDS_TITLE),
+                        text: DecisionCriteria.POST_DECISION_STANDARDS_TITLE),
                   ),
                   const Divider(),
                 ],
@@ -297,22 +296,22 @@ class AlertDialogUtils {
                             const TextStyle(color: Colors.black, fontSize: 15),
                         children: <TextSpan>[
                           TextSpan(
-                              text: Decision_criteria
+                              text: DecisionCriteria
                                   .POST_DECISIONZ_STANDARDS_CONTENT),
                           TextSpan(
-                            text: Decision_criteria.STANDARDS_DECISION[0],
+                            text: DecisionCriteria.STANDARDS_DECISION[0],
                           ),
                           TextSpan(
-                            text: Decision_criteria.STANDARDS_DECISION[1],
+                            text: DecisionCriteria.STANDARDS_DECISION[1],
                           ),
                           TextSpan(
-                            text: Decision_criteria.STANDARDS_DECISION[2],
+                            text: DecisionCriteria.STANDARDS_DECISION[2],
                           ),
                           TextSpan(
-                            text: Decision_criteria.STANDARDS_DECISION[3],
+                            text: DecisionCriteria.STANDARDS_DECISION[3],
                           ),
                           TextSpan(
-                            text: Decision_criteria.STANDARDS_DECISION[4],
+                            text: DecisionCriteria.STANDARDS_DECISION[4],
                           ),
                         ],
                       )),
@@ -325,7 +324,7 @@ class AlertDialogUtils {
               actions: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: const Color(0xFFB0B2B5), // Đặt màu cho nút
+                    backgroundColor: const Color(0xFFB0B2B5), // Đặt màu cho nút
                     // Các thuộc tính khác của nút như textColor, textStyle, padding, borderRadius, v.v. cũng có thể được chỉnh sửa ở đây nếu cần.
                   ),
                   child: const Text("Quay lại"),
@@ -393,7 +392,7 @@ class AlertDialogUtils {
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Column(
                     children: <Widget>[
                       Container(
@@ -470,7 +469,7 @@ class AlertDialogUtils {
               actions: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: const Color(0xFFB0B2B5), // Đặt màu cho nút
+                    backgroundColor: const Color(0xFFB0B2B5), // Đặt màu cho nút
                     // Các thuộc tính khác của nút như textColor, textStyle, padding, borderRadius, v.v. cũng có thể được chỉnh sửa ở đây nếu cần.
                   ),
                   child: const Text("Quay lại"),
@@ -518,7 +517,7 @@ class AlertDialogUtils {
                       ),
                       children: <TextSpan>[
                         TextSpan(
-                          text: Accept_Decision.POST_ACCEPT_DECISION_TITLE,
+                          text: AcceptDecision.POST_ACCEPT_DECISION_TITLE,
                         ),
                       ],
                     ),
@@ -536,14 +535,14 @@ class AlertDialogUtils {
                       style: const TextStyle(color: Colors.black, fontSize: 15),
                       children: <TextSpan>[
                         TextSpan(
-                          text: Accept_Decision.POST_ACCEPT_DECISION_CONTENT,
+                          text: AcceptDecision.POST_ACCEPT_DECISION_CONTENT,
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Container(
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         border: Border.all(color: Colors.red, width: 2),
                         borderRadius: BorderRadius.circular(10)),
@@ -553,7 +552,7 @@ class AlertDialogUtils {
                           Icons.dangerous_outlined,
                           color: Colors.red,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         Flexible(
@@ -564,16 +563,16 @@ class AlertDialogUtils {
                                   color: Colors.black, fontSize: 15),
                               children: <TextSpan>[
                                 TextSpan(
-                                    text: Accept_Decision
+                                    text: AcceptDecision
                                         .NOTICE_OF_ACCEPT_THE_DECISION[0],
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold)),
                                 TextSpan(
-                                  text: Accept_Decision
+                                  text: AcceptDecision
                                       .NOTICE_OF_ACCEPT_THE_DECISION[1],
                                 ),
                                 TextSpan(
-                                    text: Accept_Decision
+                                    text: AcceptDecision
                                         .NOTICE_OF_ACCEPT_THE_DECISION[2],
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold))
@@ -590,7 +589,7 @@ class AlertDialogUtils {
               actions: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: Color(0xFFB0B2B5), // Đặt màu cho nút
+                    backgroundColor: const Color(0xFFB0B2B5), // Đặt màu cho nút
                     // Các thuộc tính khác của nút như textColor, textStyle, padding, borderRadius, v.v. cũng có thể được chỉnh sửa ở đây nếu cần.
                   ),
                   child: const Text("Quay lại"),
@@ -629,9 +628,9 @@ class AlertDialogUtils {
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
-                        text: Not_accept_decision.POST_ACCEPT_DECISION_TITLE),
+                        text: NotAcceptDecision.POST_ACCEPT_DECISION_TITLE),
                   ),
-                  Divider(),
+                  const Divider(),
                 ],
               ),
               content: Column(
@@ -644,16 +643,16 @@ class AlertDialogUtils {
                       style: const TextStyle(color: Colors.black, fontSize: 15),
                       children: <TextSpan>[
                         TextSpan(
-                          text: Not_accept_decision
+                          text: NotAcceptDecision
                               .NOTICE_OF_ACCEPT_THE_DECISION[0],
                         ),
                         TextSpan(
-                            text: Not_accept_decision
+                            text: NotAcceptDecision
                                 .NOTICE_OF_ACCEPT_THE_DECISION[1]),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   const Divider()
@@ -661,7 +660,7 @@ class AlertDialogUtils {
               ),
               actions: [
                 ElevatedButton(
-                  child: Text("Đóng"),
+                  child: const Text("Đóng"),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupDetail/group_detail.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 import 'package:social_network_app_mobile/widgets/text_description.dart';
 
@@ -35,14 +36,23 @@ class SearchItem extends StatelessWidget {
                   ),
                 ))
             : item['page_relationship']?['like'] == true ||
-                    item['page_relationship']?['following'] == true
+                    item['page_relationship']?['following'] == true ||
+                    item?["page_relationship"] != null
                 ? Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const PageDetail(),
                       settings: RouteSettings(arguments: item['id'].toString()),
                     ))
-                : const SizedBox();
+                : item?["group_relationship"] != null
+                    ? Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return GroupDetail(
+                            id: item['id'],
+                          );
+                        },
+                      ))
+                    : const SizedBox();
       },
       borderRadius: BorderRadius.circular(10),
       child: Container(

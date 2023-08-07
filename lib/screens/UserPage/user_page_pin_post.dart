@@ -36,8 +36,8 @@ class _UserPagePinPostState extends ConsumerState<UserPagePinPost> {
             children: [
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: Row(
-                  children: const [
+                child: const Row(
+                  children: [
                     Icon(
                       FontAwesomeIcons.thumbtack,
                       size: 18,

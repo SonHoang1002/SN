@@ -21,7 +21,7 @@ class CreatePostButton extends ConsumerWidget {
   final dynamic userType;
 
   const CreatePostButton(
-      {Key? key,
+      {super.key, 
       this.postDiscussion,
       this.preType,
       this.reloadFunction,
@@ -31,21 +31,21 @@ class CreatePostButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    dynamic _userType;
+    dynamic userType;
     if (friendData != null) {
       if (userType != null) {
-        _userType = userType;
+        userType = userType;
       } else {
-        _userType = 'me';
+        userType = 'me';
         if (friendData?['relationships'] != null &&
             friendData?['relationships']?['friendship_status'] == 'ARE_FRIENDS') {
-          _userType = 'friend';
+          userType = 'friend';
         } else if (friendData['relationships'] != null &&
             friendData?['relationships']?['friendship_status'] ==
                 'OUTGOING_REQUEST') {
-          _userType = 'requested';
+          userType = 'requested';
         } else {
-          _userType = 'stranger';
+          userType = 'stranger';
         }
       }
     }
@@ -84,7 +84,7 @@ class CreatePostButton extends ConsumerWidget {
                     width: 10,
                   ),
                   buildTextContent(
-                      friendData != null && (_userType == "friend")
+                      friendData != null && (userType == "friend")
                           ? "Hãy viết gì đó cho ${friendData['display_name']}"
                           : "Bạn đang nghĩ gì?",
                       false,

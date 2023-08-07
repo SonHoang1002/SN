@@ -12,8 +12,12 @@ String getRefractorTime(String preTime,
   Duration difference = currentTime.difference(parsedTime);
 
   if (difference < const Duration(minutes: 1)) {
-    int seconds = difference.inSeconds;
-    return "$seconds giây trước";
+    if (difference.inSeconds >= 0) {
+      int seconds = difference.inSeconds;
+      return "$seconds giây trước";
+    } else {
+      return "Hết hạn";
+    }
   } else if (difference < const Duration(hours: 1)) {
     int hours = difference.inMinutes;
     return "$hours phút trước";

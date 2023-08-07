@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:loader_overlay/loader_overlay.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/learn_space_api.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
@@ -84,11 +83,10 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
           "media_ids": [mediaUploadResult['id']],
         },
       );
-
       if (response == null) {
         message = 'Có lỗi xảy ra trong quá trình đăng';
-      } else if (response['error'] != null) {
-        message = response['error'];
+      } else if (response?["content"]?['error'] != null) {
+        message = response?["content"]?['error'];
       } else {
         ref
             .read(learnSpaceStateControllerProvider.notifier)
@@ -109,16 +107,17 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
 
       if (response == null) {
         message = 'Có lỗi xảy ra trong quá trình đăng, hãy xem lại bài viết';
-      } else if (response['error'] != null) {
-        message = response['error'];
+      } else if (response?["content"]?['error'] != null){
+        message = response?["content"]?['error'];
       } else {
         ref
             .read(learnSpaceStateControllerProvider.notifier)
             .getListCourseReview(widget.courseDetail['id']);
+            print("response ${jsonEncode(response)}");
         message = 'Đăng bài đánh giá thành công!';
       }
     }
-
+    
     return message;
   }
 

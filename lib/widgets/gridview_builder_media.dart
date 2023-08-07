@@ -1,5 +1,6 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 
@@ -90,7 +91,7 @@ class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
                             : Hero(
                                 tag: widget.medias[indexBg]['id'] ?? indexBg,
                                 child: ExtendedImage.network(
-                                    widget.medias[indexBg]['url'],
+                                    (widget.medias[indexBg]?['url']) ??(widget.medias[indexBg]?['show_url'])??linkAvatarDefault ,
                                     fit: BoxFit.cover,
                                     width: size.width, loadStateChanged:
                                         (ExtendedImageState state) {
@@ -109,6 +110,7 @@ class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
                                               BorderRadius.circular(10.0)),
                                     );
                                   }
+                                  return null;
                                 })),
                         widget.imageRemain != null &&
                                 widget.imageRemain! > 0 &&

@@ -10,17 +10,17 @@ class EmsoAdvertisementOptionsConstants {
     "data": [
       {
         "key": "application_and_website",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Tìm hiểu về quảng cáo"
       },
       {
         "key": "location",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Thông tin trên trang cá nhân"
       },
       {
         "key": "location",
-        "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+        "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
         "content": "Tương tác trên mạng xã hội"
       },
     ]
@@ -85,17 +85,17 @@ class InteractOnSocialNetworksConstants {
   static const Map<String, dynamic> INTERACT_ON_SOCIAL_NETWORK_PAGE_CONTENTS = {
     "key": "interact_on_social_network_page_contents",
     "data": {
-      "img": SettingConstants.PATH_IMG + "cat_1.png",
+      "img": "${SettingConstants.PATH_IMG}cat_1.png",
       "title": "Thức ăn sạch",
       "subTitle": "938K người thích trang này",
-      "icon": SettingConstants.PATH_ICON + "bel_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bel_icon.svg",
       "content": "Bạn bè của bạn",
     }
   };
   static const Map<String, dynamic> INTERACT_ON_SOCIAL_NETWORK_CONTENTS = {
     "key": "interact_on_social_network_contents",
     "data": {
-      "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+      "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
       "title":
           "Ai có thể nhìn thấy hoạt động tương tác của bạn trên mạng xã hội cùng với quảng cáo ?",
       "content": "Bạn bè của bạn",

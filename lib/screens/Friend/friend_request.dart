@@ -177,11 +177,11 @@ class _FriendRequestState extends ConsumerState<FriendRequest> {
                                                                   width: 0.2,
                                                                   color:
                                                                       greyColor)),
-                                                          child: Row(
+                                                          child: const Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
                                                                     .center,
-                                                            children: const [
+                                                            children: [
                                                               Text(
                                                                 'Xác nhận',
                                                                 textAlign:
@@ -250,11 +250,11 @@ class _FriendRequestState extends ConsumerState<FriendRequest> {
                                                                   width: 0.2,
                                                                   color:
                                                                       greyColor)),
-                                                          child: Row(
+                                                          child: const Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
                                                                     .center,
-                                                            children: const [
+                                                            children: [
                                                               Text(
                                                                 'Xoá',
                                                                 textAlign:
@@ -323,11 +323,11 @@ class _FriendRequestState extends ConsumerState<FriendRequest> {
                                                                   width: 0.2,
                                                                   color:
                                                                       greyColor)),
-                                                          child: Row(
+                                                          child: const Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
                                                                     .center,
-                                                            children: const [
+                                                            children: [
                                                               Icon(
                                                                   FontAwesomeIcons
                                                                       .hands,
@@ -364,11 +364,11 @@ class _FriendRequestState extends ConsumerState<FriendRequest> {
                                                                 ['relationships']
                                                             ['friendship_status'] ==
                                                         'CAN_REQUEST'
-                                                    ? Column(
+                                                    ? const Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
                                                                 .start,
-                                                        children: const [
+                                                        children: [
                                                           Text(
                                                               'Đã gỡ lời mời kết bạn',
                                                               style: TextStyle(

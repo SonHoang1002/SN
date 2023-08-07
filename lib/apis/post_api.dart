@@ -5,9 +5,9 @@ import 'api_root.dart';
 class PostApi {
   Future getListPostApi(params) async {
     final response =
-        await Api().getRequestBase('/api/v1/timelines/home', params);
+        await Api().getRequestBase('/api/v1/timelines/home', params)??[];
     List postList = [];
-    if (response != null) {
+    if (response != null ) {
       response.forEach((ele) {
         var newData = ele;
         newData = {...newData, "visible": true};
@@ -81,7 +81,7 @@ class PostApi {
     return await Api().postRequestBase("/api/v1/report_violations", data);
   }
 
-  Future reactionPostApi(idPost, data) async { 
+  Future reactionPostApi(idPost, data) async {
     return await Api()
         .postRequestBase("/api/v1/statuses/$idPost/favourite", data);
   }

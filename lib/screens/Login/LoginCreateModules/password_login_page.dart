@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 
 import '../../../constant/login_constants.dart';
@@ -23,8 +22,8 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
 
   late double height = 0;
   bool _iShowPassword = true;
-  TextEditingController _passwordController = TextEditingController(text: "");
-  TextEditingController _passwordConfirmController =
+  final TextEditingController _passwordController = TextEditingController(text: "");
+  final TextEditingController _passwordConfirmController =
       TextEditingController(text: "");
 
   RegExp numbersRegex = RegExp(r'\d');
@@ -177,7 +176,9 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
           handleUpdate != null ? handleUpdate(value) : null;
         }),
         controller: controller,
-        validator: (value) {},
+        validator: (value) {
+          return null;
+        },
         obscureText: _iShowPassword,
         keyboardType: numberType! ? TextInputType.number : TextInputType.text,
         maxLength: numberType ? 10 : 100,

@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -7,12 +6,9 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
-import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_content.dart';
 import 'package:social_network_app_mobile/screens/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
-import 'package:social_network_app_mobile/screens/Post/post_suggest.dart';
-import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_controller.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
@@ -88,8 +84,7 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
 
   @override
   Widget build(BuildContext context) {
-    watchPost =
-        ref.watch(currentPostControllerProvider).currentPost  ;
+    watchPost = ref.watch(currentPostControllerProvider).currentPost;
     List suggestWatchList = ref.watch(watchControllerProvider).watchSuggest;
     meData ??= ref.watch(meControllerProvider)[0];
     return Scaffold(
@@ -131,34 +126,17 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
                   const SizedBox(
                     height: 12.0,
                   ),
-                  Stack(
-                    children: [
-                      Hero(
-                        tag: (widget.media?['remote_url']) ??
-                            (widget.media?['url']),
-                        child: VideoPlayerHasController(
-                          media: widget.media,
-                        ),
-                      ),
-                      Positioned.fill(child: GestureDetector(
-                        onDoubleTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => WatchDetail(
-                                        post: watchPost ?? widget.post,
-                                        media: widget.media,
-                                        type: postWatchDetail,
-                                        preType: widget.preType,
-                                        updateDataFunction: () {
-                                          widget.updateData != null
-                                              ? widget.updateData!()
-                                              : null;
-                                        },
-                                      )));
-                        },
-                      ))
-                    ],
+                  Hero(
+                    tag: (widget.media?['remote_url']) ??
+                        (widget.media?['url']) ??
+                        (widget.post?['media_attachments']?[0]
+                            ?['remote_url']) ??
+                        (widget.post?['media_attachments']?[0]?['url']),
+                    child: VideoPlayerHasController(
+                      media: widget.media, 
+                      onDoubleTapAction: () { 
+                      },
+                    ),
                   ),
                   PostFooter(
                     post: watchPost ?? widget.post,
@@ -202,44 +180,44 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
                               const SizedBox(
                                 height: 12.0,
                               ),
-                              Stack(
-                                children: [
-                                  Hero(
-                                    tag: (suggestWatchList[index]
-                                                ?['media_attachments']?[0]
-                                            ?['remote_url']) ??
-                                        (suggestWatchList[index]
-                                                ?['media_attachments']?[0]
-                                            ?['url']) ??
-                                        (widget.media?['remote_url']) ??
-                                        (widget.media?['url']),
-                                    child: VideoPlayerHasController(
-                                      media: (suggestWatchList[index]
-                                              ?['media_attachments']?[0]) ??
-                                          widget.media,
-                                    ),
-                                  ),
-                                  Positioned.fill(child: GestureDetector(
-                                    onDoubleTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => WatchDetail(
-                                                    post: watchPost ??
-                                                        widget.post,
-                                                    media: widget.media,
-                                                    type: postWatchDetail,
-                                                    preType: widget.preType,
-                                                    updateDataFunction: () {
-                                                      widget.updateData != null
-                                                          ? widget.updateData!()
-                                                          : null;
-                                                    },
-                                                  )));
-                                    },
-                                  ))
-                                ],
+                              // Stack(
+                              // children: [
+                              Hero(
+                                tag: (suggestWatchList[index]
+                                            ?['media_attachments']?[0]
+                                        ?['remote_url']) ??
+                                    (suggestWatchList[index]
+                                        ?['media_attachments']?[0]?['url']) ??
+                                    (widget.media?['remote_url']) ??
+                                    (widget.media?['url']),
+                                child: VideoPlayerHasController(
+                                  media: (suggestWatchList[index]
+                                          ?['media_attachments']?[0]) ??
+                                      widget.media,
+                                  onDoubleTapAction: () { 
+                                  },
+                                ),
                               ),
+                              // Positioned.fill(child: GestureDetector(
+                              //   onDoubleTap: () {
+                              //     Navigator.push(
+                              //         context,
+                              //         MaterialPageRoute(
+                              //             builder: (context) => WatchDetail(
+                              //                   post: watchPost ??
+                              //                       widget.post,
+                              //                   media: widget.media,
+                              //                   type: postWatchDetail,
+                              //                   preType: widget.preType,
+                              //                   updateDataFunction: () {
+                              //                     widget.updateData != null
+                              //                         ? widget.updateData!()
+                              //                         : null;
+                              //                   },
+                              //                 )));
+                              //   },
+                              // ))
+                              //   ],
                               PostFooter(
                                 post: suggestWatchList[0] ??
                                     watchPost ??

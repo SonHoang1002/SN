@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -8,7 +7,7 @@ import 'package:social_network_app_mobile/widgets/Banuba/file_plugin.dart';
 import 'package:uuid/uuid.dart';
 
 class AudioBrowserWidget extends StatefulWidget {
-  AudioBrowserWidget({
+  const AudioBrowserWidget({
     Key? key,
     this.title = 'Audio Browser',
   }) : super(key: key);
@@ -31,7 +30,7 @@ class _AudioBrowserState extends State<AudioBrowserWidget> {
   @override
   Widget build(BuildContext context) {
     return MediaQuery(
-      data: MediaQueryData.fromWindow(ui.window),
+      data: MediaQueryData.fromView(ui.window),
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Container(
@@ -119,7 +118,7 @@ class _AudioBrowserState extends State<AudioBrowserWidget> {
       final dynamic result;
       final args = {
         "url": audioTrackUri.toString(),
-        "id": Uuid().v1(),
+        "id": const Uuid().v1(),
         "artist": "The best artist",
         "title": "My favorite song",
       };

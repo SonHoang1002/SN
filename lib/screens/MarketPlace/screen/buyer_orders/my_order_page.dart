@@ -289,11 +289,11 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
           "data": element
         };
       }).toList();
-      primaryList.forEach((element) {
+      for (var element in primaryList) {
         if (element["data"]["order_items"].length > 1) {
           element["open"] = false;
         }
-      });
+      }
       return primaryList;
     }
   }
@@ -502,7 +502,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
         } else if (paymentStatus == "paid") {
           title = "Chờ - Đã thanh toán";
         } else {
-          title = "Chờ - ${paymentStatus}";
+          title = "Chờ - $paymentStatus";
         }
         break;
       case "delivered":
@@ -512,7 +512,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
         } else if (paymentStatus == "paid") {
           title = "Vận chuyển - Đã thanh toán";
         } else {
-          title = "Vận chuyển - ${paymentStatus}";
+          title = "Vận chuyển - $paymentStatus";
         }
         break;
       case "shipping":
@@ -522,7 +522,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
         } else if (paymentStatus == "paid") {
           title = "Đang giao - Đã thanh toán";
         } else {
-          title = "Đang giao - ${paymentStatus}";
+          title = "Đang giao - $paymentStatus";
         }
         break;
       case "finish":
@@ -532,7 +532,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
         } else if (paymentStatus == "paid") {
           title = "Hoàn thành - đã thanh toán";
         } else {
-          title = "Hoàn thành - ${paymentStatus}";
+          title = "Hoàn thành - $paymentStatus";
         }
         break;
       case "cancelled":
@@ -542,7 +542,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
         } else if (paymentStatus == "paid") {
           title = "Đã hủy - đã thanh toán";
         } else {
-          title = "Đã hủy - ${paymentStatus}";
+          title = "Đã hủy - $paymentStatus";
         }
         break;
       case "return":
@@ -722,7 +722,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
 
   Widget _buildEmptyMessageAndSuggestList() {
     return listSuggestProduct != null && listSuggestProduct!.isNotEmpty
-        ? buildSuggestListComponent(
+        ? SuggestListComponent(
             context: context,
             controller: _suggestScrollController,
             isLoading: true,

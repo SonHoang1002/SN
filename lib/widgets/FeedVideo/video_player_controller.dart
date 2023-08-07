@@ -1,11 +1,10 @@
 import 'package:chewie/chewie.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/FeedVideo/custom_video_elements/video_custom_control.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -19,23 +18,23 @@ class VideoPlayerHasController extends ConsumerStatefulWidget {
   final ValueNotifier<int>? videoPositionNotifier;
   final bool? isHiddenControl;
   final double? timeStart;
-  final Function? handleDoubleTapAction;
-  final Function? handleTapAction;
+  final Function? handleAction;
+  final Function? onDoubleTapAction;
   final bool? isFocus;
 
   const VideoPlayerHasController(
       {Key? key,
       this.media,
       this.type,
-      this.handleDoubleTapAction,
+      this.handleAction,
       this.overlayWidget,
       this.aspectRatio,
-      this.hasDispose,
+      this.hasDispose = false,
       this.isHiddenControl,
       this.timeStart,
       this.videoPositionNotifier,
-      this.handleTapAction,
-      this.isFocus})
+      this.isFocus,
+      this.onDoubleTapAction})
       : super(key: key);
 
   @override
@@ -45,13 +44,12 @@ class VideoPlayerHasController extends ConsumerStatefulWidget {
 
 class _VideoPlayerHasControllerState
     extends ConsumerState<VideoPlayerHasController>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, AutomaticKeepAliveClientMixin {
   bool isVisible = false;
   BetterState? betterPlayer;
   VideoPlayerController? videoPlayerController;
   ChewieController? chewieController;
   bool isPlaying = true;
-  GlobalKey globalKey = GlobalKey();
 
   @override
   void initState() {
@@ -70,16 +68,21 @@ class _VideoPlayerHasControllerState
             if (mounted) {
               setState(() {
                 chewieController = ChewieController(
-                  placeholder: Container(
-                      decoration: BoxDecoration(
-                    color: Color(int.parse(
-                        '0xFF${widget.media['meta']['small']['average_color'].substring(1)}')),
-                  )),
-                  showControlsOnInitialize: false,
-                  videoPlayerController: videoPlayerController!,
-                  aspectRatio: videoPlayerController!.value.aspectRatio,
-                  // progressIndicatorDelay: const Duration(seconds: 10)
-                );
+                    placeholder: Container(
+                        decoration: BoxDecoration(
+                      color: Color(int.parse(
+                          '0xFF${(widget.media?['meta']?['small']?['average_color']).substring(1)}')),
+                    )),
+                    showControlsOnInitialize: false,
+                    videoPlayerController: videoPlayerController!,
+                    showControls: true,
+                    customControls: CustomControlVideo(
+                      backgroundColor: const Color.fromRGBO(41, 41, 41, 0.7),
+                      iconColor: const Color.fromARGB(255, 200, 200, 200),
+                      onDoubleTapAction: widget.onDoubleTapAction,
+                    ),
+                    aspectRatio: videoPlayerController!.value.aspectRatio,
+                    progressIndicatorDelay: const Duration(seconds: 10));
               });
             }
           });
@@ -89,7 +92,9 @@ class _VideoPlayerHasControllerState
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    widget.hasDispose == true
+        ? WidgetsBinding.instance.removeObserver(this)
+        : null;
 
     if (betterPlayer!.videoPlayerController != null &&
         betterPlayer!.videoId != widget.media['id']) {
@@ -113,6 +118,12 @@ class _VideoPlayerHasControllerState
             )),
             showControlsOnInitialize: true,
             videoPlayerController: videoPlayerController!,
+            showControls: true,
+            customControls: CustomControlVideo(
+              backgroundColor: const Color.fromRGBO(41, 41, 41, 0.7),
+              iconColor: const Color.fromARGB(255, 200, 200, 200),
+              onDoubleTapAction: widget.onDoubleTapAction,
+            ),
             aspectRatio: videoPlayerController!.value.aspectRatio,
             progressIndicatorDelay: const Duration(seconds: 10));
       });
@@ -132,75 +143,55 @@ class _VideoPlayerHasControllerState
 
   @override
   Widget build(BuildContext context) {
-    dynamic selectedVideo = ref.watch(selectedVideoProvider);
-    // Size? sizeOfVideo;
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   sizeOfVideo = globalKey.currentContext?.size;
-    // });
+    final selectedVideo = ref.watch(selectedVideoProvider);
+    // widget.isFocus == true
+    //     ? chewieController?.videoPlayerController.setVolume(5)
+    //     : chewieController?.videoPlayerController.setVolume(0); 
     return AspectRatio(
-      aspectRatio: videoPlayerController!.value.aspectRatio > 1
-          ? 1
-          : videoPlayerController!.value.aspectRatio,
+      aspectRatio:
+          //  videoPlayerController!.value.aspectRatio > 1
+          //     ? 1
+          //     :
+          videoPlayerController!.value.aspectRatio,
       child: VisibilityDetector(
           onVisibilityChanged: (visibilityInfo) {
-            // if (widget.isFocus!) {
-            if (isPlaying && visibilityInfo.visibleFraction > 0.7) {
+            if (mounted) {
               setState(() {
-                isVisible = visibilityInfo.visibleFraction > 0.7;
-                if (mounted) {
-                  if (chewieController == null) return;
-                  if (isVisible) {
-                    if (selectedVideo == null) {
-                      chewieController?.videoPlayerController.play();
-                    } else {
-                      chewieController?.videoPlayerController.pause();
+                isVisible = visibilityInfo.visibleFraction > 0.85;
+                if (chewieController == null) return;
+                if (isVisible) {
+                  if (selectedVideo != null) {
+                    chewieController!.videoPlayerController.pause();
+                  } else {
+                    if (isPlaying && widget.isFocus == true) {
+                      chewieController!.videoPlayerController.play();
                     }
                   }
+                } else {
+                  chewieController!.videoPlayerController.pause();
                 }
               });
-            } else {
-              chewieController?.videoPlayerController.pause();
             }
-            // }
           },
           key: Key(widget.media['id']),
           child: Stack(
             children: [
               chewieController != null
                   ? AspectRatio(
-                      key: globalKey,
-                      // tag: widget.media['file']?.path ??
-                      //       widget.media['remote_url'] ??
-                      //       widget.media['url'],
-                      aspectRatio: videoPlayerController!.value.aspectRatio > 1
-                          ? 1
-                          : videoPlayerController!.value.aspectRatio,
-                      // (widget.type == postWatchDetail ||
-                      //         chewieController!
-                      //                 .videoPlayerController.value.aspectRatio >=
-                      //             3 / 4)
-                      //     ? chewieController!
-                      //         .videoPlayerController.value.aspectRatio
-                      // : 3 / 4,
+                      aspectRatio: videoPlayerController!.value.aspectRatio,
                       child: chewieController!
                               .videoPlayerController.value.isInitialized
                           ? selectedVideo != null &&
                                   widget.type != 'miniPlayer' &&
                                   widget.media['id'] ==
-                                      selectedVideo['media_attachments'][0]
-                                          ['id']
+                                      (selectedVideo?['media_attachments']?[0]
+                                          ?['id'])
                               ? Stack(
                                   children: [
-                                    Positioned.fill(
-                                      child: ExtendedImage.network(
-                                        (widget.media['preview_url'] ??
-                                            widget.media['preview_remote_url']),
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        // height: sizeOfVideo?.height,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
+                                    ImageCacheRender(
+                                        path: (widget.media?[
+                                                'preview_remote_url']) ??
+                                            (widget.media?['preview_url'])),
                                     Positioned.fill(
                                         child: Container(
                                       color: Colors.black.withOpacity(0.4),
@@ -219,78 +210,57 @@ class _VideoPlayerHasControllerState
                                     Material(
                                         child: Chewie(
                                             controller: chewieController!)),
-                                    Positioned.fill(
-                                        child: GestureDetector(
-                                      onTap: () {
-                                        if (widget.handleTapAction != null) {
-                                          widget.handleTapAction!();
-                                        } else {
-                                          if (betterPlayer!.videoId !=
-                                              widget.media['id']) {
-                                            ref
-                                                .read(
-                                                    betterPlayerControllerProvider
-                                                        .notifier)
-                                                .initializeBetterPlayerController(
-                                                    widget.media['id'],
-                                                    videoPlayerController!,
-                                                    chewieController!);
-                                          }
-                                          setState(() {
-                                            isPlaying = !isPlaying;
-                                          });
-                                          // if (widget.isFocus!) {
-                                          if (isPlaying) {
-                                            chewieController!
-                                                .videoPlayerController
-                                                .play();
-                                          } else {
-                                            chewieController!
-                                                .videoPlayerController
-                                                .pause();
-                                          }
-                                        }
-                                        // }
-                                      },
-                                      onDoubleTap: () {
-                                        if (widget.handleDoubleTapAction !=
-                                            null) {
-                                          widget.handleDoubleTapAction!();
-                                        }
-                                      },
-                                    ))
+                                    widget.handleAction != null
+                                        ? Positioned.fill(
+                                            child: GestureDetector(
+                                            onTap: () {
+                                              if (betterPlayer!.videoId !=
+                                                  widget.media['id']) {
+                                                ref
+                                                    .read(
+                                                        betterPlayerControllerProvider
+                                                            .notifier)
+                                                    .initializeBetterPlayerController(
+                                                        widget.media['id'],
+                                                        videoPlayerController!,
+                                                        chewieController!);
+                                              }
+                                              if (widget.handleAction != null) {
+                                                widget.handleAction!();
+                                              }
+                                            },
+                                            onDoubleTap: () {
+                                              if (betterPlayer!.videoId !=
+                                                  widget.media['id']) {
+                                                ref
+                                                    .read(
+                                                        betterPlayerControllerProvider
+                                                            .notifier)
+                                                    .initializeBetterPlayerController(
+                                                        widget.media['id'],
+                                                        videoPlayerController!,
+                                                        chewieController!);
+                                              }
+                                              if (widget.onDoubleTapAction !=
+                                                  null) {
+                                                widget.onDoubleTapAction!();
+                                              }
+                                            },
+                                          ))
+                                        : const SizedBox()
                                   ],
                                 )
-                          : Positioned.fill(
-                              child: ExtendedImage.network(
-                                (widget.media['preview_url'] ??
-                                    widget.media['preview_remote_url']),
-                                width: MediaQuery.of(context).size.width,
-                                // height: sizeOfVideo?.height,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                    )
-                  : Positioned.fill(
-                      child: ExtendedImage.network(
-                        (widget.media['preview_url'] ??
-                            widget.media['preview_remote_url']),
-                        width: MediaQuery.of(context).size.width,
-                        // height: sizeOfVideo?.height,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-              // const Positioned.fill(
-              //   child: Align(
-              //       alignment: Alignment.center,
-              //       child: Icon(
-              //         FontAwesomeIcons.play,
-              //         color: Colors.green,
-              //         size: 40,
-              //       )),
-              // ),
+                          : ImageCacheRender(
+                              path: widget.media['preview_remote_url'] ??
+                                  widget.media['preview_url']))
+                  : ImageCacheRender(
+                      path: widget.media['preview_remote_url'] ??
+                          widget.media['preview_url']),
             ],
           )),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

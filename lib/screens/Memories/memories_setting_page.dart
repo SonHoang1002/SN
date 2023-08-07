@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/screens/Memories/memories_block_page.dart';
-import 'package:social_network_app_mobile/screens/Page/PageCreate/CreateStep/settting_page_page.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 
 class MemoriesSetting extends StatefulWidget {
@@ -45,7 +43,7 @@ class _MemoriesSettingState extends State<MemoriesSetting> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,

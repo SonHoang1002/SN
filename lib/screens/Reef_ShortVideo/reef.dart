@@ -1,13 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/data/moment.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateMoment/camera_moment_controller.dart';
-import 'package:social_network_app_mobile/screens/CreatePost/CreateMoment/create_moment.dart';
 import 'package:social_network_app_mobile/screens/Reef_ShortVideo/reef_center.dart';
 import 'package:social_network_app_mobile/screens/Reef_ShortVideo/reef_footer.dart';
 import 'package:social_network_app_mobile/screens/Reef_ShortVideo/reef_header.dart';
@@ -18,6 +15,7 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/general_componen
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 
 class Reef extends ConsumerStatefulWidget {
   const Reef({super.key});
@@ -34,35 +32,43 @@ class _ReefState extends ConsumerState<Reef> {
     momentSuggests = ref.watch(momentControllerProvider).momentSuggest;
 
     return momentSuggests.isNotEmpty
-        ? Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              children: [
-                ReefHeader(
-                  function: () {
-                    handleSettingHeader();
-                  },
+        ? Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: [
+                    ReefHeader(
+                      function: () {
+                        handleSettingHeader();
+                      },
+                    ),
+                    buildSpacer(height: 10),
+                    ReefCenter(reefList: momentSuggests),
+                    buildSpacer(height: 10),
+                    ReefFooter(
+                      firstFunction: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const CameraMomentController()));
+                      },
+                      secondFunction: () {
+                        pushCustomCupertinoPageRoute(
+                            context, const UserPageHome());
+                      },
+                    )
+                  ],
                 ),
-                buildSpacer(height: 10),
-                ReefCenter(reefList: momentSuggests),
-                buildSpacer(height: 10),
-                ReefFooter(
-                  firstFunction: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const CameraMomentController()));
-                  },
-                  secondFunction: () {
-                    pushCustomCupertinoPageRoute(context, const UserPageHome());
-                  },
-                )
-              ],
-            ),
+              ),
+              const CrossBar(
+                height: 7,
+                opacity: 0.2,
+              ),
+            ],
           )
-        : buildTextContent("Chưa có video ngắn nào !!!", true,
-            fontSize: 16, isCenterLeft: false);
+        : const SizedBox();
   }
 
   handleSettingHeader() {

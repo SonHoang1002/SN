@@ -1,5 +1,5 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
-import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
@@ -92,4 +92,147 @@ _buildLoadingWidget(bool? isLoadingMore, bool? isLoading) {
                   isCenterLeft: false),
             )
       : const SizedBox();
+}
+
+class SuggestListComponent extends StatefulWidget {
+  final BuildContext context;
+  final Widget title;
+  final List<dynamic> contentList;
+  final Function? titleFunction;
+  final ScrollController? controller;
+  final Axis? axis;
+  final bool? isLoading;
+  final bool? isLoadingMore;
+  final bool? isShowAll;
+  final bool? productIsVertical;
+  final bool? isHaveFlagship;
+  final dynamic saleBanner;
+
+  /// call callbackFunction when user scroll to max extendent position
+  final Function? callbackFunction;
+
+  const SuggestListComponent(
+      {super.key,
+      required this.context,
+      required this.title,
+      required this.contentList,
+      this.titleFunction,
+      this.controller,
+      this.axis = Axis.vertical,
+      this.isLoading = false,
+      this.isLoadingMore = false,
+      this.isShowAll,
+      this.productIsVertical = true,
+      this.isHaveFlagship = false,
+      this.saleBanner,
+      this.callbackFunction});
+
+  @override
+  State<SuggestListComponent> createState() => _SuggestListComponentState();
+}
+
+class _SuggestListComponentState extends State<SuggestListComponent> {
+  List? _contentList;
+  ScrollController scrollController = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() async {
+      if (double.parse((scrollController.offset).toStringAsFixed(0)) ==
+          (double.parse((scrollController.position.maxScrollExtent)
+              .toStringAsFixed(0)))) {
+        EasyDebounce.debounce('my-debouncer', const Duration(milliseconds: 300),
+            () async {
+          if (widget.callbackFunction != null) {
+            await widget.callbackFunction!();
+          }
+        });
+      }
+    });
+    _contentList = widget.isShowAll == true
+        ? [...widget.contentList, {}]
+        : widget.contentList;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final height = size.height;
+    final width = size.width;
+    return widget.axis == Axis.vertical
+        ? SingleChildScrollView(
+            controller: scrollController,
+            scrollDirection: widget.axis!,
+            child: Column(
+              children: [
+                widget.title,
+                GridView.builder(
+                    scrollDirection: widget.axis!,
+                    padding: const EdgeInsets.only(top: 10, left: 7),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisSpacing: 0,
+                        mainAxisSpacing: 6,
+                        crossAxisCount:
+                            widget.productIsVertical == false ? 1 : 2,
+                        childAspectRatio: widget.productIsVertical == false
+                            ? 3.1
+                            : height > 800
+                                ? 0.75
+                                : (width / (height - 190) > 0
+                                    ? width / (height - 275)
+                                    : 0.81)),
+                    itemCount: _contentList!.length,
+                    itemBuilder: (context, index) {
+                      if (widget.isShowAll == true &&
+                          index == _contentList!.length - 1) {
+                        return const SizedBox();
+                      }
+                      return buildProductItem(
+                          context: context,
+                          data: _contentList![index],
+                          isVertical: widget.productIsVertical,
+                          saleBanner: widget.saleBanner,
+                          isHaveFlagship: widget.isHaveFlagship!);
+                    }),
+                _buildLoadingWidget(widget.isLoadingMore, widget.isLoading)
+              ],
+            ))
+        : Column(
+            children: [
+              widget.title,
+              buildSpacer(height: 10),
+              SizedBox(
+                height: 250,
+                width: width,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _contentList!.length,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                          onTap: () {},
+                          child: widget.isShowAll == true &&
+                                  index == _contentList!.length - 1
+                              ? buildSeeAllProductItem(context: context)
+                              : Row(
+                                  children: [
+                                    buildProductItem(
+                                        context: context,
+                                        data: _contentList![index],
+                                        isVertical: widget.productIsVertical),
+                                    widget.axis == Axis.horizontal &&
+                                            index == _contentList!.length - 1
+                                        ? _buildLoadingWidget(
+                                            widget.isLoadingMore,
+                                            widget.isLoading)
+                                        : const SizedBox()
+                                  ],
+                                ));
+                    }),
+              ),
+            ],
+          );
+  }
 }

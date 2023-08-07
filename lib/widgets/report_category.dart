@@ -124,7 +124,7 @@ class ReportChildren extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     List children = report['children'] ?? [];
     handleReport() async {
-      var data;
+      Map<String, dynamic> data;
       var response;
       if (entityType == "post") {
         data = {

@@ -17,21 +17,21 @@ class SelectionPrivateRuleOfStoryConstants {
         "subData": [
           {
             "key": "public",
-            "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+            "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
             "title": "Công khai",
             "subTitle": "Bất kỳ ai ở trên hoặc ngoài Emso",
             "iconNext": "",
           },
           {
             "key": "friend",
-            "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+            "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
             "title": "Bạn bè",
             "subTitle": "Bạn bè của bạn trên Emso",
             "iconNext": "",
           },
           {
             "key": "custom",
-            "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+            "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
             "title": "Tùy chỉnh",
             "subTitle":
                 "Thiet, An và 102 người khác có thể nhìn thấy tin của bạn",
@@ -39,7 +39,7 @@ class SelectionPrivateRuleOfStoryConstants {
           },
           {
             "key": "hide_story_with",
-            "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+            "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
             "title": "Ẩn tin với",
             "iconNext": SettingConstants.NEXT_ICON_DATA
           },
@@ -50,20 +50,20 @@ class SelectionPrivateRuleOfStoryConstants {
         "subData": [
           {
             "key": "comment",
-            "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+            "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
             "title": "Bình luận",
             "subTitle": "Đang bật với mọi tin",
             "iconNext": ""
           },
           {
             "key": "story_you_turn_off",
-            "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+            "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
             "title": "Tin bạn đã tắt",
             "iconNext": SettingConstants.NEXT_ICON_DATA
           },
           {
             "key": "always_share_on_instagram",
-            "icon": SettingConstants.PATH_ICON + "bell_icon.svg",
+            "icon": "${SettingConstants.PATH_ICON}bell_icon.svg",
             "title": "Luôn chia sẻ lên Instagram",
             "subTitle": "Tự động chia sẻ tin trên Emso lên Instagram",
             "iconNext": ""

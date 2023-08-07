@@ -27,9 +27,9 @@ class BlockPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             BackIconAppbar(),
             AppBarTitle(title: BlockConstants.BLOCK_APPBAR_TITLE),
             SizedBox(),
@@ -48,7 +48,7 @@ class BlockPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               // color: Colors.grey[900],
               child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.symmetric(vertical: 5),
                 children: [
                   // title
                   Padding(
@@ -63,8 +63,8 @@ class BlockPage extends StatelessWidget {
                       prefixWidget: Container(
                           height: 40,
                           width: 40,
-                          padding: EdgeInsets.all(10),
-                          margin: EdgeInsets.only(right: 10),
+                          padding: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.only(right: 10),
                           child: SvgPicture.asset(
                             BlockConstants.BLOCK_SEE_BLOCK_LIST["icon"],
                             color: Colors.blue,
@@ -76,7 +76,7 @@ class BlockPage extends StatelessWidget {
                     [
                       Text(
                         BlockConstants.BLOCK_ADD_TO_BLOCK_LIST["title"],
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.blue,
                             fontSize: 17,
                             fontWeight: FontWeight.bold),
@@ -85,19 +85,19 @@ class BlockPage extends StatelessWidget {
                     prefixWidget: Container(
                         height: 40,
                         width: 40,
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                             color: Colors.blue[200],
                             borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        margin: EdgeInsets.only(right: 10),
+                                const BorderRadius.all(Radius.circular(20))),
+                        margin: const EdgeInsets.only(right: 10),
                         child: SvgPicture.asset(
                           BlockConstants.BLOCK_SEE_BLOCK_LIST["icon"],
                           color: Colors.blue,
                         )),
                     changeBackground: Colors.grey[300],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   GeneralComponent(
@@ -111,12 +111,12 @@ class BlockPage extends StatelessWidget {
                     prefixWidget: Container(
                         height: 40,
                         width: 40,
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                             color: Colors.grey[300],
                             borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        margin: EdgeInsets.only(right: 10),
+                                const BorderRadius.all(Radius.circular(20))),
+                        margin: const EdgeInsets.only(right: 10),
                         child: SvgPicture.asset(
                           BlockConstants.BLOCK_SEE_BLOCK_LIST["icon"],
                           color: Colors.blue,
@@ -125,7 +125,7 @@ class BlockPage extends StatelessWidget {
                   ),
                   //////////////////////////////////////////////////////////// xem danh sach chan thi hien ra component ben duoi //////////////////////////////////////////////
                   Container(
-                    margin: EdgeInsets.only(top: 10),
+                    margin: const EdgeInsets.only(top: 10),
                     child: GeneralComponent(
                       [
                         buildTextContent("Nguyen Van A", false),
@@ -134,13 +134,13 @@ class BlockPage extends StatelessWidget {
                           height: 40,
                           width: 40,
                           // padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                               // color: Colors.grey[800],
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20))),
-                          margin: EdgeInsets.only(right: 10),
+                          margin: const EdgeInsets.only(right: 10),
                           child: Image.asset(
-                            SettingConstants.PATH_IMG + "cat_1.png",
+                            "${SettingConstants.PATH_IMG}cat_1.png",
                             // color: Colors.blue,
                           )),
                       suffixWidget: ElevatedButton(

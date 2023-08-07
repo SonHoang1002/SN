@@ -192,7 +192,7 @@ class ConfirmLoginConstants {
     "Mã đã được gửi đến điện thoại của bạn. Hãy nhập mã đó tại đây."
   ];
   static Map<String, dynamic> CONFIRM_LOGIN_USER = {
-    "icon": LoginConstants.PATH_IMG + "example_cover_img_1.jpg",
+    "icon": "${LoginConstants.PATH_IMG}example_cover_img_1.jpg",
     "title": "Sam Smiths",
     "subTitle": "Người dùng Emso Network"
   };

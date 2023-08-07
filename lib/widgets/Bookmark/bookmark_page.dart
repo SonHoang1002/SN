@@ -130,8 +130,8 @@ class _BookmarkPageState extends ConsumerState<BookmarkPage> {
                 children: [
                   FolderItem(
                     handleAction: handleAction,
-                    item: {
-                      "icon": const Icon(
+                    item: const {
+                      "icon": Icon(
                         FontAwesomeIcons.plus,
                         size: 20,
                         color: Colors.black87,
@@ -242,8 +242,8 @@ class _AlertDialogState extends ConsumerState<CustomAlertDialog> {
   @override
   Widget build(BuildContext context) {
     return CupertinoAlertDialog(
-      title: Column(
-        children: const [
+      title: const Column(
+        children: [
           Text('Tạo bộ sưu tập'),
           TextDescription(description: "Đặt tên cho bộ sưu tập của bạn")
         ],

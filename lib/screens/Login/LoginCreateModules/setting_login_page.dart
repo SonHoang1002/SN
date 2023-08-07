@@ -9,7 +9,6 @@ import '../../../constant/common.dart';
 import '../../../helper/push_to_new_screen.dart';
 import '../../../storage/storage.dart';
 import '../../../theme/colors.dart';
-import '../../../widgets/Market/image_cache.dart';
 import '../../../widgets/back_icon_appbar.dart';
 import 'onboarding_login_page.dart';
 
@@ -89,7 +88,7 @@ class _SettingLoginPageState extends State<SettingLoginPage> {
           Expanded(
             child: Column(
               children: [
-                Container(
+                SizedBox(
                   height: 300,
                   // color: Colors.grey[800],
                   child: Column(

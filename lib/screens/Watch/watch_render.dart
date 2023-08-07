@@ -66,8 +66,10 @@ class _WatchRenderState extends ConsumerState<WatchRender>
         const CrossBar(
           height: 1,
         ),
-        if (['watch_home', 'watch_follow'].contains(menuSelected))
-          WatchHome(type: menuSelected, fetchDataWatch: fetchDataWatch)
+        if (menuSelected == 'watch_home')
+          WatchHome(type: menuSelected, fetchDataWatch: fetchDataWatch,isFocus : menuSelected == 'watch_home')
+          else if (menuSelected == 'watch_follow')
+          WatchHome(type: menuSelected, fetchDataWatch: fetchDataWatch,isFocus : menuSelected == 'watch_follow')
         else
           menuSelected == 'watch_saved' ? const WatchSaved() : const SizedBox()
       ],
