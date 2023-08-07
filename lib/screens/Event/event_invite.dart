@@ -15,6 +15,8 @@ import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'package:social_network_app_mobile/widgets/share_modal_bottom.dart';
 
+import '../../widgets/skeleton.dart';
+
 class EventInvite extends ConsumerStatefulWidget {
   final dynamic event;
   const EventInvite({Key? key, this.event}) : super(key: key);
@@ -83,7 +85,7 @@ class _EventInviteState extends ConsumerState<EventInvite> {
             const Padding(
               padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
               child: Text(
-                'Lời mời quan tâm dự án',
+                'Lời mời quan tâm sự kiện',
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
@@ -258,7 +260,7 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                               ),
                               buttonCard: Container(
                                 padding: const EdgeInsets.only(
-                                    bottom: 16.0, left: 16.0, right: 16.0),
+                                    bottom: 16.0, left: 15.5, right: 15.5),
                                 child: Row(
                                   children: [
                                     Align(
@@ -1146,7 +1148,7 @@ class _EventInviteState extends ConsumerState<EventInvite> {
             isLoading &&
                     (eventAction && events.isEmpty ||
                         !eventAction && eventsInviteHost.isEmpty)
-                ? const Center(child: CupertinoActivityIndicator())
+                ? Center(child: SkeletonCustom().eventSkeleton(context))
                 : (eventAction && events.isEmpty ||
                         !eventAction && eventsInviteHost.isEmpty)
                     ? Column(

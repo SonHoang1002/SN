@@ -12,6 +12,8 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:social_network_app_mobile/widgets/share_modal_bottom.dart';
 
+import '../../widgets/skeleton.dart';
+
 class RecruitCard extends ConsumerStatefulWidget {
   const RecruitCard({Key? key}) : super(key: key);
 
@@ -57,7 +59,7 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
     final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
-    return Expanded(
+    return Flexible(
         child: RefreshIndicator(
       onRefresh: () async {
         ref
@@ -168,7 +170,7 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                             ),
                             buttonCard: Container(
                               padding: const EdgeInsets.only(
-                                  bottom: 16.0, left: 16.0, right: 16.0),
+                                  bottom: 16.0, left: 15.5, right: 15.5),
                               child: Row(
                                 children: [
                                   Align(
@@ -314,7 +316,7 @@ class _RecruitCardState extends ConsumerState<RecruitCard> {
                   ))
                 : const SizedBox(),
             isMore == true
-                ? const Center(child: CupertinoActivityIndicator())
+                ? Center(child: SkeletonCustom().eventSkeleton(context))
                 : recruits.isEmpty
                     ? Column(
                         children: [

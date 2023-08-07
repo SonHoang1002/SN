@@ -11,6 +11,8 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
+import '../../widgets/skeleton.dart';
+
 class EventPast extends ConsumerStatefulWidget {
   final dynamic event;
   const EventPast({Key? key, this.event}) : super(key: key);
@@ -180,7 +182,7 @@ class _EventPastState extends ConsumerState<EventPast> {
                     ))
                   : const SizedBox(),
               isLoading && events.isEmpty || isMore == true
-                  ? const Center(child: CupertinoActivityIndicator())
+                  ?  Center(child: SkeletonCustom().eventSkeleton(context))
                   : events.isEmpty
                       ? Column(
                           children: [

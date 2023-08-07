@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 Decoration myBoxDec(animation, {isCircle = false}) {
   return BoxDecoration(
     shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+    borderRadius: isCircle? null : const BorderRadius.all(Radius.circular(15)),
     gradient: LinearGradient(
       begin: Alignment.centerLeft,
       end: Alignment.centerRight,
@@ -166,6 +167,7 @@ class _CardSkeletonState extends State<CardSkeleton>
 Decoration myDarkBoxDec(animation, {isCircle = false}) {
   return BoxDecoration(
     shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+    borderRadius: isCircle? null : const BorderRadius.all(Radius.circular(15)),
     gradient: LinearGradient(
       begin: Alignment.centerLeft,
       end: Alignment.centerRight,
@@ -1106,6 +1108,488 @@ class _CardSkeletonInListState extends State<CardSkeletonInList>
                     )
                   : const Offstage()
             ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class EventSkeleton extends StatefulWidget {
+  final bool isBottomLinesActive;
+  final bool isPaddingActive;
+  const EventSkeleton(
+      {super.key,
+      this.isBottomLinesActive = true,
+      this.isPaddingActive = true});
+  @override
+  // ignore: library_private_types_in_public_api
+  _EventSkeletonState createState() => _EventSkeletonState();
+}
+
+class _EventSkeletonState extends State<EventSkeleton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+
+    animation = Tween<double>(begin: -1.0, end: 2.0).animate(
+        CurvedAnimation(curve: Curves.easeInOutSine, parent: _controller));
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed ||
+          status == AnimationStatus.dismissed) {
+        _controller.repeat();
+      } else if (status == AnimationStatus.dismissed) {
+        _controller.forward();
+      }
+    });
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return Padding(
+          padding: widget.isPaddingActive
+              ? const EdgeInsets.symmetric(vertical: 16.0)
+              : const EdgeInsets.all(0),
+          child: Container(
+            width: width*1,
+            height: height*0.395,
+            color: Colors.white,
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const SizedBox(
+                  width: 10,
+                ),
+                SizedBox(
+                  height: height * 0.3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        height: height * 0.28,
+                      width: width * 0.9,
+                        decoration: myBoxDec(animation),
+                        
+                      ),
+                    ],
+                  ),
+                ),
+                widget.isBottomLinesActive
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Container(
+                            height: height * 0.01,
+                            width: width * 0.5,
+                            decoration: myBoxDec(animation),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: height * 0.01,
+                            width: width * 0.3,
+                            decoration: myBoxDec(animation),
+                          ),
+                        ],
+                      )
+                    : const Offstage()
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class DarkEventSkeleton extends StatefulWidget {
+  final bool isBottomLinesActive;
+  final bool isPaddingActive;
+  const DarkEventSkeleton(
+      {super.key,
+      this.isBottomLinesActive = true,
+      this.isPaddingActive = true});
+  @override
+  // ignore: library_private_types_in_public_api
+  _DarkEventSkeletonState createState() => _DarkEventSkeletonState();
+}
+
+class _DarkEventSkeletonState extends State<DarkEventSkeleton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+
+    animation = Tween<double>(begin: -1.0, end: 2.0).animate(
+        CurvedAnimation(curve: Curves.easeInOutSine, parent: _controller));
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed ||
+          status == AnimationStatus.dismissed) {
+        _controller.repeat();
+      } else if (status == AnimationStatus.dismissed) {
+        _controller.forward();
+      }
+    });
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return Padding(
+          padding: widget.isPaddingActive
+              ? const EdgeInsets.symmetric(vertical: 16.0)
+              : const EdgeInsets.all(0),
+          child: Container(
+            width: width*1,
+            height: height*0.395,
+            color: Colors.transparent,
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const SizedBox(
+                  width: 10,
+                ),
+                SizedBox(
+                    height: height * 0.3,
+                    child: Container(
+                      height: height * 0.28,
+                      width: width * 0.9,
+                      decoration: myDarkBoxDec(animation),
+                    ),
+                  ),
+                widget.isBottomLinesActive
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Container(
+                            height: height * 0.01,
+                            width: width * 0.5,
+                            decoration: myDarkBoxDec(animation),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: height * 0.01,
+                            width: width * 0.3,
+                            decoration: myDarkBoxDec(animation),
+                          ),
+                        ],
+                      )
+                    : const Offstage()
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class GrowSkeleton extends StatefulWidget {
+  final bool isBottomLinesActive;
+  final bool isPaddingActive;
+  const GrowSkeleton(
+      {super.key,
+      this.isBottomLinesActive = true,
+      this.isPaddingActive = true});
+  @override
+  // ignore: library_private_types_in_public_api
+  _GrowSkeletonState createState() => _GrowSkeletonState();
+}
+
+class _GrowSkeletonState extends State<GrowSkeleton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+
+    animation = Tween<double>(begin: -1.0, end: 2.0).animate(
+        CurvedAnimation(curve: Curves.easeInOutSine, parent: _controller));
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed ||
+          status == AnimationStatus.dismissed) {
+        _controller.repeat();
+      } else if (status == AnimationStatus.dismissed) {
+        _controller.forward();
+      }
+    });
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return Padding(
+          padding: widget.isPaddingActive
+              ? const EdgeInsets.symmetric(vertical: 16.0)
+              : const EdgeInsets.all(0),
+          child: Container(
+            width: width*1,
+            height: height*0.45,
+            color: Colors.white,
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const SizedBox(
+                  width: 10,
+                ),
+                SizedBox(
+                  height: height * 0.3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        height: height * 0.28,
+                      width: width * 0.9,
+                        decoration: myBoxDec(animation),
+                        
+                      ),
+                    ],
+                  ),
+                ),
+                widget.isBottomLinesActive
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Container(
+                            height: height * 0.01,
+                            width: width * 0.5,
+                            decoration: myBoxDec(animation),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: height * 0.01,
+                            width: width * 0.3,
+                            decoration: myBoxDec(animation),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: height * 0.015,
+                            width: width * 0.85,
+                            decoration: myBoxDec(animation),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: height * 0.007,
+                            width: width * 0.5,
+                            decoration: myBoxDec(animation),
+                          ),
+                        ],
+                      )
+                    : const Offstage()
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class DarkGrowSkeleton extends StatefulWidget {
+  final bool isBottomLinesActive;
+  final bool isPaddingActive;
+  const DarkGrowSkeleton(
+      {super.key,
+      this.isBottomLinesActive = true,
+      this.isPaddingActive = true});
+  @override
+  // ignore: library_private_types_in_public_api
+  _DarkGrowSkeletonState createState() => _DarkGrowSkeletonState();
+}
+
+class _DarkGrowSkeletonState extends State<DarkGrowSkeleton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+
+    animation = Tween<double>(begin: -1.0, end: 2.0).animate(
+        CurvedAnimation(curve: Curves.easeInOutSine, parent: _controller));
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed ||
+          status == AnimationStatus.dismissed) {
+        _controller.repeat();
+      } else if (status == AnimationStatus.dismissed) {
+        _controller.forward();
+      }
+    });
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var width = MediaQuery.sizeOf(context).width;
+    var height = MediaQuery.sizeOf(context).height;
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return Padding(
+          padding: widget.isPaddingActive
+              ? const EdgeInsets.symmetric(vertical: 16.0)
+              : const EdgeInsets.all(0),
+          child: Container(
+            width: width*1,
+            height: height*0.45,
+            color: Colors.transparent,
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const SizedBox(
+                  width: 10,
+                ),
+                SizedBox(
+                    height: height * 0.3,
+                    child: Container(
+                      height: height * 0.28,
+                      width: width * 0.9,
+                      decoration: myDarkBoxDec(animation),
+                    ),
+                  ),
+                widget.isBottomLinesActive
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Container(
+                            height: height * 0.01,
+                            width: width * 0.5,
+                            decoration: myDarkBoxDec(animation),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: height * 0.01,
+                            width: width * 0.3,
+                            decoration: myDarkBoxDec(animation),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: height * 0.015,
+                            width: width * 0.85,
+                            decoration: myDarkBoxDec(animation),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            height: height * 0.007,
+                            width: width * 0.5,
+                            decoration: myDarkBoxDec(animation),
+                          ),
+                        ],
+                      )
+                    : const Offstage()
+              ],
+            ),
           ),
         );
       },

@@ -11,6 +11,8 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:social_network_app_mobile/widgets/share_modal_bottom.dart';
 
+import '../../widgets/skeleton.dart';
+
 class LearnSpaceCard extends ConsumerStatefulWidget {
   const LearnSpaceCard({super.key});
 
@@ -509,7 +511,7 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                     ))
                   : const SizedBox(),
               isLoading && course.isEmpty || isMore == true
-                  ? const Center(child: CupertinoActivityIndicator())
+                  ?  Center(child: SkeletonCustom().eventSkeleton(context))
                   : course.isEmpty
                       ? Column(
                           children: [

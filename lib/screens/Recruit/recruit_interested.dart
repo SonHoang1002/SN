@@ -11,6 +11,7 @@ import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:social_network_app_mobile/widgets/share_modal_bottom.dart';
 
 import '../../constant/common.dart';
+import '../../widgets/skeleton.dart';
 
 class RecruitInterested extends ConsumerStatefulWidget {
   const RecruitInterested({super.key});
@@ -47,7 +48,7 @@ class _RecruitInterestedState extends ConsumerState<RecruitInterested> {
     final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
-    return Expanded(
+    return Flexible(
         child: RefreshIndicator(
       onRefresh: () async {
         ref
@@ -150,7 +151,7 @@ class _RecruitInterestedState extends ConsumerState<RecruitInterested> {
                           ),
                           buttonCard: Container(
                             padding: const EdgeInsets.only(
-                                bottom: 16.0, left: 16.0, right: 16.0),
+                                bottom: 16.0, left: 15.5, right: 15.5),
                             child: Row(
                               children: [
                                 Align(
@@ -287,7 +288,7 @@ class _RecruitInterestedState extends ConsumerState<RecruitInterested> {
                   ))
                 : const SizedBox(),
             isMore == true
-                ? const Center(child: CupertinoActivityIndicator())
+                ? Center(child: SkeletonCustom().eventSkeleton(context))
                 : recruits.isEmpty
                     ? Column(
                         children: [
