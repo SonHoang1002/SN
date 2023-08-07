@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+import 'package:provider/provider.dart' as pv;
 
 class PageActivity extends StatefulWidget {
   final dynamic data;
@@ -50,25 +52,25 @@ class _PageActivityState extends State<PageActivity> {
 
     List<TextSpan> textSpans = [];
     List<String> words = description.split(' ');
-
+    final theme = pv.Provider.of<ThemeManager>(context);
     for (var word in words) {
       if (word.startsWith('[') && word.endsWith(']')) {
         String title = word.substring(1, word.length - 1);
         textSpans.add(
           TextSpan(
             text: title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: theme.isDarkMode ? Colors.white : Colors.black),
           ),
         );
       } else {
         textSpans.add(
           TextSpan(
             text: word,
-            style: const TextStyle(
-              fontWeight: FontWeight.normal,
-            ),
+            style: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: theme.isDarkMode ? Colors.white : Colors.black),
           ),
         );
       }
@@ -123,6 +125,7 @@ class _PageActivityState extends State<PageActivity> {
       ),
       body: ListView.builder(
           itemCount: data.length,
+          shrinkWrap: true,
           itemBuilder: (context, index) {
             return ListTile(
                 contentPadding:

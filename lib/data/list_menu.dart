@@ -279,3 +279,8 @@ List musicMenu = [
     "icon": "",
   }
 ];
+List pageUsersType = [
+  {"key": "like", "label": "Những người thích Trang này"},
+  {"key": "follower", "label": "Những người theo dõi Trang này"},
+  {"key": "blocked", "label": "Những người bị cấm trên Trang này"},
+];

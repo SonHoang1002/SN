@@ -146,6 +146,14 @@ class PageApi {
     return await Api().postRequestBase('/api/v1/block_pages', params);
   }
 
+  Future getSettingsPage(id) async {
+    return await Api().getRequestBase('/api/v1/pages/$id/settings', null);
+  }
+
+  Future updateSettingsPage(id, data) async {
+    return await Api().patchRequestBase('/api/v1/pages/$id/settings', data);
+  }
+
   Future<http.Response> createPage(data) async {
     // return await Api().postRequestBase("/api/v1/pages", params);
     var token = await SecureStorage().getKeyStorage("token");
