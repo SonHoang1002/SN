@@ -12,6 +12,8 @@ import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:social_network_app_mobile/widgets/share_modal_bottom.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
+import '../../widgets/skeleton.dart';
+
 class GrowCard extends ConsumerStatefulWidget {
   const GrowCard({Key? key}) : super(key: key);
   @override
@@ -58,7 +60,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
     final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
-    return Expanded(
+    return Flexible(
       child: RefreshIndicator(
         onRefresh: () async {
           ref
@@ -145,7 +147,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                                   Padding(
                                     padding: const EdgeInsets.all(2.0),
                                     child: Text(
-                                      'Cam kết mục tiêu ${(convertNumberToVND(grows[indexInteresting]?['target_value'] )~/ 1)} VNĐ',
+                                      'Cam kết mục tiêu ${convertNumberToVND(grows[indexInteresting]?['target_value'] ~/ 1)} VNĐ',
                                       style: const TextStyle(
                                         fontSize: 12.0,
                                         color: greyColor,
@@ -244,7 +246,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                             ),
                             buttonCard: Container(
                               padding: const EdgeInsets.only(
-                                  bottom: 16.0, left: 16.0, right: 16.0),
+                                  bottom: 16.0, left: 15.5, right: 15.5),
                               child: Row(
                                 children: [
                                   Align(
@@ -384,7 +386,7 @@ class _GrowCardState extends ConsumerState<GrowCard> {
                     ))
                   : const SizedBox(),
               isMore == true
-                  ? const Center(child: CupertinoActivityIndicator())
+                  ? Center(child: SkeletonCustom().growSkeleton(context))
                   : grows.isEmpty
                       ? Column(
                           children: [

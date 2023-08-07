@@ -9,6 +9,8 @@ import 'package:social_network_app_mobile/screens/Grows/grow_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
 
+import '../../widgets/skeleton.dart';
+
 class GrowHost extends ConsumerStatefulWidget {
   const GrowHost({Key? key}) : super(key: key);
 
@@ -72,7 +74,7 @@ class _GrowHostState extends ConsumerState<GrowHost> {
     List growsUpcoming = ref.watch(growControllerProvider).growsUpcoming;
     List growsPast = ref.watch(growControllerProvider).growsPast;
     bool isMore = ref.watch(growControllerProvider).isMore;
-    return Expanded(
+    return Flexible(
       child: RefreshIndicator(
         onRefresh: () async {
           growHost == 'now'
@@ -554,7 +556,7 @@ class _GrowHostState extends ConsumerState<GrowHost> {
                               growHost == 'now' && grows.isEmpty ||
                               growHost == 'past' && growsPast.isEmpty) ||
                       isMore == true
-                  ? const Center(child: CupertinoActivityIndicator())
+                  ? Center(child: SkeletonCustom().growSkeleton(context))
                   : growHost == 'upcoming' && growsUpcoming.isEmpty ||
                           growHost == 'now' && grows.isEmpty ||
                           growHost == 'past' && growsPast.isEmpty

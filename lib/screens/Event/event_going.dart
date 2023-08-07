@@ -15,6 +15,8 @@ import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/share_modal_bottom.dart';
 
+import '../../widgets/skeleton.dart';
+
 class EventGoing extends ConsumerStatefulWidget {
   final dynamic event;
   const EventGoing({Key? key, this.event}) : super(key: key);
@@ -167,7 +169,7 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                             ),
                             buttonCard: Container(
                               padding: const EdgeInsets.only(
-                                  bottom: 16.0, right: 16.0, left: 16.0),
+                                  bottom: 16.0, right: 15.5, left: 15.5),
                               child: Row(
                                 children: [
                                   Align(
@@ -541,7 +543,7 @@ class _EventGoingState extends ConsumerState<EventGoing> {
                     ))
                   : const SizedBox(),
               isLoading && events.isEmpty || isMore == true
-                  ? const Center(child: CupertinoActivityIndicator())
+                  ? Center(child: SkeletonCustom().eventSkeleton(context))
                   : events.isEmpty
                       ? Column(
                           children: [

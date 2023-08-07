@@ -12,6 +12,7 @@ import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:social_network_app_mobile/widgets/share_modal_bottom.dart';
 
 import '../../constant/common.dart';
+import '../../widgets/skeleton.dart';
 
 class LearnSpaceInvitations extends ConsumerStatefulWidget {
   const LearnSpaceInvitations({Key? key}) : super(key: key);
@@ -604,7 +605,7 @@ class _LearnSpaceInvitationsState extends ConsumerState<LearnSpaceInvitations> {
                   ))
                 : const SizedBox(),
             isMore == true
-                ? const Center(child: CupertinoActivityIndicator())
+                ? Center(child: SkeletonCustom().eventSkeleton(context))
                 : courseInvitations.isEmpty
                     ? Column(
                         children: [

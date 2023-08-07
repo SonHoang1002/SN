@@ -8,6 +8,8 @@ import 'package:social_network_app_mobile/screens/Post/post.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 
+import '../../../widgets/skeleton.dart';
+
 class GroupFeedAll extends ConsumerStatefulWidget {
   const GroupFeedAll({super.key});
 
@@ -112,8 +114,16 @@ class _GroupFeedAllState extends ConsumerState<GroupFeedAll> {
                       ))),
           const CrossBar(),
           groupFeed.isEmpty
-              ? const Center(
-                  child: CircularProgressIndicator(),
+              ? Center(
+                  child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: 4,
+                    itemBuilder: (context, i) {
+                      return Center(
+                        child: SkeletonCustom().postSkeleton(context),
+                      );
+                    })
                 )
               : SizedBox(
                   child: ListView.builder(
