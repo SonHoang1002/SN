@@ -44,9 +44,11 @@ class _EventInterestedState extends ConsumerState<EventInterested> {
 
   void fetchData(params) async {
     await ref.read(eventControllerProvider.notifier).getListEventOwner(params);
-    setState(() {
+    if(mounted){
+      setState(() {
       isLoading = false;
     });
+    }
   }
 
   @override
