@@ -41,7 +41,7 @@ class _PageGeneralSettingsState extends ConsumerState<PageGeneralSettings> {
     'public': 'Bất kỳ người dùng nào',
     'over17': 'Người dùng trên 17 tuổi',
     'over18': 'Người dùng trên 18 tuổi',
-    'over19': 'Người dùng trên 19 tuổi',
+    'over21': 'Người dùng trên 21 tuổi',
   };
   dynamic _filterSelection;
   @override
@@ -253,7 +253,7 @@ class _PageGeneralSettingsState extends ConsumerState<PageGeneralSettings> {
                     ],
                   ),
                 ),
-                const Text(
+                /* const Text(
                   "Gỡ trang",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                 ),
@@ -304,7 +304,7 @@ class _PageGeneralSettingsState extends ConsumerState<PageGeneralSettings> {
                       );
                     });
                   },
-                ),
+                ), */
               ],
             ),
           ),

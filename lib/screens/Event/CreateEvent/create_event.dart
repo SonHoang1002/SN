@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -117,6 +118,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
       'start_time': selectedDateTime.toString(),
       'end_time': endDateTime?.toString(),
       'event_type': 'offline',
+      'category_id': categorySelected[0]["id"],
       'id':
           checkinSelected.isNotEmpty ? checkinSelected[0]['id'].toString() : '',
       'address':
