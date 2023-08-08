@@ -11,6 +11,7 @@ import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:social_network_app_mobile/widgets/share_modal_bottom.dart';
 
 import '../../constant/common.dart';
+import '../../widgets/skeleton.dart';
 
 class RecruitNews extends ConsumerStatefulWidget {
   const RecruitNews({super.key});
@@ -81,7 +82,7 @@ class _RecruitNewsState extends ConsumerState<RecruitNews> {
     final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
-    return Expanded(
+    return Flexible(
       child: RefreshIndicator(
         onRefresh: () async {
           !recruitStatus
@@ -413,7 +414,7 @@ class _RecruitNewsState extends ConsumerState<RecruitNews> {
                           }))
                   : const SizedBox(),
               isLoading && recruits.isEmpty || isMore == true
-                  ? const Center(child: CupertinoActivityIndicator())
+                  ? Center(child: SkeletonCustom().eventSkeleton(context))
                   : recruits.isEmpty
                       ? Column(
                           children: [

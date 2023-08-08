@@ -15,6 +15,8 @@ import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:social_network_app_mobile/widgets/modal_invite_friend.dart';
 import 'package:social_network_app_mobile/widgets/share_modal_bottom.dart';
 
+import '../../widgets/skeleton.dart';
+
 class EventHost extends ConsumerStatefulWidget {
   final dynamic event;
   const EventHost({Key? key, this.event}) : super(key: key);
@@ -590,7 +592,7 @@ class _EventHostState extends ConsumerState<EventHost> {
                           (eventHost && events.isEmpty ||
                               !eventHost && eventPast.isEmpty) ||
                       isMore == true
-                  ? const Center(child: CupertinoActivityIndicator())
+                  ? Center(child: SkeletonCustom().eventSkeleton(context))
                   : (eventHost && events.isEmpty ||
                           !eventHost && eventPast.isEmpty)
                       ? Column(

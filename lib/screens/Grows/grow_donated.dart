@@ -11,6 +11,8 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:social_network_app_mobile/widgets/share_modal_bottom.dart';
 
+import '../../widgets/skeleton.dart';
+
 class GrowDonated extends ConsumerStatefulWidget {
   const GrowDonated({Key? key}) : super(key: key);
 
@@ -55,7 +57,7 @@ class _GrowDonatedState extends ConsumerState<GrowDonated> {
     List grows = ref.watch(growControllerProvider).growsDonated;
     bool isMore = ref.watch(growControllerProvider).isMore;
 
-    return Expanded(
+    return Flexible(
       child: RefreshIndicator(
         onRefresh: () async {
           fetchData(configParams);
@@ -160,7 +162,7 @@ class _GrowDonatedState extends ConsumerState<GrowDonated> {
                               ),
                               buttonCard: Container(
                                 padding: const EdgeInsets.only(
-                                    bottom: 16.0, left: 16.0, right: 16.0),
+                                    bottom: 16.0, left: 15.5, right: 15.5),
                                 child: Row(
                                   children: [
                                     Align(
@@ -302,7 +304,7 @@ class _GrowDonatedState extends ConsumerState<GrowDonated> {
               ],
             ),
             loading && grows.isEmpty || isMore == true
-                ? const Center(child: CupertinoActivityIndicator())
+                ? Center(child: SkeletonCustom().eventSkeleton(context))
                 : grows.isEmpty
                     ? Column(
                         children: [

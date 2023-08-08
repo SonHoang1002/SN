@@ -11,6 +11,7 @@ import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:social_network_app_mobile/widgets/share_modal_bottom.dart';
 
 import '../../constant/common.dart';
+import '../../widgets/skeleton.dart';
 
 class LearnSpaceInterested extends ConsumerStatefulWidget {
   const LearnSpaceInterested({Key? key}) : super(key: key);
@@ -167,7 +168,7 @@ class _LearnSpaceInterestedState extends ConsumerState<LearnSpaceInterested> {
                           ),
                           buttonCard: Container(
                             padding: const EdgeInsets.only(
-                                bottom: 16.0, left: 16.0, right: 16.0),
+                                bottom: 16.0, left: 15.5, right: 15.5),
                             child: Row(
                               children: [
                                 Align(
@@ -303,7 +304,7 @@ class _LearnSpaceInterestedState extends ConsumerState<LearnSpaceInterested> {
                   ))
                 : const SizedBox(),
             isLoading && course.isEmpty || isMore == true
-                ? const Center(child: CupertinoActivityIndicator())
+                ? Center(child: SkeletonCustom().eventSkeleton(context))
                 : course.isEmpty
                     ? Column(
                         children: [

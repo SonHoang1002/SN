@@ -52,4 +52,30 @@ class SkeletonCustom {
             isPaddingActive: false,
           );
   }
+  
+  eventSkeleton(context) {
+    final theme = Provider.of<ThemeManager>(context);
+    String modeTheme = theme.themeMode == ThemeMode.dark
+        ? 'dark'
+        : theme.themeMode == ThemeMode.light
+            ? 'light'
+            : 'system';
+
+    return modeTheme == 'dark'
+        ? const DarkEventSkeleton()
+        : const EventSkeleton();
+  }
+
+  growSkeleton(context) {
+    final theme = Provider.of<ThemeManager>(context);
+    String modeTheme = theme.themeMode == ThemeMode.dark
+        ? 'dark'
+        : theme.themeMode == ThemeMode.light
+            ? 'light'
+            : 'system';
+
+    return modeTheme == 'dark'
+        ? const DarkGrowSkeleton()
+        : const GrowSkeleton();
+  }
 }

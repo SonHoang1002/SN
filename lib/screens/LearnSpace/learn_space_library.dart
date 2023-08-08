@@ -12,6 +12,8 @@ import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
 
+import '../../widgets/skeleton.dart';
+
 class LearnSpaceLibrary extends ConsumerStatefulWidget {
   const LearnSpaceLibrary({super.key});
 
@@ -85,8 +87,8 @@ class _LearnSpaceLibraryState extends ConsumerState<LearnSpaceLibrary> {
                   ),
                 ),
                 isLoading && courseLibrary.isEmpty
-                    ? const Center(
-                        child: CupertinoActivityIndicator(),
+                    ? Center(
+                        child: SkeletonCustom().eventSkeleton(context),
                       )
                     : courseLibrary.isEmpty
                         ? const Padding(

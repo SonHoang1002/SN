@@ -15,6 +15,8 @@ import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/share_modal_bottom.dart';
 
+import '../../widgets/skeleton.dart';
+
 class GrowInvite extends ConsumerStatefulWidget {
   final dynamic event;
   const GrowInvite({Key? key, this.event}) : super(key: key);
@@ -49,9 +51,11 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
     await ref
         .read(growControllerProvider.notifier)
         .getListGrowsInvite(paramsConfig);
-    setState(() {
-      loading = false;
-    });
+    if (mounted) {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   void _fetchGetListInviteHost() async {
@@ -76,7 +80,7 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
     final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
-    return Expanded(
+    return Flexible(
       child: RefreshIndicator(
         onRefresh: () async {
           eventAction ? _fetchGetListInvite() : _fetchGetListInviteHost();
@@ -257,7 +261,7 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                               ),
                               buttonCard: Container(
                                 padding: const EdgeInsets.only(
-                                    bottom: 16.0, left: 16.0, right: 16.0),
+                                    bottom: 16.0, left: 15.5, right: 15.5),
                                 child: Row(
                                   children: [
                                     Align(
@@ -827,7 +831,7 @@ class _GrowInviteState extends ConsumerState<GrowInvite> {
                         (eventAction && grows.isEmpty ||
                             !eventAction && growsInviteHost.isEmpty) ||
                     isMore == true
-                ? const Center(child: CupertinoActivityIndicator())
+                ? Center(child: SkeletonCustom().eventSkeleton(context))
                 : eventAction && grows.isEmpty ||
                         !eventAction && growsInviteHost.isEmpty
                     ? Column(

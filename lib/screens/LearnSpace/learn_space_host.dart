@@ -9,6 +9,8 @@ import 'package:social_network_app_mobile/screens/LearnSpace/learn_space_detail.
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
 
+import '../../widgets/skeleton.dart';
+
 class LearnSpaceHost extends ConsumerStatefulWidget {
   const LearnSpaceHost({Key? key}) : super(key: key);
 
@@ -186,7 +188,7 @@ class _LearnSpaceHostState extends ConsumerState<LearnSpaceHost> {
                   ))
                 : const SizedBox(),
             isLoading && course.isEmpty || isMore == true
-                ? const Center(child: CupertinoActivityIndicator())
+                ? Center(child: SkeletonCustom().eventSkeleton(context))
                 : course.isEmpty
                     ? Column(
                         children: [
