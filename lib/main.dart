@@ -6,7 +6,6 @@ import 'package:social_network_app_mobile/app.dart';
 import 'package:social_network_app_mobile/services/isar_post_service.dart';
 import 'package:social_network_app_mobile/services/notification_service.dart';
 
- 
 void main() async {
   // if (!Platform.isWindows) {
   //   WidgetsFlutterBinding.ensureInitialized();
@@ -22,8 +21,8 @@ void main() async {
     const ProviderScope(
       child: App(),
     ),
-  );
-  await IsarPostService().resetPostIsar();
+  ); 
+    await IsarPostService().getEarlyPost();
 }
 
 class MyHttpOverrides extends HttpOverrides {

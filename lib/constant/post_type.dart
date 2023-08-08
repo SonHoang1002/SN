@@ -21,6 +21,7 @@ String postMoment = 'moment';
 //Type create update post
 String feedPost = 'feed_post_upload';
 String postPageUser = 'post_page_user';
+String postAnotherPageUser = "post_another_page_user";
 String postReblog = 'reblog';
 String postDetail = 'post_detail';
 String postDetailFromFeed = 'post_detail_from_feed';

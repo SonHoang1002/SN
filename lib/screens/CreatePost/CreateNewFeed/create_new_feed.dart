@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -7,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:social_network_app_mobile/apis/create_post_apis/preview_url_post_api.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
@@ -68,13 +71,17 @@ class CreateNewFeed extends ConsumerStatefulWidget {
   final dynamic postDiscussion;
   final dynamic pageData;
   final Function? reloadFunction;
+  // This is used to create post in friend wall (must allow to create post from friend)
+  final dynamic friendData;
+
   const CreateNewFeed(
       {Key? key,
       this.post,
       this.type,
       this.postDiscussion,
       this.reloadFunction,
-      this.pageData})
+      this.pageData,
+      this.friendData})
       : super(key: key);
 
   @override
@@ -112,6 +119,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   final GlobalKey _heightKey = GlobalKey();
   bool _isClickForCreatePost = false;
+  final FocusNode _focusNode = FocusNode();
   @override
   void initState() {
     super.initState();
@@ -304,7 +312,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         setState(() {
           files = newFiles;
           _isShow = false;
-        }); 
+        });
         break;
       case 'update_file_description':
         setState(() {
@@ -504,9 +512,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             ? widget.reloadFunction!(null, null)
             : null;
       } else {
-        ref
-            .read(postControllerProvider.notifier)
-            .createUpdatePost(type, _createFakeData());
+        ref.read(postControllerProvider.notifier).createUpdatePost(
+            type, _createFakeData(),
+            isIdCurrentUser: widget.friendData['id'] ==
+                ref.watch(meControllerProvider)[0]['id']);
         widget.reloadFunction != null
             ? widget.reloadFunction!(null, null)
             : null;
@@ -571,6 +580,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       if (widget.pageData != null) {
         data['page_id'] = widget.pageData['id'];
         data['page_owner_id'] = widget.pageData['id'];
+      }
+      if (widget.friendData != null) {
+        data['target_account_id'] = widget.friendData['id'];
       }
       var response = await PostApi().createStatus(data);
       if (response != null) {
@@ -666,9 +678,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           .read(learnSpaceStateControllerProvider.notifier)
           .actionUpdateDetailInPost(widget.type, response);
     } else {
-      ref
-          .read(postControllerProvider.notifier)
-          .actionUpdateDetailInPost(widget.type, response);
+      ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+          widget.type, response,
+          isIdCurrentUser: widget.friendData['id'] ==
+              ref.watch(meControllerProvider)[0]['id']);
     }
 
     if (response != null && mounted) {
@@ -720,7 +733,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     }
   }
 
-  handleChooseMenu(menu, subType) {
+  handleChooseMenu(menu, subType) async {
     if (menu == null) return;
     if (menu['key'] == 'media') {
       Navigator.push(
@@ -759,9 +772,29 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       case 'live-video':
         break;
       case 'bg-color':
-        break;
+        setState(() {
+          _isShow = false;
+        });
+        _focusNode.requestFocus();
+        return;
       case 'camera':
-        break;
+        final imageData =
+            await ImagePicker().pickImage(source: ImageSource.camera);
+        final size = MediaQuery.sizeOf(context);
+        if (imageData != null) {
+          List newFiles = [];
+          newFiles.add({
+            "file": File(imageData.path),
+            "aspect": size.height / size.width,
+            "type": "image",
+            "subType": "local",
+          });
+          setState(() {
+            files = newFiles;
+            _isShow = false;
+          });
+        }
+        return;
       case 'tag-people':
         body = FriendTag(
             friendsPrePage: friendSelected, handleUpdateData: handleUpdateData);
@@ -1035,8 +1068,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                 backgroundSelected: files.isNotEmpty || checkin != null
                     ? null
                     : backgroundSelected,
+                focusNode: _focusNode,
                 handleUpdateData: handleUpdateData,
                 handleGetPreviewUrl: handleGetPreviewUrl,
+                friendData: widget.friendData,
                 pageData: widget.pageData),
             previewUrlData != null
                 ? PreviewUrlPost(

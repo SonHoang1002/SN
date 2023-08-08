@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,8 +24,13 @@ class PostHeaderAction extends ConsumerStatefulWidget {
   final dynamic post;
   final String type;
   final Function? reloadFunction;
+  final dynamic friendData;
   const PostHeaderAction(
-      {Key? key, this.post, required this.type, this.reloadFunction})
+      {Key? key,
+      this.post,
+      required this.type,
+      this.reloadFunction,
+      this.friendData})
       : super(key: key);
 
   @override
@@ -131,6 +135,7 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         builder: (BuildContext context) => AlertDialogDelete(
               post: widget.post,
               type: widget.type,
+              friendData: widget.friendData,
             ));
   }
 
@@ -204,7 +209,7 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  CreateNewFeed(post: widget.post, type: widget.type)));
+                  CreateNewFeed(post: widget.post, type: widget.type,friendData: widget.friendData,)));
     }
   }
 
@@ -220,7 +225,8 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
             ? "Bỏ ghim bài viết"
             : "Ghim bài viết",
         "icon": FontAwesomeIcons.thumbtack,
-        "isShow": meData['id'] == widget.post['account']['id'],
+        "isShow": meData['id'] == widget.post['account']['id'] &&
+            widget.friendData == null,
       },
       {
         "key": widget.post['bookmarked'] != null && widget.post['bookmarked']
@@ -368,7 +374,9 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
 class AlertDialogDelete extends ConsumerWidget {
   final dynamic post;
   final String type;
-  const AlertDialogDelete({super.key, this.post, required this.type});
+  final dynamic friendData;
+  const AlertDialogDelete(
+      {super.key, this.post, required this.type, this.friendData});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -383,9 +391,10 @@ class AlertDialogDelete extends ConsumerWidget {
             .read(pageControllerProvider.notifier)
             .actionHiddenDeletePost(type, post);
       } else {
-        ref
-            .read(postControllerProvider.notifier)
-            .actionHiddenDeletePost(type, post);
+        ref.read(postControllerProvider.notifier).actionHiddenDeletePost(
+            type, post,
+            isIdCurrentUser:
+                friendData['id'] == ref.watch(meControllerProvider)[0]['id']);
       }
 
       if (response != null) {
