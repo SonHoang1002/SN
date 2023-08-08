@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screens/Post/PageReference/page_mention.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'package:social_network_app_mobile/widgets/page_visibility.dart';
@@ -19,6 +22,7 @@ class CreateFeedStatusHeader extends ConsumerStatefulWidget {
   final dynamic visibility;
   final Function? handleUpdateData;
   final dynamic entity;
+  final dynamic sharePostFriend;
 
   const CreateFeedStatusHeader(
       {Key? key,
@@ -27,7 +31,8 @@ class CreateFeedStatusHeader extends ConsumerStatefulWidget {
       this.friendSelected,
       this.visibility,
       this.handleUpdateData,
-      this.entity})
+      this.entity,
+      this.sharePostFriend})
       : super(key: key);
 
   @override
@@ -77,7 +82,7 @@ class _CreateFeedStatusHeaderState
                         : meData['display_name'],
                     style: TextStyle(
                         fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w800,
                         // overflow: TextOverflow.ellipsis,
                         color: Theme.of(context).textTheme.bodyLarge!.color),
                     children: [
@@ -99,6 +104,20 @@ class _CreateFeedStatusHeaderState
                           ? TextSpan(
                               text: widget.friendSelected![0]['display_name'])
                           : const TextSpan(),
+                      // widget.sharePostFriend != null &&
+                      //         widget.sharePostFriend['id'] != meData['id']
+                      //     ? TextSpan(children: [
+                      //         const WidgetSpan(child: Text(" đến ")),
+                      //         WidgetSpan(
+                      //             child: Text(
+                      //           widget.sharePostFriend['display_name'] ?? "",
+                      //           style: const TextStyle(
+                      //             fontSize: 14,
+                      //             fontWeight: FontWeight.w700,
+                      //           ),
+                      //         ))
+                      //       ])
+                      //     : const WidgetSpan(child: SizedBox()),
                       widget.friendSelected!.isNotEmpty &&
                               widget.friendSelected!.length >= 2
                           ? const TextSpan(
@@ -134,7 +153,10 @@ class _CreateFeedStatusHeaderState
             ),
             Row(
               children: [
-                widget.entity != null && widget.entity['entityType'] == 'group'
+                (widget.entity != null &&
+                            widget.entity['entityType'] == 'group') ||
+                        (widget.sharePostFriend != null &&
+                            widget.sharePostFriend['id'] != meData['id'])
                     ? Container(
                         padding: const EdgeInsets.all(4.0),
                         margin: const EdgeInsets.only(right: 8.0),
@@ -150,12 +172,14 @@ class _CreateFeedStatusHeaderState
                               color: greyColor,
                             ),
                             const SizedBox(
-                              width: 5,
+                              width: 7,
                             ),
-                            SizedBox(
-                              width: 80,
+                            Container(
+                              padding: const EdgeInsets.only(right: 3),
                               child: Text(
-                                widget.entity['title'],
+                                (widget.entity?['title']) ??
+                                    (widget.sharePostFriend?['display_name']) ??
+                                    "",
                                 style: const TextStyle(
                                     overflow: TextOverflow.ellipsis,
                                     fontSize: 12,

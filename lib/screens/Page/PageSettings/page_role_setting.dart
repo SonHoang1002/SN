@@ -431,7 +431,6 @@ class _PageRoleSettingsState extends ConsumerState<PageRoleSettings> {
         isHaveCloseButton: false,
         bgColor: Colors.grey[300], widget: StatefulBuilder(
       builder: (ctx, setStatefull) {
-        print(index);
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(

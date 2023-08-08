@@ -12,27 +12,38 @@ class PostState {
   final List postsPin;
   final bool isMore;
 
+  /// data of current user
   final List postUserPage;
   final bool isMoreUserPage;
+
+  /// data of another user
+  final List postAnotherUserPage;
+  final bool isMoreAnother;
 
   const PostState(
       {this.posts = const [],
       this.postUserPage = const [],
       this.postsPin = const [],
       this.isMore = true,
-      this.isMoreUserPage = true});
+      this.postAnotherUserPage = const [],
+      this.isMoreUserPage = true,
+      this.isMoreAnother = true});
 
   PostState copyWith(
       {List posts = const [],
       List postUserPage = const [],
       List postsPin = const [],
       bool isMore = true,
+      List postAnotherUserPage = const [],
+      bool isMoreAnother = true,
       bool isMoreUserPage = true}) {
     return PostState(
         posts: posts,
         postUserPage: postUserPage,
         postsPin: postsPin,
         isMore: isMore,
+        isMoreAnother: isMoreAnother,
+        postAnotherUserPage: postAnotherUserPage,
         isMoreUserPage: isMoreUserPage);
   }
 }
@@ -58,7 +69,8 @@ class PostController extends StateNotifier<PostState> {
           postsPin: state.postsPin,
           postUserPage: state.postUserPage,
           isMore: response.length < params['limit'] ? false : true,
-          // isMore: true,
+          postAnotherUserPage: state.postAnotherUserPage,
+          isMoreAnother: state.isMoreAnother,
           isMoreUserPage: state.isMoreUserPage);
     }
   }
@@ -83,6 +95,8 @@ class PostController extends StateNotifier<PostState> {
           postsPin: state.postsPin,
           postUserPage: state.postUserPage,
           isMore: true,
+          postAnotherUserPage: state.postAnotherUserPage,
+          isMoreAnother: state.isMoreAnother,
           isMoreUserPage: state.isMoreUserPage);
     }
   }
@@ -93,41 +107,44 @@ class PostController extends StateNotifier<PostState> {
           posts: checkObjectUniqueInList(state.posts + newData, 'id'),
           postsPin: state.postsPin,
           postUserPage: state.postUserPage,
+          postAnotherUserPage: state.postAnotherUserPage,
+          isMoreAnother: state.isMoreAnother,
           isMore: newData.length < params['limit'] ? false : true,
           isMoreUserPage: state.isMoreUserPage);
     }
   }
 
-  getListPostUserPage(accountId, params) async {
+  getListPostUserPage(bool isIdCurrentUser, accountId, params) async {
     List response = await UserPageApi().getListPostApi(accountId, params) ?? [];
     List newList = [];
     if (params["max_id"] != null) {
-      newList = checkObjectUniqueInList(state.postUserPage + response, 'id');
+      newList = checkObjectUniqueInList(
+          (isIdCurrentUser ? state.postUserPage : state.postAnotherUserPage) +
+              response,
+          'id');
     } else {
       newList = response;
     }
 
-    // List newList = [];
-    // List allDataList = [];
-    // allDataList.addAll(state.postUserPage);
-    // allDataList.addAll(response);
-    // for (int i = 0; i < allDataList.length; i++) {
-    //   List keyOfNewList = newList.map((element) => element['id']).toList();
-
-    //   if (!keyOfNewList.contains(allDataList[i]["id"])) {
-    //     newList.add(allDataList[i]);
-    //   }
-    // }
-
     if (mounted) {
       state = state.copyWith(
-          posts: state.posts,
-          postsPin: state.postsPin,
-          postUserPage: newList,
-          // postUserPage:
-          //     checkObjectUniqueInList(state.postUserPage + response, 'id'),
-          isMore: state.isMore,
-          isMoreUserPage: response.length < params['limit'] ? false : true);
+        posts: state.posts,
+        postsPin: state.postsPin,
+        postUserPage: isIdCurrentUser ? newList : state.postUserPage,
+        postAnotherUserPage:
+            !isIdCurrentUser ? newList : state.postAnotherUserPage,
+        isMore: state.isMore,
+        isMoreAnother: !isIdCurrentUser
+            ? response.length < params['limit']
+                ? false
+                : true
+            : state.isMoreAnother,
+        isMoreUserPage: isIdCurrentUser
+            ? response.length < params['limit']
+                ? false
+                : true
+            : state.isMoreUserPage,
+      );
       // isMoreUserPage: true);
     }
   }
@@ -140,11 +157,14 @@ class PostController extends StateNotifier<PostState> {
           posts: state.posts,
           isMore: state.isMore,
           postUserPage: state.postUserPage,
+          postAnotherUserPage: state.postAnotherUserPage,
+          isMoreAnother: state.isMoreAnother,
           isMoreUserPage: state.isMoreUserPage);
     }
   }
 
-  createUpdatePost(type, newPost) {
+  createUpdatePost(dynamic type, dynamic newPost,
+      {bool isIdCurrentUser = true}) {
     if (mounted) {
       state = state.copyWith(
           postsPin: state.postsPin,
@@ -152,16 +172,24 @@ class PostController extends StateNotifier<PostState> {
               ? [newPost] + state.posts
               : state.posts,
           isMore: state.isMore,
-          postUserPage: [feedPost, postPageUser].contains(type)
-              ? [newPost] + state.postUserPage
+          postUserPage: isIdCurrentUser == true
+              ? ([feedPost, postPageUser].contains(type))
+                  ? [newPost] + state.postUserPage
+                  : state.postUserPage
               : state.postUserPage,
+          postAnotherUserPage: isIdCurrentUser == false
+              ? ([feedPost, postPageUser].contains(type))
+                  ? [newPost] + state.postAnotherUserPage
+                  : state.postAnotherUserPage
+              : state.postAnotherUserPage,
+          isMoreAnother: state.isMoreAnother,
           isMoreUserPage: state.isMoreUserPage);
     }
   }
 
   // only apply for first post of list post from post screen
   // Recently, create post from feed or userpage also show other page. Therefore, we should update on two page
-  changeProcessingPost(dynamic newData) {
+  changeProcessingPost(dynamic newData, {bool isIdCurrentUser = true}) {
     if (mounted) {
       state = state.copyWith(
           postsPin: state.postsPin,
@@ -171,11 +199,21 @@ class PostController extends StateNotifier<PostState> {
             ...state.posts.sublist(1)
           ],
           isMore: state.isMore,
-          postUserPage: [
-            ...state.posts.sublist(0, 0),
-            newData,
-            ...state.posts.sublist(1)
-          ],
+          postUserPage: isIdCurrentUser == true
+              ? [
+                  ...state.postUserPage.sublist(0, 0),
+                  newData,
+                  ...state.postUserPage.sublist(1)
+                ]
+              : state.postUserPage,
+          postAnotherUserPage: isIdCurrentUser == false
+              ? [
+                  ...state.postAnotherUserPage.sublist(0, 0),
+                  newData,
+                  ...state.postAnotherUserPage.sublist(1)
+                ]
+              : state.postAnotherUserPage,
+          isMoreAnother: state.isMoreAnother,
           isMoreUserPage: state.isMoreUserPage);
     }
   }
@@ -190,6 +228,8 @@ class PostController extends StateNotifier<PostState> {
             ...state.posts.sublist(0, 0),
             ...state.posts.sublist(1)
           ],
+          postAnotherUserPage: state.postAnotherUserPage,
+          isMoreAnother: state.isMoreAnother,
           isMoreUserPage: state.isMoreUserPage);
     }
   }
@@ -209,6 +249,8 @@ class PostController extends StateNotifier<PostState> {
                   .where((element) => element['id'] != post['id'])
                   .toList()
               : [post] + state.postUserPage,
+          postAnotherUserPage: state.postAnotherUserPage,
+          isMoreAnother: state.isMoreAnother,
           isMoreUserPage: state.isMoreUserPage);
     }
   }
@@ -248,12 +290,14 @@ class PostController extends StateNotifier<PostState> {
                   ...state.postUserPage.sublist(index + 1)
                 ]
               : state.postUserPage,
+          postAnotherUserPage: state.postAnotherUserPage,
+          isMoreAnother: state.isMoreAnother,
           isMoreUserPage: state.isMoreUserPage);
     }
   }
 
   actionUpdateDetailInPost(dynamic type, dynamic data,
-      {dynamic preType}) async {
+      {dynamic preType, bool isIdCurrentUser = true}) async {
     int index = -1;
     if (type == feedPost ||
         (preType == postDetailFromFeed) ||
@@ -269,8 +313,13 @@ class PostController extends StateNotifier<PostState> {
           state.postsPin[index] = data;
         }
       }
-      index = state.postUserPage
-          .indexWhere((element) => element['id'] == data['id']);
+      if (isIdCurrentUser == true) {
+        index = state.postUserPage
+            .indexWhere((element) => element['id'] == data['id']);
+      } else {
+        index = state.postAnotherUserPage
+            .indexWhere((element) => element['id'] == data['id']);
+      }
     }
     if (index < 0) return;
 
@@ -287,20 +336,35 @@ class PostController extends StateNotifier<PostState> {
                 ]
               : state.posts,
           isMore: state.isMore,
-          postUserPage: type == postPageUser ||
-                  (preType != null && preType == postDetailFromUserPage) ||
-                  (type == postMultipleMedia && preType == postPageUser)
-              ? [
-                  ...state.postUserPage.sublist(0, index),
-                  data,
-                  ...state.postUserPage.sublist(index + 1)
-                ]
+          postUserPage: isIdCurrentUser == true
+              ? type == postPageUser ||
+                      (preType != null && preType == postDetailFromUserPage) ||
+                      (type == postMultipleMedia && preType == postPageUser)
+                  ? [
+                      ...state.postUserPage.sublist(0, index),
+                      data,
+                      ...state.postUserPage.sublist(index + 1)
+                    ]
+                  : state.postUserPage
               : state.postUserPage,
+          postAnotherUserPage: isIdCurrentUser == false
+              ? type == postPageUser ||
+                      (preType != null && preType == postDetailFromUserPage) ||
+                      (type == postMultipleMedia && preType == postPageUser)
+                  ? [
+                      ...state.postAnotherUserPage.sublist(0, index),
+                      data,
+                      ...state.postAnotherUserPage.sublist(index + 1)
+                    ]
+                  : state.postAnotherUserPage
+              : state.postAnotherUserPage,
+          isMoreAnother: state.isMoreAnother,
           isMoreUserPage: state.isMoreUserPage);
     }
   }
 
-  actionHiddenDeletePost(type, data) {
+  actionHiddenDeletePost(dynamic type, dynamic data,
+      {bool isIdCurrentUser = true}) {
     int index = -1;
     if (type == feedPost) {
       index = state.posts.indexWhere((element) => element['id'] == data['id']);
@@ -312,8 +376,13 @@ class PostController extends StateNotifier<PostState> {
           state.postsPin.removeAt(index);
         }
       }
-      index = state.postUserPage
-          .indexWhere((element) => element['id'] == data['id']);
+      if (isIdCurrentUser == true) {
+        index = state.postUserPage
+            .indexWhere((element) => element['id'] == data['id']);
+      } else {
+        index = state.postAnotherUserPage
+            .indexWhere((element) => element['id'] == data['id']);
+      }
     }
 
     if (index < 0) return;
@@ -327,12 +396,23 @@ class PostController extends StateNotifier<PostState> {
                 ]
               : state.posts,
           isMore: state.isMore,
-          postUserPage: type == postPageUser
-              ? [
-                  ...state.postUserPage.sublist(0, index),
-                  ...state.postUserPage.sublist(index + 1)
-                ]
-              : state.posts,
+          postUserPage: isIdCurrentUser == true
+              ? type == postPageUser
+                  ? [
+                      ...state.postUserPage.sublist(0, index),
+                      ...state.postUserPage.sublist(index + 1)
+                    ]
+                  : state.postUserPage
+              : state.postUserPage,
+          postAnotherUserPage: isIdCurrentUser == false
+              ? type == postPageUser
+                  ? [
+                      ...state.postAnotherUserPage.sublist(0, index),
+                      ...state.postAnotherUserPage.sublist(index + 1)
+                    ]
+                  : state.postUserPage
+              : state.postUserPage,
+          isMoreAnother: state.isMoreAnother,
           isMoreUserPage: state.isMoreUserPage);
     }
   }
@@ -389,6 +469,8 @@ class PostController extends StateNotifier<PostState> {
             posts: response,
             postsPin: state.postsPin,
             postUserPage: state.postUserPage,
+            postAnotherUserPage: state.postAnotherUserPage,
+            isMoreAnother: state.isMoreAnother,
             isMoreUserPage: state.isMoreUserPage,
             isMore: response.length < params['limit'] ? false : true);
       }
@@ -399,6 +481,8 @@ class PostController extends StateNotifier<PostState> {
             posts: response,
             postsPin: state.postsPin,
             postUserPage: state.postUserPage,
+            postAnotherUserPage: state.postAnotherUserPage,
+            isMoreAnother: state.isMoreAnother,
             isMoreUserPage: state.isMoreUserPage);
       }
     }
@@ -409,8 +493,10 @@ class PostController extends StateNotifier<PostState> {
       state = state.copyWith(
           isMore: true,
           posts: type == 'post' ? [] : state.posts,
-          postsPin: type == 'user' ? [] : state.posts,
-          postUserPage: type == 'user' ? [] : state.posts,
+          postsPin: type == 'user' ? [] : state.postsPin,
+          postUserPage: type == 'user' ? [] : state.postUserPage,
+          postAnotherUserPage: type == 'user' ? [] : state.postAnotherUserPage,
+          isMoreAnother: type == 'user' ? true : false,
           isMoreUserPage: type == 'user' ? true : false);
     }
   }

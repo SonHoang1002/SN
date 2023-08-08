@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
+import 'dart:developer' as developer;
 
 Function(int num) shortenLargeNumber = (int num) {
   if (num >= 1000000000) {
@@ -128,8 +132,6 @@ String formatTimeMediaPlayer(Duration duration) {
   return [if (duration.inHours > 0) hours, minutes, seconds].join(':');
 }
 
- 
-
 classifyTypeMessage(message) {
   if (message['urls'] != null && message['urls'].length > 0) {
     if (message['urls'].elementAt(0)["headers"] != null &&
@@ -227,6 +229,7 @@ String formatCurrency(dynamic number) {
 TextStyle customIbmPlexSans(TextStyle textStyle) {
   return GoogleFonts.ibmPlexSans(textStyle: textStyle);
 }
+
 // return media id list
 Future<List> uploadMedia(List<dynamic> mediaList) async {
   return Future.wait(mediaList.map((element) async {
@@ -238,3 +241,31 @@ Future<List> uploadMedia(List<dynamic> mediaList) async {
     return (response?["id"]).toString();
   }));
 }
+
+void consoleLog(String? name, dataLog, [StackTrace? stackTrace]) {
+  if (stackTrace != null) {
+    final traceString = stackTrace.toString().split('\n');
+    final lineNumber = traceString[1]
+        .split(RegExp(r' +'))[1]
+        .split(':')
+        .last; // Lấy số dòng từ chuỗi trace
+    final fileName =
+        traceString[1].split(RegExp(r' +'))[0]; // Lấy tên file từ chuỗi trace
+    try {
+      print(traceString[0].split(RegExp(r'[()]'))[1]);
+      developer.log(dataLog is String ? dataLog : jsonEncode(dataLog),
+          name: '');
+    } catch (e) {
+      print('Kiểu dữ liệu truyền vào không phù hợp');
+    }
+  } else {
+    try {
+      developer.log(dataLog is String ? dataLog : jsonEncode(dataLog),
+          name: name ?? 'log');
+    } catch (e) {
+      print('Kiểu dữ liệu truyền vào không phù hợp');
+    }
+  }
+}
+
+ 
