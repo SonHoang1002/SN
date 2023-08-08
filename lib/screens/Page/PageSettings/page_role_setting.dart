@@ -9,11 +9,14 @@ import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/providers/page/page_role_provider.dart';
+import 'package:social_network_app_mobile/screens/Page/PageSettings/custom_pop_up.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/widgets/Posts/opaque_cupertino_route.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
@@ -31,32 +34,34 @@ class PageRoleSettings extends ConsumerStatefulWidget {
 class _PageRoleSettingsState extends ConsumerState<PageRoleSettings> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
-  var filterUserList = [
-    "Quản trị viên",
-    "Người kiểm duyệt",
-  ];
+  Map<String, String> filterUserList = {
+    'moderator': 'Người kiểm duyệt',
+    'admin': 'Quản trị viên',
+  };
   dynamic _filterSelection;
   List<dynamic> searchResults = [];
   List<dynamic> listAdmin = [];
-  addToList(data) {
-    data["role"] = _controller.text;
-    if (listAdmin.contains(data) == false) {
-      setState(() {
-        listAdmin.add(data);
-      });
-    }
-  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _filterSelection = filterUserList[0];
-    _controller.text = filterUserList[0];
+    _filterSelection = 'admin';
+    _controller.text = filterUserList['admin']!;
+  }
+
+  bool haveInList(data) {
+    for (var i = 0; i < listAdmin.length; i++) {
+      if (listAdmin[i]["target_account"]["id"] == data["id"]) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @override
   Widget build(BuildContext context) {
+    listAdmin = ref.watch(pageRoleControllerProvider).accounts;
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -76,11 +81,11 @@ class _PageRoleSettingsState extends ConsumerState<PageRoleSettings> {
               const Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
         ),
         body: Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   "Chỉ định một vai trò mới trên Trang",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
@@ -115,12 +120,12 @@ class _PageRoleSettingsState extends ConsumerState<PageRoleSettings> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16),
                   child: Text(
                       "Có thể quản lý tất cả khía cạnh của Trang. Họ có thể đăng và gửi tin nhắn với tư cách Trang, trả lời và xóa bình luận trên Trang, tạo quảng cáo, xem những ai tạo bài viết hoặc bình luận, xem thông tin chi tiết và chỉ định vai trò trên Trang."),
                 ),
-                Text(
+                const Text(
                   "Quản trị viên và người kiểm duyệt",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
@@ -132,9 +137,13 @@ class _PageRoleSettingsState extends ConsumerState<PageRoleSettings> {
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
-                              buildAdminRoleActionBottomSheet(index);
+                              if (listAdmin[index]["status"] != "pending") {
+                                buildAdminRoleActionBottomSheet(index);
+                              }
                             },
-                            child: Padding(
+                            child: Container(
+                              color: Colors.transparent,
+                              width: MediaQuery.of(context).size.width,
                               padding:
                                   const EdgeInsets.symmetric(vertical: 10.0),
                               child: Row(
@@ -149,9 +158,11 @@ class _PageRoleSettingsState extends ConsumerState<PageRoleSettings> {
                                       AvatarSocial(
                                           width: 40,
                                           height: 40,
-                                          object: listAdmin[index],
-                                          path: listAdmin[index]['avatar_media']
-                                              ['preview_url']),
+                                          object: listAdmin[index]
+                                              ["target_account"],
+                                          path: listAdmin[index]
+                                                  ["target_account"]
+                                              ['avatar_media']['preview_url']),
                                       const SizedBox(
                                         width: 16,
                                       ),
@@ -162,28 +173,79 @@ class _PageRoleSettingsState extends ConsumerState<PageRoleSettings> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Text(
-                                            listAdmin[index]?['display_name'] ??
+                                            listAdmin[index]["target_account"]
+                                                    ?['display_name'] ??
                                                 'Không xác định',
                                             style: const TextStyle(
                                               fontWeight: FontWeight.w700,
                                               fontSize: 14,
                                             ),
                                           ),
-                                          Text(listAdmin[index]["role"])
+                                          Row(
+                                            children: [
+                                              Text(
+                                                filterUserList[listAdmin[index]
+                                                    ["role"]]!,
+                                                style: const TextStyle(
+                                                    fontSize: 12),
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              listAdmin[index]["status"] ==
+                                                      "pending"
+                                                  ? const Text(
+                                                      "Đang chờ",
+                                                      style: TextStyle(
+                                                          color: Colors.red,
+                                                          fontSize: 12),
+                                                    )
+                                                  : Container()
+                                            ],
+                                          )
                                         ],
                                       ),
                                     ],
                                   ),
-                                  ButtonPrimary(
-                                    label: 'Huỷ lời mời',
-                                    isGrey: true,
-                                    handlePress: () {
-                                      //Navigator.pop(context);
-                                      setState(() {
-                                        listAdmin.remove(listAdmin[index]);
-                                      });
-                                    },
-                                  ),
+                                  listAdmin[index]["status"] == "pending"
+                                      ? ButtonPrimary(
+                                          label: 'Huỷ lời mời',
+                                          isGrey: true,
+                                          handlePress: () async {
+                                            //Navigator.pop(context);
+
+                                            await showCupertinoModalPopup(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  CustomCupertinoAlertDialog(
+                                                title: 'Hủy yêu cầu',
+                                                content:
+                                                    'Bạn có chắc chắn muốn hủy người này làm quản lý Trang.',
+                                                cancelText: 'Huỷ',
+                                                confirmText: 'Xác nhận',
+                                                onCancel: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                onConfirm: () async {
+                                                  Navigator.pop(context);
+                                                  await PageApi()
+                                                      .removeInviteManagePage(
+                                                          widget.data["id"],
+                                                          listAdmin[index][
+                                                                  "target_account"]
+                                                              ["id"]);
+                                                  ref
+                                                      .read(
+                                                          pageRoleControllerProvider
+                                                              .notifier)
+                                                      .getInviteListPage(
+                                                          widget.data['id']);
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        )
+                                      : Container(),
                                 ],
                               ),
                             ),
@@ -200,45 +262,39 @@ class _PageRoleSettingsState extends ConsumerState<PageRoleSettings> {
         bgColor: Colors.grey[300], widget: StatefulBuilder(
       builder: (ctx, setStatefull) {
         return ListView.builder(
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            itemCount: filterUserList.length,
-            itemBuilder: (context, index) {
-              final data = filterUserList[index];
-              return InkWell(
-                child: Column(
-                  children: [
-                    GeneralComponent(
-                      [
-                        buildTextContent(data, true),
-                      ],
-                      changeBackground: transparent,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      suffixWidget: Radio(
-                        fillColor: MaterialStateColor.resolveWith(
-                            (states) => secondaryColor),
-                        groupValue: _filterSelection,
-                        value: data,
-                        onChanged: (value) async {
-                          setState(() {
-                            _filterSelection = data;
-                          });
-                          popToPreviousScreen(context);
-                        },
-                      ),
-                      function: () async {
-                        setState(() {
-                          _filterSelection = data;
-                          _controller.text = data;
-                        });
-                        popToPreviousScreen(context);
-                      },
-                    ),
-                    buildSpacer(height: 10)
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          itemCount: filterUserList.length,
+          itemBuilder: (context, index) {
+            final key = filterUserList.keys.elementAt(index);
+            final value = filterUserList[key]!;
+            return Column(
+              children: [
+                GeneralComponent(
+                  [
+                    buildTextContent(value, true),
                   ],
+                  changeBackground: transparent,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  suffixWidget: Radio(
+                    fillColor: MaterialStateColor.resolveWith(
+                        (states) => secondaryColor),
+                    groupValue: _filterSelection,
+                    value: key,
+                    onChanged: (value) async {
+                      setState(() {
+                        _filterSelection = key;
+                        _controller.text = filterUserList[_filterSelection]!;
+                      });
+                      popToPreviousScreen(context);
+                    },
+                  ),
                 ),
-              );
-            });
+                buildSpacer(height: 10)
+              ],
+            );
+          },
+        );
       },
     ));
   }
@@ -282,17 +338,51 @@ class _PageRoleSettingsState extends ConsumerState<PageRoleSettings> {
                   });
                 }),
               ),
-              Container(
+              SizedBox(
                 height: MediaQuery.of(context).size.height * 0.6,
                 child: ListView.builder(
-                    shrinkWrap: true,
                     padding: EdgeInsets.zero,
                     itemCount: searchResults.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                        onTap: () {
-                          addToList(searchResults[index]);
-                          Navigator.pop(context);
+                        onTap: () async {
+                          await showCupertinoModalPopup(
+                            context: context,
+                            builder: (BuildContext context) =>
+                                CustomCupertinoAlertDialog(
+                              title: 'Xác nhận lời mời',
+                              content:
+                                  'Bạn có chắc chắn muốn mời người này làm quản lý Trang.',
+                              cancelText: 'Huỷ',
+                              confirmText: 'Xác nhận',
+                              onCancel: () {
+                                Navigator.pop(context);
+                              },
+                              onConfirm: () async {
+                                Navigator.pop(context);
+                                var check = haveInList(searchResults[index]);
+                                if (check == false) {
+                                  await PageApi().sendInviteManagePage(
+                                      widget.data["id"], {
+                                    "target_account_id": searchResults[index]
+                                        ["id"],
+                                    "role": _filterSelection
+                                  });
+                                  ref
+                                      .read(pageRoleControllerProvider.notifier)
+                                      .getInviteListPage(widget.data['id']);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content:
+                                              Text("Tài khoản đã được thêm")));
+                                }
+                              },
+                            ),
+                          );
+                          if (mounted) {
+                            Navigator.pop(context);
+                          }
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -341,7 +431,6 @@ class _PageRoleSettingsState extends ConsumerState<PageRoleSettings> {
         isHaveCloseButton: false,
         bgColor: Colors.grey[300], widget: StatefulBuilder(
       builder: (ctx, setStatefull) {
-        print(index);
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(

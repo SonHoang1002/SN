@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/apis/page_api.dart';
+import 'package:social_network_app_mobile/providers/page/page_notification_provider.dart';
+import 'package:social_network_app_mobile/providers/page/page_role_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_settings_provider.dart';
 import 'package:social_network_app_mobile/screens/Page/PageEdit/page_activity.dart';
 import 'package:social_network_app_mobile/screens/Page/PageSettings/page_followers_setting.dart';
@@ -44,8 +48,14 @@ class _PageSettingsState extends ConsumerState<PageSettings> {
     var pSettings = PageSettingsState(
         visitor_posts: response["visitor_posts"] ?? "",
         age_restrictions: response["age_restrictions"],
-        cencored: List.from(widget.data["monitored_keywords"]));
+        cencored: widget.data["monitored_keywords"]);
     ref.read(pageSettingsControllerProvider.notifier).updateState(pSettings);
+    ref
+        .read(pageNotificationsControllerProvider.notifier)
+        .getNotificationsPage(widget.data['id']);
+    ref
+        .read(pageRoleControllerProvider.notifier)
+        .getInviteListPage(widget.data['id']);
   }
 
   void updatePageEllipsis() {

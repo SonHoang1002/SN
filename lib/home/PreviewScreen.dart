@@ -30,14 +30,17 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
                 MaterialPageRoute(builder: ((context) => const Home())));
           });
         } else {
-            SecureStorage().getKeyStorage("dataLogin").then((value) {
-            if(value.toString() == "[]" || value == "noData"){
-              Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: ((context) => const MainLoginPage(null))));
-            }
-            else{
-              Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: ((context) => const OnboardingLoginPage())));
+          SecureStorage().getKeyStorage("dataLogin").then((value) {
+            if (value.toString() == "[]" || value == "noData") {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: ((context) => const MainLoginPage(null))));
+            } else {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: ((context) => const OnboardingLoginPage())));
             }
           });
         }
@@ -46,31 +49,35 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child:
-              const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(
-              "Emso",
-              style: TextStyle(
-                  fontSize: 26,
-                  color: primaryColor,
-                  fontWeight: FontWeight.w700),
+      body: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(),
+          SizedBox(
+            child: Image.asset(
+              "assets/Logo_Preview.png",
+              height: 160.0,
+              width: 160.0,
             ),
-            Text(
-              "Social",
-              style: TextStyle(
-                  fontSize: 26,
-                  color: secondaryColor,
-                  fontWeight: FontWeight.w700),
-            )
-          ]),
+          ),
+         Align(
+          alignment: Alignment.bottomCenter,
+          child: Column(
+              children: [
+                const Text("From",style: TextStyle(color: greyColor),),
+                Image.asset(
+                  "assets/Logo_Producer.png",
+                  height: 70.0,
+                  width: 70.0,
+                ),
+              ],
+            ),
         ),
+        ],
       ),
     );
   }

@@ -8,7 +8,7 @@ class IsarPostService {
   Future<List> getPostsWithNumber(int number, dynamic lastPost) async {
     List postsOnIsar = await getAllPostsFromIsar();
     int indexOnIsar = postsOnIsar.indexWhere((e) => e['id'] == lastPost['id']);
-    if (indexOnIsar >= 0) { 
+    if (indexOnIsar >= 0) {
       // kiem tra xem trong isar co du so luong bai can khong
       if (indexOnIsar + number < (await getCountPostIsar())) {
         return [...postsOnIsar.sublist(indexOnIsar + 1, indexOnIsar + number)];
@@ -48,6 +48,23 @@ class IsarPostService {
       instance.writeTxn(() async {
         await instance.postModels.where().deleteAll();
       });
+    }
+  }
+
+  //
+  getEarlyPost() async {
+    final instance = await IsarService.instance;
+    if (instance.isOpen == true) {
+      final allPost = await instance.postModels.where().findAll();
+      if (allPost.length > 100) {
+        final early100Post = allPost.reversed.take(100).toList();
+        await resetPostIsar();
+        await instance.writeTxn(() async {
+          for (var post in early100Post) {
+            await instance.postModels.put(post);
+          }
+        });
+      }
     }
   }
 }

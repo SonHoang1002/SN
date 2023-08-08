@@ -113,7 +113,6 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
         ref
             .read(learnSpaceStateControllerProvider.notifier)
             .getListCourseReview(widget.courseDetail['id']);
-            print("response ${jsonEncode(response)}");
         message = 'Đăng bài đánh giá thành công!';
       }
     }

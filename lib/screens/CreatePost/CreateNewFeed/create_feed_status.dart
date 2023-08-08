@@ -16,6 +16,10 @@ class CreateFeedStatus extends StatefulWidget {
   final List friendSelected;
   final Function handleGetPreviewUrl;
   final dynamic pageData;
+  final FocusNode? focusNode;
+
+  /// This is used to create post in friend wall
+  final dynamic friendData;
   const CreateFeedStatus(
       {Key? key,
       required this.visibility,
@@ -27,7 +31,9 @@ class CreateFeedStatus extends StatefulWidget {
       required this.friendSelected,
       this.checkin,
       this.content,
-      this.pageData})
+      this.pageData,
+      this.focusNode,
+      this.friendData})
       : super(key: key);
 
   @override
@@ -90,6 +96,7 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
               statusActivity: widget.statusActivity,
               visibility: widget.visibility,
               handleUpdateData: widget.handleUpdateData,
+              sharePostFriend: widget.friendData,
               entity: widget.pageData != null
                   ? {...widget.pageData, "entityType": "page"}
                   : null,
@@ -114,6 +121,7 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
               children: [
                 TextFormField(
                   autofocus: false,
+                  focusNode: widget.focusNode,
                   onChanged: (value) {
                     widget.handleUpdateData('update_content', value);
                     widget.handleGetPreviewUrl(value);

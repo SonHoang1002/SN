@@ -1,4 +1,3 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,6 +35,7 @@ class PostHeader extends ConsumerStatefulWidget {
   final Function? reloadFunction;
   final Function(dynamic)? updateDataFunction;
   final bool? isInGroup;
+  final dynamic friendData;
   const PostHeader(
       {Key? key,
       this.post,
@@ -44,7 +44,8 @@ class PostHeader extends ConsumerStatefulWidget {
       this.isHaveAction,
       this.reloadFunction,
       this.updateDataFunction,
-      this.isInGroup = false})
+      this.isInGroup = false,
+      this.friendData})
       : super(key: key);
 
   @override
@@ -147,7 +148,7 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
     }
 
     if (statusActivity['data_type'] == postStatusEmoji) {
-      description = ' đang cảm thấy ${statusActivity['name']} cùng với ';
+      description = ' đang cảm thấy ${statusActivity['name']} ';
     } else if (statusActivity['data_type'] == postStatusActivity) {
       description =
           ' ${statusActivity['parent']['name'].toLowerCase()} ${statusActivity['name'].toLowerCase()}';
@@ -358,6 +359,7 @@ class BlockPostHeaderAction extends StatelessWidget {
                             ? widget.reloadFunction!()
                             : null;
                       },
+                      friendData: widget.friendData,
                     ));
           },
           child: const Icon(
@@ -389,7 +391,10 @@ class BlockPostHeaderAction extends StatelessWidget {
                   size: 20,
                   color: greyColor,
                 ),
-              )
+              ),
+        const SizedBox(
+          width: 5,
+        ),
       ],
     );
   }

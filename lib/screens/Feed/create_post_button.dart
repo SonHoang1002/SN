@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +23,7 @@ class CreatePostButton extends ConsumerWidget {
   final dynamic userType;
 
   const CreatePostButton(
-      {super.key, 
+      {super.key,
       this.postDiscussion,
       this.preType,
       this.reloadFunction,
@@ -30,7 +32,7 @@ class CreatePostButton extends ConsumerWidget {
       this.userType});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) { 
     dynamic userType;
     if (friendData != null) {
       if (userType != null) {
@@ -38,7 +40,8 @@ class CreatePostButton extends ConsumerWidget {
       } else {
         userType = 'me';
         if (friendData?['relationships'] != null &&
-            friendData?['relationships']?['friendship_status'] == 'ARE_FRIENDS') {
+            friendData?['relationships']?['friendship_status'] ==
+                'ARE_FRIENDS') {
           userType = 'friend';
         } else if (friendData['relationships'] != null &&
             friendData?['relationships']?['friendship_status'] ==
@@ -60,6 +63,7 @@ class CreatePostButton extends ConsumerWidget {
                       pageData: pageData,
                       reloadFunction: reloadFunction,
                       postDiscussion: postDiscussion,
+                      friendData: friendData
                     ))));
       },
       child: Container(

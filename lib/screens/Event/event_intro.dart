@@ -222,13 +222,11 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                   : Center(
                                       child: ClipOval(
                                           child: ExtendedImage.network(
-                                        hosts[index]['account']
-                                                    ['avatar_media'] !=
-                                                null
-                                            ? hosts[index]['account']
-                                                ['avatar_media']['url']
-                                            : hosts[index]['account']
-                                                ['avatar_static'],
+                                        (hosts[index]?['account']?['avatar_media'] !=null)
+                                            ? (hosts[index]['account']['avatar_media']['url'] !=null)
+                                                ? (hosts[index]['account']['avatar_media']['url'])
+                                                : (hosts[index]['account']['avatar_media']['preview_url'])
+                                            : (hosts[index]['account']['avatar_static']),
                                         fit: BoxFit.cover,
                                         width: 180.0,
                                         height: 180.0,
@@ -247,7 +245,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    hosts[index]['account']['display_name'] ??
+                                    hosts[index]?['account']?['display_name'] ??
                                         "",
                                     style: const TextStyle(
                                       fontSize: 12.0,
@@ -262,7 +260,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    '${hosts[index]['account']['followers_count'].toString()} người quan tâm · ${hosts[index]['account']['following_count'].toString()} người theo dõi',
+                                    '${hosts[index]?['account']?['followers_count'].toString()} người quan tâm · ${hosts[index]?['account']?['following_count'].toString()} người theo dõi',
                                     style: const TextStyle(
                                       fontSize: 11.0,
                                       fontWeight: FontWeight.w500,
@@ -282,7 +280,8 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                             child: Column(
                               children: [
                                 Text(
-                                  hosts[index]['account']['description'] ?? "",
+                                  hosts[index]?['account']?['description'] ??
+                                      "",
                                   style: const TextStyle(
                                     fontSize: 12.0,
                                     fontWeight: FontWeight.w700,
@@ -471,8 +470,8 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                         eventsSuggested[indexSuggest]
                                                     ['banner'] !=
                                                 null
-                                            ? eventsSuggested[indexSuggest]
-                                                ['banner']['url']
+                                            ? (eventsSuggested[indexSuggest]
+                                                ?['banner']?['url'])
                                             : linkBannerDefault,
                                         height: 180.0,
                                         width:
@@ -505,7 +504,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                         GetTimeAgo.parse(
                                           DateTime.parse(
                                               eventsSuggested[indexSuggest]
-                                                  ['start_time']),
+                                                  ?['start_time']),
                                         ),
                                         style: const TextStyle(
                                           fontSize: 12.0,
@@ -516,7 +515,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                     SizedBox(
                                       height: 30,
                                       child: Text(
-                                        eventsSuggested[indexSuggest]['title'],
+                                        eventsSuggested[indexSuggest]?['title'],
                                         maxLines: 2,
                                         style: const TextStyle(
                                           fontSize: 12.0,
@@ -551,11 +550,11 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                       alignment: Alignment.bottomLeft,
                                       child: InkWell(
                                         onTap: () {
-                                          String key =
-                                              eventsSuggested[indexSuggest]
-                                                          ['event_relationship']
-                                                      ['status'] ??
-                                                  '';
+                                          String key = eventsSuggested[
+                                                          indexSuggest]
+                                                      ?['event_relationship']
+                                                  ?['status'] ??
+                                              '';
                                           if (key != '') {
                                             showModalBottomSheet(
                                               isScrollControlled: true,

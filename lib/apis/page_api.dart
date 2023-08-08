@@ -88,6 +88,39 @@ class PageApi {
     return await Api().getRequestBase('/api/v1/pages/$id/pins', null);
   }
 
+  Future getNotificationsPageApi(id) async {
+    return await Api()
+        .getRequestBase('/api/v1/pages/$id/setting_notifications', null);
+  }
+
+  Future updateNotificationsPage(params, id) async {
+    return await Api()
+        .patchRequestBase('/api/v1/pages/$id/setting_notifications', params);
+  }
+
+  Future getListAdminPage(id) async {
+    return await Api().getRequestBase('/api/v1/pages/$id/accounts', null);
+  }
+
+  Future getListInvitePage(id) async {
+    return await Api().getRequestBase('/api/v1/pages/$id/invitations', null);
+  }
+
+  Future sendInviteManagePage(id, params) async {
+    return await Api()
+        .postRequestBaseWithParams('/api/v1/pages/$id/invitations', params);
+  }
+
+  Future removeInviteManagePage(id, userId) async {
+    return await Api()
+        .deleteRequestBase('/api/v1/pages/$id/invitations/$userId', null);
+  }
+
+  Future removeUserManagePage(id, userId) async {
+    return await Api()
+        .deleteRequestBase('/api/v1/pages/$id/accounts/$userId', null);
+  }
+
   Future pagePostMedia(data, id) async {
     return await Api().patchRequestBase('/api/v1/pages/$id', data);
   }
