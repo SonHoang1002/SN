@@ -58,9 +58,11 @@ class CustomBannerState extends ConsumerState<CustomBanner> {
 
     _timer = Timer.periodic(const Duration(seconds: 2), (Timer timer) {
       if (_currentPage < images.length - 1) {
-        setState(() {
+        if(mounted){
+          setState(() {
           _currentPage++;
         });
+        }
       } else {
         setState(() {
           _currentPage = 0;

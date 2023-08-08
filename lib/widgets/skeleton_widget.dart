@@ -84,7 +84,7 @@ class _CardSkeletonState extends State<CardSkeleton>
               ? const EdgeInsets.symmetric(vertical: 16.0)
               : const EdgeInsets.all(0),
           child: Container(
-            color: Colors.white,
+            color: Colors.transparent,
             padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -247,7 +247,7 @@ class _DarkCardSkeletonState extends State<DarkCardSkeleton>
               ? const EdgeInsets.symmetric(vertical: 16.0)
               : const EdgeInsets.all(0),
           child: Container(
-            color: Colors.grey[800],
+            color: Colors.transparent,
             padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -431,7 +431,7 @@ class _CardProfileSkeletonState extends State<CardProfileSkeleton>
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
-            color: Colors.white,
+            color: Colors.transparent,
             padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.max,
@@ -724,7 +724,7 @@ class _CardPageSkeletonState extends State<CardPageSkeleton>
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
-              color: Colors.white,
+              color: Colors.transparent,
               padding: const EdgeInsets.all(16),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -1174,7 +1174,7 @@ class _EventSkeletonState extends State<EventSkeleton>
           child: Container(
             width: width*1,
             height: height*0.395,
-            color: Colors.white,
+            color: Colors.transparent,
             padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -1399,7 +1399,7 @@ class _GrowSkeletonState extends State<GrowSkeleton>
           child: Container(
             width: width*1,
             height: height*0.45,
-            color: Colors.white,
+            color: Colors.transparent,
             padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,

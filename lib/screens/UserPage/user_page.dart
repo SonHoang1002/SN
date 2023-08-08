@@ -183,7 +183,8 @@ class _UserPageState extends ConsumerState<UserPage> {
             .getListPostUserPage(id, {"limit": 3, "exclude_replies": true});
 
         var friendNew = await UserPageApi().getUserFriend(id, {'limit': 20});
-        setState(() {
+        if(mounted){
+          setState(() {
           userData = ref.watch(userInformationProvider).userInfor;
           userAbout = ref.watch(userInformationProvider).userMoreInfor;
           lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
@@ -204,9 +205,10 @@ class _UserPageState extends ConsumerState<UserPage> {
             } else {
               userType = 'stranger';
             }
-            following.value = userData['relationships']['following'];
+            following.value = userData['relationships']?['following'];
           }
         });
+        }
       });
     }
 

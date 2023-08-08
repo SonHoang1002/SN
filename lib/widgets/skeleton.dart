@@ -6,26 +6,30 @@ import 'package:social_network_app_mobile/widgets/skeleton_widget.dart';
 class SkeletonCustom {
   postSkeleton(context) {
     final theme = Provider.of<ThemeManager>(context);
+    final brightness = MediaQuery.of(context).platformBrightness;
     String modeTheme = theme.themeMode == ThemeMode.dark
         ? 'dark'
         : theme.themeMode == ThemeMode.light
             ? 'light'
             : 'system';
 
-    return modeTheme == 'dark'
-        ? const DarkCardSkeleton()
-        : const CardSkeleton();
+    return (brightness == Brightness.dark)
+        ? modeTheme == 'dark'?const DarkCardSkeleton(): modeTheme == 'light'?const CardSkeleton():brightness == Brightness.dark?const DarkCardSkeleton(): const CardSkeleton()
+        : modeTheme == 'dark'?const DarkCardSkeleton(): modeTheme == 'light'?const CardSkeleton():brightness == Brightness.dark?const DarkCardSkeleton(): const CardSkeleton();
   }
+  
+  
 
   postSkeletonInList(context) {
     final theme = Provider.of<ThemeManager>(context);
+    final brightness = MediaQuery.of(context).platformBrightness;
     String modeTheme = theme.themeMode == ThemeMode.dark
         ? 'dark'
         : theme.themeMode == ThemeMode.light
             ? 'light'
             : 'system';
 
-    return modeTheme == 'dark'
+    return(modeTheme == 'dark' || brightness == Brightness.dark)
         ? const DarkCardSkeletonInList(
             isBottomLinesActive: false,
           )
@@ -36,13 +40,14 @@ class SkeletonCustom {
 
   postSkeletonDiscovery(context) {
     final theme = Provider.of<ThemeManager>(context);
+    final brightness = MediaQuery.of(context).platformBrightness;
     String modeTheme = theme.themeMode == ThemeMode.dark
         ? 'dark'
         : theme.themeMode == ThemeMode.light
             ? 'light'
             : 'system';
 
-    return modeTheme == 'dark'
+    return (modeTheme == 'dark' || brightness == Brightness.dark)
         ? const DarkCardSkeleton(
             isBottomLinesActive: false,
             isPaddingActive: false,
@@ -55,27 +60,30 @@ class SkeletonCustom {
   
   eventSkeleton(context) {
     final theme = Provider.of<ThemeManager>(context);
+    final brightness = MediaQuery.of(context).platformBrightness;
     String modeTheme = theme.themeMode == ThemeMode.dark
         ? 'dark'
         : theme.themeMode == ThemeMode.light
             ? 'light'
             : 'system';
 
-    return modeTheme == 'dark'
-        ? const DarkEventSkeleton()
-        : const EventSkeleton();
+    return (brightness == Brightness.dark)
+        ? modeTheme == 'dark'?const DarkEventSkeleton(): modeTheme == 'light'?const EventSkeleton():brightness == Brightness.dark?const DarkEventSkeleton(): const EventSkeleton()
+        : modeTheme == 'dark'?const DarkEventSkeleton(): modeTheme == 'light'?const EventSkeleton():brightness == Brightness.dark?const DarkEventSkeleton(): const EventSkeleton();
   }
+  
 
   growSkeleton(context) {
     final theme = Provider.of<ThemeManager>(context);
+    final brightness = MediaQuery.of(context).platformBrightness;
     String modeTheme = theme.themeMode == ThemeMode.dark
         ? 'dark'
         : theme.themeMode == ThemeMode.light
             ? 'light'
             : 'system';
 
-    return modeTheme == 'dark'
-        ? const DarkGrowSkeleton()
-        : const GrowSkeleton();
+    return (brightness == Brightness.dark)
+        ? modeTheme == 'dark'?const DarkGrowSkeleton(): modeTheme == 'light'?const GrowSkeleton():brightness == Brightness.dark?const DarkGrowSkeleton(): const GrowSkeleton()
+        : modeTheme == 'dark'?const DarkGrowSkeleton(): modeTheme == 'light'?const GrowSkeleton():brightness == Brightness.dark?const DarkGrowSkeleton(): const GrowSkeleton();
   }
 }
