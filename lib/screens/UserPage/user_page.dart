@@ -204,7 +204,7 @@ class _UserPageState extends ConsumerState<UserPage> {
             } else {
               userType = 'stranger';
             }
-            following.value = userData['relationships']['following'];
+            following.value = userData['relationships']?['following'];
           }
         });
       });
