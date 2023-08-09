@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -15,13 +14,13 @@ import 'package:social_network_app_mobile/screens/Event/CreateEvent/date_picker.
 import 'package:social_network_app_mobile/screens/Event/CreateEvent/event_category.dart';
 import 'package:social_network_app_mobile/screens/Event/CreateEvent/event_publish.dart';
 import 'package:social_network_app_mobile/screens/Event/event_detail.dart';
+import 'package:social_network_app_mobile/screens/Page/PageSettings/custom_alert_pop_up.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/CustomCropImage/crop_your_image.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:extended_image/extended_image.dart' as img;
 import '../../../widgets/appbar_title.dart';
 import '../../../widgets/back_icon_appbar.dart';
-import 'event_meeting.dart';
 
 class CreateEvents extends ConsumerStatefulWidget {
   const CreateEvents({Key? key}) : super(key: key);
@@ -53,6 +52,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
   List categorySelected = [];
   bool isCropping = false;
   bool formLoading = false;
+  bool haveImage = true;
   Future<Uint8List> _load(File imageFile) async {
     final bytes = await imageFile.readAsBytes();
     return Uint8List.fromList(bytes);
@@ -77,6 +77,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
         ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 100);
     pickedFileFuture.then((pickedFile) {
       if (pickedFile != null) {
+        haveImage = true;
         final imageDataFuture = _load(File(pickedFile.path));
         imageDataFuture.then((imageData) {
           Navigator.push(
@@ -269,6 +270,10 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
+                                    border: haveImage == false
+                                        ? Border.all(
+                                            width: 1, color: Colors.red)
+                                        : null,
                                     color: theme.isDarkMode
                                         ? Colors.black
                                         : Colors.white,
@@ -439,7 +444,13 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                                         child: GetEventCategory(
                                             categorySelected: categorySelected,
                                             onCategorySelectedChanged:
-                                                _updateCheckinSelected)));
+                                                _updateCheckinSelected))).then(
+                                  (value) {
+                                    setState(
+                                      () {},
+                                    );
+                                  },
+                                );
                               },
                               child: IgnorePointer(
                                 child: TextFormField(
@@ -537,19 +548,38 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                               maxLines: null,
                             ),
                             const SizedBox(height: 32),
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  minimumSize: Size(
-                                      MediaQuery.sizeOf(context).width, 45),
-                                  foregroundColor: Colors.white, // foreground
-                                ),
-                                onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    _formKey.currentState!.save();
-                                    createEvent();
-                                  }
-                                },
-                                child: const Text('Tạo sự kiện'))
+                            _formKey.currentState != null &&
+                                    _formKey.currentState!.validate() &&
+                                    files != null
+                                ? ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      minimumSize: Size(
+                                          MediaQuery.sizeOf(context).width, 45),
+                                      foregroundColor:
+                                          Colors.white, // foreground
+                                    ),
+                                    onPressed: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        if (files == null) {
+                                          showCupertinoModalPopup(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                buildCustomCupertinoAlertDialog(
+                                              context,
+                                              'Hãy thêm ảnh cho sự kiện',
+                                            ),
+                                          );
+                                          setState(() {
+                                            haveImage = false;
+                                          });
+                                        } else {
+                                          _formKey.currentState!.save();
+                                          createEvent();
+                                        }
+                                      }
+                                    },
+                                    child: const Text('Tạo sự kiện'))
+                                : Container()
                           ],
                         ),
                       ),
