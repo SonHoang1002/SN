@@ -121,6 +121,16 @@ class PageApi {
         .deleteRequestBase('/api/v1/pages/$id/accounts/$userId', null);
   }
 
+  Future updateUserManagePage(id, userId, params) async {
+    return await Api()
+        .patchRequestBase('/api/v1/pages/$id/accounts/$userId', params);
+  }
+
+  Future updatePageHolder(id, params) async {
+    return await Api()
+        .patchRequestBase('/api/v1/pages/$id/account_holder', params);
+  }
+
   Future pagePostMedia(data, id) async {
     return await Api().patchRequestBase('/api/v1/pages/$id', data);
   }

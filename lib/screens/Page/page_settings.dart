@@ -56,6 +56,9 @@ class _PageSettingsState extends ConsumerState<PageSettings> {
     ref
         .read(pageRoleControllerProvider.notifier)
         .getInviteListPage(widget.data['id']);
+    ref
+        .read(pageRoleControllerProvider.notifier)
+        .getAdminListPage(widget.data['id']);
   }
 
   void updatePageEllipsis() {

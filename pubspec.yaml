@@ -249,7 +249,11 @@ flutter:
     - assets/Noti/
     - assets/pages/
     - assets/groups/
-    - assets/
+    - assets/memories_banner.jpg
+    - assets/memories_layout_1.jpg
+    - assets/memories_layout_2.jpg
+    - assets/memories_layout_3.jpg
+    - assets/memories_layout_4.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
