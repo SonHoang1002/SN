@@ -168,7 +168,7 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
                     ? const Center(
                         child: Text("Không có bạn bè để hiển thị"),
                       )
-                    : Expanded(
+                    : Flexible(
                         child: ListView.builder(
                             shrinkWrap: true,
                             controller: scrollController,

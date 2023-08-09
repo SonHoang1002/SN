@@ -47,7 +47,7 @@ class CustomBannerState extends ConsumerState<CustomBanner> {
             images = ref
                 .read(campaineProvider)
                 .listCampaine
-                .map((e) => (e['banner']['url']))
+                .map((e) => (e['banner']?['url']))
                 .toList()
                 .where((ele) => ele != null)
                 .toList();
@@ -64,9 +64,11 @@ class CustomBannerState extends ConsumerState<CustomBanner> {
         });
         }
       } else {
-        setState(() {
+        if(mounted){
+          setState(() {
           _currentPage = 0;
         });
+        }
       }
       _controller.animateToPage(
         _currentPage,
