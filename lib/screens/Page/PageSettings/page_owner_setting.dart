@@ -207,8 +207,12 @@ class _PageOwnerSettingState extends ConsumerState<PageOwnerSetting> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text(
-                                          "Tài khoản chưa xác minh danh tính")));
+                                          "Tài khoản chưa xác minh danh tính hoặc không phải quản trị viên")));
                             } else {
+                              setState(() {
+                                widget.data["account_holder"] =
+                                    accountSelected["account"];
+                              });
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text(

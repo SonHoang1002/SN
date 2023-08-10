@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
+import 'package:social_network_app_mobile/providers/page/page_follower_management_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
@@ -36,29 +38,49 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
       "label": "Bạn bè",
     },
   ];
-  List users = [
-    User(name: "Nguyễn Thanh Bình", date: "27/08/2000", isChecked: false),
-    User(name: "John Doe", date: "27/08/2000", isChecked: false),
-    User(name: "Jane Smith", date: "27/08/2000", isChecked: false),
-    User(name: "Bob Johnson", date: "27/08/2000", isChecked: false),
-  ];
-  List users_follow = [
-    User(name: "John Doe", date: "27/08/2000", isChecked: false),
-    User(name: "Jane Smith", date: "27/08/2000", isChecked: false),
-    User(name: "Bob Johnson", date: "27/08/2000", isChecked: false),
-  ];
-  List users_blocked = [
-    User(name: "Bob Johnson", date: "27/08/2000", isChecked: false),
-  ];
+  List users = [];
+  List users_follow = [];
+  List users_blocked = [];
   List filteredUserList = [];
+  List checkIndex = [];
   @override
   void initState() {
     super.initState();
+    getData();
+  }
+
+  void getData() {
+    users = ref.read(pageFollowControllerProvider).like;
     filteredUserList = List.from(users);
+    checkboxList();
+  }
+
+  void checkboxList() {
+    checkIndex = [];
+    for (int i = 0; i < filteredUserList.length; i++) {
+      checkIndex.add(false);
+    }
+  }
+
+  List<String> arrayToStringList() {
+    List<String> saved = [];
+    for (var i = 0; i < filteredUserList.length; i++) {
+      if (checkIndex[i] == true) {
+        if (menuSelected == "blocked") {
+          saved.add(filteredUserList[i]["target_account"]["id"]);
+        } else {
+          saved.add(filteredUserList[i]["id"]);
+        }
+      }
+    }
+    return saved;
   }
 
   @override
   Widget build(BuildContext context) {
+    users = ref.watch(pageFollowControllerProvider).like;
+    users_follow = ref.watch(pageFollowControllerProvider).follower;
+    users_blocked = ref.watch(pageFollowControllerProvider).block;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -133,11 +155,10 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                         }
                       } else if (tab == 'blocked') {
                         if (mounted) {
-                          setState(() {
-                            filteredUserList = users_blocked;
-                          });
+                          filteredUserList = users_blocked;
                         }
                       }
+                      checkboxList();
                     },
                     listTabs: pageUsersType,
                     tabCurrent: menuSelected)),
@@ -146,9 +167,35 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                 ? Align(
                     alignment: Alignment.bottomCenter,
                     child: ButtonPrimary(
-                      label: 'Cấm trên trang',
-                      handlePress: () {
-                        Navigator.pop(context);
+                      label: menuSelected == "blocked"
+                          ? "Bỏ cấm trên trang"
+                          : 'Cấm trên trang',
+                      handlePress: () async {
+                        var res;
+                        if (menuSelected != "blocked") {
+                          res = await PageApi().pageBlockAccount(
+                              widget.data["id"],
+                              {"target_account_ids": arrayToStringList()});
+                        } else {
+                          res = await PageApi().pageUnblockAccount(
+                              widget.data["id"],
+                              {"target_account_ids": arrayToStringList()});
+                        }
+                        await ref
+                            .read(pageFollowControllerProvider.notifier)
+                            .getDataFollowPage(widget.data['id']);
+                        if (mounted) {
+                          if (res != null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text("Cập nhật thành công")));
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text("Cập nhật thất bại")));
+                          }
+                        }
+                        //Navigator.pop(context);
                       },
                     ),
                   )
@@ -162,15 +209,15 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
   void onClickToggleChecked(value) {
     setState(() {
       for (int i = 0; i < filteredUserList.length; i++) {
-        filteredUserList[i].isChecked = value;
+        checkIndex[i] = value;
       }
     });
   }
 
   bool checkAvailableButton() {
     int count = 0;
-    for (int i = 0; i < filteredUserList.length; i++) {
-      if (filteredUserList[i].isChecked) {
+    for (int i = 0; i < checkIndex.length; i++) {
+      if (checkIndex[i] == true) {
         count++;
       }
     }
@@ -179,10 +226,11 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
     } else {
       selectAll = false;
     }
-    if (count > 0)
+    if (count > 0) {
       return true;
-    else
+    } else {
       return false;
+    }
   }
 
   void onSearchTextChanged(String searchText) {
@@ -210,12 +258,21 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
           default:
             searchList = List.from(users);
         }
-        filteredUserList = searchList
-            .where((user) => user.name
-                .trim()
-                .toLowerCase()
-                .contains(searchText.trim().toLowerCase()))
-            .toList();
+        if (menuSelected != "blocked") {
+          filteredUserList = searchList
+              .where((user) => user["display_name"]
+                  .trim()
+                  .toLowerCase()
+                  .contains(searchText.trim().toLowerCase()))
+              .toList();
+        } else {
+          filteredUserList = searchList
+              .where((user) => user["target_account"]["display_name"]
+                  .trim()
+                  .toLowerCase()
+                  .contains(searchText.trim().toLowerCase()))
+              .toList();
+        }
       }
     });
   }
@@ -275,8 +332,7 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
               itemBuilder: (context, index) => GestureDetector(
                     onTap: () {
                       setState(() {
-                        filteredUserList[index].isChecked =
-                            !filteredUserList[index].isChecked;
+                        checkIndex[index] = !checkIndex[index];
                         showButton = checkAvailableButton();
                       });
                     },
@@ -286,11 +342,11 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                         Container(
                           width: width * 0.1,
                           child: Checkbox(
-                            value: filteredUserList[index].isChecked,
+                            value: checkIndex[index],
                             activeColor: secondaryColor,
                             onChanged: (value) {
                               setState(() {
-                                filteredUserList[index].isChecked = value;
+                                checkIndex[index] = value;
                                 showButton = checkAvailableButton();
                               });
                             },
@@ -298,10 +354,12 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                         ),
                         Container(
                             width: width * 0.6,
-                            child: Text(filteredUserList[index].name)),
+                            child:
+                                Text(filteredUserList[index]["display_name"])),
                         Container(
                             width: width * 0.3,
-                            child: Text(filteredUserList[index].date)),
+                            child: Text(
+                                filteredUserList[index]["last_status_at"])),
                       ],
                     ),
                   )),
@@ -350,8 +408,7 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
               itemBuilder: (context, index) => GestureDetector(
                     onTap: () {
                       setState(() {
-                        filteredUserList[index].isChecked =
-                            !filteredUserList[index].isChecked;
+                        checkIndex[index] = !checkIndex[index];
                         showButton = checkAvailableButton();
                       });
                     },
@@ -361,11 +418,11 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                         Container(
                           width: width * 0.1,
                           child: Checkbox(
-                            value: filteredUserList[index].isChecked,
+                            value: checkIndex[index],
                             activeColor: secondaryColor,
                             onChanged: (value) {
                               setState(() {
-                                filteredUserList[index].isChecked = value;
+                                checkIndex[index] = value;
                                 showButton = checkAvailableButton();
                               });
                             },
@@ -373,13 +430,16 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                         ),
                         Container(
                             width: width * 0.4,
-                            child: Text(filteredUserList[index].name)),
+                            child: Text(filteredUserList[index]
+                                ["target_account"]["display_name"])),
                         Container(
                             width: width * 0.3,
-                            child: Text(filteredUserList[index].date)),
+                            child: Text(filteredUserList[index]
+                                ["target_account"]["last_status_at"])),
                         Container(
                           width: width * 0.2,
-                          child: Text("Nguyễn Đình Đạt"),
+                          child: Text(filteredUserList[index]["account"]
+                              ["display_name"]),
                         )
                       ],
                     ),
@@ -388,12 +448,4 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
       ],
     );
   }
-}
-
-class User {
-  String name;
-  String date;
-  bool isChecked;
-
-  User({required this.name, required this.date, this.isChecked = false});
 }
