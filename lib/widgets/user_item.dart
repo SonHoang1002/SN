@@ -20,7 +20,7 @@ class UserItem extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => const UserPageHome(),
               settings: RouteSettings(
-                arguments: {'id': user['id'].toString()},
+                arguments: {'id': user['id'].toString(), "user": user},
               ),
             ));
       },

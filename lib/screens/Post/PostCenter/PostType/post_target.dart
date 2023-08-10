@@ -19,7 +19,6 @@ class PostTarget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.sizeOf(context);
-    // meData ??= ref.watch(meControllerProvider)[0];
     return Container(
       width: size.width,
       height: size.width + 100,
@@ -30,7 +29,7 @@ class PostTarget extends ConsumerWidget {
             postCreateQuestionAnwer,
             postQuestionAnwer,
             'target_create'
-          ].contains(type) ? statusQuestion['color'] : post?['status_target']?['color']).replaceAll('-', '').replaceAll(' ', '')}')),
+          ].contains(type) ? (statusQuestion?['color']) : post?['status_target']?['color']).replaceAll('-', '').replaceAll(' ', '')}')),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

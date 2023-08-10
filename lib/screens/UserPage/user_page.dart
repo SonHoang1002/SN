@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
@@ -135,10 +132,6 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   ValueNotifier<bool> following = ValueNotifier(false);
   String userType = '';
-  // "me": current user on device,
-  // "friend": current user on device's friend
-  // "stranger": not a friend of current user on device == backend 's CAN_REQUEST
-  // "requested": OUTGOING_REQUEST,
 
   // save id of post
   ValueNotifier<dynamic> focusCurrentPostIndex = ValueNotifier("");
@@ -164,6 +157,7 @@ class _UserPageState extends ConsumerState<UserPage> {
               as Map<String, dynamic>;
           setState(() {
             id = queryParams['id'];
+            userData = queryParams['user'];
           });
         }
       });
@@ -180,34 +174,35 @@ class _UserPageState extends ConsumerState<UserPage> {
             id == ref.watch(meControllerProvider)[0]['id'],
             id,
             {"limit": 3, "exclude_replies": true});
-        var friendNew = await UserPageApi().getUserFriend(id, {'limit': 20});
-        if(mounted){
+        var friendNew =
+            await UserPageApi().getUserFriend(id, {'limit': 20}) ?? [];
+        if (mounted) {
           setState(() {
-          userData = ref.watch(userInformationProvider).userInfor;
-          userAbout = ref.watch(userInformationProvider).userMoreInfor;
-          lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
-          postUser = (id == ref.watch(meControllerProvider)[0]['id']
-              ? ref.watch(postControllerProvider).postUserPage
-              : ref.watch(postControllerProvider).postAnotherUserPage);
-          pinPost = ref.watch(postControllerProvider).postsPin;
-          friend = friendNew;
-          if (deviceUserId == id) {
-            userType = 'me';
-          } else {
-            if (userData['relationships'] != null &&
-                userData['relationships']['friendship_status'] ==
-                    'ARE_FRIENDS') {
-              userType = 'friend';
-            } else if (userData['relationships'] != null &&
-                userData['relationships']['friendship_status'] ==
-                    'OUTGOING_REQUEST') {
-              userType = 'requested';
+            userData = ref.watch(userInformationProvider).userInfor;
+            userAbout = ref.watch(userInformationProvider).userMoreInfor;
+            lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
+            postUser = (id == ref.watch(meControllerProvider)[0]['id']
+                ? ref.watch(postControllerProvider).postUserPage
+                : ref.watch(postControllerProvider).postAnotherUserPage);
+            pinPost = ref.watch(postControllerProvider).postsPin;
+            friend = friendNew;
+            if (deviceUserId == id) {
+              userType = 'me';
             } else {
-              userType = 'stranger';
+              if (userData['relationships'] != null &&
+                  userData['relationships']['friendship_status'] ==
+                      'ARE_FRIENDS') {
+                userType = 'friend';
+              } else if (userData['relationships'] != null &&
+                  userData['relationships']['friendship_status'] ==
+                      'OUTGOING_REQUEST') {
+                userType = 'requested';
+              } else {
+                userType = 'stranger';
+              }
+              following.value = userData['relationships']?['following'];
             }
-            following.value = userData['relationships']?['following'];
-          }
-        });
+          });
         }
       });
     }
@@ -269,8 +264,9 @@ class _UserPageState extends ConsumerState<UserPage> {
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(postControllerProvider.notifier).changeProcessingPost(newData,
-          isIdCurrentUser:
-              userData['id'] == ref.watch(meControllerProvider)[0]['id']);
+          isIdCurrentUser: userData != null
+              ? userData['id'] == ref.watch(meControllerProvider)[0]['id']
+              : true);
       setState(() {});
     });
   }
@@ -724,7 +720,7 @@ class _UserPageState extends ConsumerState<UserPage> {
           UserPageFriendBlock(user: userData, friends: friend),
           id == ref.watch(meControllerProvider)[0]['id'] ||
                   // userType == "friend" ||
-                  userData['allow_post_status'] == true
+                  userData?['allow_post_status'] == true
               ? Column(
                   children: [
                     const CrossBar(

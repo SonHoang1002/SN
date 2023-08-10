@@ -79,7 +79,7 @@ class UserPageInfomationBlock extends StatelessWidget {
     final theme = Provider.of<ThemeManager>(context);
     final size = MediaQuery.sizeOf(context);
     final createdDate =
-        user['created_at'] != null ? DateTime.parse(user['created_at']) : null;
+        user?['created_at'] != null ? DateTime.parse(user['created_at']) : null;
     return generalInformation == null
         ? const SizedBox()
         : Container(

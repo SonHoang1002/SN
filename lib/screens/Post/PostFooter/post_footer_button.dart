@@ -46,8 +46,10 @@ class PostFooterButton extends ConsumerStatefulWidget {
 
   /// Update data from post and post detail screen
   final Function(dynamic)? updateDataFunction;
-  /// Transfer current offset of textformfield to scroll post listview 
+
+  /// Transfer current offset of textformfield to scroll post listview
   final Function(Offset)? jumpToOffsetFunction;
+  final dynamic friendData;
 
   const PostFooterButton(
       {Key? key,
@@ -61,7 +63,8 @@ class PostFooterButton extends ConsumerStatefulWidget {
       this.isShowCommentBox,
       this.updateDataFunction,
       this.fromOneMediaPost = false,
-      this.jumpToOffsetFunction})
+      this.jumpToOffsetFunction,
+      this.friendData})
       : super(key: key);
 
   @override
@@ -84,17 +87,15 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
       if (commentNode.hasFocus) {
         RenderBox renderBox =
             textFieldGlobalKey.currentContext!.findRenderObject() as RenderBox;
-        
-          widget.jumpToOffsetFunction != null
-              ? widget
-                  .jumpToOffsetFunction!(renderBox.localToGlobal(Offset.zero))
-              : null;
-        
+
+        widget.jumpToOffsetFunction != null
+            ? widget.jumpToOffsetFunction!(renderBox.localToGlobal(Offset.zero))
+            : null;
       }
     });
     super.initState();
   }
-  
+
   @override
   void dispose() {
     super.dispose();
@@ -207,7 +208,11 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
             ?['reactions'] = newFavourites;
         ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
             widget.type, newPost,
-            preType: widget.preType);
+            preType: widget.preType,
+            isIdCurrentUser: widget.friendData != null
+                ? ref.watch(meControllerProvider)[0]['id'] ==
+                    widget.friendData['id']
+                : true);
         ref
             .read(currentPostControllerProvider.notifier)
             .saveCurrentPost(newPost);
@@ -242,7 +247,11 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
             ?['reactions'] = newFavourites;
         ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
             widget.type, newPost,
-            preType: widget.preType);
+            preType: widget.preType,
+            isIdCurrentUser: widget.friendData != null
+                ? ref.watch(meControllerProvider)[0]['id'] ==
+                    widget.friendData['id']
+                : true);
         ref
             .read(currentPostControllerProvider.notifier)
             .saveCurrentPost(newPost);
@@ -304,7 +313,11 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
         }
         ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
             widget.type, newPost,
-            preType: widget.preType);
+            preType: widget.preType,
+            isIdCurrentUser: widget.friendData != null
+                ? ref.watch(meControllerProvider)[0]['id'] ==
+                    widget.friendData['id']
+                : true);
         ref
             .read(currentPostControllerProvider.notifier)
             .saveCurrentPost(newPost);
@@ -323,7 +336,11 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
         };
         ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
             widget.type, newPost,
-            preType: widget.preType);
+            preType: widget.preType,
+            isIdCurrentUser: widget.friendData != null
+                ? ref.watch(meControllerProvider)[0]['id'] ==
+                    widget.friendData['id']
+                : true);
         ref
             .read(currentPostControllerProvider.notifier)
             .saveCurrentPost(newPost);

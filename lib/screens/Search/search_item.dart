@@ -32,7 +32,7 @@ class SearchItem extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => const UserPageHome(),
                   settings: RouteSettings(
-                    arguments: {'id': item['id'].toString()},
+                    arguments: {'id': item['id'].toString(), "user": item},
                   ),
                 ))
             : item['page_relationship']?['like'] == true ||

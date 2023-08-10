@@ -116,6 +116,7 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
                               settings: RouteSettings(
                                 arguments: {
                                   'id': widget.friends[index]['id'],
+                                  "user":widget.friends[index]
                                 },
                               ),
                             ),

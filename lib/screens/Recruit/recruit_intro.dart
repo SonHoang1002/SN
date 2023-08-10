@@ -213,7 +213,8 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                     builder: (context) => const UserPageHome(),
                                     settings: RouteSettings(
                                       arguments: {
-                                        'id': recruitDetail['account']['id']
+                                        'id': recruitDetail['account']['id'],
+                                        "user":recruitDetail['account']
                                       },
                                     ),
                                   ));
@@ -267,7 +268,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                           settings: RouteSettings(
                                             arguments: {
                                               'id': recruitDetail['account']
-                                                  ['id']
+                                                  ['id'],"user":recruitDetail['account']
                                             },
                                           ),
                                         ));

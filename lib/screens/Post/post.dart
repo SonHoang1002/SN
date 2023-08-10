@@ -62,7 +62,8 @@ class Post extends ConsumerStatefulWidget {
       this.approvalFunction,
       this.haveSuggest = true,
       this.isInGroup = false,
-      this.jumpToOffsetFunction,this.friendData})
+      this.jumpToOffsetFunction,
+      this.friendData})
       : super(key: key);
 
   @override
@@ -112,6 +113,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     meData ??= ref.watch(meControllerProvider)[0];
+
     if (isNeedInitPost) {
       currentPost = widget.post;
     }
@@ -132,14 +134,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ((widget.type != postPageUser &&
-                                    currentPost?['account']?['id'] !=
-                                        meData['id']) &&
-                                widget.haveSuggest == true) ||
-                            (currentPost?['group'] == null ||
-                                currentPost?['group'].isEmpty) ||
-                            (currentPost?['page'] == null ||
-                                currentPost?['page'].isEmpty)
+                    checkShowSuggestWidget()
                         ? PostSuggest(
                             post: currentPost,
                             type: widget.type,
@@ -172,8 +167,9 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                               child: PostHeader(
                                   post: currentPost,
                                   type: widget.type,
-                                  isHaveAction: widget.type != postPageUser
-                                      ? !isHaveSuggest
+                                  isHaveAction: widget.type != postPageUser &&
+                                          isHaveSuggest == true
+                                      ? false
                                       : true,
                                   reloadFunction: () {
                                     setState(() {});
@@ -256,6 +252,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                                 updateDataFunction: updateNewPost,
                                 isShowCommentBox: _isShowCommentBox.value,
                                 preType: widget.preType,
+                                friendData: widget.friendData,
                                 jumpToOffsetFunction:
                                     widget.jumpToOffsetFunction),
                   ],
@@ -272,6 +269,36 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
             ],
           )
         : const SizedBox();
+  }
+
+  bool checkShowSuggestWidget() {
+    // người đang sử dụng -> nsd
+    // Hiện suggest trong các trường hợp sau:
+    // - là post ở FEED
+    //   + chủ của bài viết không là chủ của nó
+    //   + bạn của nsd thực hiện thao tác gì đó trong trang, group mà nsd chưa follow hoặc là thành viên trong đó
+    //   + nsd không phải là admin(chủ) hoặc moderator(kiểm duyệt viên) của page, group
+    //   + nsd không phải bạn của chủ bài viết
+    // - không phải là post của user page, page, group
+    //
+    if ((widget.type == feedPost &&
+            (currentPost?['account']?['id']) != meData['id']) &&
+        widget.haveSuggest == true) {
+      return true;
+    }
+    if (currentPost?['group'] == null || currentPost?['group'].isEmpty) {
+      return true;
+    }
+    if (currentPost?['page'] == null || currentPost?['page'].isEmpty) {
+      return true;
+    }
+    return false;
+
+    // return ((widget.type != postPageUser &&
+    //             (currentPost?['account']?['id']) != meData['id']) &&
+    //         widget.haveSuggest == true) ||
+    //     (currentPost?['group'] == null || currentPost?['group'].isEmpty) ||
+    //     (currentPost?['page'] == null || currentPost?['page'].isEmpty);
   }
 
   handleApprovePost(bool approve) async {

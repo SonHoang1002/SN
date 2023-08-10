@@ -244,25 +244,25 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                     buildSpacer(height: 3),
                                     Row(
                                       children: [
-                                        widget.post['page_owner'] != null &&
-                                                widget.post['page'] != null &&
-                                                widget.post?['page_owner']?[
-                                                            'page_relationship']
-                                                        ?['role'] ==
-                                                    "admin" &&
-                                                widget.type != postDetail
-                                            ? Row(
-                                                children: [
-                                                  buildTextContent(
-                                                      widget.post['account']
-                                                              ['display_name'] +
-                                                          " · ",
-                                                      true,
-                                                      colorWord: greyColor,
-                                                      fontSize: 13)
-                                                ],
-                                              )
-                                            : const SizedBox(),
+                                        // widget.post['page_owner'] != null &&
+                                        //         widget.post['page'] != null &&
+                                        //         widget.post?['page_owner']?[
+                                        //                     'page_relationship']
+                                        //                 ?['role'] ==
+                                        //             "admin" &&
+                                        //         widget.type != postDetail
+                                        //     ? Row(
+                                        //         children: [
+                                        //           buildTextContent(
+                                        //               widget.post['account']
+                                        //                       ['display_name'] +
+                                        //                   " · ",
+                                        //               true,
+                                        //               colorWord: greyColor,
+                                        //               fontSize: 13)
+                                        //         ],
+                                        //       )
+                                        //     : const SizedBox(),
                                         widget.post['processing'] !=
                                                     "isProcessing" &&
                                                 widget.post?['created_at'] !=
@@ -300,14 +300,10 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                         )
                       ],
                     ),
-                    // (widget.post?['account']?['id'] == meData['id'] ||
-                    //     (widget.post?['page'] != null &&
-                    //         widget.post?['page_owner'] != null &&
-                    //         widget.post?['page_owner']?['page_relationship']
-                    //                 ?['role'] ==
-                    //             "admin"))
-                    // ?
-                    (![postReblog, postMultipleMedia].contains(widget.type))
+                    // checkShowHeaderOption()
+                    //     ?
+                    (![postReblog, postMultipleMedia].contains(widget.type) &&
+                            widget.isHaveAction == true)
                         ? BlockPostHeaderAction(
                             widget: widget,
                             meData: meData,
@@ -319,6 +315,16 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
             ),
           )
         : const SizedBox();
+  }
+
+  bool checkShowHeaderOption() {
+    bool status = (widget.post?['account']?['id'] ==
+            ref.watch(meControllerProvider)[0]['id'] ||
+        (widget.post?['page'] != null &&
+            widget.post?['page_owner'] != null &&
+            widget.post?['page_owner']?['page_relationship']?['role'] ==
+                "admin"));
+    return status;
   }
 
   @override
