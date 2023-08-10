@@ -514,8 +514,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       } else {
         ref.read(postControllerProvider.notifier).createUpdatePost(
             type, _createFakeData(),
-            isIdCurrentUser: widget.friendData['id'] ==
-                ref.watch(meControllerProvider)[0]['id']);
+            isIdCurrentUser: widget.friendData != null
+                ? widget.friendData['id'] ==
+                    ref.watch(meControllerProvider)[0]['id']
+                : true);
         widget.reloadFunction != null
             ? widget.reloadFunction!(null, null)
             : null;
@@ -680,8 +682,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     } else {
       ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
           widget.type, response,
-          isIdCurrentUser: widget.friendData['id'] ==
-              ref.watch(meControllerProvider)[0]['id']);
+          isIdCurrentUser: widget.friendData != null
+              ? widget.friendData['id'] ==
+                  ref.watch(meControllerProvider)[0]['id']
+              : true);
     }
 
     if (response != null && mounted) {

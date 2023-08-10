@@ -49,8 +49,11 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
     super.initState();
   }
 
-  void completeLogin() async{
-   await IsarPostService().resetPostIsar();
+  void completeLogin() async {
+    if (1 == 2) {
+      await IsarPostService().resetPostIsar();
+    }
+
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(

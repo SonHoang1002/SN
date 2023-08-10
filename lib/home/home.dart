@@ -30,6 +30,7 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import '../widgets/snack_bar_custom.dart';
 import 'standards_violation.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -50,9 +51,9 @@ class _HomeState extends ConsumerState<Home>
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   Size? size;
   ThemeManager? theme;
-  ValueNotifier<bool?> isDisconnected = ValueNotifier(null);
   WebSocketChannel? webSocketChannel;
   StreamSubscription<dynamic>? subscription;
+  bool _connectionStatus = true;
   double valueFromPercentageInRange(
       {required final double min, max, percentage}) {
     return percentage * (max - min) + min;
@@ -258,12 +259,11 @@ class _HomeState extends ConsumerState<Home>
         'textNone':
             ' đã bày tỏ cảm xúc về ${status?['in_reply_to_parent_id'] != null || status?['in_reply_to_id'] != null ? 'bình luận' : 'bài viết'} ${status?['page_owner'] == null && status?['account']?['id'] == ref.watch(meControllerProvider)[0]['id'] ? 'của bạn' : ''} ${status?['content'] ?? ""}'
       };
-      
-    }else if (type == 'bad_status') {
+    } else if (type == 'bad_status') {
       return {
         'textNone': ' , bài viết của bạn đã vi phạm tiêu chuẩn cộng đồng'
       };
-    }  else if (type == 'status') {
+    } else if (type == 'status') {
       if (status['reblog'] != null) {
         return {
           'textNone':
@@ -347,11 +347,15 @@ class _HomeState extends ConsumerState<Home>
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-    if (result != ConnectivityResult.mobile ||
-        result != ConnectivityResult.wifi) {
-      setState(() {});
+    if (result == ConnectivityResult.mobile ||
+        result == ConnectivityResult.wifi) {
+      setState(() {
+        _connectionStatus = true;
+      });
     } else {
-      setState(() {});
+      setState(() {
+        _connectionStatus = false;
+      });
     }
   }
 
@@ -360,7 +364,6 @@ class _HomeState extends ConsumerState<Home>
     isShowSnackBar.dispose();
     showBottomNavigatorNotifier.dispose();
     _connectivitySubscription.cancel();
-    isDisconnected.dispose();
     subscription?.cancel();
     cancelListening();
     super.dispose();
@@ -447,9 +450,27 @@ class _HomeState extends ConsumerState<Home>
     SizedBox(),
     AppBarTitle(title: 'Watch')
   ];
+  @override
+  void didChangeDependencies() { 
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(Duration.zero, () async {
+      await useIsolate();
+    });
+    if (_connectionStatus == false && !isShowSnackBar.value) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        buildSnackBar(context, "Không có kết nối mạng");
+        isShowSnackBar.value = true;
+      });
+    } else if (_connectionStatus == true && isShowSnackBar.value) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        buildSnackBar(context, "Đã khôi phục kết nối mạng");
+        isShowSnackBar.value = false;
+      });
+    }
     size ??= MediaQuery.sizeOf(context);
     theme ??= pv.Provider.of<ThemeManager>(context);
     String modeTheme = theme!.themeMode == ThemeMode.dark

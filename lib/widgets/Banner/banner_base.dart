@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'package:social_network_app_mobile/widgets/Banner/page_pick_frames.dart';
 import 'package:social_network_app_mobile/widgets/Banner/page_pick_media.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 import 'package:social_network_app_mobile/widgets/blue_certified_widget.dart';
+import 'package:social_network_app_mobile/widgets/custom_extended_image.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 
 class BannerBase extends StatefulWidget {
@@ -68,9 +70,10 @@ class _BannerBaseState extends State<BannerBase> {
                       ),
                       opaque: false);
                 },
-                child: ImageCacheRender(
+                child: ExtendedImageNetworkCustom(
                   path: path,
                   height: 200.0,
+                  fit: BoxFit.cover,
                   width: size.width,
                 ),
               ),
@@ -307,7 +310,6 @@ class _BannerBaseState extends State<BannerBase> {
             ));
   }
 }
-
 class CameraIcon extends StatelessWidget {
   const CameraIcon({
     super.key,

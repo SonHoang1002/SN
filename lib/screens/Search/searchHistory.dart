@@ -69,7 +69,8 @@ class SearchHistory extends ConsumerWidget {
                                               arguments: {
                                                 'id': searchHistory[index]
                                                         ['entity_id']
-                                                    .toString()
+                                                    .toString(),
+                                                'user': searchHistory[index]
                                               },
                                             ),
                                           ))

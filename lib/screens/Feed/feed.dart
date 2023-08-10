@@ -229,10 +229,6 @@ class _FeedState extends ConsumerState<Feed> {
   Widget build(BuildContext context) {
     List posts = List.from(ref.watch(postControllerProvider).posts);
     theme ??= pv.Provider.of<ThemeManager>(context);
-    var countInIsar;
-    Future.delayed(Duration.zero, () async {
-      countInIsar = await IsarPostService().getCountPostIsar();
-    });
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(postControllerProvider.notifier).refreshListPost(paramsConfig);
@@ -338,6 +334,7 @@ class _FeedState extends ConsumerState<Feed> {
   }
 
   Widget _buildSuggestGroupWidget() {
+    final meData = ref.watch(meControllerProvider)[0];
     return Suggest(
         type: suggestGroups,
         headerWidget: Image.asset(
@@ -347,7 +344,7 @@ class _FeedState extends ConsumerState<Feed> {
         subHeaderWidget: Column(children: [
           buildSpacer(height: 5),
           buildTextContent(
-              ref.watch(meControllerProvider)[0]['display_name'] +
+              (meData?['display_name'] ?? meData ? ['name']) +
                   " ơi, bạn có thể sẽ thích các nhóm sau ",
               true,
               fontSize: 17),

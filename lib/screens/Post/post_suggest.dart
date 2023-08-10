@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -107,10 +106,8 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
       }
       dynamic checkVideoImage =
           _checkVideoImage(widget.post?['media_attachments']);
-      if ((checkVideoImage["video"] != null &&
-              checkVideoImage["video"] != 0) &&
-          (checkVideoImage["image"] != null &&
-              checkVideoImage["image"] != 0)) {
+      if ((checkVideoImage["video"] != null && checkVideoImage["video"] != 0) &&
+          (checkVideoImage["image"] != null && checkVideoImage["image"] != 0)) {
         listContent.addAll([
           const TextSpan(
             text: ' đã thêm ',
@@ -162,7 +159,11 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
         widget.post?['reblog'] != null &&
         widget.post?['reblog']?['post_type'] != 'watch') {
       listContent = [
-        TextSpan(text: widget.post?["account"]["display_name"], style: bold),
+        TextSpan(
+            text: (widget.post?['group']?['title']) ??
+                (widget.post?['page']?['title']) ??
+                (widget.post?["account"]?["display_name"]),
+            style: bold),
         const TextSpan(
           text: ' đã chia sẻ bài viết của ',
         )

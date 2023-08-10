@@ -88,7 +88,7 @@ class _BookmarkPageState extends ConsumerState<BookmarkPage> {
       if (response != null && mounted) {
         ref
             .read(postControllerProvider.notifier)
-            .actionUpdateDetailInPost(widget.type, response);
+            .actionUpdateDetailInPost(widget.type, response,);
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Đã lưu vào ${item['name']}")));
         if (mounted) {

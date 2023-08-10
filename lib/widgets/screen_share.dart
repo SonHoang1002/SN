@@ -249,7 +249,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
           } else if (groupShareSelected == null && pageShareSelected == null) {
             ref
                 .read(postControllerProvider.notifier)
-                .createUpdatePost(widget.type, response);
+                .createUpdatePost(widget.type, response,);
           }
         }
       }

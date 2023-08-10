@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,9 +44,12 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
     var response =
         await BookmarkApi().unBookmarkApi({"bookmark_id": widget.post['id']});
     if (response != null && mounted) {
-      ref
-          .read(postControllerProvider.notifier)
-          .actionUpdateDetailInPost(widget.type, response);
+      ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+          widget.type, response,
+          isIdCurrentUser: widget.friendData != null
+              ? ref.watch(meControllerProvider)[0]['id'] ==
+                  widget.friendData['id']
+              : true);
       Navigator.pop(context);
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("Bỏ lưu thành công")));
@@ -60,9 +65,12 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         ...widget.post,
         "notify": key == "unopen_notification_post" ? false : true
       };
-      ref
-          .read(postControllerProvider.notifier)
-          .actionUpdateDetailInPost(widget.type, newData);
+      ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+          widget.type, newData,
+          isIdCurrentUser: widget.friendData != null
+              ? ref.watch(meControllerProvider)[0]['id'] ==
+                  widget.friendData['id']
+              : true);
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(key == "unopen_notification_post"
@@ -208,8 +216,11 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  CreateNewFeed(post: widget.post, type: widget.type,friendData: widget.friendData,)));
+              builder: (context) => CreateNewFeed(
+                    post: widget.post,
+                    type: widget.type,
+                    friendData: widget.friendData,
+                  )));
     }
   }
 
@@ -226,7 +237,8 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
             : "Ghim bài viết",
         "icon": FontAwesomeIcons.thumbtack,
         "isShow": meData['id'] == widget.post['account']['id'] &&
-            widget.friendData == null,
+            (widget.friendData != null &&
+                widget.friendData['id'] == meData['id']),
       },
       {
         "key": widget.post['bookmarked'] != null && widget.post['bookmarked']
@@ -261,14 +273,18 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         "key": "comment_permission_post",
         "label": "Ai có thể bình luận về bài viết này?",
         "icon": FontAwesomeIcons.solidComment,
-        "isShow": meData['id'] == widget.post['account']['id']
+        "isShow": meData['id'] == widget.post['account']['id'] &&
+            (widget.friendData != null &&
+                widget.friendData['id'] == meData['id'])
       },
       {
         "key": "object_post",
         "label": "Chỉnh sửa đối tượng",
         "icon": FontAwesomeIcons.globe,
         "description": "Chỉnh sửa đối tượng theo dõi bài viết của bạn",
-        "isShow": meData['id'] == widget.post['account']['id']
+        "isShow": meData['id'] == widget.post['account']['id'] &&
+            (widget.friendData != null &&
+                widget.friendData['id'] == meData['id'])
       },
       {
         "key": widget.post['notify']

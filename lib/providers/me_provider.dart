@@ -78,10 +78,10 @@ class MeController extends StateNotifier<List> {
     }
   }
 
-  updateMedata(data) async {
-    if (data != null) {
-      state = [data];
-    }
+  updateMedata(List data) async {
+ 
+      state = data;
+ 
   }
 
   resetMeData() {
