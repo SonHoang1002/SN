@@ -131,6 +131,29 @@ class PageApi {
         .patchRequestBase('/api/v1/pages/$id/account_holder', params);
   }
 
+  Future getPageLikeAccount(id) async {
+    return await Api().getRequestBase(
+        '/api/v1/pages/$id/likes', {"excluded_page_account": true});
+  }
+
+  Future getPageFollowerAccount(id) async {
+    return await Api().getRequestBase(
+        '/api/v1/pages/$id/follows', {"excluded_page_account": true});
+  }
+
+  Future getPageBlockAccount(id) async {
+    return await Api().getRequestBase('/api/v1/pages/$id/blocks', null);
+  }
+
+  Future pageBlockAccount(id, params) async {
+    return await Api()
+        .postRequestBaseWithParams('/api/v1/pages/$id/blocks', params);
+  }
+
+  Future pageUnblockAccount(id, params) async {
+    return await Api().deleteRequestBase('/api/v1/pages/$id/blocks', params);
+  }
+
   Future pagePostMedia(data, id) async {
     return await Api().patchRequestBase('/api/v1/pages/$id', data);
   }

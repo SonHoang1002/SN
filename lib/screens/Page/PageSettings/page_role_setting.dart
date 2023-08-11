@@ -181,9 +181,14 @@ class _PageRoleSettingsState extends ConsumerState<PageRoleSettings> {
                                             object: listAdmin[index]
                                                 ["target_account"],
                                             path: listAdmin[index]
-                                                        ["target_account"]
-                                                    ['avatar_media']
-                                                ['preview_url']),
+                                                            ["target_account"]
+                                                        ['avatar_media'] !=
+                                                    null
+                                                ? listAdmin[index]
+                                                            ["target_account"]
+                                                        ['avatar_media']
+                                                    ['preview_url']
+                                                : linkAvatarDefault),
                                         const SizedBox(
                                           width: 16,
                                         ),
