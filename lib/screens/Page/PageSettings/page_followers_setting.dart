@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
 import 'package:social_network_app_mobile/providers/page/page_follower_management_provider.dart';
@@ -81,126 +83,135 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
     users = ref.watch(pageFollowControllerProvider).like;
     users_follow = ref.watch(pageFollowControllerProvider).follower;
     users_blocked = ref.watch(pageFollowControllerProvider).block;
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        title: const AppBarTitle(title: 'Người và trang khác'),
-        leading: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(
-            FontAwesomeIcons.angleLeft,
-            size: 18,
-            color: Theme.of(context).textTheme.titleLarge?.color,
-          ),
-        ),
-        shape: const Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
+    return LoaderOverlay(
+      useDefaultLoading: false,
+      overlayWidget: const Center(
+        child: CupertinoActivityIndicator(),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
-              child: Text(
-                "Người và trang khác",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          centerTitle: true,
+          title: const AppBarTitle(title: 'Người và trang khác'),
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              FontAwesomeIcons.angleLeft,
+              size: 18,
+              color: Theme.of(context).textTheme.titleLarge?.color,
+            ),
+          ),
+          shape:
+              const Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(bottom: 10.0),
+                child: Text(
+                  "Người và trang khác",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                ),
               ),
-            ),
-            const Text(
-              "Đây là nơi hiển thị những người và Trang khác đã thích tam hon trong sang. Từ danh sách người thích Trang, hãy nhấp vào để xóa hoặc cấm ai đó khỏi danh sách này. Người bị cấm không thể đăng, bình luận, gửi tin nhắn hoặc thực hiện các hành động khác trên Trang.",
-              style: TextStyle(fontSize: 14),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: 'Tìm kiếm...',
-                prefixIcon: Icon(Icons.search),
+              const Text(
+                "Đây là nơi hiển thị những người và Trang khác đã thích tam hon trong sang. Từ danh sách người thích Trang, hãy nhấp vào để xóa hoặc cấm ai đó khỏi danh sách này. Người bị cấm không thể đăng, bình luận, gửi tin nhắn hoặc thực hiện các hành động khác trên Trang.",
+                style: TextStyle(fontSize: 14),
               ),
-              onChanged: (value) {
-                onSearchTextChanged(value);
-              },
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: HeaderTabs(
-                    chooseTab: (tab) {
-                      showButton = false;
-                      if (mounted) {
-                        setState(() {
-                          selectAll = false;
-                          menuSelected = tab;
-                        });
-                        onClickToggleChecked(false);
-                      }
-                      if (tab == 'like') {
+              const SizedBox(
+                height: 10,
+              ),
+              TextFormField(
+                decoration: const InputDecoration(
+                  hintText: 'Tìm kiếm...',
+                  prefixIcon: Icon(Icons.search),
+                ),
+                onChanged: (value) {
+                  onSearchTextChanged(value);
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: HeaderTabs(
+                      chooseTab: (tab) {
+                        showButton = false;
                         if (mounted) {
                           setState(() {
-                            filteredUserList = users;
+                            selectAll = false;
+                            menuSelected = tab;
                           });
+                          onClickToggleChecked(false);
                         }
-                      } else if (tab == 'follower') {
-                        if (mounted) {
-                          setState(() {
-                            filteredUserList = users_follow;
-                          });
-                        }
-                      } else if (tab == 'blocked') {
-                        if (mounted) {
-                          filteredUserList = users_blocked;
-                        }
-                      }
-                      checkboxList();
-                    },
-                    listTabs: pageUsersType,
-                    tabCurrent: menuSelected)),
-            Expanded(child: renderTab(widget.data)),
-            showButton
-                ? Align(
-                    alignment: Alignment.bottomCenter,
-                    child: ButtonPrimary(
-                      label: menuSelected == "blocked"
-                          ? "Bỏ cấm trên trang"
-                          : 'Cấm trên trang',
-                      handlePress: () async {
-                        var res;
-                        if (menuSelected != "blocked") {
-                          res = await PageApi().pageBlockAccount(
-                              widget.data["id"],
-                              {"target_account_ids": arrayToStringList()});
-                        } else {
-                          res = await PageApi().pageUnblockAccount(
-                              widget.data["id"],
-                              {"target_account_ids": arrayToStringList()});
-                        }
-                        await ref
-                            .read(pageFollowControllerProvider.notifier)
-                            .getDataFollowPage(widget.data['id']);
-                        if (mounted) {
-                          if (res != null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text("Cập nhật thành công")));
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text("Cập nhật thất bại")));
+                        if (tab == 'like') {
+                          if (mounted) {
+                            setState(() {
+                              filteredUserList = users;
+                            });
+                          }
+                        } else if (tab == 'follower') {
+                          if (mounted) {
+                            setState(() {
+                              filteredUserList = users_follow;
+                            });
+                          }
+                        } else if (tab == 'blocked') {
+                          if (mounted) {
+                            filteredUserList = users_blocked;
                           }
                         }
-                        //Navigator.pop(context);
+                        checkboxList();
                       },
-                    ),
-                  )
-                : Container(),
-          ],
+                      listTabs: pageUsersType,
+                      tabCurrent: menuSelected)),
+              Expanded(child: renderTab(widget.data)),
+              showButton
+                  ? Align(
+                      alignment: Alignment.bottomCenter,
+                      child: ButtonPrimary(
+                        label: menuSelected == "blocked"
+                            ? "Bỏ cấm trên trang"
+                            : 'Cấm trên trang',
+                        handlePress: () async {
+                          context.loaderOverlay.show();
+                          var res;
+                          if (menuSelected != "blocked") {
+                            res = await PageApi().pageBlockAccount(
+                                widget.data["id"],
+                                {"target_account_ids": arrayToStringList()});
+                          } else {
+                            res = await PageApi().pageUnblockAccount(
+                                widget.data["id"],
+                                {"target_account_ids": arrayToStringList()});
+                          }
+                          await ref
+                              .read(pageFollowControllerProvider.notifier)
+                              .getDataFollowPage(widget.data['id']);
+                          if (mounted) {
+                            context.loaderOverlay.hide();
+                            if (res != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Cập nhật thành công")));
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Cập nhật thất bại")));
+                            }
+                          }
+                          //Navigator.pop(context);
+                        },
+                      ),
+                    )
+                  : Container(),
+            ],
+          ),
         ),
       ),
     );

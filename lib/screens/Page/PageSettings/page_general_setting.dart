@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
@@ -66,244 +67,256 @@ class _PageGeneralSettingsState extends ConsumerState<PageGeneralSettings> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        title: const AppBarTitle(title: 'Chung'),
-        leading: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(
-            FontAwesomeIcons.angleLeft,
-            size: 18,
-            color: Theme.of(context).textTheme.titleLarge?.color,
-          ),
-        ),
-        shape: const Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
+    return LoaderOverlay(
+      useDefaultLoading: false,
+      overlayWidget: const Center(
+        child: CupertinoActivityIndicator(),
       ),
-      body: Container(
-        height: double.infinity,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Quản lý nội dung trên trang",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                /*  const Text(
-                  "Giới hạn người dùng đăng bài",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0, bottom: 20),
-                  child: TextFormField(
-                    enabled: false,
-                    autofocus: false,
-                    decoration: const InputDecoration(
-                      /* fillColor: greyColorOutlined,
-                      filled: true, */
-                      border: OutlineInputBorder(),
-                      labelText: 'Không cho phép đăng bài',
-                    ),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          centerTitle: true,
+          title: const AppBarTitle(title: 'Chung'),
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              FontAwesomeIcons.angleLeft,
+              size: 18,
+              color: Theme.of(context).textTheme.titleLarge?.color,
+            ),
+          ),
+          shape:
+              const Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
+        ),
+        body: Container(
+          height: double.infinity,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Quản lý nội dung trên trang",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                   ),
-                ), */
-                const Text(
-                  "Giới hạn người dùng đăng bài",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    buildFilterUsersSelectionBottomSheet();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 16.0, bottom: 10),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  /*  const Text(
+                    "Giới hạn người dùng đăng bài",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0, bottom: 20),
                     child: TextFormField(
-                      controller: _controller,
                       enabled: false,
                       autofocus: false,
                       decoration: const InputDecoration(
+                        /* fillColor: greyColorOutlined,
+                        filled: true, */
                         border: OutlineInputBorder(),
-                        labelText: 'Giới hạn độ tuổi',
+                        labelText: 'Không cho phép đăng bài',
+                      ),
+                    ),
+                  ), */
+                  const Text(
+                    "Giới hạn người dùng đăng bài",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      buildFilterUsersSelectionBottomSheet();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 16.0, bottom: 10),
+                      child: TextFormField(
+                        controller: _controller,
+                        enabled: false,
+                        autofocus: false,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Giới hạn độ tuổi',
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Text(
-                    "Khi giới hạn tuổi cho Trang của bạn, những người có tuổi bé hơn sẽ không thể xem được Trang hoặc nội dung Trang của bạn"),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(0, 3, 0, 6),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          color: focus.hasFocus ? secondaryColor : greyColor,
-                          width: focus.hasFocus ? 2 : 1),
-                      borderRadius: const BorderRadius.all(Radius.circular(8))),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                        child: Wrap(
-                            children: List.generate(monitored_keywords.length,
-                                (index) => selectedArea(context, index))),
-                      ),
-                      TextFormField(
-                        focusNode: focus,
-                        controller: _categoryController,
-                        onEditingComplete: () {
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          monitored_keywords = [
-                            ...monitored_keywords,
-                            _categoryController.text
-                          ];
-                          setState(() {
-                            _categoryController.text = "";
-                          });
-                        },
-                        decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            suffixIcon: Icon(Icons.search),
-                            labelText: "Thêm từ, cụm từ cần kiểm duyệt",
-                            labelStyle:
-                                TextStyle(color: Colors.grey, fontSize: 16),
-                            contentPadding: EdgeInsets.fromLTRB(10, 12, 0, 0)),
-                      ),
-                    ],
+                  Text(
+                      "Khi giới hạn tuổi cho Trang của bạn, những người có tuổi bé hơn sẽ không thể xem được Trang hoặc nội dung Trang của bạn"),
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0, top: 10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      /* const Divider(
-                        height: 20,
-                        thickness: 1,
-                      ), */
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: ButtonPrimary(
-                                label: 'Lưu thay đổi',
-                                handlePress: () async {
-                                  var res = await PageApi().pagePostMedia(
-                                    {
-                                      "monitored_keywords": monitored_keywords,
-                                    },
-                                    widget.data['id'],
-                                  );
-                                  await PageApi()
-                                      .updateSettingsPage(widget.data['id'], {
-                                    "age_restrictions":
-                                        pSettings.age_restrictions,
-                                  });
-                                  if (mounted) {
-                                    if (res != null) {
-                                      pSettings.cencored = monitored_keywords;
-                                      ref
-                                          .read(pageSettingsControllerProvider
-                                              .notifier)
-                                          .updateState(pSettings);
-                                      Navigator.pop(context);
-                                    } else {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content: Text(
-                                        'Có lỗi sảy ra , xin vui lòng thử lại sau',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      )));
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(0, 3, 0, 6),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: focus.hasFocus ? secondaryColor : greyColor,
+                            width: focus.hasFocus ? 2 : 1),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(8))),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                          child: Wrap(
+                              children: List.generate(monitored_keywords.length,
+                                  (index) => selectedArea(context, index))),
+                        ),
+                        TextFormField(
+                          focusNode: focus,
+                          controller: _categoryController,
+                          onEditingComplete: () {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            monitored_keywords = [
+                              ...monitored_keywords,
+                              _categoryController.text
+                            ];
+                            setState(() {
+                              _categoryController.text = "";
+                            });
+                          },
+                          decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              suffixIcon: Icon(Icons.search),
+                              labelText: "Thêm từ, cụm từ cần kiểm duyệt",
+                              labelStyle:
+                                  TextStyle(color: Colors.grey, fontSize: 16),
+                              contentPadding:
+                                  EdgeInsets.fromLTRB(10, 12, 0, 0)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0, top: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        /* const Divider(
+                          height: 20,
+                          thickness: 1,
+                        ), */
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: ButtonPrimary(
+                                  label: 'Lưu thay đổi',
+                                  handlePress: () async {
+                                    context.loaderOverlay.show();
+                                    var res = await PageApi().pagePostMedia(
+                                      {
+                                        "monitored_keywords":
+                                            monitored_keywords,
+                                      },
+                                      widget.data['id'],
+                                    );
+                                    await PageApi()
+                                        .updateSettingsPage(widget.data['id'], {
+                                      "age_restrictions":
+                                          pSettings.age_restrictions,
+                                    });
+                                    if (mounted) {
+                                      context.loaderOverlay.hide();
+                                      if (res != null) {
+                                        pSettings.cencored = monitored_keywords;
+                                        ref
+                                            .read(pageSettingsControllerProvider
+                                                .notifier)
+                                            .updateState(pSettings);
+                                        Navigator.pop(context);
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                                content: Text(
+                                          'Có lỗi sảy ra , xin vui lòng thử lại sau',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        )));
+                                      }
                                     }
-                                  }
-                                },
+                                  },
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: ButtonPrimary(
-                                label: 'Đặt lại',
-                                isGrey: true,
-                                handlePress: () {
-                                  setState(() {
-                                    monitored_keywords = [];
-                                  });
-                                },
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: ButtonPrimary(
+                                  label: 'Đặt lại',
+                                  isGrey: true,
+                                  handlePress: () {
+                                    setState(() {
+                                      monitored_keywords = [];
+                                    });
+                                  },
+                                ),
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                /* const Text(
-                  "Gỡ trang",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
-                  child: Text(
-                    "Khi nhấp vào xóa, Trang của bạn sẽ bị xóa vĩnh viễn. Sau khi xóa vĩnh viễn, tất cả các dữ liệu của Trang sẽ bị xóa và không thể khôi phục lại.",
-                  ),
-                ),
-                ButtonPrimary(
-                  label: 'Xoá Trang ${widget.data['title']}',
-                  isGrey: true,
-                  handlePress: () {
-                    setState(() {
-                      showCupertinoModalPopup(
-                        context: context,
-                        builder: (BuildContext context) => CupertinoAlertDialog(
-                          title: const Text('Gỡ Trang'),
-                          content: const Column(
-                            children: [
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                  'Bạn có chắc chắn muốn xóa vĩnh viễn Trang này? Tất cả dữ liệu sẽ bị xóa và không thể khôi phục sau khi bạn xác nhận Gỡ Trang',
-                                  style: TextStyle(
-                                      fontSize: 13, color: greyColor)),
-                            ],
-                          ),
-                          actions: <CupertinoDialogAction>[
-                            CupertinoDialogAction(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Huỷ'),
-                            ),
-                            CupertinoDialogAction(
-                              onPressed: () async {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Gỡ Trang vĩnh viễn'),
                             ),
                           ],
                         ),
-                      );
-                    });
-                  },
-                ), */
-              ],
+                      ],
+                    ),
+                  ),
+                  /* const Text(
+                    "Gỡ trang",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                    child: Text(
+                      "Khi nhấp vào xóa, Trang của bạn sẽ bị xóa vĩnh viễn. Sau khi xóa vĩnh viễn, tất cả các dữ liệu của Trang sẽ bị xóa và không thể khôi phục lại.",
+                    ),
+                  ),
+                  ButtonPrimary(
+                    label: 'Xoá Trang ${widget.data['title']}',
+                    isGrey: true,
+                    handlePress: () {
+                      setState(() {
+                        showCupertinoModalPopup(
+                          context: context,
+                          builder: (BuildContext context) => CupertinoAlertDialog(
+                            title: const Text('Gỡ Trang'),
+                            content: const Column(
+                              children: [
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                    'Bạn có chắc chắn muốn xóa vĩnh viễn Trang này? Tất cả dữ liệu sẽ bị xóa và không thể khôi phục sau khi bạn xác nhận Gỡ Trang',
+                                    style: TextStyle(
+                                        fontSize: 13, color: greyColor)),
+                              ],
+                            ),
+                            actions: <CupertinoDialogAction>[
+                              CupertinoDialogAction(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Huỷ'),
+                              ),
+                              CupertinoDialogAction(
+                                onPressed: () async {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Gỡ Trang vĩnh viễn'),
+                              ),
+                            ],
+                          ),
+                        );
+                      });
+                    },
+                  ), */
+                ],
+              ),
             ),
           ),
         ),

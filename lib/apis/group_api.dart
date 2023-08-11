@@ -13,6 +13,14 @@ class GroupApi {
     return await Api().getRequestBase('/api/v1/groups/$id/accounts',null);
   }
 
+  Future joinGroupRequest(id) async {
+    return await Api().postRequestBase('/api/v1/groups/$id/accounts', null);
+  }
+
+  Future removeGroupRequest(id) async {
+    return await Api().deleteRequestBase('/api/v1/groups/$id/leave', null);
+  }
+
   Future fetchCategories(params) async {
     return await Api().getRequestBase('/api/v1/categories', params);
   }
