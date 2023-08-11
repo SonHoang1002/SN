@@ -1,7 +1,11 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+
+import '../../providers/grow/grow_provider.dart';
 
 class Payment extends ConsumerStatefulWidget {
   const Payment({Key? key}) : super(key: key);
@@ -13,7 +17,12 @@ class Payment extends ConsumerStatefulWidget {
 class _PaymentState extends ConsumerState<Payment> {
   @override
   Widget build(BuildContext context) {
-    return  Column(
+    dynamic transactions = ref.watch(growControllerProvider).growTransactions;
+    int balance = transactions["balance"];
+
+    String formattedBalance = NumberFormat.decimalPattern().format(balance);
+
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Divider(
@@ -21,37 +30,46 @@ class _PaymentState extends ConsumerState<Payment> {
           thickness: 1,
         ),
         Padding(
-            padding: const EdgeInsets.only(top: 16, left: 16, right: 16.0),
+          padding: const EdgeInsets.only(top: 16, left: 16, right: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children:  [
-             const  Text('Số dư xư'),
+            children: [
+              const Text('Số dư xu'),
               Padding(
                 padding: const EdgeInsets.only(top: 32.0),
-                child: Row(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SvgPicture.asset('assets/IconCoin.svg',
-                            width: 40,
-                            height: 40,
-                            color: Colors.amber),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 16.0),
-                          child: Text('0', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 36),),
+                            width: 40, height: 40, color: Colors.amber),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: Text(
+                            formattedBalance,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w700, fontSize: 36),
+                          ),
                         ),
                       ],
                     ),
+                    const SizedBox(height: 20,),
                     Center(
                       child: ElevatedButton(
                         onPressed: () {
                           // Do something
                         },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.redAccent[400], // background (button) color// foreground (text) color
-                          ),
-                        child: const Text('Nạp', style: TextStyle(color: Colors.white),),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.redAccent[
+                              400], // background (button) color// foreground (text) color
+                          minimumSize: Size(200,40)
+                        ),
+                        child: const Text(
+                          'Nạp',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     )
                   ],
@@ -61,8 +79,8 @@ class _PaymentState extends ConsumerState<Payment> {
           ),
         ),
         const Padding(
-          padding:  EdgeInsets.only(top: 32.0),
-          child:  Divider(
+          padding: EdgeInsets.only(top: 32.0),
+          child: Divider(
             height: 16,
             thickness: 1,
           ),
@@ -75,23 +93,33 @@ class _PaymentState extends ConsumerState<Payment> {
               Row(
                 children: [
                   SvgPicture.asset('assets/IconCoin.svg',
-                      width: 22,
-                      height: 22,
-                      color: Colors.grey),
+                      width: 22, height: 22, color: Colors.grey),
                   const Padding(
                     padding: EdgeInsets.only(left: 10.0),
-                    child: Text('Doanh thu quà tặng', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),),
+                    child: Text(
+                      'Doanh thu quà tặng',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
+                    ),
                   ),
                 ],
               ),
-             const Row(
-               children: [  Padding(
-                 padding: EdgeInsets.only(left: 10.0),
-                 child: Text('\$0', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 16),),
-               ),
-                  Icon(FontAwesomeIcons.chevronRight, size: 12,)],
-             )
-
+              const Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: Text(
+                      '\$0',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
+                    ),
+                  ),
+                  Icon(
+                    FontAwesomeIcons.chevronRight,
+                    size: 12,
+                  )
+                ],
+              )
             ],
           ),
         ),
@@ -112,7 +140,10 @@ class _PaymentState extends ConsumerState<Payment> {
                   ),
                 ),
                 SizedBox(width: 3),
-                Icon(FontAwesomeIcons.chevronRight, size: 12,)
+                Icon(
+                  FontAwesomeIcons.chevronRight,
+                  size: 12,
+                )
               ],
             ),
           ),

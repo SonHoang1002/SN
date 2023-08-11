@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -111,7 +113,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
         setState(() {
           pagesRender = ref.read(pageListControllerProvider).pageAdmin;
         });
-      } else if (key == "share_user_page_other") { 
+      } else if (key == "share_user_page_other") {
         setState(() {
           renderType = "users";
         });
@@ -151,7 +153,6 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
         if (response != null) {
           List resGroups = response['groups'] ?? [];
           List resPages = response['pages'] ?? [];
-          
 
           setState(() {
             isSearch = false;
@@ -225,11 +226,14 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
       if (pageShareSelected != null) {
         data['page_id'] = pageShareSelected['id'];
       }
+      if (userShareSelected != null) {
+        data['target_account_id'] = userShareSelected['id'];
+      }
 
       if (['post', 'moment'].contains(widget.entityType)) {
-        data['reblog_of_id'] = widget.entityShare['id'];
-        var response = await PostApi().createStatus(data);
-
+        data['reblog_of_id'] = widget.entityShare['id']; 
+        
+        var response = await PostApi().createStatus(data); 
         if (response != null) {
           if (context.mounted) {
             context.loaderOverlay.hide();
@@ -245,7 +249,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
           } else if (groupShareSelected == null && pageShareSelected == null) {
             ref
                 .read(postControllerProvider.notifier)
-                .createUpdatePost(widget.type, response);
+                .createUpdatePost(widget.type, response,);
           }
         }
       }
@@ -291,7 +295,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
               automaticallyImplyLeading: false,
               title: const AppBarTitle(title: "Chia sẻ"),
               actions: [
-                if (!['groups', 'pages',"users"].contains(renderType))
+                if (!['groups', 'pages', "users"].contains(renderType))
                   ButtonPrimary(
                     label: "Chia sẻ",
                     handlePress: handleShare,
@@ -303,7 +307,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
             body: Container(
               margin:
                   const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
-              child: ['groups', 'pages',"users"].contains(renderType)
+              child: ['groups', 'pages', "users"].contains(renderType)
                   ? Column(
                       children: [
                         Row(
@@ -379,6 +383,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
                         children: [
                           CreateFeedStatusHeader(
                             entity: groupShareSelected ?? pageShareSelected,
+                            sharePostFriend: userShareSelected,
                             visibility: visibility,
                             handleUpdateData: handleUpdateData,
                             friendSelected: const [],

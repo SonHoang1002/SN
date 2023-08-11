@@ -31,55 +31,55 @@ class UserPageApi {
   }
 
   Future updateOtherInformation(idUser, data) async {
-    return Api().postRequestBase('/api/v1/account_general_infomation', data);
+    return await Api().postRequestBase('/api/v1/account_general_infomation', data);
   }
 
   Future getUserMedia(idUser, params) async {
-    return Api()
+    return await Api()
         .getRequestBase('/api/v1/accounts/$idUser/media_attachments', params);
   }
 
   Future getUserAlbum(idUser, params) async {
-    return Api().getRequestBase('/api/v1/accounts/$idUser/albums', params);
+    return await Api().getRequestBase('/api/v1/accounts/$idUser/albums', params);
   }
 
   Future getUserMediaAlbum(idAlbum, params) async {
-    return Api()
+    return await Api()
         .getRequestBase('/api/v1/albums/$idAlbum/media_attachments', params);
   }
 
 //1,2 s
   Future getUserFriend(idUser, params) async {
-    return Api().getRequestBase('/api/v1/accounts/$idUser/friendships', params);
+    return await Api().getRequestBase('/api/v1/accounts/$idUser/friendships', params);
   }
 
 //345ms
   Future getUserFeatureContent(idUser) async {
-    return Api()
+    return await Api()
         .getRequestBase('/api/v1/accounts/$idUser/featured_contents', null);
   }
 
   Future getUserFeatureContentMedia(idUser, idEntity) async {
-    return Api().getRequestBase(
+    return await Api().getRequestBase(
         '/api/v1/accounts/$idUser/featured_contents/$idEntity/media_attachments',
         null);
   }
 
   Future getHobbiesByCategories(String keyword) async {
-    return Api().getRequestBase('/api/v1/categories', {"keyword": keyword});
+    return await Api().getRequestBase('/api/v1/categories', {"keyword": keyword});
   }
 
   Future getMediaAttachment(String userId, params) async {
-    return Api()
+    return await Api()
         .getRequestBase('/api/v1/accounts/$userId/media_attachments', params);
   }
 
   Future createNoticeCollection(data) async {
-    return Api().postRequestBase('/api/v1/account_featured_contents', data);
+    return await Api().postRequestBase('/api/v1/account_featured_contents', data);
   }
 
   Future getLivingPlaceByKeyword(String keyword) async {
-    return Api().getRequestBase('/api/v1/places', {"keyword": keyword});
+    return await Api().getRequestBase('/api/v1/places', {"keyword": keyword});
   }
 }
 

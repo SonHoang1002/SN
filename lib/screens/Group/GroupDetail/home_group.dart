@@ -22,6 +22,7 @@ import 'package:social_network_app_mobile/widgets/AvatarStack/avatar_stack.dart'
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/chip_menu.dart';
+import 'package:social_network_app_mobile/widgets/skeleton.dart';
 
 import '../../../widgets/AvatarStack/positions.dart';
 
@@ -42,6 +43,7 @@ class HomeGroup extends ConsumerStatefulWidget {
 class _HomeGroupState extends ConsumerState<HomeGroup> {
   final scrollController = ScrollController();
   String menuSelected = '';
+  bool isLoading = false;
   File? url;
   late File image;
   final settings = RestrictedPositions(
@@ -58,7 +60,11 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
     scrollController.addListener(
       () {
         if (scrollController.position.maxScrollExtent ==
-            scrollController.offset) {
+                scrollController.offset &&
+            !isLoading) {
+          setState(() {
+            isLoading = true;
+          });
           String maxId =
               ref.read(groupListControllerProvider).groupPost.last['id'];
           ref.read(groupListControllerProvider.notifier).getPostGroup({
@@ -67,6 +73,9 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
             "limit": 3,
             "max_id": maxId
           }, widget.groupDetail['id']);
+          setState(() {
+            isLoading = false;
+          });
         }
       },
     );
@@ -407,7 +416,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                       widget.groupDetail?['group_relationship']?['admin'] ||
                               widget.groupDetail?['group_relationship']
                                   ?['moderator']
-                          ?   const Column(
+                          ? const Column(
                               children: [
                                 Divider(
                                   height: 20,
@@ -511,8 +520,18 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
           checkVisible()
               ? postGroup.isEmpty
                   ? SliverToBoxAdapter(
-                      child: buildTextContent("Chưa có bài viết nào", false,
-                          fontSize: 14, isCenterLeft: false),
+                      child: isLoading
+                          ? buildTextContent("Chưa có bài viết nào", false,
+                              fontSize: 14, isCenterLeft: false)
+                          : ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: 3,
+                              itemBuilder: (context, i) {
+                                return Center(
+                                  child: SkeletonCustom().postSkeleton(context),
+                                );
+                              }),
                     )
                   : SliverList(
                       delegate: SliverChildBuilderDelegate(
@@ -532,6 +551,10 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                   },
                   childCount: 0,
                 )),
+          SliverToBoxAdapter(
+              child: isLoading
+                  ? SkeletonCustom().postSkeleton(context)
+                  : const SizedBox())
         ],
       ),
     );

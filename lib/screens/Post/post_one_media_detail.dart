@@ -421,7 +421,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
           MaterialPageRoute(
             builder: (context) => const UserPageHome(),
             settings: RouteSettings(
-              arguments: {'id': account['id']},
+              arguments: {'id': account['id'],'user':account},
             ),
           ));
     }

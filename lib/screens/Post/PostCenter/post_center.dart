@@ -147,11 +147,12 @@ class PostCenter extends StatelessWidget {
         updateDataFunction: updateDataFunction,
       );
     } else if ([postTarget, postVisibleQuestion].contains(postType)) {
-      return PostTarget(
-        post: post,
-        type: postType == postVisibleQuestion ? postQuestionAnwer : postTarget,
-        statusQuestion: post['status_question'],
-      );
+      // return PostTarget(
+      //   post: post,
+      //   type: postType == postVisibleQuestion ? postQuestionAnwer : postTarget,
+      //   statusQuestion: post['status_question'],
+      // );
+      return const SizedBox();
     }
     // else if (postType == postShareEvent) {
     //   return PostShareEvent(post: widget.post);

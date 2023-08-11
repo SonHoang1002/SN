@@ -37,9 +37,11 @@ class _GrowOwnerState extends ConsumerState<GrowOwner> {
     await ref
         .read(growControllerProvider.notifier)
         .getListGrowsOwner(configParams);
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override

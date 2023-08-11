@@ -79,7 +79,6 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
 
   @override
   Widget build(BuildContext context) {
-    print("groupDetail ${jsonEncode(groupDetail)}");
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

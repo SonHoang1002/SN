@@ -55,7 +55,7 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
       }
     }
 
-    scrollController.addListener(() async{
+    scrollController.addListener(() async {
       if (scrollController.position.maxScrollExtent ==
               scrollController.offset &&
           !isLoading) {
@@ -65,18 +65,18 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
           });
         }
         if (friendsAll != []) {
-      await ref
-            .read(userInformationProvider.notifier)
-            .getUserFriend(widget.user['id'], {
-          "limit": 10,
-          "max_id": ref.watch(userInformationProvider).friends.last['id'],
-        });
+          await ref
+              .read(userInformationProvider.notifier)
+              .getUserFriend(widget.user['id'], {
+            "limit": 10,
+            "max_id": ref.watch(userInformationProvider).friends.last['id'],
+          });
         }
         if (mounted) {
           setState(() {
             if (ref.watch(userInformationProvider).friends != []) {
               friendsAll = ref.watch(userInformationProvider).friends;
-               isLoading = false; // Kết thúc quá trình tải dữ liệu
+              isLoading = false; // Kết thúc quá trình tải dữ liệu
             }
           });
         }
@@ -168,7 +168,7 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
                     ? const Center(
                         child: Text("Không có bạn bè để hiển thị"),
                       )
-                    : Expanded(
+                    : Flexible(
                         child: ListView.builder(
                             shrinkWrap: true,
                             controller: scrollController,
@@ -188,7 +188,8 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
                                                 settings: RouteSettings(
                                                   arguments: {
                                                     'id': friendsAll[index]
-                                                        ['id']
+                                                        ['id'],
+                                                    "user": friendsAll[index]
                                                   },
                                                 ),
                                               ));
@@ -213,10 +214,11 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
                                   ),
                                 )),
                       ),
-                      isLoading? const Center(
-                                                  child: CupertinoActivityIndicator(),
-                                                )
-                                              : const SizedBox()
+            isLoading
+                ? const Center(
+                    child: CupertinoActivityIndicator(),
+                  )
+                : const SizedBox()
           ],
         ),
       ),

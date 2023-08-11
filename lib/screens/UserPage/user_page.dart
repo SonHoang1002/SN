@@ -1,4 +1,3 @@
-
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -133,10 +132,6 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   ValueNotifier<bool> following = ValueNotifier(false);
   String userType = '';
-  // "me": current user on device,
-  // "friend": current user on device's friend
-  // "stranger": not a friend of current user on device == backend 's CAN_REQUEST
-  // "requested": OUTGOING_REQUEST,
 
   // save id of post
   ValueNotifier<dynamic> focusCurrentPostIndex = ValueNotifier("");
@@ -162,6 +157,7 @@ class _UserPageState extends ConsumerState<UserPage> {
               as Map<String, dynamic>;
           setState(() {
             id = queryParams['id'];
+            userData = queryParams['user'];
           });
         }
       });
@@ -171,42 +167,43 @@ class _UserPageState extends ConsumerState<UserPage> {
         ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
         ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
         final deviceUserId = await SecureStorage().getKeyStorage('userId');
-        // List postUserNew =
-        //     await UserPageApi().getListPostApi(id, {"exclude_replies": true}) ??
-        //         [];
 
         ref.read(postControllerProvider.notifier).getListPostPin(id);
-        // List lifeEventNew = await UserPageApi().getListLifeEvent(id) ?? [];
 
-        ref
-            .read(postControllerProvider.notifier)
-            .getListPostUserPage(id, {"limit": 3, "exclude_replies": true});
-
-        var friendNew = await UserPageApi().getUserFriend(id, {'limit': 20});
-        setState(() {
-          userData = ref.watch(userInformationProvider).userInfor;
-          userAbout = ref.watch(userInformationProvider).userMoreInfor;
-          lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
-          postUser = ref.watch(postControllerProvider).postUserPage;
-          pinPost = ref.watch(postControllerProvider).postsPin;
-          friend = friendNew;
-          if (deviceUserId == id) {
-            userType = 'me';
-          } else {
-            if (userData['relationships'] != null &&
-                userData['relationships']['friendship_status'] ==
-                    'ARE_FRIENDS') {
-              userType = 'friend';
-            } else if (userData['relationships'] != null &&
-                userData['relationships']['friendship_status'] ==
-                    'OUTGOING_REQUEST') {
-              userType = 'requested';
+        ref.read(postControllerProvider.notifier).getListPostUserPage(
+            id == ref.watch(meControllerProvider)[0]['id'],
+            id,
+            {"limit": 3, "exclude_replies": true});
+        var friendNew =
+            await UserPageApi().getUserFriend(id, {'limit': 20}) ?? [];
+        if (mounted) {
+          setState(() {
+            userData = ref.watch(userInformationProvider).userInfor;
+            userAbout = ref.watch(userInformationProvider).userMoreInfor;
+            lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
+            postUser = (id == ref.watch(meControllerProvider)[0]['id']
+                ? ref.watch(postControllerProvider).postUserPage
+                : ref.watch(postControllerProvider).postAnotherUserPage);
+            pinPost = ref.watch(postControllerProvider).postsPin;
+            friend = friendNew;
+            if (deviceUserId == id) {
+              userType = 'me';
             } else {
-              userType = 'stranger';
+              if (userData['relationships'] != null &&
+                  userData['relationships']['friendship_status'] ==
+                      'ARE_FRIENDS') {
+                userType = 'friend';
+              } else if (userData['relationships'] != null &&
+                  userData['relationships']['friendship_status'] ==
+                      'OUTGOING_REQUEST') {
+                userType = 'requested';
+              } else {
+                userType = 'stranger';
+              }
+              following.value = userData['relationships']?['following'];
             }
-            following.value = userData['relationships']['following'];
-          }
-        });
+          });
+        }
       });
     }
 
@@ -227,7 +224,9 @@ class _UserPageState extends ConsumerState<UserPage> {
               maxId = ref.read(postControllerProvider).postUserPage.last['id'];
             }
             ref.read(postControllerProvider.notifier).getListPostUserPage(
-                id, {"max_id": maxId, "exclude_replies": true, "limit": 10});
+                id == ref.watch(meControllerProvider)[0]['id'],
+                id,
+                {"max_id": maxId, "exclude_replies": true, "limit": 10});
           });
           //   DefaultCacheManager().emptyCache();
         }
@@ -235,25 +234,28 @@ class _UserPageState extends ConsumerState<UserPage> {
     });
   }
 
-  void fetchData() async {
-    ref.read(postControllerProvider.notifier).getListPostPin(id);
-    ref
-        .read(postControllerProvider.notifier)
-        .getListPostUserPage(id, {"limit": 3, "exclude_replies": true});
-    ref.read(userInformationProvider.notifier).getUserInformation(id);
-    ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
-    ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
-    ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
-    var friendNew = await UserPageApi().getUserFriend(id, {'limit': 20});
-    setState(() {
-      userData = ref.watch(userInformationProvider).userInfor;
-      userAbout = ref.watch(userInformationProvider).userMoreInfor;
-      lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
-      postUser = ref.watch(postControllerProvider).postUserPage;
-      pinPost = ref.watch(postControllerProvider).postsPin;
-      friend = friendNew;
-    });
-  }
+  // void fetchData() async {
+  //   ref.read(postControllerProvider.notifier).getListPostPin(id);
+  //   ref.read(postControllerProvider.notifier).getListPostUserPage(
+  //       id == ref.watch(meControllerProvider)[0]['id'],
+  //       id,
+  //       {"limit": 3, "exclude_replies": true});
+  //   ref.read(userInformationProvider.notifier).getUserInformation(id);
+  //   ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
+  //   ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
+  //   ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
+  //   var friendNew = await UserPageApi().getUserFriend(id, {'limit': 20});
+  //   setState(() {
+  //     userData = ref.watch(userInformationProvider).userInfor;
+  //     userAbout = ref.watch(userInformationProvider).userMoreInfor;
+  //     lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
+  //     postUser = (id == ref.watch(meControllerProvider)[0]['id']
+  //             ? ref.watch(postControllerProvider).postUserPage
+  //             : ref.watch(postControllerProvider).postAnotherUserPage);
+  //     pinPost = ref.watch(postControllerProvider).postsPin;
+  //     friend = friendNew;
+  //   });
+  // }
 
   _reloadFunction(dynamic type, dynamic newData) {
     if (type == null && newData == null) {
@@ -261,7 +263,10 @@ class _UserPageState extends ConsumerState<UserPage> {
       return;
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(postControllerProvider.notifier).changeProcessingPost(newData);
+      ref.read(postControllerProvider.notifier).changeProcessingPost(newData,
+          isIdCurrentUser: userData != null
+              ? userData['id'] == ref.watch(meControllerProvider)[0]['id']
+              : true);
       setState(() {});
     });
   }
@@ -329,10 +334,17 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   Widget buildUserPageBody(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    final theme = pv.Provider.of<ThemeManager>(context); 
-    if (ref.watch(postControllerProvider).postUserPage.isNotEmpty) {
-      postUser = ref.read(postControllerProvider).postUserPage;
-      isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
+    final theme = pv.Provider.of<ThemeManager>(context);
+    if (id == ref.watch(meControllerProvider)[0]['id']) {
+      if (ref.watch(postControllerProvider).postUserPage.isNotEmpty) {
+        postUser = ref.read(postControllerProvider).postUserPage;
+        isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
+      }
+    } else {
+      if (ref.watch(postControllerProvider).postAnotherUserPage.isNotEmpty) {
+        postUser = ref.read(postControllerProvider).postAnotherUserPage;
+        isMorePageUser = ref.watch(postControllerProvider).isMoreAnother;
+      }
     }
     return CustomScrollView(controller: scrollController, slivers: [
       SliverToBoxAdapter(
@@ -706,7 +718,9 @@ class _UserPageState extends ConsumerState<UserPage> {
             opacity: 0.1,
           ),
           UserPageFriendBlock(user: userData, friends: friend),
-          id == ref.watch(meControllerProvider)[0]['id'] || userType == "friend"
+          id == ref.watch(meControllerProvider)[0]['id'] ||
+                  // userType == "friend" ||
+                  userData?['allow_post_status'] == true
               ? Column(
                   children: [
                     const CrossBar(
@@ -787,6 +801,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                 reloadFunction: () {
                   setState(() {});
                 },
+                friendData: userData,
               ));
         },
         childCount: postUser.length,
@@ -809,11 +824,10 @@ class _UserPageState extends ConsumerState<UserPage> {
       appBar: buildAppBar(context),
       body: RefreshIndicator(
         onRefresh: () async {
-          // Future.delayed(const Duration(milliseconds: 800), () async{
-          await ref
-              .read(postControllerProvider.notifier)
-              .getListPostUserPage(id, {"exclude_replies": true, "limit": 20});
-          // });
+          await ref.read(postControllerProvider.notifier).getListPostUserPage(
+              id == ref.watch(meControllerProvider)[0]['id'],
+              id,
+              {"exclude_replies": true, "limit": 20});
         },
         child: buildUserPageBody(context),
       ),

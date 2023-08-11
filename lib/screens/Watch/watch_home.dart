@@ -74,13 +74,6 @@ class _WatchHomeState extends ConsumerState<WatchHome>
     watchData.isEmpty
         ? null
         : focusIdNotifier ??= ValueNotifier(watchData[0]?['id']);
-
-    // [110750106876372619, 110750102990006995, 110673932458552076,
-    // 110673674660771731, 110673437079587627, 110673200636080428]
-
-    // [110687626644559367, 110568916833729667, 110568899606375321,
-    // 110568797742857620, 110568789090500908, 110512206994112364]
-    print(widget.type.toString() + widget.isFocus.toString());
     return Expanded(
         child: watchData.isNotEmpty
             ? Column(

@@ -30,6 +30,7 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_wid
 import 'package:social_network_app_mobile/widgets/Suggestions/suggest.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/skeleton.dart';
+import 'package:social_network_app_mobile/widgets/snack_bar_custom.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 class Feed extends ConsumerStatefulWidget {
@@ -42,41 +43,60 @@ class Feed extends ConsumerStatefulWidget {
 
 class _FeedState extends ConsumerState<Feed> {
   final scrollController = ScrollController();
-  var paramsConfig = {"limit": 3, "exclude_replies": true};
+  var paramsConfig = {"limit": 6, "exclude_replies": true};
   double heightOfProcessingPost = 0;
   bool dataHasVideoPending = false;
   ValueNotifier<dynamic> focusCurrentPostIndex = ValueNotifier("");
   ValueNotifier<bool> loadingTo40 = ValueNotifier(false);
   ThemeManager? theme;
   List posts = [];
+  ValueNotifier<bool> _isMore = ValueNotifier(true);
 
   @override
   void initState() {
     super.initState();
     if (!mounted) return;
-    // Future.delayed(Duration.zero, () async {
-    //   await ref.read(postControllerProvider.notifier).getListPost(paramsConfig);
-    //   await IsarPostService()
-    //       .addPostIsar(ref.read(postControllerProvider).posts);
-    // });
-    // Future.delayed(Duration.zero, () async {
-    //   while ((await IsarPostService().getCountPostIsar()) < 400) {
-    //     await useIsolate(paramsConfig);
-    //   }
-    // });
 
-    getListPost();
     updatePostIsar();
+    initRiverpodData();
     addScrollListener();
+    // getListPost();
+    _isMore.value = ref.read(postControllerProvider).isMore;
+  }
+
+  // init 4  first post for riverpod post
+  initRiverpodData() async {
+    final isarPostCount = await IsarPostService().getCountPostIsar();
+
+    if ((isarPostCount != 0)) {
+      final isarPostDataList = await IsarPostService().getAllPostsFromIsar();
+      if (isarPostCount >= 5) {
+        ref.read(postControllerProvider.notifier).addListPost(
+              isarPostDataList.sublist(0, 5),
+              paramsConfig,
+            );
+      } else {
+        ref.read(postControllerProvider.notifier).addListPost(
+              isarPostDataList,
+              paramsConfig,
+            );
+      }
+    }
   }
 
   Future<void> getListPost() async {
-    await ref.read(postControllerProvider.notifier).getListPost(paramsConfig);
     await IsarPostService().addPostIsar(ref.read(postControllerProvider).posts);
   }
 
   Future<void> updatePostIsar() async {
-    while ((await IsarPostService().getCountPostIsar()) < 100) {
+    final isarPostCount = await IsarPostService().getCountPostIsar();
+    while (isarPostCount < 100 ||
+        isarPostCount == ref.read(postControllerProvider).posts.length) {
+      if (isarPostCount > 0) {
+        _isMore.value = true;
+      } else {
+        _isMore.value = false;
+      }
       await useIsolate(paramsConfig);
     }
   }
@@ -89,13 +109,16 @@ class _FeedState extends ConsumerState<Feed> {
             ? widget.callbackFunction!(false)
             : null;
         hiddenKeyboard(context);
-
         if (double.parse((scrollController.offset).toStringAsFixed(0)) %
-                120.0 ==
-            0) {
+                    120.0 ==
+                0 ||
+            scrollController.offset ==
+                scrollController.position.maxScrollExtent) {
           EasyDebounce.debounce(
-              'my-debouncer', const Duration(milliseconds: 300), () async {});
-          getDataFromIsar();
+              'my-debouncer', const Duration(milliseconds: 300), () async {
+            getDataFromIsar();
+            updatePostIsar();
+          });
         }
       } else if (scrollController.position.userScrollDirection ==
           ScrollDirection.forward) {
@@ -107,6 +130,38 @@ class _FeedState extends ConsumerState<Feed> {
       }
     });
   }
+
+  getDataFromIsar() async {
+    final instance = await IsarService.instance;
+    final allPostInIsar = await instance.postModels.where().findAll();
+    final postIdList = allPostInIsar.map((e) => e.postId).toList();
+    if (ref.watch(postControllerProvider).posts.isEmpty) {
+      renderPostForRiverpod(allPostInIsar, 0);
+    } else {
+      var index = postIdList
+          .indexOf(ref.watch(postControllerProvider).posts.last['id']);
+      renderPostForRiverpod(allPostInIsar, index);
+    }
+  }
+
+  renderPostForRiverpod(List isarPostList, int index) {
+    if (isarPostList.length >= index + 7) {
+      List newDataList = isarPostList
+          .map((e) => jsonDecode(e.objectPost!))
+          .toList()
+          .sublist(index + 1, index + 7);
+      ref.read(postControllerProvider.notifier).addListPost(
+            newDataList,
+            paramsConfig,
+          );
+    } else {
+      ref.read(postControllerProvider.notifier).addListPost(
+            isarPostList.map((e) => jsonDecode(e.objectPost!)).toList(),
+            paramsConfig,
+          );
+    }
+  }
+////////////// begin isolate
 
   useIsolate(dynamic params) async {
     final ReceivePort receivePort = ReceivePort();
@@ -125,26 +180,6 @@ class _FeedState extends ConsumerState<Feed> {
     return response;
   }
 
-  getDataFromIsar() async {
-    if (ref.watch(postControllerProvider).posts.isEmpty) return;
-    final instance = await IsarService.instance;
-    final allPostInIsar = await instance.postModels.where().findAll();
-    final postIdList = allPostInIsar.map((e) => e.postId).toList();
-    final index =
-        postIdList.indexOf(ref.watch(postControllerProvider).posts.last['id']);
-
-    if (allPostInIsar.length > index + 10) {
-      List newDataList = allPostInIsar
-          .map((e) => jsonDecode(e.objectPost!))
-          .toList()
-          .sublist(index + 1, index + 10);
-      ref.read(postControllerProvider.notifier).addListPost(
-            newDataList,
-            paramsConfig,
-          );
-    }
-  }
-
   static Future<void> callGetListPostIsolate(List<dynamic> args) async {
     SendPort resultPort = args[0];
     BackgroundIsolateBinaryMessenger.ensureInitialized(args[1][0]);
@@ -152,26 +187,7 @@ class _FeedState extends ConsumerState<Feed> {
     Isolate.exit(resultPort, response);
   }
 
-  updateDataInRiverpod(String scrollDirection) async {
-    final instance = await IsarService.instance;
-    final allPostInIsar = await instance.postModels.where().findAll();
-    final postIdList = allPostInIsar.map((e) => e.postId).toList();
-    dynamic resultData;
-    if (scrollDirection == "fromBottomToTop") {
-    } else if (scrollDirection == "fromTopToBottom") {
-      final index =
-          postIdList.indexOf(ref.watch(postControllerProvider).posts[0]['id']);
-      if (index > 0) {
-        resultData = allPostInIsar[index - 1];
-      }
-    }
-
-    if (resultData != null) {
-      ref
-          .read(postControllerProvider.notifier)
-          .updatePostWhenScroll(scrollDirection, resultData);
-    }
-  }
+////////////// end isolate
 
   // // avoid bug look up ...
   _reloadFeedFunction(dynamic type, dynamic newData) async {
@@ -189,7 +205,7 @@ class _FeedState extends ConsumerState<Feed> {
           }
         });
         if (isHaveVideo) {
-          _buildSnackBar("Video của bạn đã sẵn sàng.");
+          buildSnackBar(context, "Video của bạn đã sẵn sàng.");
         }
       });
     }
@@ -209,25 +225,10 @@ class _FeedState extends ConsumerState<Feed> {
     setState(() {});
   }
 
-  _buildSnackBar(String title) {
-    return ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-          content: Text(title),
-          duration: const Duration(seconds: 3),
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.only(bottom: 20, right: 20, left: 20),
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(9)))),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    List posts = List.from(ref.read(postControllerProvider).posts);
-    bool isMore = ref.watch(postControllerProvider).isMore;
+    List posts = List.from(ref.watch(postControllerProvider).posts);
     theme ??= pv.Provider.of<ThemeManager>(context);
-    posts = ref.read(postControllerProvider).posts;
-    print("posts ${jsonEncode(posts)}");
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(postControllerProvider.notifier).refreshListPost(paramsConfig);
@@ -278,9 +279,7 @@ class _FeedState extends ConsumerState<Feed> {
                           },
                           child: Column(
                             children: [
-                              index == 4
-                                  ? const Reef()
-                                  : const SizedBox(),
+                              index == 4 ? const Reef() : const SizedBox(),
                               index == 19
                                   ? _buildSuggestGroupWidget()
                                   : const SizedBox(),
@@ -315,7 +314,7 @@ class _FeedState extends ConsumerState<Feed> {
                       }, childCount: posts.length),
                     )
                   : const SliverToBoxAdapter(child: SizedBox()),
-              isMore
+              _isMore.value && ref.read(postControllerProvider).isMore
                   ? SliverToBoxAdapter(
                       child:
                           Center(child: SkeletonCustom().postSkeleton(context)))
@@ -335,6 +334,7 @@ class _FeedState extends ConsumerState<Feed> {
   }
 
   Widget _buildSuggestGroupWidget() {
+    final meData = ref.watch(meControllerProvider)[0];
     return Suggest(
         type: suggestGroups,
         headerWidget: Image.asset(
@@ -344,7 +344,7 @@ class _FeedState extends ConsumerState<Feed> {
         subHeaderWidget: Column(children: [
           buildSpacer(height: 5),
           buildTextContent(
-              ref.watch(meControllerProvider)[0]['display_name'] +
+              (meData?['display_name'] ?? meData ? ['name']) +
                   " ơi, bạn có thể sẽ thích các nhóm sau ",
               true,
               fontSize: 17),

@@ -47,7 +47,7 @@ class CustomBannerState extends ConsumerState<CustomBanner> {
             images = ref
                 .read(campaineProvider)
                 .listCampaine
-                .map((e) => (e['banner']['url']))
+                .map((e) => (e?['banner']?['url']) ?? linkBannerDefault)
                 .toList()
                 .where((ele) => ele != null)
                 .toList();
@@ -58,13 +58,17 @@ class CustomBannerState extends ConsumerState<CustomBanner> {
 
     _timer = Timer.periodic(const Duration(seconds: 2), (Timer timer) {
       if (_currentPage < images.length - 1) {
-        setState(() {
-          _currentPage++;
-        });
+        if (mounted) {
+          setState(() {
+            _currentPage++;
+          });
+        }
       } else {
-        setState(() {
+        if(mounted){
+          setState(() {
           _currentPage = 0;
         });
+        }
       }
       _controller.animateToPage(
         _currentPage,

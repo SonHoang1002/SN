@@ -202,7 +202,6 @@ flutter:
     - assets/icon/
     - assets/reaction/
     - assets/post_media.svg
-    - assets/target.svg
     - assets/win.svg
     - assets/chat.svg
     - assets/Plus.svg
@@ -210,8 +209,7 @@ flutter:
     - assets/WatchFC.svg
     - assets/home.svg
     - assets/HomeFC.svg
-    - assets/notification.svg
-    - assets/blood.png
+    - assets/notification.svg 
     - assets/event.svg
     - assets/friend.svg
     - assets/Groups_1.svg
@@ -219,7 +217,6 @@ flutter:
     - assets/job.svg
     - assets/learnspace.svg
     - assets/Maket.svg
-    - assets/moment_menu.png
     - assets/music.svg
     - assets/Page.svg
     - assets/saved.svg
@@ -228,16 +225,13 @@ flutter:
     - assets/NotiDM.svg
     - assets/Live.svg
     - assets/post_background.png
-    - assets/live_event.png
-    - assets/camera.png
-    - assets/LogoEmso.svg
-    - assets/loading.gif
+    - assets/live_event.png 
+    - assets/LogoEmso.svg 
     - assets/IconCoin.svg
     - assets/disc.png
     - assets/grey.png
     - assets/Payment.svg
     - assets/MomentFC.png
-    - assets/MomentDM_1.png
     - assets/MomentLM.png
     - assets/MomentMenu.png
     - assets/Chat_3.png
@@ -246,6 +240,8 @@ flutter:
     - assets/MarketFC.png
     - assets/Plus_2.png
     - assets/wow-emo-2.gif
+    - assets/Logo_Preview.png
+    - assets/Logo_Producer.png
     - assets/Noti/
     - assets/pages/
     - assets/groups/

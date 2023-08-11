@@ -45,9 +45,11 @@ class _EventGoingState extends ConsumerState<EventGoing> {
 
   void fetchData(params) async {
     await ref.read(eventControllerProvider.notifier).getListEventGoing(params);
-    setState(() {
+    if(mounted){
+      setState(() {
       isLoading = false;
     });
+    }
   }
 
   @override

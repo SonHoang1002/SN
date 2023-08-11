@@ -1,4 +1,3 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,6 +35,7 @@ class PostHeader extends ConsumerStatefulWidget {
   final Function? reloadFunction;
   final Function(dynamic)? updateDataFunction;
   final bool? isInGroup;
+  final dynamic friendData;
   const PostHeader(
       {Key? key,
       this.post,
@@ -44,7 +44,8 @@ class PostHeader extends ConsumerStatefulWidget {
       this.isHaveAction,
       this.reloadFunction,
       this.updateDataFunction,
-      this.isInGroup = false})
+      this.isInGroup = false,
+      this.friendData})
       : super(key: key);
 
   @override
@@ -147,7 +148,7 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
     }
 
     if (statusActivity['data_type'] == postStatusEmoji) {
-      description = ' đang cảm thấy ${statusActivity['name']} cùng với ';
+      description = ' đang cảm thấy ${statusActivity['name']} ';
     } else if (statusActivity['data_type'] == postStatusActivity) {
       description =
           ' ${statusActivity['parent']['name'].toLowerCase()} ${statusActivity['name'].toLowerCase()}';
@@ -243,25 +244,25 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                     buildSpacer(height: 3),
                                     Row(
                                       children: [
-                                        widget.post['page_owner'] != null &&
-                                                widget.post['page'] != null &&
-                                                widget.post?['page_owner']?[
-                                                            'page_relationship']
-                                                        ?['role'] ==
-                                                    "admin" &&
-                                                widget.type != postDetail
-                                            ? Row(
-                                                children: [
-                                                  buildTextContent(
-                                                      widget.post['account']
-                                                              ['display_name'] +
-                                                          " · ",
-                                                      true,
-                                                      colorWord: greyColor,
-                                                      fontSize: 13)
-                                                ],
-                                              )
-                                            : const SizedBox(),
+                                        // widget.post['page_owner'] != null &&
+                                        //         widget.post['page'] != null &&
+                                        //         widget.post?['page_owner']?[
+                                        //                     'page_relationship']
+                                        //                 ?['role'] ==
+                                        //             "admin" &&
+                                        //         widget.type != postDetail
+                                        //     ? Row(
+                                        //         children: [
+                                        //           buildTextContent(
+                                        //               widget.post['account']
+                                        //                       ['display_name'] +
+                                        //                   " · ",
+                                        //               true,
+                                        //               colorWord: greyColor,
+                                        //               fontSize: 13)
+                                        //         ],
+                                        //       )
+                                        //     : const SizedBox(),
                                         widget.post['processing'] !=
                                                     "isProcessing" &&
                                                 widget.post?['created_at'] !=
@@ -299,14 +300,10 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                         )
                       ],
                     ),
-                    // (widget.post?['account']?['id'] == meData['id'] ||
-                    //     (widget.post?['page'] != null &&
-                    //         widget.post?['page_owner'] != null &&
-                    //         widget.post?['page_owner']?['page_relationship']
-                    //                 ?['role'] ==
-                    //             "admin"))
-                    // ?
-                    (![postReblog, postMultipleMedia].contains(widget.type))
+                    // checkShowHeaderOption()
+                    //     ?
+                    (![postReblog, postMultipleMedia].contains(widget.type) &&
+                            widget.isHaveAction == true)
                         ? BlockPostHeaderAction(
                             widget: widget,
                             meData: meData,
@@ -318,6 +315,16 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
             ),
           )
         : const SizedBox();
+  }
+
+  bool checkShowHeaderOption() {
+    bool status = (widget.post?['account']?['id'] ==
+            ref.watch(meControllerProvider)[0]['id'] ||
+        (widget.post?['page'] != null &&
+            widget.post?['page_owner'] != null &&
+            widget.post?['page_owner']?['page_relationship']?['role'] ==
+                "admin"));
+    return status;
   }
 
   @override
@@ -358,6 +365,7 @@ class BlockPostHeaderAction extends StatelessWidget {
                             ? widget.reloadFunction!()
                             : null;
                       },
+                      friendData: widget.friendData,
                     ));
           },
           child: const Icon(
@@ -389,7 +397,10 @@ class BlockPostHeaderAction extends StatelessWidget {
                   size: 20,
                   color: greyColor,
                 ),
-              )
+              ),
+        const SizedBox(
+          width: 5,
+        ),
       ],
     );
   }

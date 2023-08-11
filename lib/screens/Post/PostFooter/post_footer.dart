@@ -20,6 +20,7 @@ class PostFooter extends StatelessWidget {
   final bool? isShowCommentBox;
   final Function(dynamic)? updateDataFunction;
   final Function(Offset)? jumpToOffsetFunction;
+  final dynamic friendData;
   const PostFooter(
       {Key? key,
       this.post,
@@ -29,7 +30,7 @@ class PostFooter extends StatelessWidget {
       this.reloadDetailFunction,
       this.isShowCommentBox,
       this.updateDataFunction,
-      this.jumpToOffsetFunction})
+      this.jumpToOffsetFunction,this.friendData})
       : super(key: key);
 
   @override
@@ -72,14 +73,16 @@ class PostFooter extends StatelessWidget {
           decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3)),
         ),
         PostFooterButton(
-            post: post,
-            type: type,
-            preType: preType,
-            indexImage: indexOfImage,
-            isShowCommentBox: isShowCommentBox,
-            reloadDetailFunction: reloadDetailFunction,
-            updateDataFunction: updateDataFunction,
-            jumpToOffsetFunction: jumpToOffsetFunction),
+          post: post,
+          type: type,
+          preType: preType,
+          indexImage: indexOfImage,
+          isShowCommentBox: isShowCommentBox,
+          reloadDetailFunction: reloadDetailFunction,
+          updateDataFunction: updateDataFunction,
+          jumpToOffsetFunction: jumpToOffsetFunction,
+          friendData: friendData,
+        ),
         type != postDetail
             ? const SizedBox()
             : Column(

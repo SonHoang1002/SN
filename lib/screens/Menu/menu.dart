@@ -10,6 +10,7 @@ import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Menu/menu_user.dart';
 import 'package:social_network_app_mobile/screens/Setting/setting.dart';
+import 'package:social_network_app_mobile/services/isar_post_service.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
@@ -78,6 +79,7 @@ class _MenuState extends ConsumerState<Menu> {
       ref.read(pageControllerProvider.notifier).reset();
       ref.read(friendControllerProvider.notifier).reset();
       ref.read(groupListControllerProvider.notifier).reset();
+      await IsarPostService().resetPostIsar();
 
       final theme = pv.Provider.of<ThemeManager>(context, listen: false);
       theme.toggleTheme('system');

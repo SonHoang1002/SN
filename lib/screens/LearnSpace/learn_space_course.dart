@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -81,7 +82,8 @@ class _LearnSpaceCourseState extends ConsumerState<LearnSpaceCourse> {
     if (mounted) {
       setState(() {
         if (ref.watch(learnSpaceStateControllerProvider).courseChapter != []) {
-          addCourseChapter = ref.watch(learnSpaceStateControllerProvider).courseChapter;
+          addCourseChapter =
+              ref.watch(learnSpaceStateControllerProvider).courseChapter;
           courseChapter.addAll(addCourseChapter);
           isLoading = false; // Kết thúc quá trình tải dữ liệu
         }
@@ -155,16 +157,19 @@ class _LearnSpaceCourseState extends ConsumerState<LearnSpaceCourse> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             const SizedBox(width: 6.0),
-                            Flexible(child: Text(
-                              "${index + 1}. " + courseChapter[index]['title'],
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  color: menuSelected ==
-                                          courseChapter[index]['title']
-                                      ? white
-                                      : null),
-                            ),),
+                            Flexible(
+                              child: Text(
+                                "${index + 1}. " +
+                                    courseChapter[index]['title'],
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                    color: menuSelected ==
+                                            courseChapter[index]['title']
+                                        ? white
+                                        : null),
+                              ),
+                            ),
                             const SizedBox(width: 6.0),
                           ],
                         ),
@@ -198,8 +203,7 @@ class _LearnSpaceCourseState extends ConsumerState<LearnSpaceCourse> {
                                                   ListTile(
                                                       dense: true,
                                                       contentPadding:
-                                                          const EdgeInsets
-                                                                  .symmetric(
+                                                          const EdgeInsets.symmetric(
                                                               horizontal: 16.0,
                                                               vertical: 0.0),
                                                       visualDensity:
@@ -224,72 +228,120 @@ class _LearnSpaceCourseState extends ConsumerState<LearnSpaceCourse> {
                                                               FontWeight.w500,
                                                         ),
                                                       ),
-                                                      subtitle: Text(courseLessonChapter[newIndex]
-                                                                              ['course_lesson_attachments']
-                                                                          [0]
-                                                                      ['attachment']
-                                                                  ['type'] ==
-                                                              'document'
+                                                      subtitle: Text(courseLessonChapter[
+                                                                      newIndex][
+                                                                  'course_lesson_attachments']
+                                                              .isEmpty
                                                           ? 'Tài liệu'
-                                                          : courseLessonChapter[newIndex]
-                                                                              ['course_lesson_attachments'][0]
+                                                          : courseLessonChapter[newIndex]['course_lesson_attachments']
+                                                                              [0]
                                                                           ['attachment']
                                                                       ['type'] ==
-                                                                  'video'
-                                                              ? 'Video'
-                                                              : 'Ảnh'),
+                                                                  'document'
+                                                              ? 'Tài liệu'
+                                                              : courseLessonChapter[newIndex]['course_lesson_attachments'][0]['attachment']['type'] == 'video'
+                                                                  ? 'Video'
+                                                                  : 'Ảnh'),
                                                       onTap: () async {
                                                         setState(() {
                                                           loadingCourseFile =
                                                               true;
                                                         });
-                                                        String fileUrl = courseLessonChapter[
-                                                                        newIndex]
-                                                                    ['course_lesson_attachments']
-                                                                [0]['attachment']
-                                                            ['url']; // Đường dẫn đến file
-                                                        String fileName = fileUrl
-                                                            .split('/')
-                                                            .last; // Tên file được trích xuất từ đường dẫn
+                                                        bool checkNull =
+                                                            courseLessonChapter[
+                                                                            newIndex]
+                                                                        [
+                                                                        'course_lesson_attachments']
+                                                                    .isEmpty
+                                                                ? false
+                                                                : true;
+                                                        if (checkNull) {
+                                                          String fileUrl = courseLessonChapter[
+                                                                          newIndex]
+                                                                      [
+                                                                      'course_lesson_attachments']
+                                                                  [
+                                                                  0]['attachment']
+                                                              [
+                                                              'url']; // Đường dẫn đến file
+                                                          String fileName = fileUrl
+                                                              .split('/')
+                                                              .last; // Tên file được trích xuất từ đường dẫn
 
-                                                        // Tải file về bằng http
-                                                        final response =
-                                                            await http.get(
-                                                                Uri.parse(
-                                                                    fileUrl));
-                                                        final bytes = response.bodyBytes;
+                                                          // Tải file về bằng http
+                                                          final response =
+                                                              await http.get(
+                                                                  Uri.parse(
+                                                                      fileUrl));
+                                                          final bytes = response
+                                                              .bodyBytes;
 
-                                                        // Lưu file vào thư mục tạm trên thiết bị của người dùng
-                                                        final tempDir =
-                                                            await getTemporaryDirectory();
-                                                        final file = File('${tempDir.path}/$fileName');
-                                                        await file.writeAsBytes(
-                                                            bytes);
-                                                        bool permission =
-                                                            await Permission
-                                                                .manageExternalStorage
-                                                                .isGranted;
-                                                        if (Platform
-                                                                .isAndroid &&
-                                                            !permission) {
-                                                          PermissionStatus
-                                                              status =
+                                                          // Lưu file vào thư mục tạm trên thiết bị của người dùng
+                                                          final tempDir =
+                                                              await getTemporaryDirectory();
+                                                          final file = File(
+                                                              '${tempDir.path}/$fileName');
+                                                          await file
+                                                              .writeAsBytes(
+                                                                  bytes);
+                                                          bool permission =
                                                               await Permission
                                                                   .manageExternalStorage
-                                                                  .request();
-                                                          if (status
-                                                              .isGranted) {
+                                                                  .isGranted;
+                                                          if (Platform
+                                                                  .isAndroid &&
+                                                              !permission) {
+                                                            PermissionStatus
+                                                                status =
+                                                                await Permission
+                                                                    .manageExternalStorage
+                                                                    .request();
+                                                            if (status
+                                                                .isGranted) {
+                                                              OpenFile.open(
+                                                                  file.path);
+                                                            }
+                                                          } else {
                                                             OpenFile.open(
                                                                 file.path);
                                                           }
+                                                          setState(() {
+                                                            loadingCourseFile =
+                                                                false;
+                                                          });
                                                         } else {
-                                                          OpenFile.open(
-                                                              file.path);
+                                                          setState(() {
+                                                            loadingCourseFile =
+                                                                false;
+                                                          });
+                                                          showDialog(
+                                                            context: context,
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                              return AlertDialog(
+                                                                title: Text(
+                                                                  courseLessonChapter[
+                                                                          newIndex]
+                                                                      ['title'],
+                                                                ),
+                                                                content: const Text(
+                                                                    'Hiện chưa có dữ liệu'),
+                                                                actions: [
+                                                                  TextButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context); // Đóng AlertDialog
+                                                                    },
+                                                                    child: const Text(
+                                                                        'Đóng'),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            },
+                                                          );
                                                         }
-                                                        setState(() {
-                                                          loadingCourseFile =
-                                                              false;
-                                                        });
                                                       }),
                                                   Divider(
                                                     height: 1,

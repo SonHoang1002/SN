@@ -11,6 +11,7 @@ import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
+import 'package:social_network_app_mobile/services/isar_post_service.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
@@ -48,7 +49,11 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
     super.initState();
   }
 
-  void completeLogin() {
+  void completeLogin() async {
+    if (1 == 2) {
+      await IsarPostService().resetPostIsar();
+    }
+
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(

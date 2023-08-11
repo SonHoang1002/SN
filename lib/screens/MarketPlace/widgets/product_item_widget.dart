@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/get_min_max_price.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
@@ -20,7 +21,7 @@ Widget buildProductItem(
     bool? isVertical = true}) {
   final List<dynamic> prices =
       getMinAndMaxPrice(data?["product_variants"] ?? []);
-      final size =  MediaQuery.sizeOf(context);
+  final size = MediaQuery.sizeOf(context);
   double childWidth = size.width * 0.45;
   return InkWell(
     onTap: () {
@@ -59,12 +60,13 @@ Widget buildProductItem(
                                       topLeft: Radius.circular(8),
                                       topRight: Radius.circular(8)),
                                   child: ExtendedImage.network(
-                                    !(data?["product_image_attachments"])
-                                                .isEmpty &&
-                                            (data?["product_image_attachments"]) !=
-                                                null
-                                        ? (data?["product_image_attachments"]
-                                            ?[0]?["attachment"]?["url"])
+                                    ((data?["product_image_attachments"]) !=
+                                                null) &&
+                                            ((data?["product_image_attachments"])
+                                                .isNotEmpty)
+                                        ? ((data?["product_image_attachments"]
+                                                ?[0]?["attachment"]?["url"]) ??
+                                            linkBannerDefault)
                                         : "https://i.pinimg.com/474x/14/c6/d3/14c6d321c7f16a73be476cd9dcb475af.jpg",
                                     height: 120.0,
                                     fit: BoxFit.cover,
