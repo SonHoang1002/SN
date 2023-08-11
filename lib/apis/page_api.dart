@@ -146,8 +146,7 @@ class PageApi {
   }
 
   Future pageBlockAccount(id, params) async {
-    return await Api()
-        .postRequestBaseWithParams('/api/v1/pages/$id/blocks', params);
+    return await Api().postRequestBase('/api/v1/pages/$id/blocks', params);
   }
 
   Future pageUnblockAccount(id, params) async {

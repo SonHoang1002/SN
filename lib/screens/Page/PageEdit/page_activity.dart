@@ -123,33 +123,42 @@ class _PageActivityState extends State<PageActivity> {
         centerTitle: true,
         title: const AppBarTitle(title: 'Nhật ký hoạt động'),
       ),
-      body: ListView.builder(
-          itemCount: data.length,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return ListTile(
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
-                visualDensity: const VisualDensity(horizontal: -4, vertical: 0),
-                leading: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ClipOval(
-                      child: ExtendedImage.network(extractImage(data[index]))),
-                ),
-                title: extractDescription(data[index]),
-                subtitle: Text(GetTimeAgo.parse(
-                    DateTime.parse(data[index]['created_at']))),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const UserPageHome(),
-                        settings: RouteSettings(
-                          arguments: {'id': id(data[index])},
-                        ),
-                      ));
-                });
-          }),
+      body: data.isNotEmpty
+          ? ListView.builder(
+              itemCount: data.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 0.0),
+                    visualDensity:
+                        const VisualDensity(horizontal: -4, vertical: 0),
+                    leading: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipOval(
+                          child:
+                              ExtendedImage.network(extractImage(data[index]))),
+                    ),
+                    title: extractDescription(data[index]),
+                    subtitle: Text(GetTimeAgo.parse(
+                        DateTime.parse(data[index]['created_at']))),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const UserPageHome(),
+                            settings: RouteSettings(
+                              arguments: {'id': id(data[index])},
+                            ),
+                          ));
+                    });
+              })
+          : const Center(
+              child: Text(
+                "Không có hoạt động của quản trị viên",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
     );
   }
 }

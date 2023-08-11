@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/apis/group_api.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupDetail/group_detail.dart';
@@ -78,13 +79,19 @@ class _GroupListDiscoverState extends ConsumerState<GroupListDiscover> {
   }
 }
 
-class GroupItemInkwell extends StatelessWidget {
+class GroupItemInkwell extends StatefulWidget {
   final dynamic group;
   const GroupItemInkwell({
     super.key,
     this.group,
   });
 
+  @override
+  State<GroupItemInkwell> createState() => _GroupItemInkwellState();
+}
+
+class _GroupItemInkwellState extends State<GroupItemInkwell> {
+  var inGroup = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -95,14 +102,24 @@ class GroupItemInkwell extends StatelessWidget {
         children: [
           Flexible(
             child: GroupItem(
-              group: group,
+              group: widget.group,
             ),
           ),
           buildSpacer(width: 5),
           ButtonPrimary(
-            label: "Tham gia",
+            label: inGroup ? "Huỷ" : "Tham gia",
             isPrimary: false,
-            handlePress: () {},
+            isGrey: inGroup,
+            handlePress: () async {
+              setState(() {
+                inGroup = !inGroup;
+              });
+              if (inGroup) {
+                await GroupApi().joinGroupRequest(widget.group["id"]);
+              } else {
+                await GroupApi().removeGroupRequest(widget.group["id"]);
+              }
+            },
           )
         ],
       ),

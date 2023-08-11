@@ -150,6 +150,8 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
         if (response["status_code"] == 422) {
           showSnackBar(context,
               /* response["content"]["error"] */ "Thời gian bắt đầu sự kiện không hợp lệ");
+        } else if (response["status_code"] == 500) {
+          showSnackBar(context, "Tạo sự kiện thất bại");
         } else {
           Navigator.push(
               context,

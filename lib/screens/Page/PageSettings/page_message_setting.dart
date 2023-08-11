@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_message_provider.dart';
+import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
@@ -17,16 +21,94 @@ class PageMessage extends ConsumerStatefulWidget {
 
 class _PageMessageState extends ConsumerState<PageMessage> {
   bool saveAvaliable = true;
-  List<PageMesssagesState> qlist = [
-    PageMesssagesState(question: 'Xin chào', response: 'Chào bạn'),
-    PageMesssagesState(
-        question: 'Sản phẩm này còn không', response: 'Còn sản phẩm'),
-  ];
+  List<PageMesssagesState> qlist = [];
   var key = UniqueKey();
   @override
   void initState() {
     super.initState();
-    getList();
+    getUpdateData();
+    //getList();
+  }
+
+  Future<void> getUpdateData() async {
+    final dio = Dio();
+    var userToken = await SecureStorage().getKeyStorage("token");
+    var userId = ref.read(meControllerProvider)[0]["id"];
+    String url =
+        "https://dev-chat.emso.vn/api/v1/teams.info?teamId=${widget.data['id']}";
+    final headers = {
+      'X-User-Id': userId,
+      'X-Auth-Token': userToken,
+    };
+
+    final response = await dio.get(
+      url,
+      options: Options(headers: headers),
+    );
+
+    if (response.statusCode == 200) {
+      var data = response.data["teamInfo"]["automatic_reply"];
+      List<PageMesssagesState> outputList = [];
+      data.forEach((item) {
+        String? option = item["option"];
+        String? question = item["question"];
+        String? answer = item["answer"];
+
+        if (option != null && question != null && answer != null) {
+          var newIndex = option.replaceFirst("option-", "");
+          PageMesssagesState newState = PageMesssagesState(
+            index: int.parse(newIndex),
+            question: question,
+            response: answer,
+            isNew: false, // Set the default value for 'isNew'
+          );
+          outputList.add(newState);
+        }
+      });
+      qlist = outputList;
+      setState(() {
+        ref.read(pageMesssagesProvider.notifier).updateState(qlist);
+      });
+    }
+  }
+
+  Future<void> sendUpdateData() async {
+    final dio = Dio();
+    var userToken = await SecureStorage().getKeyStorage("token");
+    var userId = ref.read(meControllerProvider)[0]["id"];
+    const url = 'https://dev-chat.emso.vn/api/v1/teams.automaticReply';
+    final headers = {
+      'X-User-Id': userId,
+      'X-Auth-Token': userToken,
+    };
+    List<Map<String, String>> outputList = [];
+    qlist.forEach((item) {
+      Map<String, String> newItem = {
+        'option': 'option-${item.index}',
+        'question': item.question ?? '',
+        'answer': item.response ?? '',
+      };
+      outputList.add(newItem);
+    });
+    final requestData = {
+      'teamId': widget.data["id"],
+      'automatic_reply': outputList,
+    };
+
+    final response = await dio.post(
+      url,
+      data: jsonEncode(requestData),
+      options: Options(headers: headers),
+    );
+    if (mounted) {
+      if (response.statusCode == 200) {
+        ref.read(pageMesssagesProvider.notifier).updateState(qlist);
+        Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text("Có lỗi sảy ra, vui lòing thử lại sau")));
+      }
+    }
   }
 
   void onItemDelete(int index) {
@@ -54,13 +136,6 @@ class _PageMessageState extends ConsumerState<PageMessage> {
     qlist[index - 1].response = response;
     qlist[index - 1].isNew = false;
     checkValidateState();
-  }
-
-  void getList() {
-    final listPosts = ref.read(pageMesssagesProvider).toList();
-    //if (listPosts.length > 0) {
-    qlist = listPosts;
-    //}
   }
 
   @override
@@ -136,7 +211,7 @@ class _PageMessageState extends ConsumerState<PageMessage> {
                         setState(() {
                           saveAvaliable = false;
                           qlist.add(PageMesssagesState(
-                              index: qlist.length,
+                              index: qlist.length + 1,
                               question: "",
                               response: "",
                               isNew: true));
@@ -179,12 +254,7 @@ class _PageMessageState extends ConsumerState<PageMessage> {
                               : ButtonPrimary(
                                   label: 'Lưu thay đổi',
                                   handlePress: () {
-                                    //widget.onChange(valueText);
-
-                                    ref
-                                        .read(pageMesssagesProvider.notifier)
-                                        .updateState(qlist);
-                                    Navigator.pop(context);
+                                    sendUpdateData();
                                   },
                                 ),
                         ),
