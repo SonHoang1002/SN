@@ -814,7 +814,7 @@ class _DarkCardPageSkeletonState extends State<DarkCardPageSkeleton>
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: Container(
-              color: Colors.grey[800],
+              color: Colors.transparent,
               padding: const EdgeInsets.all(16),
               child: Column(
                 mainAxisSize: MainAxisSize.max,

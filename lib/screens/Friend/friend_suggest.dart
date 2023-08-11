@@ -92,7 +92,8 @@ class _FriendSuggestState extends ConsumerState<FriendSuggest> {
                                   builder: (context) => const UserPageHome(),
                                   settings: RouteSettings(
                                     arguments: {
-                                      'id': friendSuggestions[index]['id']
+                                      'id': friendSuggestions[index]['id'],
+                                      'user': friendSuggestions[index]
                                     },
                                   ),
                                 ),

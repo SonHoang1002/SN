@@ -86,4 +86,18 @@ class SkeletonCustom {
         ? modeTheme == 'dark'?const DarkGrowSkeleton(): modeTheme == 'light'?const GrowSkeleton():brightness == Brightness.dark?const DarkGrowSkeleton(): const GrowSkeleton()
         : modeTheme == 'dark'?const DarkGrowSkeleton(): modeTheme == 'light'?const GrowSkeleton():brightness == Brightness.dark?const DarkGrowSkeleton(): const GrowSkeleton();
   }
+
+   introduceSkeleton(context) {
+    final theme = Provider.of<ThemeManager>(context);
+    final brightness = MediaQuery.of(context).platformBrightness;
+    String modeTheme = theme.themeMode == ThemeMode.dark
+        ? 'dark'
+        : theme.themeMode == ThemeMode.light
+            ? 'light'
+            : 'system';
+
+    return (brightness == Brightness.dark)
+        ? modeTheme == 'dark'?const DarkCardPageSkeleton(): modeTheme == 'light'?const CardPageSkeleton():brightness == Brightness.dark?const DarkCardPageSkeleton(): const CardPageSkeleton()
+        : modeTheme == 'dark'?const DarkCardPageSkeleton(): modeTheme == 'light'?const CardPageSkeleton():brightness == Brightness.dark?const DarkCardPageSkeleton(): const CardPageSkeleton();
+  }
 }

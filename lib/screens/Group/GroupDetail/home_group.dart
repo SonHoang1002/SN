@@ -45,6 +45,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
   String menuSelected = '';
   bool isLoading = false;
   File? url;
+  bool seeMore = false;
   late File image;
   final settings = RestrictedPositions(
     maxCoverage: 0.3,
@@ -61,9 +62,11 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
       () {
         if (scrollController.position.maxScrollExtent ==
                 scrollController.offset &&
-            !isLoading) {
+            !isLoading &&
+            ref.read(groupListControllerProvider).groupPost.isNotEmpty) {
           setState(() {
             isLoading = true;
+            seeMore = true;
           });
           String maxId =
               ref.read(groupListControllerProvider).groupPost.last['id'];
@@ -73,8 +76,13 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
             "limit": 3,
             "max_id": maxId
           }, widget.groupDetail['id']);
-          setState(() {
-            isLoading = false;
+          Future.delayed(const Duration(seconds: 1), () {
+            if (mounted) {
+              setState(() {
+                seeMore = false;
+                isLoading = false;
+              });
+            }
           });
         }
       },
@@ -526,7 +534,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                           : ListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
-                              itemCount: 3,
+                              itemCount: 1,
                               itemBuilder: (context, i) {
                                 return Center(
                                   child: SkeletonCustom().postSkeleton(context),
@@ -547,14 +555,14 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
               : SliverList(
                   delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    return const SizedBox();
+                    return  const Text("Đây là nhóm riêng tư bạn cần tham gia để theo dõi các bài viết");
                   },
                   childCount: 0,
                 )),
           SliverToBoxAdapter(
               child: isLoading
-                  ? SkeletonCustom().postSkeleton(context)
-                  : const SizedBox())
+                  ? seeMore? SkeletonCustom().postSkeleton(context) :const SizedBox()
+                  : const SizedBox()),
         ],
       ),
     );

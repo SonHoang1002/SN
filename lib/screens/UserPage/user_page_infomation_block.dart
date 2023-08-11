@@ -9,6 +9,7 @@ import 'package:social_network_app_mobile/widgets/StoryView/story_page.dart';
 import 'package:social_network_app_mobile/widgets/chip_menu.dart';
 
 import '../../theme/theme_manager.dart';
+import '../../widgets/skeleton.dart';
 
 class UserPageInfomationBlock extends StatelessWidget {
   final dynamic userAbout;
@@ -81,7 +82,9 @@ class UserPageInfomationBlock extends StatelessWidget {
     final createdDate =
         user?['created_at'] != null ? DateTime.parse(user['created_at']) : null;
     return generalInformation == null
-        ? const SizedBox()
+        ? Center(
+            child: SkeletonCustom().introduceSkeleton(context),
+          )
         : Container(
             margin: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Column(

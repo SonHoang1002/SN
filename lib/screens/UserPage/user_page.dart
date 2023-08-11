@@ -44,8 +44,9 @@ import '../../widgets/skeleton.dart';
 import '../Feed/create_post_button.dart';
 
 class UserPageHome extends StatefulWidget {
-  final dynamic id;
-  const UserPageHome({super.key, this.id});
+  final String? id;
+  final dynamic user; 
+  const UserPageHome({super.key, this.id, this.user});
 
   @override
   State<UserPageHome> createState() => _UserPageHomeState();
@@ -90,7 +91,7 @@ class _UserPageHomeState extends State<UserPageHome> {
   @override
   Widget build(BuildContext context) {
     List<Widget> pageUserRoutes = [
-      UserPage(id: widget.id),
+      UserPage(id: widget.id, user: widget.user,),
       const Moment(typePage: 'home'),
       const SizedBox(),
       const Watch(),
@@ -151,6 +152,7 @@ class _UserPageState extends ConsumerState<UserPage> {
         if (widget.id != null) {
           setState(() {
             id = widget.id;
+            userData = widget.user;
           });
         } else {
           final queryParams = ModalRoute.of(context)?.settings.arguments
@@ -178,7 +180,7 @@ class _UserPageState extends ConsumerState<UserPage> {
             await UserPageApi().getUserFriend(id, {'limit': 20}) ?? [];
         if (mounted) {
           setState(() {
-            userData = ref.watch(userInformationProvider).userInfor;
+            userData ??= ref.watch(userInformationProvider).userInfor;
             userAbout = ref.watch(userInformationProvider).userMoreInfor;
             lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
             postUser = (id == ref.watch(meControllerProvider)[0]['id']
@@ -364,15 +366,7 @@ class _UserPageState extends ConsumerState<UserPage> {
                 SizedBox(
                   height: 35,
                   width: size.width - 85,
-                  child: userType == ''
-                      ? Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          width: size.width * 0.8,
-                        )
-                      : userType == 'me'
+                  child: userType == 'me'
                           ? ButtonPrimary(
                               icon: const Icon(
                                 FontAwesomeIcons.pen,
