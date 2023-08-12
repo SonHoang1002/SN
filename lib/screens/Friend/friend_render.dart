@@ -95,8 +95,8 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                           const UserPageHome(),
                                       settings: RouteSettings(
                                         arguments: {
-                                          'id': friendRequest[indexRequest]
-                                              ['id']
+                                          'id': friendRequest[indexRequest]["account"]['id'],
+                                          'user': friendRequest[indexRequest]["account"]
                                         },
                                       ),
                                     ),
@@ -447,7 +447,8 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                           const UserPageHome(),
                                       settings: RouteSettings(
                                         arguments: {
-                                          'id': friendSuggestions[index]['id']
+                                          'id': friendSuggestions[index]['id'],
+                                          'user': friendSuggestions[index],
                                         },
                                       ),
                                     ),
