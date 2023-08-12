@@ -146,7 +146,7 @@ class _VideoPlayerHasControllerState
     final selectedVideo = ref.watch(selectedVideoProvider);
     // widget.isFocus == true
     //     ? chewieController?.videoPlayerController.setVolume(5)
-    //     : chewieController?.videoPlayerController.setVolume(0); 
+    //     : chewieController?.videoPlayerController.setVolume(0);
     return AspectRatio(
       aspectRatio:
           //  videoPlayerController!.value.aspectRatio > 1
@@ -253,9 +253,12 @@ class _VideoPlayerHasControllerState
                           : ImageCacheRender(
                               path: widget.media['preview_remote_url'] ??
                                   widget.media['preview_url']))
-                  : ImageCacheRender(
-                      path: widget.media['preview_remote_url'] ??
-                          widget.media['preview_url']),
+                  : AspectRatio(
+                      aspectRatio: videoPlayerController!.value.aspectRatio,
+                      child: ImageCacheRender(
+                          path: widget.media['preview_remote_url'] ??
+                              widget.media['preview_url']),
+                    ),
             ],
           )),
     );

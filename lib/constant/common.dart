@@ -56,6 +56,24 @@ String linkAvatarDefault =
 String linkBannerDefault =
     "https://sn.emso.vn/static/media/group_cover.81acfb42.png";
 
+dynamic pollOptionMenuPost = {
+  "key": 'poll',
+  "label": 'Thăm dò ý kiến',
+  "icon": FontAwesomeIcons.poll,
+  "color": 0xFFf7923b,
+  "display": 'group',
+  "disabled": [
+    'media',
+    'life-event',
+    'gif',
+    'file',
+    'write-suggest',
+    'event-group',
+    'answer-learn',
+    'answer'
+  ]
+};
+
 List listMenuPost = [
   {
     "key": 'media',
@@ -149,23 +167,6 @@ List listMenuPost = [
       'file',
       'write-suggest',
       'answer-learn'
-    ]
-  },
-  {
-    "key": 'poll',
-    "label": 'Thăm dò ý kiến',
-    "icon": FontAwesomeIcons.poll,
-    "color": 0xFFf7923b,
-    "display": 'group',
-    "disabled": [
-      'media',
-      'life-event',
-      'gif',
-      'file',
-      'write-suggest',
-      'event-group',
-      'answer-learn',
-      'answer'
     ]
   },
   // {

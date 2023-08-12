@@ -97,26 +97,39 @@ class _WatchHomeState extends ConsumerState<WatchHome>
                                     setState(() {});
                                   }
                                 },
-                                child: Post(
-                                    key: Key((watchData[index]?['id']) ??
-                                        Random().nextInt(10000).toString()),
-                                    post: watchData[index],
-                                    type: postWatch,
-                                    isFocus:
-                                        // widget.isFocus == true && (
-                                        focusIdNotifier!.value ==
-                                            watchData[index]['id'],
-                                    // ),
-                                    preType: widget.type == 'watch_home'
-                                        ? "suggest"
-                                        : "follow"),
+                                child: Column(
+                                  children: [
+                                    Post(
+                                        key: Key((watchData[index]?['id']) ??
+                                            Random().nextInt(10000).toString()),
+                                        post: watchData[index],
+                                        type: postWatch,
+                                        isFocus:
+                                            // widget.isFocus == true && (
+                                            focusIdNotifier!.value ==
+                                                watchData[index]['id'],
+                                        // ),
+                                        preType: widget.type == 'watch_home'
+                                            ? "suggest"
+                                            : "follow"),
+                                    index == watchData.length - 1
+                                        ? (widget.type == 'watch_home'
+                                                ? ref
+                                                    .watch(
+                                                        watchControllerProvider)
+                                                    .isMoreSuggest
+                                                : ref
+                                                    .watch(
+                                                        watchControllerProvider)
+                                                    .isMoreFollow)
+                                            ? const SizedBox()
+                                            : const Center(
+                                                child: Text(
+                                                    'Không còn bài viết gợi ý nào nữa'))
+                                        : const SizedBox()
+                                  ],
+                                ),
                               ))),
-                  (widget.type == 'watch_home'
-                          ? ref.watch(watchControllerProvider).isMoreSuggest
-                          : ref.watch(watchControllerProvider).isMoreFollow)
-                      ? const SizedBox()
-                      : const Center(
-                          child: Text('Không còn bài viết gợi ý nào nữa'))
                 ],
               )
             : ListView.builder(

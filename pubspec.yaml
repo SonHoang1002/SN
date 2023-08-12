@@ -146,6 +146,7 @@ dependencies:
   multi_image_picker: ^4.8.1
   flutter_persistent_keyboard_height: ^1.0.5
   qr_code_scanner: ^1.0.1
+  qr_flutter: ^4.1.0
   
 dev_dependencies:
   flutter_test:
@@ -189,6 +190,8 @@ flutter:
     - assets/images/
     - assets/effect_frame/
     - assets/sounds/
+    - assets/qrDM.png
+    - assets/qrLM.png
     - assets/images_and_video.png
     # - assets/image_upload.png
     - assets/camera_menu.png

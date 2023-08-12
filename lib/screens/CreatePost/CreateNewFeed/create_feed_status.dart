@@ -1,11 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/apis/friends_api.dart';
+import 'package:social_network_app_mobile/apis/search_api.dart';
 import 'package:social_network_app_mobile/data/background_post.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_feed_status_header.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/widgets/box_mention.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import "package:collection/collection.dart";
+import 'package:social_network_app_mobile/widgets/mentions/model/social_content_detection_model.dart';
 
-class CreateFeedStatus extends StatefulWidget {
+class CreateFeedStatus extends ConsumerStatefulWidget {
   final String? content;
   final bool isShowBackground;
   final dynamic checkin;
@@ -17,6 +25,9 @@ class CreateFeedStatus extends StatefulWidget {
   final Function handleGetPreviewUrl;
   final dynamic pageData;
   final FocusNode? focusNode;
+  final Function(
+      Offset currentCharacterMention, List mentionList)? mentionAction;
+  final Function(dynamic mention)? handleMention;
 
   /// This is used to create post in friend wall
   final dynamic friendData;
@@ -33,16 +44,19 @@ class CreateFeedStatus extends StatefulWidget {
       this.content,
       this.pageData,
       this.focusNode,
-      this.friendData})
+      this.friendData,
+      this.mentionAction,this.handleMention})
       : super(key: key);
 
   @override
-  State<CreateFeedStatus> createState() => _CreateFeedStatusState();
+  ConsumerState<CreateFeedStatus> createState() => _CreateFeedStatusState();
 }
 
-class _CreateFeedStatusState extends State<CreateFeedStatus> {
+class _CreateFeedStatusState extends ConsumerState<CreateFeedStatus> {
   final TextEditingController controller = TextEditingController();
+  ValueNotifier<List> listMentions = ValueNotifier([]);
   bool isActiveBackground = false;
+  GlobalKey textformfieldKey = GlobalKey();
 
   @override
   void initState() {
@@ -120,11 +134,13 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextFormField(
+                  key: textformfieldKey,
                   autofocus: false,
                   focusNode: widget.focusNode,
                   onChanged: (value) {
                     widget.handleUpdateData('update_content', value);
                     widget.handleGetPreviewUrl(value);
+                    onDetectContent(value);
                   },
                   maxLines: null,
                   textAlign: widget.backgroundSelected != null
@@ -149,13 +165,44 @@ class _CreateFeedStatusState extends State<CreateFeedStatus> {
                         fontSize: widget.backgroundSelected != null ? 22 : 15),
                     border: InputBorder.none,
                   ),
-                ),
+                )
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  void onDetectContent(String value) async {
+    if (!value.contains('@')) {
+      if (listMentions.value.isNotEmpty) {
+        setState(() {
+          listMentions.value = [];
+        });
+      }
+      return;
+    }
+    List newList = [];
+    if (value.substring(1).isEmpty) {
+      newList = await FriendsApi().getListFriendApi(
+              ref.watch(meControllerProvider)[0]['id'], {"limit": 20}) ??
+          [];
+    } else {
+      var response = await SearchApi()
+          .getListSearchApi({"q": value.substring(1), "limit": 5});
+      if (response != null) {
+        newList = response['accounts'] + response['groups'] + response['pages'];
+      }
+    }
+    final textfieldRenderBox =
+        textformfieldKey.currentContext!.findRenderObject() as RenderBox;
+    Offset textfieldOffset = textfieldRenderBox.localToGlobal(Offset.zero);
+    final bottomOffset = Offset(textfieldOffset.dx,
+        textfieldOffset.dy + textfieldRenderBox.size.height - 100);
+    widget.mentionAction != null
+        ? widget.mentionAction!(bottomOffset, newList)
+        : null;
   }
 
   @override

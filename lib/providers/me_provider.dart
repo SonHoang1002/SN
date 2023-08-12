@@ -11,7 +11,7 @@ final meControllerProvider =
 class MeController extends StateNotifier<List> {
   MeController() : super([]);
 
-  getMeData() async {
+  getMeData({bool connectStatus = true}) async {
     var response = await MeApi().fetchDataMeApi();
 
     if (response != null) {
@@ -23,7 +23,6 @@ class MeController extends StateNotifier<List> {
       if (newList != null && newList != 'noData') {
         listAccount = jsonDecode(newList) ?? [];
       }
-
       var newTheme =
           listAccount.map((e) => e['id']).toList().contains(response['id'])
               ? (listAccount
@@ -59,29 +58,33 @@ class MeController extends StateNotifier<List> {
     } else {
       var newList = await SecureStorage().getKeyStorage('dataLogin');
       var token = await SecureStorage().getKeyStorage("token");
-
       List listAccount = [];
 
       if (newList != null && newList != 'noData') {
         listAccount = jsonDecode(newList) ?? [];
-      }
-      await SecureStorage().saveKeyStorage(
-          jsonEncode(listAccount
-              .map((element) => element['token'] == token
-                  ? {...element, token: null}
-                  : element)
-              .toList()),
-          'dataLogin');
+      } 
+      List newDataLoginList = listAccount;
+
+      var index = newDataLoginList
+          .map((e) => e['token'].toString())
+          .toList()
+          .indexOf(token.toString());
+      var firstData = newDataLoginList[index];
+      newDataLoginList.removeAt(index);
+      newDataLoginList.insert(0, firstData);
+      await SecureStorage()
+          .saveKeyStorage(jsonEncode(newDataLoginList), 'dataLogin'); 
       resetMeData();
-      SecureStorage().deleteKeyStorage('token');
-      SecureStorage().deleteKeyStorage('userId');
+      state = newDataLoginList;
+
+      // resetMeData();
+      // SecureStorage().deleteKeyStorage('token');
+      // SecureStorage().deleteKeyStorage('userId');
     }
   }
 
   updateMedata(List data) async {
- 
-      state = data;
- 
+    state = data;
   }
 
   resetMeData() {

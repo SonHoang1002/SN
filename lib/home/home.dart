@@ -10,6 +10,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:social_network_app_mobile/apis/config.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
@@ -22,11 +26,14 @@ import 'package:social_network_app_mobile/screens/Moment/moment.dart';
 import 'package:social_network_app_mobile/screens/Notification/notification_page.dart';
 import 'package:social_network_app_mobile/screens/Search/search.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch.dart';
+import 'package:social_network_app_mobile/services/isar_post_service.dart';
 import 'package:social_network_app_mobile/services/notification_service.dart';
 import 'package:social_network_app_mobile/services/web_socket_service.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -84,10 +91,10 @@ class _HomeState extends ConsumerState<Home>
       SecureStorage().getKeyStorage("token").then((value) {
         if (value != 'noData') {
           Future.delayed(Duration.zero, () async {
-            if (ref.watch(meControllerProvider).isEmpty) {
-              await ref.read(meControllerProvider.notifier).getMeData();
-              await setTheme();
-            }
+            // if (ref.watch(meControllerProvider).isEmpty) {
+            await ref.read(meControllerProvider.notifier).getMeData();
+            await setTheme();
+            // }
           });
         } else {
           Navigator.pushReplacement(
@@ -417,7 +424,38 @@ class _HomeState extends ConsumerState<Home>
   }
 
   handleClick(key) {
-    if (key == 'notification') {
+    if (key == "qr") {
+      showCupertinoDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: ((context) {
+          return CupertinoAlertDialog(
+            content: Container(
+              margin: const EdgeInsets.only(top: 8.0),
+              height: 300,
+              width: MediaQuery.sizeOf(context).width,
+              child: Column(
+                children: [
+                  buildTextContent("Trang cá nhân của bạn", false,
+                      isCenterLeft: false,
+                      fontSize: 16,
+                      colorWord: Theme.of(context).textTheme.bodyLarge!.color),
+                  buildSpacer(height: 20),
+                  QrImageView(
+                    data: "$urlWebEmso/" +
+                        ref.watch(meControllerProvider)[0]['id'],
+                    dataModuleStyle: const QrDataModuleStyle(
+                        dataModuleShape: QrDataModuleShape.square,
+                        color: blackColor),
+                    backgroundColor: white,
+                  ),
+                ],
+              ),
+            ),
+          );
+        }),
+      );
+    } else if (key == 'notification') {
       Navigator.push(
           context,
           CupertinoPageRoute(
@@ -450,8 +488,9 @@ class _HomeState extends ConsumerState<Home>
     SizedBox(),
     AppBarTitle(title: 'Watch')
   ];
+
   @override
-  void didChangeDependencies() { 
+  void didChangeDependencies() {
     super.didChangeDependencies();
   }
 
@@ -464,11 +503,17 @@ class _HomeState extends ConsumerState<Home>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         buildSnackBar(context, "Không có kết nối mạng");
         isShowSnackBar.value = true;
+        ref
+            .read(connectivityControllerProvider.notifier)
+            .updateConnectivity(_connectionStatus);
       });
     } else if (_connectionStatus == true && isShowSnackBar.value) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         buildSnackBar(context, "Đã khôi phục kết nối mạng");
         isShowSnackBar.value = false;
+        ref
+            .read(connectivityControllerProvider.notifier)
+            .updateConnectivity(_connectionStatus);
       });
     }
     size ??= MediaQuery.sizeOf(context);
@@ -480,6 +525,15 @@ class _HomeState extends ConsumerState<Home>
             : 'system';
 
     List iconActionFeed = [
+      {
+        "key": "qr",
+        "icon": modeTheme == 'dark' ? 'assets/qrDM.png' : 'assets/qrLM.png',
+        'type': 'image',
+        "top": 6.0,
+        "left": 6.0,
+        "right": 6.0,
+        "bottom": 6.0,
+      },
       {
         "key": "notification",
         "icon": modeTheme == 'dark'
@@ -546,9 +600,11 @@ class _HomeState extends ConsumerState<Home>
                               left: iconActionFeed[index]['left'],
                               right: iconActionFeed[index]['right'],
                               bottom: iconActionFeed[index]['bottom']),
-                          child: SvgPicture.asset(
-                            iconActionFeed[index]['icon'],
-                          ),
+                          child: (iconActionFeed[index]['icon']).contains("svg")
+                              ? SvgPicture.asset(
+                                  iconActionFeed[index]['icon'],
+                                )
+                              : Image.asset(iconActionFeed[index]['icon']),
                         ),
                 ),
               )),
