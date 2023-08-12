@@ -22,12 +22,21 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
 
   late double height = 0;
   bool _iShowPassword = true;
-  final TextEditingController _passwordController = TextEditingController(text: "");
+  final TextEditingController _passwordController =
+      TextEditingController(text: "");
   final TextEditingController _passwordConfirmController =
       TextEditingController(text: "");
 
   RegExp numbersRegex = RegExp(r'\d');
   RegExp specialCharRegex = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+  FocusNode focusNode = FocusNode();
+  @override
+  void initState() {
+    super.initState();
+    if (!focusNode.hasFocus) {
+      focusNode.requestFocus();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +78,7 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
                                 _passwordController,
                                 EmailLoginConstants
                                     .EMAIL_LOGIN_NAME_PLACEHOLODER,
-                                handleUpdate: (value) {
+                                focusNode: focusNode, handleUpdate: (value) {
                               setState(() {});
                             }),
                             !checkPassValidate()
@@ -168,7 +177,8 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
       TextEditingController controller, String placeHolder,
       {Function? handleUpdate,
       double? borderRadius = 5,
-      bool? numberType = false}) {
+      bool? numberType = false,
+      FocusNode? focusNode}) {
     return SizedBox(
       height: 40,
       child: TextFormField(
@@ -179,6 +189,7 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
         validator: (value) {
           return null;
         },
+        focusNode: focusNode,
         obscureText: _iShowPassword,
         keyboardType: numberType! ? TextInputType.number : TextInputType.text,
         maxLength: numberType ? 10 : 100,

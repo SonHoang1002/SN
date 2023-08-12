@@ -21,6 +21,7 @@ class CreatePostButton extends ConsumerWidget {
   /// This type is transfered from user page, to check that you can have permission to create post in friend wall
   /// You must transfer both [friendData] and [userType] if you want check permission to create post in friend wall
   final dynamic userType;
+  final bool? isInGroup;
 
   const CreatePostButton(
       {super.key,
@@ -29,10 +30,10 @@ class CreatePostButton extends ConsumerWidget {
       this.reloadFunction,
       this.pageData,
       this.friendData,
-      this.userType});
+      this.userType,this.isInGroup});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) { 
+  Widget build(BuildContext context, WidgetRef ref) {
     dynamic userType;
     if (friendData != null) {
       if (userType != null) {
@@ -59,12 +60,11 @@ class CreatePostButton extends ConsumerWidget {
             context,
             CupertinoPageRoute(
                 builder: ((context) => CreateNewFeed(
-                      type: preType,
-                      pageData: pageData,
-                      reloadFunction: reloadFunction,
-                      postDiscussion: postDiscussion,
-                      friendData: friendData
-                    ))));
+                    type: preType,
+                    pageData: pageData,
+                    reloadFunction: reloadFunction,
+                    postDiscussion: postDiscussion,
+                    friendData: friendData,isInGroup:isInGroup))));
       },
       child: Container(
         padding: const EdgeInsets.only(left: 15, right: 15, top: 6, bottom: 6),

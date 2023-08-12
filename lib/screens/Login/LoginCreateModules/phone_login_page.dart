@@ -25,15 +25,20 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
 
   late double height = 0;
   bool _onPhoneScreen = false;
+  RegExp regex = RegExp(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b');
 
-  final TextEditingController _phoneController = TextEditingController(text: "");
-  final TextEditingController _emailController = TextEditingController(text: "");
+  final TextEditingController _phoneController =
+      TextEditingController(text: "");
+  final TextEditingController _emailController =
+      TextEditingController(text: "");
   String textValidEmail = '';
   List<String> _countryNumberCode = ["VN", "+84"];
-  checkIsValid() {
-    if (_onPhoneScreen && _phoneController.text.trim().isEmpty) {
+  checkValid() {
+    if (_onPhoneScreen && _phoneController.text.trim().length == 10) {
       return true;
-    } else if (!_onPhoneScreen && _emailController.text.trim().isEmpty) {
+    } else if (!_onPhoneScreen &&
+        _emailController.text.trim().isNotEmpty &&
+        regex.hasMatch(_emailController.text.trim())) {
       return true;
     } else {
       return false;
@@ -125,9 +130,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                       isHavePrefix: true, numberType: true)
                   : _buildTextFormField(_emailController, (value) {
                       setState(() {
-                        if (!RegExp(
-                                r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b')
-                            .hasMatch(value)) {
+                        if (!regex.hasMatch(value)) {
                           textValidEmail = 'Email không hợp lệ';
                         } else {
                           textValidEmail = '';
@@ -174,9 +177,8 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
               ),
               buildSpacer(height: 15),
               // change status button
-              checkIsValid()
-                  ? const SizedBox()
-                  : SizedBox(
+              checkValid()
+                  ? SizedBox(
                       height: 40,
                       child: ButtonPrimary(
                         label: "Tiếp tục",
@@ -185,6 +187,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                         },
                       ),
                     )
+                  : const SizedBox()
             ],
           ),
         ),

@@ -4,7 +4,8 @@ import 'package:social_network_app_mobile/apis/api_root.dart';
 
 class AuthenApi {
   fetchDataToken(data) async {
-    return await Api().postRequestBase('/oauth/token', data);
+    var response = await Api().postRequestBase('/oauth/token', data);
+    return response;
   }
 
   loginByGoogle(token) async {
@@ -12,7 +13,7 @@ class AuthenApi {
         '/api/v1/authorization', null, {"access_token": token});
   }
 
-  registrationAccount(data) async { 
+  registrationAccount(data) async {
     return await Api().postRequestBase('/api/v1/registrations', data);
   }
 

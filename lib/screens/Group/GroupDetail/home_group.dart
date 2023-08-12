@@ -422,7 +422,9 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                                   height: 20,
                                   thickness: 1,
                                 ),
-                                CreatePostButton(),
+                                CreatePostButton(
+                                  isInGroup: true,
+                                ),
                               ],
                             )
                           : const SizedBox(),

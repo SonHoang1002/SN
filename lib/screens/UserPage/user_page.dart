@@ -21,6 +21,7 @@ import 'package:social_network_app_mobile/screens/UserPage/user_page_pin_post.da
 import 'package:social_network_app_mobile/screens/UserPage/user_photo_video.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/services/isar_post_service.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/Banner/banner_base.dart';
@@ -157,7 +158,7 @@ class _UserPageState extends ConsumerState<UserPage> {
               as Map<String, dynamic>;
           setState(() {
             id = queryParams['id'];
-            userData = queryParams['user'];
+            userData = queryParams['user']; 
           });
         }
       });

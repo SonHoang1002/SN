@@ -4,12 +4,15 @@ import 'package:badges/badges.dart' as ChipNoti;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/Menu/tranfer_account.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
+import 'package:social_network_app_mobile/widgets/snack_bar_custom.dart';
 import 'package:social_network_app_mobile/widgets/user_item.dart';
 
 class MenuUser extends ConsumerStatefulWidget {
@@ -45,15 +48,22 @@ class _MenuUserState extends ConsumerState<MenuUser> {
         ? InkWell(
             borderRadius: BorderRadius.circular(10.0),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const UserPageHome(),
-                  settings: RouteSettings(
-                    arguments: {'id': meData['id']},
+              var status =
+                  ref.watch(connectivityControllerProvider).connectInternet;
+              if (status==true) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UserPageHome(),
+                    settings: RouteSettings(
+                      arguments: {'id': meData['id']},
+                    ),
                   ),
-                ),
-              );
+                );
+              } else {
+                popToPreviousScreen(context);
+                buildSnackBar(context, "Mạng của bạn không ổn định");
+              }
             },
             child: Container(
               padding: const EdgeInsets.all(10.0),

@@ -77,8 +77,7 @@ class Api {
       //   String message = "Server đang có vấn đề. Hãy thử lại sau";
       //   logger.e(message);
       //   return {"status": e.response?.statusCode, "content": message};
-      // }
-      rethrow;
+      // } 
     }
   }
 

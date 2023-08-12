@@ -52,7 +52,6 @@ class _OnboardingLoginPageState extends ConsumerState<OnboardingLoginPage> {
 
   fetchDataLogin() async {
     var newList = await SecureStorage().getKeyStorage('dataLogin');
-
     if (newList != null && newList != 'noData') {
       setState(() {
         dataLogin = jsonDecode(newList) ?? [];
@@ -70,7 +69,7 @@ class _OnboardingLoginPageState extends ConsumerState<OnboardingLoginPage> {
     );
   }
 
-  handleLogin(int index) async {
+  handleLogin(int index) async { 
     final themeData = dataLogin[index]['theme'];
     final token = dataLogin[index]['token'];
     final theme = pv.Provider.of<ThemeManager>(context, listen: false);

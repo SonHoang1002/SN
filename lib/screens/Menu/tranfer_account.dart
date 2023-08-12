@@ -50,9 +50,7 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
   }
 
   void completeLogin() async {
-    if (1 == 2) {
-      await IsarPostService().resetPostIsar();
-    }
+    await IsarPostService().resetPostIsar();
 
     Navigator.pushAndRemoveUntil(
         context,
@@ -66,7 +64,6 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
     final theme = pv.Provider.of<ThemeManager>(context, listen: false);
     theme.toggleTheme(themeData);
     await SecureStorage().saveKeyStorage(token, 'token');
-
     completeLogin();
   }
 
@@ -81,6 +78,7 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
       ref.read(pageControllerProvider.notifier).reset();
       ref.read(friendControllerProvider.notifier).reset();
       ref.read(groupListControllerProvider.notifier).reset();
+      ref.read(meControllerProvider.notifier).resetMeData();
 
       handleLogin(dataLogin[index]['token'], dataLogin[index]['theme']);
     } else {
