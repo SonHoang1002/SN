@@ -27,7 +27,12 @@ class MenuRender extends StatelessWidget {
                       ? const MainMarketPage(isBack: true)
                       : MenuSelected(
                           menuSelected: menu,
-                        )));
+                        ),
+              settings: menu["key"] == 'eventSocial'
+                  ? const RouteSettings(name: 'Event')
+                  : menu["key"] == 'pageSocial'
+                      ? const RouteSettings(name: 'Page')
+                      : null));
     }
 
     return Column(

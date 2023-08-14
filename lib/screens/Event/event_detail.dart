@@ -22,7 +22,9 @@ import '../../widgets/report_category.dart';
 class EventDetail extends ConsumerStatefulWidget {
   final dynamic eventDetail;
   final bool? isUseEventData;
-  const EventDetail({Key? key, this.eventDetail, this.isUseEventData})
+  bool? isCreate;
+  EventDetail(
+      {Key? key, this.eventDetail, this.isUseEventData, this.isCreate = false})
       : super(key: key);
 
   @override
@@ -103,7 +105,11 @@ class _EventDetailState extends ConsumerState<EventDetail> {
         leading: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {
-              Navigator.pop(context);
+              if (widget.isCreate == true) {
+                Navigator.of(context).popUntil(ModalRoute.withName('Event'));
+              } else {
+                Navigator.pop(context);
+              }
             },
             child: Container(
               height: 26,
@@ -795,8 +801,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                           ),
                                         ),
                                         const Padding(
-                                          padding:
-                                              EdgeInsets.only(top: 8.0),
+                                          padding: EdgeInsets.only(top: 8.0),
                                           child: Row(
                                             children: [
                                               Row(
