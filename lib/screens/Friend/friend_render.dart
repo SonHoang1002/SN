@@ -91,8 +91,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const UserPageHome(),
+                                      builder: (context) =>  const UserPageHome(),
                                       settings: RouteSettings(
                                         arguments: {
                                           'id': friendRequest[indexRequest]["account"]['id'],
@@ -443,8 +442,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const UserPageHome(),
+                                      builder: (context) => const UserPageHome(),
                                       settings: RouteSettings(
                                         arguments: {
                                           'id': friendSuggestions[index]['id'],
