@@ -11,6 +11,8 @@ import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'package:social_network_app_mobile/widgets/text_action.dart';
 import 'package:social_network_app_mobile/widgets/text_description.dart';
 
+import '../../widgets/avatar_social.dart';
+import '../Group/GroupDetail/group_detail.dart';
 import '../Page/PageDetail/page_detail.dart';
 
 class SearchHistory extends ConsumerWidget {
@@ -63,13 +65,11 @@ class SearchHistory extends ConsumerWidget {
                                       ? Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                const UserPageHome(),
+                                            builder: (context) => const UserPageHome(),
                                             settings: RouteSettings(
                                               arguments: {
                                                 'id': searchHistory[index]
-                                                        ['entity_id']
-                                                    .toString(),
+                                                    ['entity_id'],
                                                 'user': searchHistory[index]
                                               },
                                             ),
@@ -112,15 +112,66 @@ class SearchHistory extends ConsumerWidget {
                                                                     'entity_id']
                                                                 .toString()),
                                                   ))
-                                              : const SizedBox();
+                                              : searchHistory[index]
+                                                          ['entity_type'] ==
+                                                      'Group'
+                                                  ? Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            GroupDetail(
+                                                          id: searchHistory[
+                                                                  index]
+                                                              ['entity_id'],
+                                                        ),
+                                                        settings: RouteSettings(
+                                                            arguments: searchHistory[
+                                                                        index][
+                                                                    'entity_id']
+                                                                .toString()),
+                                                      ))
+                                                  : const SizedBox();
                                 },
                                 child: Row(
                                   children: [
-                                    SvgPicture.asset(
-                                      'assets/story.svg',
-                                      width: 35,
-                                      height: 35,
-                                    ),
+                                    // SvgPicture.asset(
+                                    //   'assets/story.svg',
+                                    //   width: 35,
+                                    //   height: 35,
+                                    // ),
+                                     searchHistory[index]['image_url'] != null
+                                        ? searchHistory[index]['entity_type'] ==
+                                                'Account'
+                                            ? AvatarSocial(
+                                                width: 34.0,
+                                                height: 35.0,
+                                                object: searchHistory[index],
+                                                path: searchHistory[index]
+                                                    ['image_url'],
+                                              )
+                                            : Container(
+                                                width: 34,
+                                                height: 34,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
+                                                    border: Border.all(
+                                                        width: 0.3,
+                                                        color: greyColor)),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          8.0),
+                                                  child: ImageCacheRender(
+                                                    path: searchHistory[index]
+                                                        ['image_url'],
+                                                    width: 34.0,
+                                                    height: 34.0,
+                                                  ),
+                                                ),
+                                              )
+                                        : const SizedBox(),
                                     const SizedBox(
                                       width: 8.0,
                                     ),
@@ -172,28 +223,6 @@ class SearchHistory extends ConsumerWidget {
                               ),
                               Row(
                                 children: [
-                                  searchHistory[index]['image_url'] != null
-                                      ? Container(
-                                          width: 34,
-                                          height: 34,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(8.0),
-                                              border: Border.all(
-                                                  width: 0.3,
-                                                  color: greyColor)),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            child: ImageCacheRender(
-                                              path: searchHistory[index]
-                                                  ['image_url'],
-                                              width: 34.0,
-                                              height: 34.0,
-                                            ),
-                                          ),
-                                        )
-                                      : const SizedBox(),
                                   const SizedBox(
                                     width: 10.0,
                                   ),

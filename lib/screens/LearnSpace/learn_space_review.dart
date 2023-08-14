@@ -141,7 +141,7 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
             ),
             const Text('Xếp hạng khóa học này', style: TextStyle(fontSize: 17)),
             const SizedBox(height: 10),
-            Row(
+            widget.courseDetail["course_relationships"]["participant_course"]? Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
@@ -333,7 +333,7 @@ class _LearnSpaceReviewState extends ConsumerState<LearnSpaceReview> {
                     },
                     child: const Text('Viết bài đánh giá'))
               ],
-            ),
+            ): const Text("Hãy tham gia khóa học để đánh giá chất lượng !"),
             const Divider(
               height: 20,
               thickness: 1,

@@ -162,8 +162,8 @@ class UserInformationController extends StateNotifier<UserInformationState> {
   removeUserInfo() async {
     if (mounted) {
       state = state.copyWith(
-        userInfor: {},
-        userMoreInfor: {},
+        // userInfor: {},
+        // userMoreInfor: {},
         friends: [],
         friendsNear: [],
       );
