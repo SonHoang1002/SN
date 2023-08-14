@@ -53,10 +53,10 @@ class _GroupState extends ConsumerState<Group> {
       });
       ref
           .read(groupListControllerProvider.notifier)
-          .getListGroupAdminMember({'tab': 'member', 'limit': 10});
+          .getListGroupAdminMember({'tab': 'member', 'limit': 20});
       ref
           .read(groupListControllerProvider.notifier)
-          .getListGroupAdminMember({'tab': 'admin', 'limit': 10});
+          .getListGroupAdminMember({'tab': 'admin', 'limit': 20});
       ref
           .read(groupListControllerProvider.notifier)
           .groupDiscover({'tab': 'friend', 'limit': 10});

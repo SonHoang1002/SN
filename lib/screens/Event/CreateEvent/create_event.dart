@@ -49,7 +49,14 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
   File? files;
   String privateEvent = 'public';
   List checkinSelected = [];
-  List categorySelected = [];
+  List categorySelected = [
+    {
+      "id": "10",
+      "text": "Mục đích xã hội",
+      "icon":
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/10/phuot.png",
+    }
+  ];
   bool isCropping = false;
   bool formLoading = false;
   bool haveImage = true;
@@ -158,6 +165,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
               CupertinoPageRoute(
                   builder: (context) => EventDetail(
                         eventDetail: response,
+                        isCreate: true,
                       )));
         }
       }
@@ -314,6 +322,9 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                         child: Column(
                           children: [
                             TextFormField(
+                              onChanged: (value) {
+                                _formKey.currentState!.validate();
+                              },
                               controller: nameController,
                               autofocus: false,
                               decoration: const InputDecoration(
@@ -534,6 +545,9 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                             ),
                             const SizedBox(height: 16),
                             TextFormField(
+                              onChanged: (value) {
+                                _formKey.currentState!.validate();
+                              },
                               controller: detailController,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),

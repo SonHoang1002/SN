@@ -40,35 +40,39 @@ class _PageMessageState extends ConsumerState<PageMessage> {
       'X-User-Id': userId,
       'X-Auth-Token': userToken,
     };
+    try {
+      final response = await dio.get(
+        url,
+        options: Options(headers: headers),
+      );
 
-    final response = await dio.get(
-      url,
-      options: Options(headers: headers),
-    );
+      if (response.statusCode == 200) {
+        var data = response.data["teamInfo"]["automatic_reply"];
+        List<PageMesssagesState> outputList = [];
+        data.forEach((item) {
+          String? option = item["option"];
+          String? question = item["question"];
+          String? answer = item["answer"];
 
-    if (response.statusCode == 200) {
-      var data = response.data["teamInfo"]["automatic_reply"];
-      List<PageMesssagesState> outputList = [];
-      data.forEach((item) {
-        String? option = item["option"];
-        String? question = item["question"];
-        String? answer = item["answer"];
-
-        if (option != null && question != null && answer != null) {
-          var newIndex = option.replaceFirst("option-", "");
-          PageMesssagesState newState = PageMesssagesState(
-            index: int.parse(newIndex),
-            question: question,
-            response: answer,
-            isNew: false, // Set the default value for 'isNew'
-          );
-          outputList.add(newState);
-        }
-      });
-      qlist = outputList;
-      setState(() {
-        ref.read(pageMesssagesProvider.notifier).updateState(qlist);
-      });
+          if (option != null && question != null && answer != null) {
+            var newIndex = option.replaceFirst("option-", "");
+            PageMesssagesState newState = PageMesssagesState(
+              index: int.parse(newIndex),
+              question: question,
+              response: answer,
+              isNew: false, // Set the default value for 'isNew'
+            );
+            outputList.add(newState);
+          }
+        });
+        qlist = outputList;
+        setState(() {
+          ref.read(pageMesssagesProvider.notifier).updateState(qlist);
+        });
+      }
+    } catch (e) {
+      print('$e');
+      return null;
     }
   }
 

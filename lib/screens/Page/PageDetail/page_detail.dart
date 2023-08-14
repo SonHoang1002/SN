@@ -335,7 +335,11 @@ class _PageDetailState extends ConsumerState<PageDetail> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: InkWell(
           onTap: () {
-            Navigator.pop(context);
+            if (pageData["isCreate"] != null && pageData["isCreate"] == true) {
+              Navigator.of(context).popUntil(ModalRoute.withName('Page'));
+            } else {
+              Navigator.pop(context);
+            }
           },
           child: Icon(
             FontAwesomeIcons.angleLeft,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/apis/page_api.dart';
@@ -9,9 +10,9 @@ import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 
 class PageAction extends ConsumerStatefulWidget {
-  final dynamic data;
+  dynamic data;
   final Function? handleChangeDependencies;
-  const PageAction({super.key, this.data, this.handleChangeDependencies});
+  PageAction({super.key, this.data, this.handleChangeDependencies});
 
   @override
   ConsumerState<PageAction> createState() => _PageActionState();
@@ -54,12 +55,14 @@ List actions = [
 
 class _PageActionState extends ConsumerState<PageAction> {
   String isActiveAction = '';
+  String firstActiveAction = '';
   String buttonValue = '';
 
   @override
   void initState() {
     if (widget.data['button_key'] != null) {
       isActiveAction = widget.data['button_key'];
+      firstActiveAction = widget.data['button_key'];
     }
     super.initState();
   }
@@ -80,7 +83,7 @@ class _PageActionState extends ConsumerState<PageAction> {
           builder: (context) => TextFieldEdit(
             label: "Đăng ký",
             field: 'register',
-            initialValue: buttonValue ?? "",
+            initialValue: firstActiveAction == 'register' ? buttonValue : "",
             onChange: (value) => handleCallApi(value, data),
           ),
         );
@@ -105,7 +108,7 @@ class _PageActionState extends ConsumerState<PageAction> {
               return false;
             },
             field: 'email',
-            initialValue: buttonValue ?? "",
+            initialValue: firstActiveAction == 'email' ? buttonValue : "",
             onChange: (value) => handleCallApi(value, data),
           ),
         );
@@ -117,7 +120,7 @@ class _PageActionState extends ConsumerState<PageAction> {
           builder: (context) => TextFieldEdit(
             label: "Tìm hiểu thêm",
             field: 'about',
-            initialValue: buttonValue ?? "",
+            initialValue: firstActiveAction == 'about' ? buttonValue : "",
             onChange: (value) => handleCallApi(value, data),
           ),
         );
@@ -137,6 +140,7 @@ class _PageActionState extends ConsumerState<PageAction> {
           ref.read(pageControllerProvider.notifier).updateMedata(res);
         }
     }
+    widget.data["button_key"] = data;
   }
 
   void handleCallApi(value, data) async {
@@ -155,6 +159,8 @@ class _PageActionState extends ConsumerState<PageAction> {
       if (res != null) {
         widget.handleChangeDependencies!(res);
         ref.read(pageControllerProvider.notifier).updateMedata(res);
+        widget.data["button_key"] = data;
+        widget.data["button_value"] = value;
       }
     }
   }
@@ -168,47 +174,61 @@ class _PageActionState extends ConsumerState<PageAction> {
           centerTitle: true,
           elevation: 0,
           title: const AppBarTitle(title: 'Chỉnh sửa nút hành động'),
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              FontAwesomeIcons.angleLeft,
+              size: 18,
+              color: Theme.of(context).textTheme.titleLarge?.color,
+            ),
+          ),
         ),
-        body: Column(
-          children: [
-            const Text(
-                'Chọn hành động mà bạn muốn khách truy cập Trang thực hiện.'),
-            ListView.builder(
-              padding: EdgeInsets.zero,
-              shrinkWrap: true,
-              itemCount: actions.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  horizontalTitleGap: 0,
-                  dense: true,
-                  contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 12.0, vertical: 0.0),
-                  visualDensity:
-                      const VisualDensity(horizontal: -4, vertical: 0),
-                  leading: Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                    child: Image.asset(actions[index]['icon'],
-                        width: 20,
-                        height: 20,
-                        color: theme.isDarkMode ? Colors.white : Colors.black),
-                  ),
-                  title: Text(
-                    actions[index]['title'],
-                    maxLines: 2,
-                  ),
-                  subtitle: Text(
-                    actions[index]['subTitle'],
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  trailing: isActiveAction == actions[index]['key']
-                      ? const Icon(Icons.check, color: Colors.blue, size: 15)
-                      : const SizedBox(width: 5),
-                  onTap: () => handlePress(actions[index]['key'], context),
-                );
-              },
-            )
-          ],
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const Text(
+                  'Chọn hành động mà bạn muốn khách truy cập Trang thực hiện.'),
+              ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: actions.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    horizontalTitleGap: 0,
+                    dense: true,
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 0.0, vertical: 0.0),
+                    visualDensity:
+                        const VisualDensity(horizontal: -4, vertical: 0),
+                    leading: Padding(
+                      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                      child: Image.asset(actions[index]['icon'],
+                          width: 20,
+                          height: 20,
+                          color:
+                              theme.isDarkMode ? Colors.white : Colors.black),
+                    ),
+                    title: Text(
+                      actions[index]['title'],
+                      maxLines: 2,
+                    ),
+                    subtitle: Text(
+                      actions[index]['subTitle'],
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: isActiveAction == actions[index]['key']
+                        ? const Icon(Icons.check, color: Colors.blue, size: 15)
+                        : const SizedBox(width: 5),
+                    onTap: () => handlePress(actions[index]['key'], context),
+                  );
+                },
+              )
+            ],
+          ),
         ));
   }
 }

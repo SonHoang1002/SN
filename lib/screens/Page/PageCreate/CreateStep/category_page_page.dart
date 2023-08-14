@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/page/page_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Page/PageCreate/CreateStep/information_page_page.dart';
 
 import '../../../../constant/page_constants.dart';
@@ -13,15 +15,15 @@ import '../../../../widgets/GeneralWidget/bottom_navigator_button_chip.dart';
 import '../../../../widgets/back_icon_appbar.dart';
 import '../../../../widgets/show_modal_message.dart';
 
-class CategoryPage extends StatefulWidget {
+class CategoryPage extends ConsumerStatefulWidget {
   final dynamic dataCreate;
   const CategoryPage({super.key, this.dataCreate});
 
   @override
-  State<CategoryPage> createState() => _CategoryPageState();
+  ConsumerState<CategoryPage> createState() => _CategoryPageState();
 }
 
-class _CategoryPageState extends State<CategoryPage> {
+class _CategoryPageState extends ConsumerState<CategoryPage> {
   late double width = 0;
   late double height = 0;
   final TextEditingController _categoryController = TextEditingController();
@@ -56,6 +58,9 @@ class _CategoryPageState extends State<CategoryPage> {
       loadingCreate = false;
     });
     if (response.statusCode == 200) {
+      ref
+          .read(pageListControllerProvider.notifier)
+          .getListPageAdmin({'limit': 20});
       pushToNextScreen(
           context,
           InformationPagePage(dataCreate: {
