@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -169,31 +167,8 @@ class _UserPageState extends ConsumerState<UserPage> {
         }
       });
       Future.delayed(Duration.zero, () async {
-        ref.read(userInformationProvider.notifier).getUserInformation(id);
-        ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
-        ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
-        ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
         final deviceUserId = await SecureStorage().getKeyStorage('userId');
-
-        ref.read(postControllerProvider.notifier).getListPostPin(id);
-
-        ref.read(postControllerProvider.notifier).getListPostUserPage(
-            id == ref.watch(meControllerProvider)[0]['id'],
-            id,
-            {"limit": 3, "exclude_replies": true});
-        var friendNew =
-            await UserPageApi().getUserFriend(id, {'limit': 20}) ?? [];
-        if (mounted) {
-          setState(() {
-            userData = ref.watch(userInformationProvider).userInfor;
-            userAbout = ref.watch(userInformationProvider).userMoreInfor;
-            lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
-            postUser = (id == ref.watch(meControllerProvider)[0]['id']
-                ? ref.watch(postControllerProvider).postUserPage
-                : ref.watch(postControllerProvider).postAnotherUserPage);
-            pinPost = ref.watch(postControllerProvider).postsPin;
-            friend = friendNew;
-            if (deviceUserId == id) {
+        if (deviceUserId == id) {
               userType = 'me';
             } else {
               if (userData['relationships'] != null &&
@@ -209,6 +184,34 @@ class _UserPageState extends ConsumerState<UserPage> {
               }
               following.value = userData['relationships']?['following'];
             }
+        ref.read(userInformationProvider.notifier).getUserInformation(id);
+        ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
+        ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
+        ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
+        
+
+        ref.read(postControllerProvider.notifier).getListPostPin(id);
+
+        ref.read(postControllerProvider.notifier).getListPostUserPage(
+            id == ref.watch(meControllerProvider)[0]['id'],
+            id,
+            {"limit": 3, "exclude_replies": true});
+        var friendNew =
+            await UserPageApi().getUserFriend(id, {'limit': 20}) ?? [];
+        if (mounted) {
+          setState(() {
+            if(ref.watch(userInformationProvider).userInfor != null && ref.watch(userInformationProvider).userInfor.isNotEmpty){
+              userData = ref.watch(userInformationProvider).userInfor;
+            }
+            
+            userAbout = ref.watch(userInformationProvider).userMoreInfor;
+            lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
+            postUser = (id == ref.watch(meControllerProvider)[0]['id']
+                ? ref.watch(postControllerProvider).postUserPage
+                : ref.watch(postControllerProvider).postAnotherUserPage);
+            pinPost = ref.watch(postControllerProvider).postsPin;
+            friend = friendNew;
+            
           });
         }
       });

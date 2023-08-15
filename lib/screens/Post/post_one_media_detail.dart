@@ -1,5 +1,4 @@
 // ignore_for_file: unused_field
-
 import 'dart:io';
 import 'dart:math';
 
@@ -16,7 +15,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/constant/config.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
@@ -254,11 +252,22 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                 ? ref.watch(currentPostControllerProvider).currentPost
                 : userData)
         : null;
-    String path = (postRender?['media_attachments']?[0]?['url']) ??
-        postRender?['url'] ??
-        (postRender?['avatar_media']?['url']) ??
-        postRender?['banner']?['preview_url'] ??
-        linkBannerDefault;
+        
+    String path;
+    if (postRender != null &&
+    postRender['media_attachments'] != null &&
+    postRender['media_attachments'].isNotEmpty &&
+    postRender['media_attachments'][0]['url'] != null) {
+  path = postRender['media_attachments'][0]['url'];
+} else if (postRender != null && postRender['url'] != null) {
+  path = postRender['url'];
+} else if (postRender != null && postRender['avatar_media'] != null) {
+  path = postRender['avatar_media']['url'];
+} else if (postRender != null && postRender['banner'] != null) {
+  path = postRender['banner']['preview_url'];
+} else {
+  path = linkBannerDefault;
+}
     final size = MediaQuery.sizeOf(context);
     return WillPopScope(
       onWillPop: () async {
