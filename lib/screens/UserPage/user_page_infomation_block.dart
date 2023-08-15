@@ -81,8 +81,8 @@ class UserPageInfomationBlock extends StatelessWidget {
     final size = MediaQuery.sizeOf(context);
     final createdDate =
         user?['created_at'] != null ? DateTime.parse(user['created_at']) : null;
-    return generalInformation == null
-        ? Center(
+    return (generalInformation == null)
+        ? Container(
             child: SkeletonCustom().introduceSkeleton(context),
           )
         : Container(
