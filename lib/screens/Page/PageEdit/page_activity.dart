@@ -1,5 +1,6 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
@@ -122,6 +123,16 @@ class _PageActivityState extends State<PageActivity> {
         elevation: 0,
         centerTitle: true,
         title: const AppBarTitle(title: 'Nhật ký hoạt động'),
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            FontAwesomeIcons.angleLeft,
+            size: 18,
+            color: Theme.of(context).textTheme.titleLarge?.color,
+          ),
+        ),
       ),
       body: data.isNotEmpty
           ? ListView.builder(

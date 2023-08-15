@@ -316,7 +316,8 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     List<dynamic> listSwitch = [meData[0], pageData];
     String modeTheme = theme.isDarkMode ? 'dark' : 'light';
     final size = MediaQuery.sizeOf(context);
-
+    final Map<dynamic, dynamic> dataMap =
+        ModalRoute.of(context)!.settings.arguments as Map<dynamic, dynamic>;
     if (!isModalOpen && pageData?['page_relationship']?['role'] == 'admin') {
       isModalOpen = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -324,84 +325,93 @@ class _PageDetailState extends ConsumerState<PageDetail> {
       });
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        titleSpacing:
-            pageData?['title'] != null && pageData?['title'].length >= 32
-                ? 0
-                : null,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        leading: InkWell(
-          onTap: () {
-            if (pageData["isCreate"] != null && pageData["isCreate"] == true) {
-              Navigator.of(context).popUntil(ModalRoute.withName('Page'));
-            } else {
-              Navigator.pop(context);
-            }
-          },
-          child: Icon(
-            FontAwesomeIcons.angleLeft,
-            size: 18,
-            color: Theme.of(context).textTheme.titleLarge?.color,
-          ),
-        ),
-        title: InkWell(
-          onTap: () {
-            if (pageData?['page_relationship']?['role'] != '' && rolePage) {
-              showModalSwitchRole(context, listSwitch, rolePage, size);
-            }
-          },
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text(
-                rolePage
-                    ? (namePage?['title'] != null &&
-                            namePage?['title'].length >= 32
-                        ? '${namePage?['title'].substring(0, 32)}...'
-                        : namePage?['title'] ?? "")
-                    : meData[0]['display_name'],
-                style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                    fontSize: 15)),
-            if (pageData?['page_relationship']?['role'] != '' && rolePage)
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0),
-                child: Icon(
-                  FontAwesomeIcons.angleDown,
-                  size: 18,
-                ),
-              )
-          ]),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(11.0),
+    return WillPopScope(
+      onWillPop: () async {
+        if (dataMap.containsKey("isCreate")) {
+          Navigator.of(context).popUntil(ModalRoute.withName('Page'));
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          centerTitle: true,
+          titleSpacing:
+              pageData?['title'] != null && pageData?['title'].length >= 32
+                  ? 0
+                  : null,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          leading: InkWell(
+            onTap: () {
+              if (dataMap.containsKey("isCreate")) {
+                Navigator.of(context).popUntil(ModalRoute.withName('Page'));
+              } else {
+                Navigator.pop(context);
+              }
+            },
             child: Icon(
-              Icons.search,
-              size: 22,
-              color: Theme.of(context).textTheme.displayLarge!.color,
+              FontAwesomeIcons.angleLeft,
+              size: 18,
+              color: Theme.of(context).textTheme.titleLarge?.color,
             ),
-          )
-        ],
-      ),
-      body: Stack(
-        children: [
-          getBody(
-              size,
-              modeTheme,
-              /* pageData */ ref.read(pageControllerProvider).pageDetail,
-              rolePage),
-          if (showHeaderTabFixed)
-            Container(
-              width: MediaQuery.sizeOf(context).width,
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
-              decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor),
-              child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal, child: headerTab()),
-            ),
-        ],
+          ),
+          title: InkWell(
+            onTap: () {
+              if (pageData?['page_relationship']?['role'] != '' && rolePage) {
+                showModalSwitchRole(context, listSwitch, rolePage, size);
+              }
+            },
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text(
+                  rolePage
+                      ? (namePage?['title'] != null &&
+                              namePage?['title'].length >= 32
+                          ? '${namePage?['title'].substring(0, 32)}...'
+                          : namePage?['title'] ?? "")
+                      : meData[0]['display_name'],
+                  style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
+                      fontSize: 15)),
+              if (pageData?['page_relationship']?['role'] != '' && rolePage)
+                const Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Icon(
+                    FontAwesomeIcons.angleDown,
+                    size: 18,
+                  ),
+                )
+            ]),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(11.0),
+              child: Icon(
+                Icons.search,
+                size: 22,
+                color: Theme.of(context).textTheme.displayLarge!.color,
+              ),
+            )
+          ],
+        ),
+        body: Stack(
+          children: [
+            getBody(
+                size,
+                modeTheme,
+                /* pageData */ ref.read(pageControllerProvider).pageDetail,
+                rolePage),
+            if (showHeaderTabFixed)
+              Container(
+                width: MediaQuery.sizeOf(context).width,
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor),
+                child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal, child: headerTab()),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -536,7 +546,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                             context,
                             CupertinoPageRoute(
                                 builder: (_) => PageEllipsis(
-                                      data: pageData,
+                                      data: data,
                                       rolePage: rolePage,
                                       handleChangeDependencies:
                                           handleChangeDependencies,
