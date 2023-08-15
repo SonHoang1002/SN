@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/group_api.dart';
@@ -22,9 +21,17 @@ class _GroupInvitedRequestState extends ConsumerState<GroupInvitedRequest> {
   dynamic groupInviteAdmin;
   dynamic groupInviteJoin;
   dynamic groupInviteMember;
+  List<bool> testList = List.generate(1000, (index) => false);
   @override
   void initState() {
     super.initState();
+    getData();
+  }
+
+  void getData() async {
+    await ref
+        .read(groupListControllerProvider.notifier)
+        .getGroupJoinRequest(null);
   }
 
   @override
@@ -258,9 +265,24 @@ class _GroupInvitedRequestState extends ConsumerState<GroupInvitedRequest> {
                                             ),
                                           ),
                                           ButtonPrimary(
-                                            label: "Hủy bỏ",
+                                            label: testList[index] == false
+                                                ? "Hủy bỏ"
+                                                : "Yêu cầu tham gia",
                                             isPrimary: false,
-                                            handlePress: () {},
+                                            handlePress: () {
+                                              if (testList[index] == true) {
+                                                GroupApi().joinGroupRequest(
+                                                    groupInviteJoin['data']
+                                                        [index]["id"]);
+                                              } else {
+                                                GroupApi().removeGroupRequest(
+                                                    groupInviteJoin['data']
+                                                        [index]["id"]);
+                                              }
+                                              testList[index] =
+                                                  !testList[index];
+                                              setState(() {});
+                                            },
                                           )
                                         ],
                                       ),

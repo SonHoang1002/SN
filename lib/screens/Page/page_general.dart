@@ -46,20 +46,18 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
     await ref
         .read(pageListControllerProvider.notifier)
         .getListPageAdmin({'limit': 20});
-    await ref
+    ref
         .read(pageListControllerProvider.notifier)
         .getListPageSuggest({'limit': 10});
-    await ref
+    ref
         .read(pageListControllerProvider.notifier)
         .getListPageLiked({'page': 1, 'sort_direction': 'asc'});
 
     if (ref.read(pageListControllerProvider).pageInvitedLike.isEmpty) {
-      await ref
-          .read(pageListControllerProvider.notifier)
-          .getListPageInvited('like');
+      ref.read(pageListControllerProvider.notifier).getListPageInvited('like');
     }
     if (ref.read(pageListControllerProvider).pageInvitedManage.isEmpty) {
-      await ref
+      ref
           .read(pageListControllerProvider.notifier)
           .getListPageInvited('manage');
     }

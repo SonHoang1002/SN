@@ -24,64 +24,65 @@ class PageState {
   final dynamic pageDetail;
   final List pageSearch;
   final List pageCategory;
+  bool isCreate;
 
-  const PageState({
-    this.rolePage = true,
-    this.pageFeed = const [],
-    this.isMoreFeed = true,
-    this.pageReview = const [],
-    this.isMoreReview = true,
-    this.pagePined = const [],
-    this.pagePhoto = const [],
-    this.isMorePhoto = true,
-    this.pageAlbum = const [],
-    this.isMoreAlbum = true,
-    this.pageVideo = const [],
-    this.isMoreVideo = true,
-    this.pageGroup = const [],
-    this.pageDetail = const {},
-    this.isMoreGroup = true,
-    this.pageSearch = const [],
-    this.pageCategory = const [],
-  });
+  PageState(
+      {this.rolePage = true,
+      this.pageFeed = const [],
+      this.isMoreFeed = true,
+      this.pageReview = const [],
+      this.isMoreReview = true,
+      this.pagePined = const [],
+      this.pagePhoto = const [],
+      this.isMorePhoto = true,
+      this.pageAlbum = const [],
+      this.isMoreAlbum = true,
+      this.pageVideo = const [],
+      this.isMoreVideo = true,
+      this.pageGroup = const [],
+      this.pageDetail = const {},
+      this.isMoreGroup = true,
+      this.pageSearch = const [],
+      this.pageCategory = const [],
+      this.isCreate = false});
 
-  PageState copyWith({
-    bool rolePage = true,
-    List pageFeed = const [],
-    bool isMoreFeed = true,
-    List pageReview = const [],
-    bool isMoreReview = true,
-    List pagePined = const [],
-    List pagePhoto = const [],
-    bool isMorePhoto = true,
-    List pageAlbum = const [],
-    bool isMoreAlbum = true,
-    List pageVideo = const [],
-    bool isMoreVideo = true,
-    List pageGroup = const [],
-    dynamic pageDetail = const {},
-    bool isMoreGroup = true,
-    List pageSearch = const [],
-    List pageCategory = const [],
-  }) {
+  PageState copyWith(
+      {bool rolePage = true,
+      List pageFeed = const [],
+      bool isMoreFeed = true,
+      List pageReview = const [],
+      bool isMoreReview = true,
+      List pagePined = const [],
+      List pagePhoto = const [],
+      bool isMorePhoto = true,
+      List pageAlbum = const [],
+      bool isMoreAlbum = true,
+      List pageVideo = const [],
+      bool isMoreVideo = true,
+      List pageGroup = const [],
+      dynamic pageDetail = const {},
+      bool isMoreGroup = true,
+      List pageSearch = const [],
+      List pageCategory = const [],
+      bool isCreate = false}) {
     return PageState(
-      rolePage: rolePage,
-      pageFeed: pageFeed,
-      isMoreFeed: isMoreFeed,
-      pageReview: pageReview,
-      isMoreReview: isMoreReview,
-      pagePined: pagePined,
-      pagePhoto: pagePhoto,
-      isMorePhoto: isMorePhoto,
-      pageAlbum: pageAlbum,
-      isMoreAlbum: isMoreAlbum,
-      pageVideo: pageVideo,
-      isMoreVideo: isMoreVideo,
-      pageGroup: pageGroup,
-      pageDetail: pageDetail,
-      isMoreGroup: isMoreGroup,
-      pageCategory: pageCategory,
-    );
+        rolePage: rolePage,
+        pageFeed: pageFeed,
+        isMoreFeed: isMoreFeed,
+        pageReview: pageReview,
+        isMoreReview: isMoreReview,
+        pagePined: pagePined,
+        pagePhoto: pagePhoto,
+        isMorePhoto: isMorePhoto,
+        pageAlbum: pageAlbum,
+        isMoreAlbum: isMoreAlbum,
+        pageVideo: pageVideo,
+        isMoreVideo: isMoreVideo,
+        pageGroup: pageGroup,
+        pageDetail: pageDetail,
+        isMoreGroup: isMoreGroup,
+        pageCategory: pageCategory,
+        isCreate: isCreate);
   }
 }
 
@@ -91,15 +92,15 @@ final pageControllerProvider =
 });
 
 class PageController extends StateNotifier<PageState> {
-  PageController() : super(const PageState());
+  PageController() : super(PageState());
 
   reset() {
-    state = const PageState();
+    state = PageState();
   }
 
-  resetWithId(String id) { 
-    if (state.pageDetail['id'] != id) { 
-      state = const PageState();
+  resetWithId(String id) {
+    if (state.pageDetail['id'] != id) {
+      state = PageState();
     }
   }
 
