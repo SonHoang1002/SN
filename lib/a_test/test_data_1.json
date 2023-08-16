@@ -1,174 +1,455 @@
 {
-  "product": {
-    "page_id": "108277159419224076",
-    "title": "7867676tytytytytytytytytyt",
-    "description": "rituyoirtoirtuoyirutoiyu8956t598t989g89g8h9f898f9h89f8h98f9h8f9h89f8h9f8h9f8h9f8f9h",
-    "product_category_id": 4637,
-    "brand_id": "3301",
-    "weight_package": "6878",
-    "length_package": "78",
-    "width_package": "78",
-    "height_package": "78",
-    "pre_order": true,
-    "condition": "new_product",
-    "days_to_ship": 7
+  "id": "109046964585375627",
+  "created_at": "2022-09-23T16:17:10.633+07:00",
+  "backdated_time": "2022-09-23T16:17:10.633+07:00",
+  "in_reply_to_id": null,
+  "in_reply_to_account_id": null,
+  "sensitive": false,
+  "spoiler_text": "",
+  "visibility": "public",
+  "language": "vi",
+  "post_type": null,
+  "replies_count": 0,
+  "off_comment": false,
+  "reblogs_count": 0,
+  "post_category_id": 288,
+  "favourites_count": 0,
+  "reactions": [
+    {
+      "type": "like",
+      "likes_count": 0
+    },
+    {
+      "type": "haha",
+      "hahas_count": 0
+    },
+    {
+      "type": "angry",
+      "angrys_count": 0
+    },
+    {
+      "type": "love",
+      "loves_count": 0
+    },
+    {
+      "type": "sad",
+      "sads_count": 0
+    },
+    {
+      "type": "wow",
+      "wows_count": 0
+    },
+    {
+      "type": "yay",
+      "yays_count": 0
+    }
+  ],
+  "replies_total": 0,
+  "score": "109046964585375627",
+  "hidden": false,
+  "notify": false,
+  "processing": "done",
+  "view_3s": 0,
+  "source_deleted": false,
+  "viewer_reaction": null,
+  "reblogged": false,
+  "muted": false,
+  "bookmarked": false,
+  "pinned": null,
+  "content": "1 ngang 1 vuông",
+  "card": null,
+  "in_reply_to_parent_id": null,
+  "uuid": "109046964585375627",
+  "reblog": null,
+  "application": {
+    "name": "Web",
+    "website": null
   },
-  "product_options_attributes": [
+  "account": {
+    "id": "108836280883283562",
+    "username": "datgauteddy",
+    "display_name": "Đạt Gấu",
+    "avatar_static": "https://snapi.emso.asia/avatars/original/missing.png",
+    "gender": "male",
+    "earn_money": true,
+    "certified": false,
+    "avatar_media": {
+      "id": "110869873048744640",
+      "type": "image",
+      "url": "https://snapi.emso.asia/system/media_attachments/files/110/869/873/048/744/640/original/1f1679471023f419.jpg",
+      "meta": {
+        "original": {
+          "width": 834,
+          "height": 666,
+          "size": "834x666",
+          "aspect": 1.2522522522522523,
+          "average_color": "#5e5944"
+        },
+        "small": {
+          "width": 447,
+          "height": 357,
+          "size": "447x357",
+          "aspect": 1.2521008403361344,
+          "average_color": "#5e5944"
+        }
+      },
+      "preview_url": "https://snapi.emso.asia/system/media_attachments/files/110/869/873/048/744/640/small/1f1679471023f419.jpg",
+      "remote_url": null,
+      "preview_remote_url": null,
+      "show_url": "https://snapi.emso.asia/system/media_attachments/files/110/869/873/304/062/633/original/3de6b796380efd70.jpeg",
+      "status_id": "110869873090531299",
+      "description": "",
+      "position": null,
+      "created_at": "2023-08-11T14:46:46.233+07:00",
+      "frame": null,
+      "status_media": {
+        "id": "110869873090531299",
+        "favourites_count": 0,
+        "reblogs_count": 0,
+        "replies_total": 1,
+        "post_type": "account_avatar",
+        "reactions": [
+          {
+            "type": "like",
+            "likes_count": 0
+          },
+          {
+            "type": "haha",
+            "hahas_count": 0
+          },
+          {
+            "type": "angry",
+            "angrys_count": 0
+          },
+          {
+            "type": "love",
+            "loves_count": 0
+          },
+          {
+            "type": "sad",
+            "sads_count": 0
+          },
+          {
+            "type": "wow",
+            "wows_count": 0
+          },
+          {
+            "type": "yay",
+            "yays_count": 0
+          }
+        ]
+      }
+    },
+    "banner": {
+      "id": "108865987396915703",
+      "type": "image",
+      "url": "https://snapi.emso.asia/system/media_attachments/files/108/865/987/396/915/703/original/a49646cc53774142.jpeg",
+      "meta": {
+        "original": {
+          "width": 1176,
+          "height": 1764,
+          "size": "1176x1764",
+          "aspect": 0.6666666666666666,
+          "average_color": "#77838b"
+        },
+        "small": {
+          "width": 327,
+          "height": 490,
+          "size": "327x490",
+          "aspect": 0.6673469387755102,
+          "average_color": "#77838b"
+        }
+      },
+      "preview_url": "https://snapi.emso.asia/system/media_attachments/files/108/865/987/396/915/703/small/a49646cc53774142.jpeg",
+      "remote_url": null,
+      "preview_remote_url": null,
+      "show_url": "https://snapi.emso.asia/system/media_attachments/files/108/865/987/472/519/191/original/8ba264c9e87700fc.jpeg",
+      "status_id": "108865987400892671",
+      "description": "",
+      "position": null,
+      "created_at": "2022-08-22T17:12:17.766+07:00",
+      "frame": null,
+      "status_media": {
+        "id": "108865987400892671",
+        "favourites_count": 0,
+        "reblogs_count": 0,
+        "replies_total": 0,
+        "post_type": "account_banner",
+        "reactions": [
+          {
+            "type": "like",
+            "likes_count": 0
+          },
+          {
+            "type": "haha",
+            "hahas_count": 0
+          },
+          {
+            "type": "angry",
+            "angrys_count": 0
+          },
+          {
+            "type": "love",
+            "loves_count": 0
+          },
+          {
+            "type": "sad",
+            "sads_count": 0
+          },
+          {
+            "type": "wow",
+            "wows_count": 0
+          },
+          {
+            "type": "yay",
+            "yays_count": 0
+          }
+        ]
+      }
+    }
+  },
+  "status_background": null,
+  "status_activity": null,
+  "tagable_page": null,
+  "place": null,
+  "group": {
+    "id": "109041102987778035",
+    "title": "Nhóm test video và ảnh",
+    "post_permission_setting": "NONE",
+    "post_approval_setting": "NONE",
+    "member_count": 2,
+    "is_private": true,
+    "is_visible": true,
+    "banner": {
+      "id": "109041104005973450",
+      "type": "image",
+      "url": "https://snapi.emso.asia/system/media_attachments/files/109/041/104/005/973/450/original/672f43d8d76431b0.jpg",
+      "meta": {
+        "original": {
+          "width": 1920,
+          "height": 1080,
+          "size": "1920x1080",
+          "aspect": 1.7777777777777777,
+          "average_color": "#a89081"
+        },
+        "small": {
+          "width": 533,
+          "height": 300,
+          "size": "533x300",
+          "aspect": 1.7766666666666666,
+          "average_color": "#a89081"
+        }
+      },
+      "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/041/104/005/973/450/small/672f43d8d76431b0.jpg",
+      "remote_url": null,
+      "preview_remote_url": null,
+      "show_url": "https://snapi.emso.asia/system/media_attachments/files/109/041/104/135/000/017/original/60aa4ded3c386058.jpeg",
+      "status_id": "109041104131304691",
+      "description": "",
+      "position": null,
+      "created_at": "2022-09-22T15:26:45.167+07:00",
+      "frame": null,
+      "status_media": {
+        "id": "109041104131304691",
+        "favourites_count": 0,
+        "reblogs_count": 0,
+        "replies_total": 0,
+        "post_type": "group_banner",
+        "reactions": [
+          {
+            "type": "like",
+            "likes_count": 0
+          },
+          {
+            "type": "haha",
+            "hahas_count": 0
+          },
+          {
+            "type": "angry",
+            "angrys_count": 0
+          },
+          {
+            "type": "love",
+            "loves_count": 0
+          },
+          {
+            "type": "sad",
+            "sads_count": 0
+          },
+          {
+            "type": "wow",
+            "wows_count": 0
+          },
+          {
+            "type": "yay",
+            "yays_count": 0
+          }
+        ]
+      }
+    }
+  },
+  "page": null,
+  "page_owner": null,
+  "album": null,
+  "event": null,
+  "project": null,
+  "course": null,
+  "series": null,
+  "shared_event": null,
+  "shared_project": null,
+  "shared_recruit": null,
+  "shared_course": null,
+  "shared_product": null,
+  "shared_page": null,
+  "shared_group": null,
+  "shared_music": null,
+  "target_account": null,
+  "media_attachments": [
     {
-      "name": "kich co",
-      "position": 1,
-      "values": [
-        "s",
-        "m",
-        "n"
-      ]
+      "id": "109046964569215268",
+      "type": "image",
+      "url": "https://snapi.emso.asia/system/media_attachments/files/109/046/964/569/215/268/original/7fad82514e882585.png",
+      "meta": {
+        "original": {
+          "width": 512,
+          "height": 512,
+          "size": "512x512",
+          "aspect": 1,
+          "average_color": "#e9769d"
+        },
+        "small": {
+          "width": 400,
+          "height": 400,
+          "size": "400x400",
+          "aspect": 1,
+          "average_color": "#e9769d"
+        }
+      },
+      "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/046/964/569/215/268/small/7fad82514e882585.png",
+      "remote_url": null,
+      "preview_remote_url": null,
+      "show_url": null,
+      "status_id": "109046964585375627",
+      "description": null,
+      "position": null,
+      "created_at": "2022-09-23T16:17:10.265+07:00",
+      "frame": null,
+      "status_media": {
+        "id": "109046964585375626",
+        "favourites_count": 0,
+        "reblogs_count": 0,
+        "replies_total": 0,
+        "post_type": "media",
+        "reactions": [
+          {
+            "type": "like",
+            "likes_count": 0
+          },
+          {
+            "type": "haha",
+            "hahas_count": 0
+          },
+          {
+            "type": "angry",
+            "angrys_count": 0
+          },
+          {
+            "type": "love",
+            "loves_count": 0
+          },
+          {
+            "type": "sad",
+            "sads_count": 0
+          },
+          {
+            "type": "wow",
+            "wows_count": 0
+          },
+          {
+            "type": "yay",
+            "yays_count": 0
+          }
+        ]
+      }
     },
     {
-      "name": "mau sac",
-      "position": 2,
-      "values": [
-        "xanh",
-        "tim",
-        "den"
-      ]
+      "id": "109046964225660558",
+      "type": "image",
+      "url": "https://snapi.emso.asia/system/media_attachments/files/109/046/964/225/660/558/original/01670a5dbe9a3927.jpg",
+      "meta": {
+        "original": {
+          "width": 1920,
+          "height": 1080,
+          "size": "1920x1080",
+          "aspect": 1.7777777777777777,
+          "average_color": "#a89081"
+        },
+        "small": {
+          "width": 533,
+          "height": 300,
+          "size": "533x300",
+          "aspect": 1.7766666666666666,
+          "average_color": "#a89081"
+        }
+      },
+      "preview_url": "https://snapi.emso.asia/system/media_attachments/files/109/046/964/225/660/558/small/01670a5dbe9a3927.jpg",
+      "remote_url": null,
+      "preview_remote_url": null,
+      "show_url": null,
+      "status_id": "109046964585375627",
+      "description": null,
+      "position": null,
+      "created_at": "2022-09-23T16:17:05.022+07:00",
+      "frame": null,
+      "status_media": {
+        "id": "109046964585375625",
+        "favourites_count": 0,
+        "reblogs_count": 0,
+        "replies_total": 0,
+        "post_type": "media",
+        "reactions": [
+          {
+            "type": "like",
+            "likes_count": 0
+          },
+          {
+            "type": "haha",
+            "hahas_count": 0
+          },
+          {
+            "type": "angry",
+            "angrys_count": 0
+          },
+          {
+            "type": "love",
+            "loves_count": 0
+          },
+          {
+            "type": "sad",
+            "sads_count": 0
+          },
+          {
+            "type": "wow",
+            "wows_count": 0
+          },
+          {
+            "type": "yay",
+            "yays_count": 0
+          }
+        ]
+      }
     }
   ],
-  "product_variants_attributes": [
-    {
-      "title": "7867676tytytytytytytytytyt - s - xanh ",
-      "price": "98899910.0",
-      "sku": "6n6h6h6h6",
-      "position": 1,
-      "compare_at_price": null,
-      "option1": "s",
-      "option2": "xanh",
-      "image_id": "",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": 700,
-      "old_inventory_quantity": 100,
-      "requires_shipping": true
-    },
-    {
-      "title": "7867676tytytytytytytytytyt - s - tim ",
-      "price": "98899911.0",
-      "sku": "6n6h6h6h6",
-      "position": 1,
-      "compare_at_price": null,
-      "option1": "s",
-      "option2": "tim",
-      "image_id": "",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": 786,
-      "old_inventory_quantity": 100,
-      "requires_shipping": true
-    },
-    {
-      "title": "7867676tytytytytytytytytyt - s - den ",
-      "price": "98899912.0",
-      "sku": "6n6h6h6h6",
-      "position": 1,
-      "compare_at_price": null,
-      "option1": "s",
-      "option2": "den",
-      "image_id": "",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": 100,
-      "old_inventory_quantity": 100,
-      "requires_shipping": true
-    },
-    {
-      "title": "7867676tytytytytytytytytyt - m - xanh ",
-      "price": "98899913.0",
-      "sku": "6n6h6h6h6",
-      "position": 1,
-      "compare_at_price": null,
-      "option1": "m",
-      "option2": "xanh",
-      "image_id": "",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": 786,
-      "old_inventory_quantity": 100,
-      "requires_shipping": true
-    },
-    {
-      "title": "7867676tytytytytytytytytyt - m - tim ",
-      "price": "98899914.0",
-      "sku": "6n6h6h6h6",
-      "position": 1,
-      "compare_at_price": null,
-      "option1": "m",
-      "option2": "tim",
-      "image_id": "",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": 200,
-      "old_inventory_quantity": 100,
-      "requires_shipping": true
-    },
-    {
-      "title": "7867676tytytytytytytytytyt - m - den ",
-      "price": "98899915.0",
-      "sku": "6n6h6h6h6",
-      "position": 1,
-      "compare_at_price": null,
-      "option1": "m",
-      "option2": "den",
-      "image_id": "",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": 786,
-      "old_inventory_quantity": 100,
-      "requires_shipping": true
-    },
-    {
-      "title": "7867676tytytytytytytytytyt - n - xanh ",
-      "price": "98899916.0",
-      "sku": "6n6h6h6h6",
-      "position": 1,
-      "compare_at_price": null,
-      "option1": "n",
-      "option2": "xanh",
-      "image_id": "110656847766985190",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": 222,
-      "old_inventory_quantity": 100,
-      "requires_shipping": true
-    },
-    {
-      "title": "7867676tytytytytytytytytyt - n - tim ",
-      "price": "98899917.0",
-      "sku": "6n6h6h6h6",
-      "position": 1,
-      "compare_at_price": null,
-      "option1": "n",
-      "option2": "tim",
-      "image_id": "110656847766985190",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": 786,
-      "old_inventory_quantity": 100,
-      "requires_shipping": true
-    },
-    {
-      "title": "7867676tytytytytytytytytyt - n - den ",
-      "price": "98899918.0",
-      "sku": "6n6h6h6h6",
-      "position": 1,
-      "compare_at_price": null,
-      "option1": "n",
-      "option2": "den",
-      "image_id": "110656847766985190",
-      "weight": 0.25,
-      "weight_unit": "Kg",
-      "inventory_quantity": 786,
-      "old_inventory_quantity": 100,
-      "requires_shipping": true
-    }
-  ],
-  "product_attribute_informations_attributes": []
+  "mentions": [],
+  "tags": [],
+  "replies": [],
+  "favourites": [],
+  "emojis": [],
+  "status_tags": [],
+  "poll": null,
+  "status_question": {
+    "content": "Bạn hỏi gì đi...",
+    "color": null
+  },
+  "status_target": null
 }

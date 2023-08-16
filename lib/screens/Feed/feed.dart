@@ -305,6 +305,7 @@ class _FeedState extends ConsumerState<Feed> {
                                     reloadFunction: () {
                                       setState(() {});
                                     },
+                                    friendData: ref.watch(meControllerProvider)[0],
                                     jumpToOffsetFunction: _jumpToOffsetFunction,
                                     isFocus: focusCurrentPostIndex.value ==
                                         posts[index]['id']),

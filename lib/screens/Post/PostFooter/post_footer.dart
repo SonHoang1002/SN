@@ -21,6 +21,9 @@ class PostFooter extends StatelessWidget {
   final Function(dynamic)? updateDataFunction;
   final Function(Offset)? jumpToOffsetFunction;
   final dynamic friendData;
+  final dynamic groupData;
+  final bool? isInGroup;
+
   const PostFooter(
       {Key? key,
       this.post,
@@ -30,7 +33,8 @@ class PostFooter extends StatelessWidget {
       this.reloadDetailFunction,
       this.isShowCommentBox,
       this.updateDataFunction,
-      this.jumpToOffsetFunction,this.friendData})
+      this.jumpToOffsetFunction,
+      this.friendData,this.isInGroup,this.groupData})
       : super(key: key);
 
   @override
@@ -48,7 +52,9 @@ class PostFooter extends StatelessWidget {
                               post: post,
                               preType: preType ?? type,
                               indexImagePost: indexOfImage,
-                              updateDataFunction: updateDataFunction))
+                              updateDataFunction: updateDataFunction,
+                              isInGroup: isInGroup,
+                              groupData: groupData))
                       : showBarModalBottomSheet(
                           context: context,
                           backgroundColor: Colors.transparent,

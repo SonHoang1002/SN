@@ -5,7 +5,7 @@ const socketNovuUrl = 'wss://notification-ws.emso.vn/socket.io';
 const getTokenNovuUrl = 'https://notification-api.emso.vn';
 
 const tokenVideoUpload = '21fbd3b2e427d9b9bae405e6480695e6bd233e44';
-// const userToken = '3cp6cSCoQqMK9HWCasDyyICcy52EfdVXVo_gx21I6ks';
+// const userToken = '3cp6cSCoQqMK9HWCasDyyICcy52EfdVXVo_gx21I6ks';a
 // const userToken = '2SeHv0_XX2DjiYhAoEqzdwSiSRSCCSOLhQgCLRP4eIA';
 //a Luu
 // const userToken = 'zRo-Aka_TJvXPzLJdfbHTs6SnLPEU8cHalDViC2Aixs';

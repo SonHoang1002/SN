@@ -46,13 +46,19 @@ class WatchDetail extends ConsumerStatefulWidget {
   final String? type;
   final Function? updateDataFunction;
   final String? preType;
+  final dynamic friendData;
+  final bool? isInGroup;
+  final dynamic groupData;
   const WatchDetail(
       {Key? key,
       this.media,
       this.post,
       this.type,
       this.updateDataFunction,
-      this.preType})
+      this.groupData,
+      this.isInGroup,
+      this.preType,
+      this.friendData})
       : super(key: key);
 
   @override
@@ -512,7 +518,14 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            PostHeader(post: widget.post, textColor: white, type: postDetail),
+            PostHeader(
+              post: widget.post,
+              textColor: white,
+              type: postDetail,
+              friendData: widget.friendData,
+              groupData: widget.groupData,
+              isInGroup: widget.isInGroup,
+            ),
             Container(
               color: !isHiddenAction ? blackColor.withOpacity(0.5) : null,
               child: Column(

@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +27,7 @@ import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/Banner/banner_base.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
@@ -91,7 +95,10 @@ class _UserPageHomeState extends State<UserPageHome> {
   @override
   Widget build(BuildContext context) {
     List<Widget> pageUserRoutes = [
-      UserPage(id: widget.id, user: widget.user,),
+      UserPage(
+        id: widget.id,
+        user: widget.user,
+      ),
       const Moment(typePage: 'home'),
       const SizedBox(),
       const Watch(),
@@ -147,8 +154,8 @@ class _UserPageState extends ConsumerState<UserPage> {
   @override
   void initState() {
     super.initState();
-     Future.delayed(Duration.zero, () async {
-       ref.read(userInformationProvider.notifier).removeUserInfo();
+    Future.delayed(Duration.zero, () async {
+      ref.read(userInformationProvider.notifier).removeUserInfo();
     });
     if (mounted) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -182,7 +189,7 @@ class _UserPageState extends ConsumerState<UserPage> {
               } else {
                 userType = 'stranger';
               }
-              following.value = userData['relationships']?['following'];
+              following.value = userData?['relationships']?['following'];
             }
         ref.read(userInformationProvider.notifier).getUserInformation(id);
         ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
@@ -347,12 +354,12 @@ class _UserPageState extends ConsumerState<UserPage> {
     final theme = pv.Provider.of<ThemeManager>(context);
     if (id == ref.watch(meControllerProvider)[0]['id']) {
       if (ref.watch(postControllerProvider).postUserPage.isNotEmpty) {
-        postUser = ref.read(postControllerProvider).postUserPage;
+        postUser = ref.watch(postControllerProvider).postUserPage;
         isMorePageUser = ref.watch(postControllerProvider).isMoreUserPage;
       }
     } else {
       if (ref.watch(postControllerProvider).postAnotherUserPage.isNotEmpty) {
-        postUser = ref.read(postControllerProvider).postAnotherUserPage;
+        postUser = ref.watch(postControllerProvider).postAnotherUserPage;
         isMorePageUser = ref.watch(postControllerProvider).isMoreAnother;
       }
     }
@@ -366,6 +373,7 @@ class _UserPageState extends ConsumerState<UserPage> {
             objectMore: userAbout,
             type: 'user',
           ),
+          buildSpacer(height: 10),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Row(
@@ -781,7 +789,8 @@ class _UserPageState extends ConsumerState<UserPage> {
           delegate: SliverChildBuilderDelegate(
         (context, index) {
           return VisibilityDetector(
-              key: Key((postUser[index]?['id']).toString()),
+              key: Key(((postUser[index]?['id']) ?? Random().nextInt(1000))
+                  .toString()),
               onVisibilityChanged: (info) {
                 if (info.visibleFraction > 0.6) {
                   if (focusCurrentPostIndex.value != postUser[index]['id']) {

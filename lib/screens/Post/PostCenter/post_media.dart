@@ -15,6 +15,9 @@ class PostMedia extends StatefulWidget {
   final Function? reloadFunction;
   final Function? showCmtBoxFunction;
   final Function(dynamic)? updateDataFunction;
+  final bool? isInGroup;
+  final dynamic groupData;
+
   final bool? isFocus;
 
   const PostMedia(
@@ -26,7 +29,7 @@ class PostMedia extends StatefulWidget {
       this.reloadFunction,
       this.showCmtBoxFunction,
       this.updateDataFunction,
-      this.isFocus})
+      this.isFocus,this.isInGroup,this.groupData})
       : super(key: key);
 
   @override
@@ -110,9 +113,12 @@ class _PostMediaState extends State<PostMedia> {
         pushCustomCupertinoPageRoute(
             context,
             PostDetail(
-                post: widget.post,
-                preType: widget.type,
-                updateDataFunction: widget.updateDataFunction));
+              post: widget.post,
+              preType: widget.type,
+              updateDataFunction: widget.updateDataFunction,
+              groupData: widget.groupData,
+              isInGroup: widget.isInGroup,
+            ));
       }
     } else {
       return;

@@ -187,7 +187,8 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                           const UserPageHome(),
                                       settings: RouteSettings(
                                         arguments: {
-                                          'id': hosts[index]['account']['id']
+                                          'id': hosts[index]['account']['id'],
+                                          "user": hosts[index]
                                         },
                                       ),
                                     ));
@@ -222,11 +223,20 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                   : Center(
                                       child: ClipOval(
                                           child: ExtendedImage.network(
-                                        (hosts[index]?['account']?['avatar_media'] !=null)
-                                            ? (hosts[index]['account']['avatar_media']['url'] !=null)
-                                                ? (hosts[index]['account']['avatar_media']['url'])
-                                                : (hosts[index]['account']['avatar_media']['preview_url'])
-                                            : (hosts[index]['account']['avatar_static']),
+                                        (hosts[index]?['account']
+                                                    ?['avatar_media'] !=
+                                                null)
+                                            ? (hosts[index]['account']
+                                                            ['avatar_media']
+                                                        ['url'] !=
+                                                    null)
+                                                ? (hosts[index]['account']
+                                                    ['avatar_media']['url'])
+                                                : (hosts[index]['account']
+                                                        ['avatar_media']
+                                                    ['preview_url'])
+                                            : (hosts[index]['account']
+                                                ['avatar_static']),
                                         fit: BoxFit.cover,
                                         width: 180.0,
                                         height: 180.0,
@@ -310,7 +320,8 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                                 settings: RouteSettings(
                                                   arguments: {
                                                     'id': hosts[index]
-                                                        ['account']['id']
+                                                        ['account']['id'],
+                                                    "user": hosts[index]
                                                   },
                                                 ),
                                               ));

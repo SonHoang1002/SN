@@ -30,14 +30,14 @@ class SaveLoginPage extends StatelessWidget {
                     child: Column(
                       children: [
                         buildTextContent(SaveLogin.SAVE_LOGIN_TITLE, true,
-                            fontSize: 25,
+                            fontSize: 22,
                             colorWord:
                                 Theme.of(context).textTheme.bodyLarge?.color,
                             isCenterLeft: false),
                         buildTextContent(
-                            "Sau khi được xác minh tài khoản qua email hoặc số điện thoại",
+                            "sau khi được xác minh tài khoản qua email hoặc số điện thoại",
                             true,
-                            fontSize: 25,
+                            fontSize: 22,
                             colorWord:
                                 Theme.of(context).textTheme.bodyLarge?.color,
                             isCenterLeft: false),

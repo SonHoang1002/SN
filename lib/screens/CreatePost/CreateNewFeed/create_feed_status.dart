@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/apis/search_api.dart';
 import 'package:social_network_app_mobile/data/background_post.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_feed_status_header.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -25,8 +27,8 @@ class CreateFeedStatus extends ConsumerStatefulWidget {
   final Function handleGetPreviewUrl;
   final dynamic pageData;
   final FocusNode? focusNode;
-  final Function(
-      Offset currentCharacterMention, List mentionList)? mentionAction;
+  final Function(Offset currentCharacterMention, List mentionList)?
+      mentionAction;
   final Function(dynamic mention)? handleMention;
 
   /// This is used to create post in friend wall
@@ -45,7 +47,8 @@ class CreateFeedStatus extends ConsumerStatefulWidget {
       this.pageData,
       this.focusNode,
       this.friendData,
-      this.mentionAction,this.handleMention})
+      this.mentionAction,
+      this.handleMention})
       : super(key: key);
 
   @override
@@ -54,7 +57,8 @@ class CreateFeedStatus extends ConsumerStatefulWidget {
 
 class _CreateFeedStatusState extends ConsumerState<CreateFeedStatus> {
   final TextEditingController controller = TextEditingController();
-  ValueNotifier<List> listMentions = ValueNotifier([]);
+  List listMentions = [];
+  List listMentionsSelected = [];
   bool isActiveBackground = false;
   GlobalKey textformfieldKey = GlobalKey();
 
@@ -130,42 +134,67 @@ class _CreateFeedStatusState extends ConsumerState<CreateFeedStatus> {
                     )
                   : null,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Stack(
               children: [
-                TextFormField(
-                  key: textformfieldKey,
-                  autofocus: false,
-                  focusNode: widget.focusNode,
-                  onChanged: (value) {
-                    widget.handleUpdateData('update_content', value);
-                    widget.handleGetPreviewUrl(value);
-                    onDetectContent(value);
-                  },
-                  maxLines: null,
-                  textAlign: widget.backgroundSelected != null
-                      ? TextAlign.center
-                      : TextAlign.left,
-                  controller: controller,
-                  textCapitalization: TextCapitalization.sentences,
-                  style: widget.backgroundSelected != null
-                      ? TextStyle(
-                          color: Color(int.parse(
-                              '0xFF${widget.backgroundSelected['style']['fontColor'].substring(1)}')),
-                          fontWeight: FontWeight.w700,
-                          fontSize: 22)
-                      : null,
-                  decoration: InputDecoration(
-                    hintText: "Bạn đang nghĩ gì?",
-                    hintStyle: TextStyle(
-                        color: widget.backgroundSelected != null
-                            ? Color(int.parse(
-                                '0xFF${widget.backgroundSelected['style']['fontColor'].substring(1)}'))
-                            : null,
-                        fontSize: widget.backgroundSelected != null ? 22 : 15),
-                    border: InputBorder.none,
-                  ),
-                )
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextFormField(
+                      key: textformfieldKey,
+                      autofocus: false,
+                      focusNode: widget.focusNode,
+                      onChanged: (value) {
+                        widget.handleUpdateData('update_content', {
+                          "content": value,
+                          "mentions": listMentionsSelected
+                        });
+                        widget.handleGetPreviewUrl(value);
+                        onDetectContent(value);
+                      },
+                      maxLines: null,
+                      textAlign: widget.backgroundSelected != null
+                          ? TextAlign.center
+                          : TextAlign.left,
+                      controller: controller,
+                      textCapitalization: TextCapitalization.sentences,
+                      style: widget.backgroundSelected != null
+                          ? TextStyle(
+                              color: Color(int.parse(
+                                  '0xFF${widget.backgroundSelected['style']['fontColor'].substring(1)}')),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 22)
+                          : null,
+                      decoration: InputDecoration(
+                        hintText: "Bạn đang nghĩ gì?",
+                        hintStyle: TextStyle(
+                            color: widget.backgroundSelected != null
+                                ? Color(int.parse(
+                                    '0xFF${widget.backgroundSelected['style']['fontColor'].substring(1)}'))
+                                : null,
+                            fontSize:
+                                widget.backgroundSelected != null ? 22 : 15),
+                        border: InputBorder.none,
+                      ),
+                    )
+                  ],
+                ),
+                listMentions.isNotEmpty
+                    ? Container(
+                        margin: const EdgeInsets.only(top: 40),
+                        child: BoxMention(
+                          listData: listMentions,
+                          getMention: (mention) {
+                            setState(() {
+                              listMentions = [];
+                              if (!listMentionsSelected.contains(mention)) {
+                                listMentionsSelected.add(mention);
+                              }
+                            });
+                            updateDataTextController(mention);
+                          },
+                        ),
+                      )
+                    : const SizedBox(),
               ],
             ),
           ),
@@ -174,11 +203,37 @@ class _CreateFeedStatusState extends ConsumerState<CreateFeedStatus> {
     );
   }
 
+  updateDataTextController(dynamic mention) {
+    final indexOfPointer = controller.selection.baseOffset;
+    final valueOfTextfield = controller.value.text;
+    final result = renderNewValue(valueOfTextfield, indexOfPointer,
+        ((mention?['title']) ?? (mention?['display_name']) ?? ""));
+    controller.text = result[0];
+    controller.selection =
+        TextSelection.fromPosition(TextPosition(offset: result[1]));
+    widget.handleUpdateData('update_content',
+        {"content": result[0], "mentions": listMentionsSelected});
+  }
+
+  // return List contain: [0]:newValue, [1]:currentIndex of pointer
+  List renderNewValue(String value, int indexPointer, String newValue) {
+    String subStringValue = value.substring(0, indexPointer);
+    List solitList = subStringValue.split("");
+    final indexCharater = solitList.lastIndexOf("@");
+
+    return [
+      value.substring(0, indexCharater) +
+          newValue +
+          value.substring(indexPointer),
+      (value.substring(0, indexCharater) + newValue).length
+    ];
+  }
+
   void onDetectContent(String value) async {
     if (!value.contains('@')) {
-      if (listMentions.value.isNotEmpty) {
+      if (listMentions.isNotEmpty) {
         setState(() {
-          listMentions.value = [];
+          listMentions = [];
         });
       }
       return;
@@ -195,14 +250,17 @@ class _CreateFeedStatusState extends ConsumerState<CreateFeedStatus> {
         newList = response['accounts'] + response['groups'] + response['pages'];
       }
     }
-    final textfieldRenderBox =
-        textformfieldKey.currentContext!.findRenderObject() as RenderBox;
-    Offset textfieldOffset = textfieldRenderBox.localToGlobal(Offset.zero);
-    final bottomOffset = Offset(textfieldOffset.dx,
-        textfieldOffset.dy + textfieldRenderBox.size.height - 100);
-    widget.mentionAction != null
-        ? widget.mentionAction!(bottomOffset, newList)
-        : null;
+    setState(() {
+      listMentions = newList;
+    });
+    // final textfieldRenderBox =
+    //     textformfieldKey.currentContext!.findRenderObject() as RenderBox;
+    // Offset textfieldOffset = textfieldRenderBox.localToGlobal(Offset.zero);
+    // final bottomOffset = Offset(textfieldOffset.dx,
+    //     textfieldOffset.dy + textfieldRenderBox.size.height - 100);
+    // widget.mentionAction != null
+    //     ? widget.mentionAction!(bottomOffset, newList)
+    //     : null;
   }
 
   @override

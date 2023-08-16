@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/authen_api.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/main_login_page.dart';
@@ -93,6 +94,15 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
+        leading: InkWell(
+            onTap: () {
+              popToPreviousScreen(context);
+            },
+            child: const Icon(
+              FontAwesomeIcons.chevronLeft,
+              size: 20,
+              color: blackColor,
+            )),
       ),
       resizeToAvoidBottomInset: true,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

@@ -29,6 +29,8 @@ class PostCenter extends StatelessWidget {
   final Function? showCmtBoxFunction;
   final Function(dynamic)? updateDataFunction;
   final bool? isFocus;
+  final bool? isInGroup;
+  final dynamic groupData;
   const PostCenter(
       {Key? key,
       this.post,
@@ -39,7 +41,7 @@ class PostCenter extends StatelessWidget {
       this.reloadFunction,
       this.showCmtBoxFunction,
       this.updateDataFunction,
-      this.isFocus})
+      this.isFocus,this.isInGroup,this.groupData})
       : super(key: key);
 
   @override
@@ -74,6 +76,8 @@ class PostCenter extends StatelessWidget {
                     reloadFunction: () {
                       reloadFunction != null ? reloadFunction!() : null;
                     },
+                    isInGroup: isInGroup,
+                    groupData: groupData,
                     showCmtBoxFunction: showCmtBoxFunction),
             //
             post['card'] != null && (post['media_attachments'].isEmpty)
@@ -147,12 +151,11 @@ class PostCenter extends StatelessWidget {
         updateDataFunction: updateDataFunction,
       );
     } else if ([postTarget, postVisibleQuestion].contains(postType)) {
-      // return PostTarget(
-      //   post: post,
-      //   type: postType == postVisibleQuestion ? postQuestionAnwer : postTarget,
-      //   statusQuestion: post['status_question'],
-      // );
-      return const SizedBox();
+      return PostTarget(
+        post: post,
+        type: postType == postVisibleQuestion ? postQuestionAnwer : postTarget,
+        statusQuestion: post['status_question'],
+      );
     }
     // else if (postType == postShareEvent) {
     //   return PostShareEvent(post: widget.post);

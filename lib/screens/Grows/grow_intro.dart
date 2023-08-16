@@ -306,7 +306,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                           settings: RouteSettings(
                                             arguments: {
                                               'id': hosts[index]['account']
-                                                  ['id']
+                                                  ['id'],"user": hosts[index]
                                             },
                                           ),
                                         ));
@@ -386,7 +386,7 @@ class _GrowIntroState extends ConsumerState<GrowIntro> {
                                                 settings: RouteSettings(
                                                   arguments: {
                                                     'id': hosts[index]
-                                                        ['account']['id']
+                                                        ['account']['id'],"user": hosts[index]
                                                   },
                                                 ),
                                               ));

@@ -128,24 +128,22 @@ class PostController extends StateNotifier<PostState> {
 
     if (mounted) {
       state = state.copyWith(
-        posts: state.posts,
-        postsPin: state.postsPin,
-        postUserPage: isIdCurrentUser ? newList : state.postUserPage,
-        postAnotherUserPage:
-            !isIdCurrentUser ? newList : state.postAnotherUserPage,
-        isMore: state.isMore,
-        isMoreAnother: !isIdCurrentUser
-            ? response.length < params['limit']
-                ? false
-                : true
-            : state.isMoreAnother,
-        isMoreUserPage: isIdCurrentUser
-            ? response.length < params['limit']
-                ? false
-                : true
-            : state.isMoreUserPage,
-      );
-      // isMoreUserPage: true);
+          posts: state.posts,
+          postsPin: state.postsPin,
+          postUserPage: isIdCurrentUser ? newList : state.postUserPage,
+          postAnotherUserPage:
+              !isIdCurrentUser ? newList : state.postAnotherUserPage,
+          isMore: state.isMore,
+          isMoreAnother: !isIdCurrentUser
+              ? response.length < params['limit']
+                  ? false
+                  : true
+              : state.isMoreAnother,
+          isMoreUserPage: isIdCurrentUser
+              ? response.length < params['limit']
+                  ? false
+                  : true
+              : state.isMoreUserPage);
     }
   }
 

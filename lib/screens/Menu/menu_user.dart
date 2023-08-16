@@ -50,13 +50,13 @@ class _MenuUserState extends ConsumerState<MenuUser> {
             onTap: () {
               var status =
                   ref.watch(connectivityControllerProvider).connectInternet;
-              if (status==true) {
+              if (status == true) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const UserPageHome(),
                     settings: RouteSettings(
-                      arguments: {'id': meData['id']},
+                      arguments: {'id': meData['id'], "user": meData},
                     ),
                   ),
                 );
