@@ -50,6 +50,8 @@ class PostFooterButton extends ConsumerStatefulWidget {
   /// Transfer current offset of textformfield to scroll post listview
   final Function(Offset)? jumpToOffsetFunction;
   final dynamic friendData;
+  final dynamic groupData;
+  final bool? isInGroup;
 
   const PostFooterButton(
       {Key? key,
@@ -64,7 +66,9 @@ class PostFooterButton extends ConsumerStatefulWidget {
       this.updateDataFunction,
       this.fromOneMediaPost = false,
       this.jumpToOffsetFunction,
-      this.friendData})
+      this.friendData,
+      this.groupData,
+      this.isInGroup})
       : super(key: key);
 
   @override
@@ -129,6 +133,8 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
             PostDetail(
                 post: widget.post,
                 preType: widget.type,
+                isInGroup: widget.isInGroup,
+                groupData: widget.groupData,
                 updateDataFunction: widget.updateDataFunction));
       } else if (([postMultipleMedia, imagePhotoPage].contains(widget.type)) ||
           widget.fromOneMediaPost == true) {
@@ -524,6 +530,8 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
                               PostDetail(
                                   post: widget.post,
                                   preType: widget.type,
+                                  isInGroup: widget.isInGroup,
+                                  groupData: widget.groupData,
                                   updateDataFunction:
                                       widget.updateDataFunction)));
                     })))
@@ -546,7 +554,7 @@ class _PostFooterButtonState extends ConsumerState<PostFooterButton>
         children: [
           Flex(
             direction: Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(

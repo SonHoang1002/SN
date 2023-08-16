@@ -138,7 +138,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  UserPageHome(id: searchResults[index]['id']),
+                                  UserPageHome(),
                               settings: RouteSettings(
                                 arguments: {
                                   'id': searchResults[index]['id'],

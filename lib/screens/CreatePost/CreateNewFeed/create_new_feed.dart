@@ -126,7 +126,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   List listMentions = [];
   Offset textFieldOffset = const Offset(0, 150.6);
-  List listMentionsSelected = [];
 
   @override
   void initState() {
@@ -258,7 +257,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         break;
       case 'update_content':
         setState(() {
-          content = data;
+          content = data['content'];
+          listMentions = data['mentions'];
           _isShow = false;
         });
 
@@ -1077,28 +1077,30 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             Column(
               children: [
                 CreateFeedStatus(
-                    content: content,
-                    checkin: checkin,
-                    friendSelected: friendSelected,
-                    statusActivity: statusActivity,
-                    isShowBackground: checkisShowBackground(),
-                    visibility: visibility,
-                    backgroundSelected: files.isNotEmpty || checkin != null
-                        ? null
-                        : backgroundSelected,
-                    focusNode: _focusNode,
-                    handleUpdateData: handleUpdateData,
-                    handleGetPreviewUrl: handleGetPreviewUrl,
-                    friendData: widget.friendData,
-                    pageData: widget.pageData,
-                    mentionAction: (Offset offset, List newMentionList) {
-                      setState(() {
-                        // listMentions = newMentionList;
-                        if (offset.dy < 250) {
-                          textFieldOffset = offset;
-                        }
-                      });
-                    },),
+                  content: content,
+                  checkin: checkin,
+                  friendSelected: friendSelected,
+                  statusActivity: statusActivity,
+                  isShowBackground: checkisShowBackground(),
+                  visibility: visibility,
+                  backgroundSelected: files.isNotEmpty || checkin != null
+                      ? null
+                      : backgroundSelected,
+                  focusNode: _focusNode,
+                  handleUpdateData: handleUpdateData,
+                  handleGetPreviewUrl: handleGetPreviewUrl,
+                  friendData: widget.friendData,
+                  pageData: widget.pageData,
+                  // mentionAction: (Offset offset, List newMentionList) {
+                  //   setState(() {
+                  //     listMentions = newMentionList;
+                  //     if (offset.dy < 250) {
+                  //       textFieldOffset = offset;
+                  //     }
+                  //   });
+                  // },
+                ),
+
                 previewUrlData != null
                     ? PreviewUrlPost(
                         detailData: previewUrlData,
@@ -1315,32 +1317,11 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                 ),
               ],
             ),
-            listMentions.isNotEmpty
-                ? Container(
-                    margin: EdgeInsets.only(top: textFieldOffset.dy),
-                    // color: red,
-                    child: BoxMention(
-                      listData: listMentions,
-                      getMention: (mention) {
-                        handleSelectMention();
-                        setState(() {
-                          listMentions = [];
-                          if (!listMentionsSelected.contains(mention)) {
-                            listMentionsSelected.add(mention);
-                          }
-                        }); 
-                      },
-                      
-                    ),
-                  )
-                : const SizedBox(),
           ],
         ),
       ),
     );
   }
-
-  handleSelectMention() {}
 
   // color
   Widget getBottomSheet() {

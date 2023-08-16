@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_controller.dart';
+import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widgets/video_player.dart';
 
 class PostLifeEvent extends StatelessWidget {
@@ -15,9 +17,14 @@ class PostLifeEvent extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          lifeEvent['default_media_url'] != null
-              ? VideoPlayerRender(path: lifeEvent['default_media_url'])
-              : const SizedBox(),
+          // lifeEvent['default_media_url'] != null
+          //     ?
+          VideoPlayerNoneController(
+            path: lifeEvent['place_id'],
+            type: "network",
+          )
+          // : const SizedBox()
+          ,
           const SizedBox(
             height: 8,
           ),

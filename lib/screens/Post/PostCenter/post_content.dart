@@ -62,6 +62,7 @@ class PostContent extends StatelessWidget {
               children: [
                 ExpandableTextContent(
                   content: post?['content'] ?? '',
+                  postData: post,
                   linkColor: textColor ??
                       Theme.of(context).textTheme.bodyLarge!.color ??
                       white,

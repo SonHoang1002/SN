@@ -35,6 +35,7 @@ class PostDetail extends ConsumerStatefulWidget {
   final Function(dynamic)? updateDataFunction;
   final dynamic postId;
   final dynamic friendData;
+  final dynamic groupData;
 
   const PostDetail(
       {Key? key,
@@ -44,7 +45,8 @@ class PostDetail extends ConsumerStatefulWidget {
       this.updateDataFunction,
       this.postId,
       this.isInGroup,
-      this.friendData})
+      this.friendData,
+      this.groupData})
       : super(key: key);
 
   @override
@@ -335,7 +337,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     dynamic updateCountPostData = postData;
     dynamic count = postComment.length;
     for (var element in postComment) {
-      count += (element?["replies_total"]) ?? 0; 
+      count += (element?["replies_total"]) ?? 0;
     }
     updateCountPostData['replies_total'] =
         count + countAdditionalIfChild - countSubIfChild;
@@ -466,15 +468,15 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                    // color: blueColor,
-                                    child: const BackIconAppbar()),
+                                const BackIconAppbar(),
                                 Expanded(
                                   child: SizedBox(
                                     child: PostHeader(
                                       post: postData,
                                       type: postDetail,
                                       isInGroup: widget.isInGroup,
+                                      friendData: widget.friendData,
+                                      groupData: widget.groupData,
                                     ),
                                   ),
                                 ),
@@ -490,6 +492,8 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                                       post: postData,
                                       type: postDetail,
                                       preType: checkPreType(),
+                                      isInGroup: widget.isInGroup,
+                                      groupData: widget.groupData,
                                       backFunction: () async {
                                         List newList = [];
                                         while (newList.isEmpty) {

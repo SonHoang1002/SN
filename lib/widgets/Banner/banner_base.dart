@@ -310,6 +310,7 @@ class _BannerBaseState extends State<BannerBase> {
             ));
   }
 }
+
 class CameraIcon extends StatelessWidget {
   const CameraIcon({
     super.key,

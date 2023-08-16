@@ -186,7 +186,8 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                     builder: (context) => const UserPageHome(),
                                     settings: RouteSettings(
                                       arguments: {
-                                        'id': courseDetail['account']['id']
+                                        'id': courseDetail['account']['id'],
+                                        "user": courseDetail
                                       },
                                     ),
                                   ));
@@ -239,7 +240,8 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                           settings: RouteSettings(
                                             arguments: {
                                               'id': courseDetail['account']
-                                                  ['id']
+                                                  ['id'],
+                                              "user": courseDetail
                                             },
                                           ),
                                         ));

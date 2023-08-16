@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -9,8 +10,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Feed/create_post_button.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupDetail/group_detail.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_album.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_image.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_intro.dart';
@@ -87,6 +90,8 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
         }
       },
     );
+
+    Future.delayed(Duration.zero, () async {});
   }
 
   @override
@@ -205,7 +210,6 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
       mergeAndFilter(groupMorderator, groupAdmin),
       mergeAndFilter(groupMember, groupFriend),
     );
-
     final size = MediaQuery.sizeOf(context);
     return Scaffold(
       body: CustomScrollView(
@@ -421,9 +425,11 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      widget.groupDetail?['group_relationship']?['admin'] ||
+                      (widget.groupDetail?['group_relationship']?['admin'] ||
                               widget.groupDetail?['group_relationship']
-                                  ?['moderator']
+                                  ?['moderator'] ||
+                              widget.groupDetail?['group_relationship']
+                                  ?['member'])
                           ? const Column(
                               children: [
                                 Divider(
@@ -493,6 +499,8 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                                           isHiddenCrossbar: true,
                                           isHiddenFooter: true,
                                           post: groupPins[index],
+                                          groupData: widget.groupDetail,
+                                          isInGroup: true,
                                           haveSuggest: false),
                                     ),
                                   ),
@@ -547,9 +555,11 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
                           return Post(
-                              post: postGroup[index],
-                              haveSuggest: false,
-                              isInGroup: true);
+                            post: postGroup[index],
+                            haveSuggest: false,
+                            isInGroup: true,
+                            groupData: widget.groupDetail,
+                          );
                         },
                         childCount: postGroup.length,
                       ),
@@ -557,13 +567,16 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
               : SliverList(
                   delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    return  const Text("Đây là nhóm riêng tư bạn cần tham gia để theo dõi các bài viết");
+                    return const Text(
+                        "Đây là nhóm riêng tư bạn cần tham gia để theo dõi các bài viết");
                   },
                   childCount: 0,
                 )),
           SliverToBoxAdapter(
               child: isLoading
-                  ? seeMore? SkeletonCustom().postSkeleton(context) :const SizedBox()
+                  ? seeMore
+                      ? SkeletonCustom().postSkeleton(context)
+                      : const SizedBox()
                   : const SizedBox()),
         ],
       ),

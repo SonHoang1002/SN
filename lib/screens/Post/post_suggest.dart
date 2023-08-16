@@ -58,8 +58,8 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
         widget.type == feedPost) {
       listContent = [(const TextSpan(text: "Gợi ý cho bạn"))];
     } else if (widget.post?["album"] != null &&
-        widget.post?["album"]["category"] != 'avatar' &&
-        widget.post?["album"]["category"] != 'banner') {
+        widget.post?["album"]?["category"] != 'avatar' &&
+        widget.post?["album"]?["category"] != 'banner') {
       listContent = [
         const TextSpan(text: "Album  "),
         TextSpan(text: widget.post?["album"]["title"], style: bold)
@@ -85,15 +85,15 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
         ];
       }
     } else if (widget.type == feedPost && widget.post != null) {
-      if (meData['id'] != widget.post?["account"]["id"] &&
+      if (meData['id'] != widget.post?["account"]?["id"] &&
           widget.post?["reblog"]?["post_type"] == 'watch') {
         listContent = [
-          TextSpan(text: widget.post?['account']['display_name'], style: bold),
+          TextSpan(text: widget.post?['account']?['display_name'], style: bold),
           const TextSpan(text: " đã chia sẻ 1 Video ")
         ];
       }
 
-      if (meData['id'] != widget.post?["account"]["id"] &&
+      if (meData['id'] != widget.post?["account"]?["id"] &&
           widget.post?["post_type"] != 'watch' &&
           widget.post?["post_type"] != 'moment' &&
           widget.post?['media_attachments'].length > 0) {
@@ -101,7 +101,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
           (TextSpan(text: widget.post?['page']?['title'], style: bold))
         ];
         listContent = [
-          (TextSpan(text: widget.post?['account']['display_name'], style: bold))
+          (TextSpan(text: widget.post?['account']?['display_name'], style: bold))
         ];
       }
       dynamic checkVideoImage =
@@ -146,7 +146,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
       }
       if (widget.post?['group'] != null) {
         listContent.addAll([
-          TextSpan(text: widget.post?['account']['display_name'], style: bold),
+          TextSpan(text: widget.post?['account']?['display_name'], style: bold),
           const TextSpan(
             text: ' đã đăng bài trong nhóm ',
           ),
@@ -155,7 +155,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
       }
     }
 
-    if (meData['id'] != widget.post?['account']['id'] &&
+    if (meData['id'] != widget.post?['account']?['id'] &&
         widget.post?['reblog'] != null &&
         widget.post?['reblog']?['post_type'] != 'watch') {
       listContent = [
@@ -173,28 +173,28 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
           text: ' nhóm ',
         ));
       }
-      if (widget.post?['reblog']['account']['id'] ==
-          widget.post?['account']['id']) {
+      if (widget.post?['reblog']?['account']?['id'] ==
+          widget.post?['account']?['id']) {
         listContent.add(TextSpan(
           text: renderTitleShare(),
         ));
       } else {
         if (widget.post?['reblog']?['group'] != null) {
           listContent.add(TextSpan(
-              text: widget.post?['reblog']?['group']['title'], style: bold));
+              text: widget.post?['reblog']?['group']?['title'], style: bold));
         } else {
           if (widget.post?['reblog']?['page'] != null) {
             listContent.add(TextSpan(
-                text: widget.post?['reblog']?['page']['title'], style: bold));
+                text: widget.post?['reblog']?['page']?['title'], style: bold));
           } else {
             listContent.add(TextSpan(
-                text: widget.post?['reblog']['account']['display_name'],
+                text: widget.post?['reblog']?['account']?['display_name'],
                 style: bold));
           }
         }
       }
     }
-    if (meData['id'] != widget.post?['account']['id'] &&
+    if (meData['id'] != widget.post?['account']?['id'] &&
         widget.post?['post_type'] == 'target') {
       if (widget.post?['page'] != null) {
         listContent = [
@@ -202,7 +202,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
         ];
       } else {
         listContent = [
-          TextSpan(text: (widget.post?['account']['display_name']), style: bold)
+          TextSpan(text: (widget.post?['account']?['display_name']), style: bold)
         ];
       }
       if (widget.post?['status_target']?['target_status'] == 'completed') {
@@ -246,7 +246,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
   Widget build(BuildContext context) {
     var size = MediaQuery.sizeOf(context);
     suggestContent = buildSuggestContent();
-    return isShow && widget.post['account']['id'] != meData['id']
+    return isShow && widget.post['account']?['id'] != meData?['id']
         ? Column(
             children: [
               Container(
@@ -280,9 +280,9 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
   }
 
   String renderTitleShare() {
-    if (widget.post['account']['gender'] == 'male') {
+    if (widget.post?['account']?['gender'] == 'male') {
       return 'anh ấy';
-    } else if (widget.post['account']['gender'] == 'female') {
+    } else if (widget.post?['account']?['gender'] == 'female') {
       return 'cô ấy';
     } else {
       return 'mình';

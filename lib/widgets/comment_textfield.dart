@@ -345,6 +345,7 @@ class _CommentTextfieldState extends ConsumerState<CommentTextfield> {
             : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             !widget.isOnBoxComment! && widget.type != postWatchDetail
                 ? buildDivider(color: greyColor, bottom: 10)

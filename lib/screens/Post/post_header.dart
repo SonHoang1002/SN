@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +11,7 @@ import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/helper/refractor_time.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
@@ -36,6 +39,7 @@ class PostHeader extends ConsumerStatefulWidget {
   final Function(dynamic)? updateDataFunction;
   final bool? isInGroup;
   final dynamic friendData;
+  final dynamic groupData;
   const PostHeader(
       {Key? key,
       this.post,
@@ -45,7 +49,8 @@ class PostHeader extends ConsumerStatefulWidget {
       this.reloadFunction,
       this.updateDataFunction,
       this.isInGroup = false,
-      this.friendData})
+      this.friendData,
+      this.groupData})
       : super(key: key);
 
   @override
@@ -178,6 +183,8 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                     PostDetail(
                         post: widget.post,
                         preType: widget.type,
+                        isInGroup: widget.isInGroup,
+                        groupData: widget.groupData,
                         updateDataFunction: widget.updateDataFunction));
               }
             },
@@ -205,20 +212,23 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              width: size.width * 0.6,
-                              child: BlockNamePost(
-                                  post: widget.post,
-                                  account: account,
-                                  description: description,
-                                  mentions: mentions,
-                                  statusActivity: statusActivity,
-                                  group: group,
-                                  page: page,
-                                  textColor: widget.textColor,
-                                  type: widget.type,
-                                  isInGroup: widget.isInGroup),
-                            ),
+                            widget.isInGroup == true
+                                ? const SizedBox()
+                                : SizedBox(
+                                    width: size.width * 0.6,
+                                    child: BlockNamePost(
+                                        post: widget.post,
+                                        account: account,
+                                        description: description,
+                                        mentions: mentions,
+                                        statusActivity: statusActivity,
+                                        group: group,
+                                        page: page,
+                                        textColor: widget.textColor,
+                                        type: widget.type,
+                                        friendData: widget.friendData,
+                                        isInGroup: widget.isInGroup),
+                                  ),
                             Row(
                               children: [
                                 Column(
@@ -263,6 +273,8 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                         //         ],
                                         //       )
                                         //     : const SizedBox(),
+
+                                        _buildRoleUserInGroup(),
                                         widget.post['processing'] !=
                                                     "isProcessing" &&
                                                 widget.post?['created_at'] !=
@@ -278,7 +290,13 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                         Text(
                                             widget.post['processing'] !=
                                                     "isProcessing"
-                                                ? " · "
+                                                ? typeVisibility.any(
+                                                        (element) =>
+                                                            element['key'] ==
+                                                            widget.post[
+                                                                'visibility'])
+                                                    ? " · "
+                                                    : ""
                                                 : "",
                                             style: const TextStyle(
                                                 color: greyColor)),
@@ -303,7 +321,8 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                     // checkShowHeaderOption()
                     //     ?
                     (![postReblog, postMultipleMedia].contains(widget.type) &&
-                            widget.isHaveAction == true)
+                                widget.isHaveAction == true) ||
+                            widget.isInGroup == true
                         ? BlockPostHeaderAction(
                             widget: widget,
                             meData: meData,
@@ -315,6 +334,34 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
             ),
           )
         : const SizedBox();
+  }
+
+  Widget _buildRoleUserInGroup() {
+    List<Widget> resultWidgets = [const SizedBox()];
+    if (widget.isInGroup == true) {
+      if (widget.groupData != null) {
+        if (widget.groupData?["group_relationship"]?['admin']) {
+          resultWidgets = [
+            buildTextContent("Quản trị viên", true,
+                fontSize: 14, colorWord: secondaryColor),
+            buildTextContent(" · ", false)
+          ];
+        } else if (widget.groupData?["group_relationship"]?['moderator']) {
+          resultWidgets = [
+            buildTextContent("Kiểm duyệt viên", true,
+                fontSize: 14, colorWord: secondaryColor),
+            buildTextContent(" · ", false)
+          ];
+        } else {
+          resultWidgets = [
+            buildTextContent("Thành viên", true,
+                fontSize: 14, colorWord: secondaryColor),
+            buildTextContent(" · ", false)
+          ];
+        }
+      }
+    }
+    return Row(children: resultWidgets.map<Widget>((e) => e).toList());
   }
 
   bool checkShowHeaderOption() {
@@ -406,75 +453,6 @@ class BlockPostHeaderAction extends StatelessWidget {
   }
 }
 
-class BlockSubNamePost extends StatelessWidget {
-  const BlockSubNamePost({
-    super.key,
-    required this.group,
-    required this.account,
-    required this.widget,
-  });
-
-  final dynamic group;
-  final dynamic account;
-  final PostHeader widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            group != null
-                ? Text(account['display_name'],
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ))
-                : const SizedBox(),
-            buildSpacer(height: 3),
-            Row(
-              children: [
-                widget.post['page_owner'] != null &&
-                        widget.post['page'] != null &&
-                        widget.post?['page_owner']?['page_relationship']
-                                ?['role'] ==
-                            "admin" &&
-                        widget.type != postDetail
-                    ? Row(
-                        children: [
-                          buildTextContent(
-                              widget.post['account']['display_name'] + " · ",
-                              true,
-                              colorWord: greyColor,
-                              fontSize: 13)
-                        ],
-                      )
-                    : const SizedBox(),
-                widget.post['processing'] != "isProcessing"
-                    ? Text(
-                        getRefractorTime(widget.post?['created_at']),
-                        style: const TextStyle(color: greyColor, fontSize: 12),
-                      )
-                    : const SizedBox(),
-                Text(widget.post['processing'] != "isProcessing" ? " · " : "",
-                    style: const TextStyle(color: greyColor)),
-                Icon(
-                    typeVisibility.firstWhere(
-                        (element) =>
-                            element['key'] == widget.post['visibility'],
-                        orElse: () => {})['icon'],
-                    size: 13,
-                    color: greyColor)
-              ],
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
 class BlockNamePost extends ConsumerStatefulWidget {
   const BlockNamePost(
       {super.key,
@@ -487,7 +465,8 @@ class BlockNamePost extends ConsumerStatefulWidget {
       this.post,
       this.textColor,
       this.type,
-      this.isInGroup = false});
+      this.isInGroup = true,
+      this.friendData});
   final dynamic post;
   final dynamic account;
   final String description;
@@ -498,6 +477,7 @@ class BlockNamePost extends ConsumerStatefulWidget {
   final Color? textColor;
   final dynamic type;
   final bool? isInGroup;
+  final dynamic friendData;
 
   @override
   ConsumerState<BlockNamePost> createState() => _BlockNamePostState();
@@ -640,6 +620,40 @@ class _BlockNamePostState extends ConsumerState<BlockNamePost> {
                       ? buildBlueCertifiedWidget(
                           margin: const EdgeInsets.only(bottom: 2))
                       : const SizedBox()),
+              WidgetSpan(
+                  child: widget.post?['target_account'] != null &&
+                          widget.friendData?['id'] !=
+                              widget.post?['target_account']?['id']
+                      ? Container(
+                          margin: const EdgeInsets.only(right: 7),
+                          child: Icon(
+                            FontAwesomeIcons.caretRight,
+                            color: Theme.of(context).textTheme.bodyLarge!.color,
+                            size: 16,
+                          ),
+                        )
+                      : const SizedBox()),
+              TextSpan(
+                text: widget.post?['target_account'] != null &&
+                        widget.friendData?['id'] !=
+                            widget.post?['target_account']?['id']
+                    ? (widget.post?['target_account']?['display_name']) ?? ""
+                    : "",
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    pushCustomCupertinoPageRoute(context, const UserPageHome(),
+                        settings: RouteSettings(
+                          arguments: {
+                            'id': widget.post?['target_account']?['id']
+                          },
+                        ));
+                  },
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: widget.textColor ??
+                        Theme.of(context).textTheme.displayLarge!.color),
+              ),
               widget.statusActivity.isNotEmpty
                   ? WidgetSpan(
                       child: ImageCacheRender(
@@ -720,10 +734,12 @@ class AvatarPost extends StatelessWidget {
           Navigator.pushNamed(context, '/page', arguments: page);
           return;
         }
-      } else if ((group != null || post['group'] != null)) {
-        pushCustomCupertinoPageRoute(context, GroupDetail(id: group['id']));
-        return;
-      } else {
+      }
+      // else if ((group != null || post['group'] != null)) {
+      //   pushCustomCupertinoPageRoute(context, GroupDetail(id: group['id']));
+      //   return;
+      // }
+      else {
         pushCustomCupertinoPageRoute(context, const UserPageHome(),
             settings: RouteSettings(
               arguments: {'id': account['id']},
@@ -754,22 +770,24 @@ class AvatarPost extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(20),
                         image: DecorationImage(
-                            image: NetworkImage(group['banner']
-                                    ?['preview_url'] ??
-                                linkBannerDefault),
+                            image: NetworkImage(
+                                // group['banner']?['preview_url']
+                                accountLink ?? linkBannerDefault),
                             onError: (exception, stackTrace) =>
                                 const SizedBox(),
                             fit: BoxFit.cover)),
                   ),
-                  Container(
-                      margin: const EdgeInsets.only(right: 7, bottom: 7),
-                      child: Avatar(
-                        type: 'group',
-                        path: accountLink,
-                        object: account,
-                      ))
+                  // Container(
+                  //     width: 40,
+                  //     height: 40,
+                  //     // margin: const EdgeInsets.only(left: 22, top: 22),
+                  //     child: Avatar(
+                  //       type: 'group',
+                  //       path: accountLink,
+                  //       object: account,
+                  //     ))
                 ],
               ),
             )
