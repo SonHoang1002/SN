@@ -56,7 +56,6 @@ class _CreateFeedStatusHeaderState
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
     var meData = ref.watch(meControllerProvider)[0];
-
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -79,7 +78,7 @@ class _CreateFeedStatusHeaderState
                     text: widget.entity != null &&
                             widget.entity['entityType'] == 'page'
                         ? widget.entity['title']
-                        : meData['display_name'],
+                        : meData?['display_name'] ?? meData?['name'] ?? '--',
                     style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
@@ -102,7 +101,9 @@ class _CreateFeedStatusHeaderState
                               const TextStyle(fontWeight: FontWeight.normal)),
                       widget.friendSelected!.isNotEmpty
                           ? TextSpan(
-                              text: widget.friendSelected![0]['display_name'])
+                              text: widget.friendSelected![0]
+                                      ?['display_name'] ??
+                                  "--")
                           : const TextSpan(),
                       // widget.sharePostFriend != null &&
                       //         widget.sharePostFriend['id'] != meData['id']

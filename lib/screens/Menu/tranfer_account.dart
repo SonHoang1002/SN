@@ -50,7 +50,7 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
   }
 
   void completeLogin() async {
-    await IsarPostService().resetPostIsar();
+    // await IsarPostService().resetPostIsar();
 
     // ignore: use_build_context_synchronously
     Navigator.pushAndRemoveUntil(

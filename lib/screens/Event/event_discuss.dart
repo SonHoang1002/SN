@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/event_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
 
@@ -40,7 +41,7 @@ class _EventDiscussState extends ConsumerState<EventDiscuss> {
                     primary: false,
                     itemCount: eventPosts.length,
                     itemBuilder: (context, index) {
-                      return Post(post: eventPosts[index]);
+                      return Post(post: eventPosts[index],type: postEvent,);
                     })
               ])
         : const Center(child: CupertinoActivityIndicator());

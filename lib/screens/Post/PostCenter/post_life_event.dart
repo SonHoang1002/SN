@@ -17,14 +17,12 @@ class PostLifeEvent extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          // lifeEvent['default_media_url'] != null
-          //     ?
-          VideoPlayerNoneController(
-            path: lifeEvent['place_id'],
-            type: "network",
-          )
-          // : const SizedBox()
-          ,
+          lifeEvent['default_media_url'] != null
+              ? VideoPlayerNoneController(
+                  path: lifeEvent?['default_media_url'],
+                  type: "network",
+                )
+              : const SizedBox(),
           const SizedBox(
             height: 8,
           ),

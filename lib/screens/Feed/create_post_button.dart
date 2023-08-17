@@ -38,24 +38,21 @@ class CreatePostButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     dynamic userType;
+    final meData = ref.watch(meControllerProvider)[0];
     if (friendData != null) {
-      if (userType != null) {
-        userType = userType;
+      userType = 'me';
+      if (friendData?['relationships'] != null &&
+          friendData?['relationships']?['friendship_status'] == 'ARE_FRIENDS') {
+        userType = 'friend';
+      } else if (friendData['relationships'] != null &&
+          friendData?['relationships']?['friendship_status'] ==
+              'OUTGOING_REQUEST') {
+        userType = 'requested';
       } else {
-        userType = 'me';
-        if (friendData?['relationships'] != null &&
-            friendData?['relationships']?['friendship_status'] ==
-                'ARE_FRIENDS') {
-          userType = 'friend';
-        } else if (friendData['relationships'] != null &&
-            friendData?['relationships']?['friendship_status'] ==
-                'OUTGOING_REQUEST') {
-          userType = 'requested';
-        } else {
-          userType = 'stranger';
-        }
+        userType = 'stranger';
       }
     }
+
     return InkWell(
       borderRadius: BorderRadius.circular(10.0),
       onTap: () {
@@ -84,10 +81,11 @@ class CreatePostButton extends ConsumerWidget {
                       height: 40,
                       object: ref.watch(meControllerProvider)[0],
                       path: pageData != null
-                          ? (pageData?['avatar_media']?["preview_url"]) ??
+                          ? (pageData?['avatar_media']?["url"]) ??
+                              (pageData?['avatar_media']?["preview_url"]) ??
                               linkAvatarDefault
-                          : (ref.watch(meControllerProvider)[0]['avatar_media']
-                                  ?['preview_url'] ??
+                          : (meData?['avatar_media']?['preview_url'] ??
+                              meData?['show_url'] ??
                               linkAvatarDefault)),
                   const SizedBox(
                     width: 10,

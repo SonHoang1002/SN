@@ -25,7 +25,7 @@ import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 
 class Post extends ConsumerStatefulWidget {
   final dynamic post;
-  final String? type;
+  final String type;
   final bool? isHiddenCrossbar;
   final bool? isHiddenFooter;
   final dynamic data;
@@ -49,7 +49,7 @@ class Post extends ConsumerStatefulWidget {
   const Post(
       {Key? key,
       this.post,
-      this.type,
+     required this.type,
       this.isHiddenCrossbar,
       this.data,
       this.isHiddenFooter,
@@ -180,6 +180,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                                 isInGroup: widget.isInGroup,
                                 updateDataFunction: updateNewPost,
                                 groupData: widget.groupData,
+                                
                               ),
                             ),
                             PostCenter(

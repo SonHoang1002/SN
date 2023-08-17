@@ -14,6 +14,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:social_network_app_mobile/apis/config.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
+import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
@@ -66,19 +67,27 @@ class _HomeState extends ConsumerState<Home>
     return percentage * (max - min) + min;
   }
 
+  bool isDisable = false;
+
   double percentageFromValueInRange({required final double min, max, value}) {
     return (value - min) / (max - min);
   }
 
   void _onItemTapped(int index) {
     if (index == 2) {
+      ref.read(disableMomentController.notifier).setDisableMoment(true);
       showBarModalBottomSheet(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          context: context,
-          builder: (context) => const CreatePost());
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              context: context,
+              builder: ((context) => const CreatePost()))
+          .whenComplete(() =>
+              ref.read(disableMomentController.notifier).setDisableMoment(false));
     } else {
       setState(() {
         _selectedIndex = index;
+        ref
+            .read(disableMomentController.notifier)
+            .setDisableMoment(index == 1 ? false : true);
       });
     }
   }
@@ -491,6 +500,10 @@ class _HomeState extends ConsumerState<Home>
 
   @override
   void didChangeDependencies() {
+    setState(() {
+      _connectionStatus =
+          ref.watch(connectivityControllerProvider).connectInternet;
+    });
     super.didChangeDependencies();
   }
 
@@ -565,7 +578,10 @@ class _HomeState extends ConsumerState<Home>
       Feed(
         callbackFunction: _showBottomNavigator,
       ),
-      const Moment(typePage: 'home'),
+      Moment(
+        typePage: 'home',
+        isDisable: ref.watch(disableMomentController).isDisable,
+      ),
       const SizedBox(),
       const Watch(),
       MainMarketPage(

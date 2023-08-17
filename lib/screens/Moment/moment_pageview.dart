@@ -6,6 +6,7 @@ import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment_video.dart';
 import 'package:social_network_app_mobile/screens/Post/comment_post_modal.dart';
+import 'package:social_network_app_mobile/services/isar_post_service.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 class MomentPageview extends ConsumerStatefulWidget {
@@ -14,6 +15,7 @@ class MomentPageview extends ConsumerStatefulWidget {
   final int? initialPage;
   final String type;
   final String? typePage;
+  final bool? isDisable;
 
   const MomentPageview(
       {Key? key,
@@ -21,7 +23,8 @@ class MomentPageview extends ConsumerStatefulWidget {
       required this.momentRender,
       required this.handlePageChange,
       this.initialPage,
-      this.typePage})
+      this.typePage,
+      this.isDisable})
       : super(key: key);
 
   @override
@@ -87,13 +90,13 @@ class _MomentPageviewState extends ConsumerState<MomentPageview>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
     return widget.typePage != null && widget.typePage == 'home'
         ? RenderPageView(
             type: widget.type,
             pageController: _pageController,
             currentPage: currentPage,
-            widget: widget)
+            widget: widget,
+            isDisable: widget.isDisable)
         : Column(
             children: [
               Container(
@@ -103,7 +106,8 @@ class _MomentPageviewState extends ConsumerState<MomentPageview>
                     type: widget.type,
                     pageController: _pageController,
                     currentPage: currentPage,
-                    widget: widget),
+                    widget: widget,
+                    isDisable: widget.isDisable),
               ),
               BoxCommentMoment(widget: widget, currentPage: currentPage),
             ],
@@ -157,18 +161,20 @@ class BoxCommentMoment extends StatelessWidget {
 }
 
 class RenderPageView extends StatelessWidget {
-  const RenderPageView({
-    super.key,
-    required PreloadPageController pageController,
-    required this.widget,
-    required this.currentPage,
-    required this.type,
-  }) : _pageController = pageController;
+  const RenderPageView(
+      {super.key,
+      required PreloadPageController pageController,
+      required this.widget,
+      required this.currentPage,
+      required this.type,
+      required this.isDisable})
+      : _pageController = pageController;
 
   final PreloadPageController _pageController;
   final MomentPageview widget;
   final double currentPage;
   final String type;
+  final bool? isDisable;
 
   @override
   Widget build(BuildContext context) {
@@ -192,10 +198,10 @@ class RenderPageView extends StatelessWidget {
         //     ));
 
         return MomentVideo(
-          type: widget.type,
-          key: Key(widget.momentRender[index]['id']),
-          moment: widget.momentRender[index],
-        );
+            type: widget.type,
+            key: Key(widget.momentRender[index]['id']),
+            moment: widget.momentRender[index],
+            isDisable: isDisable);
       },
     );
   }

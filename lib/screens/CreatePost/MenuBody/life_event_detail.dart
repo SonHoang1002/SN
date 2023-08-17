@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -33,7 +35,9 @@ class _LifeEventDetailState extends State<LifeEventDetail> {
     if (widget.event != null && widget.event['video_url'] != null) {
       path = widget.event['video_url'][0];
       Future.delayed(Duration.zero, () {
-        widget.updateLifeEvent!('place_id', widget.event['video_url'][0]);
+        // widget.updateLifeEvent!('place_id', widget.event['video_url'][0]);
+        widget.updateLifeEvent!(
+            'default_media_url', widget.event['video_url'][0]);
       });
     }
 
@@ -55,7 +59,7 @@ class _LifeEventDetailState extends State<LifeEventDetail> {
             Stack(
               children: [
                 Container(
-                  constraints: const BoxConstraints(minHeight: 230),
+                  constraints: const BoxConstraints(minHeight: 260),
                   color: Theme.of(context).canvasColor,
                   child: path != ''
                       ? FeedVideo(
@@ -88,8 +92,8 @@ class _LifeEventDetailState extends State<LifeEventDetail> {
                                           'default_media_url', null);
                                     },
                                     child: Container(
-                                      width: 30,
-                                      height: 30,
+                                      width: 35,
+                                      height: 35,
                                       margin: const EdgeInsets.only(
                                           right: 8.0, left: 4.0),
                                       decoration: BoxDecoration(
@@ -116,14 +120,22 @@ class _LifeEventDetailState extends State<LifeEventDetail> {
                                                     widget.event['video_url']
                                                         [index]);
                                                 setState(() {
-                                                  path =
-                                                      widget.event['video_url']
-                                                          [index];
+                                                  path = '';
+                                                });
+                                                Future.delayed(
+                                                    const Duration(
+                                                        milliseconds: 200),
+                                                    () async {
+                                                  setState(() {
+                                                    path = widget
+                                                            .event['video_url']
+                                                        [index];
+                                                  });
                                                 });
                                               },
                                               child: Container(
-                                                width: 30,
-                                                height: 30,
+                                                width: 35,
+                                                height: 35,
                                                 margin: const EdgeInsets.only(
                                                     right: 8.0),
                                                 decoration: BoxDecoration(
@@ -133,7 +145,8 @@ class _LifeEventDetailState extends State<LifeEventDetail> {
                                                         color: greyColor)),
                                                 child: ClipRRect(
                                                   borderRadius:
-                                                      BorderRadius.circular(15),
+                                                      BorderRadius.circular(
+                                                          17.5),
                                                   child: FeedVideo(
                                                       path: widget.event[
                                                           'video_url'][index],

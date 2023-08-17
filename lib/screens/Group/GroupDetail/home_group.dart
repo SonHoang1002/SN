@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart' as POST_TYPE;
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
@@ -572,6 +573,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
                             return Post(
+                              type: POST_TYPE.postGroup,
                               post: postGroup[index],
                               haveSuggest: false,
                               isInGroup: true,

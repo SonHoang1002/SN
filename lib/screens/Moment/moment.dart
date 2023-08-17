@@ -18,15 +18,17 @@ class Moment extends StatefulHookConsumerWidget {
   final dynamic dataAdditional;
   final File? imageUpload;
   final dynamic dataUploadMoment;
+  final bool? isDisable;
 
-  const Moment({
-    Key? key,
-    this.isBack,
-    this.imageUpload,
-    this.dataAdditional,
-    this.dataUploadMoment,
-    this.typePage,
-  }) : super(key: key);
+  const Moment(
+      {Key? key,
+      this.isBack,
+      this.imageUpload,
+      this.dataAdditional,
+      this.dataUploadMoment,
+      this.typePage,
+      this.isDisable = false})
+      : super(key: key);
 
   @override
   ConsumerState<Moment> createState() => _MomentState();
@@ -41,6 +43,7 @@ class _MomentState extends ConsumerState<Moment>
   bool isFly = true;
   bool isFlied = false;
   bool isShowMediaUpload = true;
+  bool _isDisable = false;
 
   final GlobalKey widgetKey = GlobalKey();
   final GlobalKey<ScaffoldState> key = GlobalKey();
@@ -164,13 +167,19 @@ class _MomentState extends ConsumerState<Moment>
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               child: const Menu(),
             ),
+            onDrawerChanged: (isOpened) {
+              setState(() {
+                _isDisable = isOpened || widget.isDisable!;
+              });
+            },
             body: Stack(children: <Widget>[
               MomentTabBarView(
                   tabController: _tabController,
                   momentFollow: momentFollow,
                   widget: widget,
                   ref: ref,
-                  momentSuggests: momentSuggests),
+                  momentSuggests: momentSuggests,
+                  isDisable: _isDisable),
               if (widget.imageUpload != null && isShowMediaUpload)
                 ImageUploadProcess(
                     cartKey: cartKey, isFlied: isFlied, widget: widget),
@@ -228,20 +237,22 @@ class _MomentState extends ConsumerState<Moment>
 }
 
 class MomentTabBarView extends StatelessWidget {
-  const MomentTabBarView({
-    super.key,
-    required TabController tabController,
-    required this.momentFollow,
-    required this.widget,
-    required this.ref,
-    required this.momentSuggests,
-  }) : _tabController = tabController;
+  const MomentTabBarView(
+      {super.key,
+      required TabController tabController,
+      required this.momentFollow,
+      required this.widget,
+      required this.ref,
+      required this.momentSuggests,
+      this.isDisable})
+      : _tabController = tabController;
 
   final TabController _tabController;
   final List momentFollow;
   final Moment widget;
   final WidgetRef ref;
   final List momentSuggests;
+  final bool? isDisable;
 
   @override
   Widget build(BuildContext context) {
@@ -259,26 +270,27 @@ class MomentTabBarView extends StatelessWidget {
                           {"limit": 3, "max_id": momentFollow.last['score']});
                 }
               },
+              isDisable: isDisable,
             )
           : const NoData(),
       momentSuggests.isNotEmpty
           ? Stack(
               children: [
                 MomentPageview(
-                  type: 'suggest',
-                  typePage: widget.typePage,
-                  momentRender: momentSuggests,
-                  handlePageChange: (value) {
-                    if (value == momentSuggests.length - 2) {
-                      ref
-                          .read(momentControllerProvider.notifier)
-                          .getListMomentSuggest({
-                        "limit": 3,
-                        "max_id": momentSuggests.last['score']
-                      });
-                    }
-                  },
-                ),
+                    type: 'suggest',
+                    typePage: widget.typePage,
+                    momentRender: momentSuggests,
+                    handlePageChange: (value) {
+                      if (value == momentSuggests.length - 2) {
+                        ref
+                            .read(momentControllerProvider.notifier)
+                            .getListMomentSuggest({
+                          "limit": 3,
+                          "max_id": momentSuggests.last['score']
+                        });
+                      }
+                    },
+                    isDisable: isDisable),
               ],
             )
           : const NoData()

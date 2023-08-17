@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
 
 import '../../providers/grow/grow_provider.dart';
@@ -42,7 +43,7 @@ class _GrowDiscussState extends ConsumerState<GrowDiscuss> {
                     primary: false,
                     itemCount: growPosts.length,
                     itemBuilder: (context, index) {
-                      return Post(post: growPosts[index]);
+                      return Post(type:postGrow, post: growPosts[index]);
                     })
               ])
         : const SizedBox();
