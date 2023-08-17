@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
@@ -108,6 +109,7 @@ class _GroupApproval extends ConsumerState<GroupApproval> {
                             itemBuilder: (context, index) =>
                                 // Kiểm tra điều kiện nếu type bằng "group_pending_status"
                                 Post(
+                                  type: postGroup,
                                   waitingForApproval: true,
                                   post: listWaitingApproval![index],
                                   groupId: widget.groupID,

@@ -76,6 +76,7 @@ class CreateNewFeed extends ConsumerStatefulWidget {
   // This is used to create post in friend wall (must allow to create post from friend)
   final dynamic friendData;
   final bool? isInGroup;
+  final Function? popFunction;
 
   const CreateNewFeed(
       {Key? key,
@@ -86,7 +87,8 @@ class CreateNewFeed extends ConsumerStatefulWidget {
       this.reloadFunction,
       this.pageData,
       this.friendData,
-      this.isInGroup})
+      this.isInGroup,
+      this.popFunction})
       : super(key: key);
 
   @override
@@ -995,6 +997,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     width = size.width;
     return WillPopScope(
       onWillPop: () async {
+        // widget.popFunction != null ? widget.popFunction!() : null;
         return checkSaveDraft();
       },
       child: LoaderOverlay(
@@ -1019,6 +1022,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                       GestureDetector(
                         onTap: () {
                           // ignore: void_checks
+                          // widget.popFunction != null
+                          //     ? widget.popFunction!()
+                          //     : null;
                           return checkSaveDraft();
                         },
                         child: Icon(

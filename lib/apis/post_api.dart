@@ -17,7 +17,6 @@ class PostApi {
     return postList;
   }
 
-// 0 ms -do chưa có bản ghi nào
   Future getListPostPinApi(accountId) async {
     return await Api().getRequestBase("/api/v1/accounts/$accountId/pin", null);
   }

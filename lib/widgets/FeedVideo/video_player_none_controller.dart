@@ -124,9 +124,10 @@ class _VideoPlayerNoneControllerState
       }
     }
     return AspectRatio(
-      aspectRatio: videoPlayerController.value.aspectRatio > 1
-          ? 1
-          : videoPlayerController.value.aspectRatio,
+      aspectRatio: widget.aspectRatio ??
+          (videoPlayerController.value.aspectRatio > 1
+              ? 1
+              : videoPlayerController.value.aspectRatio),
       child: VisibilityDetector(
           onVisibilityChanged: (visibilityInfo) {
             if (mounted) {
@@ -155,9 +156,10 @@ class _VideoPlayerNoneControllerState
               Hero(
                   tag: widget.path,
                   child: AspectRatio(
-                      aspectRatio: videoPlayerController.value.aspectRatio > 1
-                          ? 1
-                          : videoPlayerController.value.aspectRatio,
+                      aspectRatio: widget.aspectRatio ??
+                          (videoPlayerController.value.aspectRatio > 1
+                              ? 1
+                              : videoPlayerController.value.aspectRatio),
                       child: VideoPlayer(videoPlayerController))),
               widget.isShowVolumn != null && widget.isShowVolumn == false
                   ? const SizedBox()

@@ -1,4 +1,3 @@
-
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -146,7 +145,8 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                       : Hero(
                           tag: (widget.post?['"media_attachments']?[0]
                                   ?['remote_url']) ??
-                              (widget.post?['"media_attachments']?[0]?['url']) ??
+                              (widget.post?['"media_attachments']?[0]
+                                  ?['url']) ??
                               (medias[0]?['remote_url']) ??
                               (medias[0]?['url']),
                           child: VideoPlayerHasController(

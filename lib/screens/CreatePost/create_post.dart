@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 // import 'package:social_network_app_mobile/apis/config.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
 // import 'package:social_network_app_mobile/screens/CreatePost/CreateMoment/create_moment.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -9,14 +11,15 @@ import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 
 import 'CreateMoment/camera_moment_controller.dart';
 
-class CreatePost extends StatefulWidget {
-  const CreatePost({Key? key}) : super(key: key);
+class CreatePost extends ConsumerStatefulWidget {
+  final Function? callbackFunction;
+  const CreatePost({Key? key,this.callbackFunction}) : super(key: key);
 
   @override
-  State<CreatePost> createState() => _CreatePostState();
+  ConsumerState<CreatePost> createState() => _CreatePostState();
 }
 
-class _CreatePostState extends State<CreatePost> {
+class _CreatePostState extends ConsumerState<CreatePost> {
   List postTypeCreate = [
     {"key": "post", "icon": "assets/story.svg", "title": "Post"},
     {"key": "moment", "image": "assets/MomentMenu.png", "title": "Khoảnh khắc"},
@@ -90,6 +93,10 @@ class _CreatePostState extends State<CreatePost> {
   //     }
   //   }
   // }
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,9 +132,22 @@ class _CreatePostState extends State<CreatePost> {
                                 pushCustomCupertinoPageRoute(
                                     context,
                                     key == 'post'
-                                        ? const CreateNewFeed()
+                                        ? CreateNewFeed(
+                                            popFunction: () {
+                                              ref
+                                                  .read(disableMomentController
+                                                      .notifier)
+                                                  .setDisableMoment(false);
+                                            },
+                                          )
                                         : const SizedBox());
                               }
+                              Future.delayed(const Duration(milliseconds: 100),
+                                  () {
+                                ref
+                                    .read(disableMomentController.notifier)
+                                    .setDisableMoment(true);
+                              });
                             },
                             child: Container(
                               height: 60,

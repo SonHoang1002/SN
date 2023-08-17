@@ -13,7 +13,6 @@ class MeController extends StateNotifier<List> {
 
   getMeData({bool connectStatus = true}) async {
     var response = await MeApi().fetchDataMeApi();
-
     if (response != null) {
       var token = await SecureStorage().getKeyStorage("token");
       var theme = await SecureStorage().getKeyStorage('theme');
@@ -62,7 +61,7 @@ class MeController extends StateNotifier<List> {
 
       if (newList != null && newList != 'noData') {
         listAccount = jsonDecode(newList) ?? [];
-      } 
+      }
       List newDataLoginList = listAccount;
 
       var index = newDataLoginList
@@ -73,7 +72,7 @@ class MeController extends StateNotifier<List> {
       newDataLoginList.removeAt(index);
       newDataLoginList.insert(0, firstData);
       await SecureStorage()
-          .saveKeyStorage(jsonEncode(newDataLoginList), 'dataLogin'); 
+          .saveKeyStorage(jsonEncode(newDataLoginList), 'dataLogin');
       resetMeData();
       state = newDataLoginList;
 

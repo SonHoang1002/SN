@@ -199,13 +199,15 @@ class _FeedState extends ConsumerState<Feed> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(postControllerProvider.notifier).changeProcessingPost(newData);
         bool isHaveVideo = false;
-        newData['media_attachments'].forEach((ele) {
-          if (ele['type'] == "video") {
-            isHaveVideo = true;
+        if (newData?['media_attachments'] != null) {
+          newData?['media_attachments'].forEach((ele) {
+            if (ele['type'] == "video") {
+              isHaveVideo = true;
+            }
+          });
+          if (isHaveVideo) {
+            buildSnackBar(context, "Video của bạn đã sẵn sàng.");
           }
-        });
-        if (isHaveVideo) {
-          buildSnackBar(context, "Video của bạn đã sẵn sàng.");
         }
       });
     }
@@ -229,7 +231,7 @@ class _FeedState extends ConsumerState<Feed> {
   Widget build(BuildContext context) {
     List posts = List.from(ref.watch(postControllerProvider).posts);
     theme ??= pv.Provider.of<ThemeManager>(context);
-    
+
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(postControllerProvider.notifier).refreshListPost(paramsConfig);
@@ -305,7 +307,8 @@ class _FeedState extends ConsumerState<Feed> {
                                     reloadFunction: () {
                                       setState(() {});
                                     },
-                                    friendData: ref.watch(meControllerProvider)[0],
+                                    friendData:
+                                        ref.watch(meControllerProvider)[0],
                                     jumpToOffsetFunction: _jumpToOffsetFunction,
                                     isFocus: focusCurrentPostIndex.value ==
                                         posts[index]['id']),
@@ -346,7 +349,7 @@ class _FeedState extends ConsumerState<Feed> {
         subHeaderWidget: Column(children: [
           buildSpacer(height: 5),
           buildTextContent(
-              (meData?['display_name'] ?? meData ? ['name']) +
+              (meData?['display_name'] ?? meData?['name']) +
                   " ơi, bạn có thể sẽ thích các nhóm sau ",
               true,
               fontSize: 17),

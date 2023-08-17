@@ -15,6 +15,7 @@ class WebSocketService {
   Future fetchToken() async {
     try {
       var res = await MeApi().fetchDataMeApi();
+      
       if (res != null) {
         final response = await Dio().post(
           '$getTokenNovuUrl/v1/widgets/session/initialize',

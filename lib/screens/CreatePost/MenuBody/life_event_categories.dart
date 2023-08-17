@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/widgets/snack_bar_custom.dart';
 
 import '../../../data/life_event_categories.dart';
 import '../../../theme/colors.dart';
@@ -31,7 +35,7 @@ class _LifeEventCategoriesState extends State<LifeEventCategories> {
     // "default_media_url": '',
     // "life_event_category_id": '',
     // "name": "",
-    // "place_id": "",
+    // "place_id": null,
     // "start_date": ""
   };
 
@@ -67,16 +71,20 @@ class _LifeEventCategoriesState extends State<LifeEventCategories> {
                   buttonAppbar: ButtonPrimary(
                     label: "Xong",
                     handlePress: () {
-                      widget.handleUpdateData('updateLifeEvent', lifeEvent);
-                      if (widget.type != null && widget.type == 'children') {
-                        Navigator.of(context)
-                          ..pop()
-                          ..pop()
-                          ..pop();
+                      if (lifeEvent['place_id'] != null) {
+                        widget.handleUpdateData('updateLifeEvent', lifeEvent);
+                        if (widget.type != null && widget.type == 'children') {
+                          Navigator.of(context)
+                            ..pop()
+                            ..pop()
+                            ..pop();
+                        } else {
+                          Navigator.of(context)
+                            ..pop()
+                            ..pop();
+                        }
                       } else {
-                        Navigator.of(context)
-                          ..pop()
-                          ..pop();
+                        buildSnackBar(context, "Vui lòng chọn địa điểm");
                       }
                     },
                   ))));
@@ -86,9 +94,7 @@ class _LifeEventCategoriesState extends State<LifeEventCategories> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-
     List listData = widget.listLifeEvent ?? lifeEventCategories;
-
     return SingleChildScrollView(
       child: Column(
         children: [

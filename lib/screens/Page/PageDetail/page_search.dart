@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
 
 import '../../../theme/theme_manager.dart';
@@ -118,6 +119,7 @@ class _PageSearchState extends State<PageSearch> {
                 itemCount: searchResults.length,
                 itemBuilder: (context, index) {
                   return Post(
+                    type: postPage,
                     post: searchResults[index],
                   );
                 }));

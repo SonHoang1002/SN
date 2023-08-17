@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:social_network_app_mobile/apis/config.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 
 import '../material_app_theme.dart';
@@ -35,11 +36,27 @@ class Api {
   Future getRequestBase(String path, Map<String, dynamic>? params) async {
     try {
       var userToken = await SecureStorage().getKeyStorage("token");
-
       Dio dio = await getDio(userToken);
       var response = await dio.get(path, queryParameters: params);
       if (response.statusCode == 200) {
         return response.data;
+      }
+      if (response.statusCode == 401) {
+        logOutWhenTokenError();
+        return null;
+      }
+      if (response.statusCode == 400) {
+        return {"status": response.statusCode, "content": response.data};
+      }
+      if (response.statusCode == 401) {
+        logOutWhenTokenError();
+      }
+      if (response.statusCode == 422) {
+        return response.data;
+      }
+      if (response.statusCode == 500) {
+        String message = "Server đang có vấn đề. Hãy thử lại sau";
+        return {"status": response.statusCode, "content": message};
       }
     } on DioError catch (e) {
       if (e.response?.statusCode == 401) {
@@ -77,7 +94,7 @@ class Api {
       //   String message = "Server đang có vấn đề. Hãy thử lại sau";
       //   logger.e(message);
       //   return {"status": e.response?.statusCode, "content": message};
-      // } 
+      // }
     }
   }
 

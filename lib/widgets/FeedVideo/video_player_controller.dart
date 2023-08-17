@@ -1,6 +1,7 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -159,11 +160,17 @@ class _VideoPlayerHasControllerState
               setState(() {
                 isVisible = visibilityInfo.visibleFraction > 0.85;
                 if (chewieController == null) return;
-                if (isVisible) {
-                  if (selectedVideo != null) {
+                if (isVisible
+                    // && ref.watch(disableVideoController).isDisable == false
+                    ) {
+                  if (selectedVideo != null
+                      //  || ref.watch(disableVideoController).isDisable == true
+                      ) {
                     chewieController!.videoPlayerController.pause();
                   } else {
-                    if (isPlaying && widget.isFocus == true) {
+                    if (isPlaying && widget.isFocus == true
+                        // && ref.watch(disableVideoController).isDisable == false
+                        ) {
                       chewieController!.videoPlayerController.play();
                     }
                   }
