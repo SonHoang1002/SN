@@ -69,6 +69,7 @@ const EDIT_POST = "edit_post";
 class CreateNewFeed extends ConsumerStatefulWidget {
   final dynamic post;
   final String? type;
+  final String? groupId;
   final dynamic postDiscussion;
   final dynamic pageData;
   final Function? reloadFunction;
@@ -80,6 +81,7 @@ class CreateNewFeed extends ConsumerStatefulWidget {
       {Key? key,
       this.post,
       this.type,
+      this.groupId,
       this.postDiscussion,
       this.reloadFunction,
       this.pageData,
@@ -597,6 +599,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       }
       if (widget.friendData != null) {
         data['target_account_id'] = widget.friendData['id'];
+      }
+      if (widget.groupId != null && widget.isInGroup == true) {
+        data = {...data, "group_id": widget.groupId};
       }
       var response = await PostApi().createStatus(data);
       if (response != null) {

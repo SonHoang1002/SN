@@ -14,6 +14,7 @@ class CreatePostButton extends ConsumerWidget {
   final dynamic preType;
   final Function? reloadFunction;
   final dynamic pageData;
+  final String? groupId;
 
   /// data from current user
   final dynamic friendData;
@@ -30,7 +31,9 @@ class CreatePostButton extends ConsumerWidget {
       this.reloadFunction,
       this.pageData,
       this.friendData,
-      this.userType,this.isInGroup});
+      this.userType,
+      this.groupId,
+      this.isInGroup});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -64,7 +67,9 @@ class CreatePostButton extends ConsumerWidget {
                     pageData: pageData,
                     reloadFunction: reloadFunction,
                     postDiscussion: postDiscussion,
-                    friendData: friendData,isInGroup:isInGroup))));
+                    friendData: friendData,
+                    groupId: groupId,
+                    isInGroup: isInGroup))));
       },
       child: Container(
         padding: const EdgeInsets.only(left: 15, right: 15, top: 6, bottom: 6),
