@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:easy_debounce/easy_debounce.dart';
@@ -17,6 +16,7 @@ import 'package:social_network_app_mobile/screens/CreatePost/create_post.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_list_settings.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page_edit_profile.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page_friend_block.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page_infomation_block.dart';
@@ -176,26 +176,24 @@ class _UserPageState extends ConsumerState<UserPage> {
       Future.delayed(Duration.zero, () async {
         final deviceUserId = await SecureStorage().getKeyStorage('userId');
         if (deviceUserId == id) {
-              userType = 'me';
-            } else {
-              if (userData['relationships'] != null &&
-                  userData['relationships']['friendship_status'] ==
-                      'ARE_FRIENDS') {
-                userType = 'friend';
-              } else if (userData['relationships'] != null &&
-                  userData['relationships']['friendship_status'] ==
-                      'OUTGOING_REQUEST') {
-                userType = 'requested';
-              } else {
-                userType = 'stranger';
-              }
-              following.value = userData?['relationships']?['following'];
-            }
+          userType = 'me';
+        } else {
+          if (userData['relationships'] != null &&
+              userData['relationships']['friendship_status'] == 'ARE_FRIENDS') {
+            userType = 'friend';
+          } else if (userData['relationships'] != null &&
+              userData['relationships']['friendship_status'] ==
+                  'OUTGOING_REQUEST') {
+            userType = 'requested';
+          } else {
+            userType = 'stranger';
+          }
+          following.value = userData?['relationships']?['following'];
+        }
         ref.read(userInformationProvider.notifier).getUserInformation(id);
         ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
         ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
         ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
-        
 
         ref.read(postControllerProvider.notifier).getListPostPin(id);
 
@@ -207,10 +205,11 @@ class _UserPageState extends ConsumerState<UserPage> {
             await UserPageApi().getUserFriend(id, {'limit': 20}) ?? [];
         if (mounted) {
           setState(() {
-            if(ref.watch(userInformationProvider).userInfor != null && ref.watch(userInformationProvider).userInfor.isNotEmpty){
+            if (ref.watch(userInformationProvider).userInfor != null &&
+                ref.watch(userInformationProvider).userInfor.isNotEmpty) {
               userData = ref.watch(userInformationProvider).userInfor;
             }
-            
+
             userAbout = ref.watch(userInformationProvider).userMoreInfor;
             lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
             postUser = (id == ref.watch(meControllerProvider)[0]['id']
@@ -218,7 +217,6 @@ class _UserPageState extends ConsumerState<UserPage> {
                 : ref.watch(postControllerProvider).postAnotherUserPage);
             pinPost = ref.watch(postControllerProvider).postsPin;
             friend = friendNew;
-            
           });
         }
       });
@@ -702,7 +700,18 @@ class _UserPageState extends ConsumerState<UserPage> {
                       size: 16,
                       color: Colors.white,
                     ),
-                    handlePress: () {},
+                    handlePress: () {
+                      if (userType == "me") {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (_) => UserSettings(
+                                    data: userData,
+                                    roleUser: userType,
+                                  )),
+                        );
+                      }
+                    },
                   ),
                 ),
               ],
