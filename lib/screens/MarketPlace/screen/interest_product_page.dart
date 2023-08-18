@@ -78,7 +78,6 @@ class _InterestProductMarketPageState
     final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
-    print("_interestProductList ${jsonEncode(_interestProductList)}");
     _initData();
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -168,8 +167,10 @@ class _InterestProductMarketPageState
                   width: 150.0,
                   path: data["product_image_attachments"] != null &&
                           data["product_image_attachments"].isNotEmpty
-                      ? data["product_image_attachments"][0]["attachment"]
-                          ["url"]
+                      ? (data["product_image_attachments"]?[0]?["attachment"]
+                              ?["url"]) ??
+                          (data["product_image_attachments"]?[0]?["attachment"]
+                              ?["preview_url"])
                       : "https://snapi.emso.asia/system/media_attachments/files/109/583/844/336/412/733/original/3041cb0fcfcac917.jpeg",
                 ),
               ),

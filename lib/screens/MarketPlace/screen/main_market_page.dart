@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_skeleton/loader_skeleton.dart';
+import 'package:market_place/constant/common.dart';
 import 'package:market_place/constant/get_min_max_price.dart';
 import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/providers/market_place_providers/cart_product_provider.dart';
@@ -271,7 +272,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
   Widget _rechargeExchangeCoin() {
     return Container(
       height: 60,
-      width: size!.width * 0.95,
+      width: size!.width * 0.97,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(7.0),
           color: Theme.of(context).colorScheme.background),
@@ -295,6 +296,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
               "Voucher giảm đến 1 tỷ VND", function: () {
             pushToNextScreen(context, EmsoPayPage());
           }),
+          buildSpacer(width: 5),
           _exchangeChildWidget(
               FontAwesomeIcons.moneyBill, "0", "Đổi coin lấy mã giảm giá",
               function: () {
@@ -309,7 +311,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
       IconData iconData, String title, String description,
       {Function? function}) {
     return Flexible(
-      flex: 7,
+      flex: 8,
       child: GestureDetector(
         onTap: () {
           function != null ? function() : null;
@@ -336,7 +338,8 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
                     buildTextContent(title, true, fontSize: 13),
                   ],
                 ),
-                buildTextContent(description, false, fontSize: 11),
+                buildTextContent(description, false,
+                    fontSize: 11, overflow: TextOverflow.ellipsis, maxLines: 1),
               ]),
         ]),
       ),
