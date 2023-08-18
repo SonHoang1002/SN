@@ -1,4 +1,3 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -212,23 +211,21 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            widget.isInGroup == true
-                                ? const SizedBox()
-                                : SizedBox(
-                                    width: size.width * 0.6,
-                                    child: BlockNamePost(
-                                        post: widget.post,
-                                        account: account,
-                                        description: description,
-                                        mentions: mentions,
-                                        statusActivity: statusActivity,
-                                        group: group,
-                                        page: page,
-                                        textColor: widget.textColor,
-                                        type: widget.type,
-                                        friendData: widget.friendData,
-                                        isInGroup: widget.isInGroup),
-                                  ),
+                            SizedBox(
+                              width: size.width * 0.6,
+                              child: BlockNamePost(
+                                  post: widget.post,
+                                  account: account,
+                                  description: description,
+                                  mentions: mentions,
+                                  statusActivity: statusActivity,
+                                  group: group,
+                                  page: page,
+                                  textColor: widget.textColor,
+                                  type: widget.type,
+                                  friendData: widget.friendData,
+                                  isInGroup: widget.isInGroup),
+                            ),
                             Row(
                               children: [
                                 Column(

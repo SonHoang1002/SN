@@ -16,6 +16,7 @@ import 'package:social_network_app_mobile/screens/CreatePost/create_post.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_list_settings.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page_edit_profile.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page_friend_block.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page_infomation_block.dart';
@@ -196,6 +197,7 @@ class _UserPageState extends ConsumerState<UserPage>
             userType = 'stranger';
           }
           following.value = userData['relationships']?['following'];
+
         }
         ref.read(userInformationProvider.notifier).getUserInformation(id);
         ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
@@ -739,7 +741,18 @@ class _UserPageState extends ConsumerState<UserPage>
                       size: 16,
                       color: Colors.white,
                     ),
-                    handlePress: () {},
+                    handlePress: () {
+                      if (userType == "me") {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                              builder: (_) => UserSettings(
+                                    data: userData,
+                                    roleUser: userType,
+                                  )),
+                        );
+                      }
+                    },
                   ),
                 ),
               ],

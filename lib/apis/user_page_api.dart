@@ -31,7 +31,8 @@ class UserPageApi {
   }
 
   Future updateOtherInformation(idUser, data) async {
-    return await Api().postRequestBase('/api/v1/account_general_infomation', data);
+    return await Api()
+        .postRequestBase('/api/v1/account_general_infomation', data);
   }
 
   Future getUserMedia(idUser, params) async {
@@ -40,7 +41,8 @@ class UserPageApi {
   }
 
   Future getUserAlbum(idUser, params) async {
-    return await Api().getRequestBase('/api/v1/accounts/$idUser/albums', params);
+    return await Api()
+        .getRequestBase('/api/v1/accounts/$idUser/albums', params);
   }
 
   Future getUserMediaAlbum(idAlbum, params) async {
@@ -50,7 +52,8 @@ class UserPageApi {
 
 //1,2 s
   Future getUserFriend(idUser, params) async {
-    return await Api().getRequestBase('/api/v1/accounts/$idUser/friendships', params);
+    return await Api()
+        .getRequestBase('/api/v1/accounts/$idUser/friendships', params);
   }
 
 //345ms
@@ -66,7 +69,8 @@ class UserPageApi {
   }
 
   Future getHobbiesByCategories(String keyword) async {
-    return await Api().getRequestBase('/api/v1/categories', {"keyword": keyword});
+    return await Api()
+        .getRequestBase('/api/v1/categories', {"keyword": keyword});
   }
 
   Future getMediaAttachment(String userId, params) async {
@@ -75,7 +79,8 @@ class UserPageApi {
   }
 
   Future createNoticeCollection(data) async {
-    return await Api().postRequestBase('/api/v1/account_featured_contents', data);
+    return await Api()
+        .postRequestBase('/api/v1/account_featured_contents', data);
   }
 
   Future getLivingPlaceByKeyword(String keyword) async {
@@ -116,5 +121,9 @@ class UserPageCredentical {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future checkUsername(data) async {
+    return await Api().getRequestBase('/api/v1/validate_username', data);
   }
 }

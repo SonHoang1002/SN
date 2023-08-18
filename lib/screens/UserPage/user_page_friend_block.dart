@@ -2,11 +2,9 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/screens/UserPage/page_friend_user.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
-import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:social_network_app_mobile/widgets/text_action.dart';
 import 'package:social_network_app_mobile/widgets/text_description.dart';
@@ -40,6 +38,11 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
                   })
                 }
             });
+
+        () => setState(() {
+              isLoading = false;
+            }));
+
     if (widget.friends.isNotEmpty) {
       isLoading = true;
     }
