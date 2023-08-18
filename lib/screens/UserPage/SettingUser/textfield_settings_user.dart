@@ -2,22 +2,25 @@
 
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 import '../../../widgets/appbar_title.dart';
 import '../../../widgets/button_primary.dart';
 
-class TextFieldEdit extends StatefulWidget {
+class TextFieldSettingsUser extends StatefulWidget {
   final String field;
   final String? initialValue;
   final Function onChange;
   final String? label;
   final String? hintText;
+  final String? warningText;
   final String? title;
+  final String? lastChangedDate;
   final Function? validateInput;
 
   final TextInputType? keyboardType;
 
-  const TextFieldEdit(
+  const TextFieldSettingsUser(
       {super.key,
       required this.field,
       required this.onChange,
@@ -25,13 +28,15 @@ class TextFieldEdit extends StatefulWidget {
       this.validateInput,
       this.keyboardType,
       this.initialValue,
+      this.warningText,
+      this.lastChangedDate,
       this.title,
       required this.label});
   @override
-  State<TextFieldEdit> createState() => _TextFieldEditState();
+  State<TextFieldSettingsUser> createState() => _TextFieldEditState();
 }
 
-class _TextFieldEditState extends State<TextFieldEdit> {
+class _TextFieldEditState extends State<TextFieldSettingsUser> {
   final TextEditingController controller = TextEditingController();
   bool errorText = false;
   String valueText = '';
@@ -104,6 +109,7 @@ class _TextFieldEditState extends State<TextFieldEdit> {
                     initialValue: widget.initialValue,
                     onChanged: _handleTextChanged,
                     keyboardType: widget.keyboardType ?? TextInputType.text,
+                    enabled: widget.warningText != null ? false : true,
                     decoration: InputDecoration(
                       labelText: widget.label,
                       border: InputBorder.none,
@@ -117,8 +123,31 @@ class _TextFieldEditState extends State<TextFieldEdit> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                Text(widget.hintText ?? ""),
+                widget.hintText == null || widget.warningText != null
+                    ? Container()
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Text(widget.hintText ?? ""),
+                      ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        widget.warningText ?? "",
+                        style: const TextStyle(color: red, fontSize: 14),
+                      ),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          widget.lastChangedDate ?? "",
+                          style: const TextStyle(color: red, fontSize: 14),
+                        )),
+                  ],
+                ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
@@ -154,7 +183,7 @@ class _TextFieldEditState extends State<TextFieldEdit> {
                               child: Align(
                                 alignment: Alignment.bottomCenter,
                                 child: ButtonPrimary(
-                                  label: 'Xoá, gỡ',
+                                  label: 'Huỷ',
                                   isGrey: true,
                                   handlePress: () {
                                     Navigator.pop(context);
