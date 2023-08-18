@@ -128,7 +128,7 @@ class Api {
     }
   }
 
-  Future deleteRequestBase(String path, data) async {
+  Future deleteRequestBase(String path, dynamic data) async {
     try {
       var userToken = await SecureStorage().getKeyStorage("token");
 

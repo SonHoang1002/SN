@@ -47,7 +47,7 @@ class CustomBannerState extends ConsumerState<CustomBanner> {
             images = ref
                 .read(campaineProvider)
                 .listCampaine
-                .map((e) => (e?['banner']?['url']) ?? linkBannerDefault)
+                .map((e) => ((e?['banner']?['url']) ?? linkBannerDefault))
                 .toList()
                 .where((ele) => ele != null)
                 .toList();

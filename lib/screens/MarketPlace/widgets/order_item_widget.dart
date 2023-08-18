@@ -17,10 +17,13 @@ Widget buildOrderItem(dynamic productData) {
             child: Row(
               children: [
                 ExtendedImage.network(
-                  productData["product_variant"] != null &&
-                          productData["product_variant"].isNotEmpty
-                      ? productData["product_variant"]["image"] != null
-                          ? productData["product_variant"]["image"]["url"]
+                  productData?["product_variant"] != null &&
+                          productData?["product_variant"].isNotEmpty
+                      ? productData?["product_variant"]?["image"] != null
+                          ? (productData?["product_variant"]?["image"]
+                                  ?["url"]) ??
+                              (productData?["product_variant"]?["image"]
+                                  ?["preview_url"])
                           : "https://kynguyenlamdep.com/wp-content/uploads/2022/01/hinh-anh-meo-con-sieu-cute-700x467.jpg"
                       : "https://kynguyenlamdep.com/wp-content/uploads/2022/01/hinh-anh-meo-con-sieu-cute-700x467.jpg",
                   height: 100.0,
@@ -34,7 +37,7 @@ Widget buildOrderItem(dynamic productData) {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       buildTextContent(
-                          productData["product_variant"]["title"], false,
+                          (productData?["product_variant"]?["title"])??"--", false,
                           fontSize: 15,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis),
@@ -43,8 +46,8 @@ Widget buildOrderItem(dynamic productData) {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           buildTextContent(
-                            productData["product_variant"]["option1"] == null &&
-                                    productData["product_variant"]["option2"] ==
+                            productData?["product_variant"]?["option1"] == null &&
+                                    productData?["product_variant"]?["option2"] ==
                                         null
                                 ? "Không phân loại"
                                 : productData["product_variant"]
@@ -52,11 +55,11 @@ Widget buildOrderItem(dynamic productData) {
                                         ["option1"] ??
                                     // ignore: prefer_interpolation_to_compose_strings
                                     ("" +
-                                                productData["product_variant"]
-                                                    ["option2"] !=
+                                                (productData?["product_variant"]
+                                                    ?["option2"]) !=
                                             null
-                                        ? productData["product_variant"]
-                                            ["option2"]
+                                        ? (productData?["product_variant"]
+                                            ?["option2"])
                                         : ""),
                             false,
                             colorWord: greyColor[700],
@@ -76,7 +79,7 @@ Widget buildOrderItem(dynamic productData) {
                         children: [
                           const SizedBox(),
                           buildTextContent(
-                            "₫${formatCurrency(productData["product_variant"]["price"])}",
+                            "₫${formatCurrency(productData?["product_variant"]?["price"])}",
                             false,
                             colorWord: greyColor[700],
                             fontSize: 13,

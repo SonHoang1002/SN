@@ -14,6 +14,7 @@ import 'package:social_network_app_mobile/screens/MarketPlace/widgets/market_but
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/share_and_search.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/Market/show_market_bottom_sheet.dart';
@@ -166,8 +167,10 @@ class _InterestProductMarketPageState
                   width: 150.0,
                   path: data["product_image_attachments"] != null &&
                           data["product_image_attachments"].isNotEmpty
-                      ? data["product_image_attachments"][0]["attachment"]
-                          ["url"]
+                      ? (data["product_image_attachments"]?[0]?["attachment"]
+                              ?["url"]) ??
+                          (data["product_image_attachments"]?[0]?["attachment"]
+                              ?["preview_url"])
                       : "https://snapi.emso.asia/system/media_attachments/files/109/583/844/336/412/733/original/3041cb0fcfcac917.jpeg",
                 ),
               ),
@@ -218,7 +221,7 @@ class _InterestProductMarketPageState
                       bgColor: greyColor,
                       width: 30,
                       function: () {
-                        showCustomMarketBottomSheet(context, 210,
+                        showCustomBottomSheet(context, 250,
                             title: "Quan tâm",
                             bgColor: bgColor,
                             widget: ListView.builder(
@@ -258,8 +261,8 @@ class _InterestProductMarketPageState
                                         padding: const EdgeInsets.all(5),
                                         function: () {
                                           data[index]["title"] == "Chia sẻ"
-                                              ? showCustomMarketBottomSheet(
-                                                  context, 300,
+                                              ? showCustomBottomSheet(
+                                                  context, 350,
                                                   title: "Chia sẻ sản phẩm",
                                                   iconData: FontAwesomeIcons
                                                       .chevronLeft,

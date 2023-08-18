@@ -3,7 +3,9 @@ import 'package:social_network_app_mobile/apis/api_root.dart';
 
 class CartProductApi {
   Future postCartProductApi(dynamic data) async {
-    return await Api().postRequestBase("/api/v1/shopping_carts", data);
+    final response =
+        await Api().postRequestBase("/api/v1/shopping_carts", data);
+    return response;
   }
 
   Future updateQuantityProductApi(dynamic id, dynamic data) async {
