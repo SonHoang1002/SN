@@ -44,9 +44,8 @@ class _PageDetailState extends ConsumerState<PageDetail> {
   double headerTabToTop = 0;
   bool showHeaderTabFixed = false;
   String typeMedia = 'image';
-  bool _isLoading = true;
   bool isUser = false;
-
+  Object? arguments;  
   @override
   void initState() {
     if (!mounted) return;
@@ -65,7 +64,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
         });
       }
     }
-    Object? arguments;
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // await ref.read(pageControllerProvider.notifier).reset();
       // ignore: use_build_context_synchronously
@@ -106,7 +105,6 @@ class _PageDetailState extends ConsumerState<PageDetail> {
       if (mounted) {
         setState(() {
           headerTabToTop = renderBox.size.height;
-          _isLoading = false;
         });
       }
     });
@@ -306,9 +304,11 @@ class _PageDetailState extends ConsumerState<PageDetail> {
 
   @override
   Widget build(BuildContext context) {
+    Map<dynamic, dynamic> dataMap = {};
     if (pageData == null || pageData.isEmpty) {
       pageData = widget.pageData;
     }
+    bool actionTest = false;
     final theme = pv.Provider.of<ThemeManager>(context);
     var meData = ref.watch(meControllerProvider);
     var rolePage = ref.watch(pageControllerProvider).rolePage;
@@ -316,8 +316,13 @@ class _PageDetailState extends ConsumerState<PageDetail> {
     List<dynamic> listSwitch = [meData[0], pageData];
     String modeTheme = theme.isDarkMode ? 'dark' : 'light';
     final size = MediaQuery.sizeOf(context);
-    final Map<dynamic, dynamic> dataMap =
-        ModalRoute.of(context)!.settings.arguments as Map<dynamic, dynamic>;
+    if (arguments is Map<dynamic, dynamic>) {
+      dataMap =
+          ModalRoute.of(context)!.settings.arguments as Map<dynamic, dynamic>;
+      actionTest = true;
+    } else {
+      actionTest = false;
+    }
     if (!isModalOpen && pageData?['page_relationship']?['role'] == 'admin') {
       isModalOpen = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -327,9 +332,11 @@ class _PageDetailState extends ConsumerState<PageDetail> {
 
     return WillPopScope(
       onWillPop: () async {
-        if (dataMap.containsKey("isCreate")) {
-          Navigator.of(context).popUntil(ModalRoute.withName('Page'));
-          return false;
+        if (actionTest) {
+          if (dataMap.containsKey("isCreate")) {
+            Navigator.of(context).popUntil(ModalRoute.withName('Page'));
+            return false;
+          }
         }
         return true;
       },
@@ -344,10 +351,19 @@ class _PageDetailState extends ConsumerState<PageDetail> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           leading: InkWell(
             onTap: () {
-              if (dataMap.containsKey("isCreate")) {
-                Navigator.of(context).popUntil(ModalRoute.withName('Page'));
+              if (actionTest) {
+                if (dataMap.containsKey("isCreate")) {
+                  Navigator.of(context).popUntil(ModalRoute.withName('Page'));
+                } else {
+                  Navigator.pop(context);
+                }
               } else {
-                Navigator.pop(context);
+                if (pageData["isCreate"] != null &&
+                    pageData["isCreate"] == true) {
+                  Navigator.of(context).popUntil(ModalRoute.withName('Page'));
+                } else {
+                  Navigator.pop(context);
+                }
               }
             },
             child: Icon(
@@ -403,7 +419,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                 rolePage),
             if (showHeaderTabFixed)
               Container(
-                width: MediaQuery.sizeOf(context).width,
+                width: MediaQuery.sizeOf(context).width*0.5,
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
                 decoration: BoxDecoration(
                     color: Theme.of(context).scaffoldBackgroundColor),
@@ -574,7 +590,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
             ],
           ),
           Container(
-            width: MediaQuery.sizeOf(context).width,
+            width: MediaQuery.sizeOf(context).width*0.2,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
             color: Theme.of(context).scaffoldBackgroundColor,
             child: Column(

@@ -30,18 +30,20 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
   bool isLoading = true;
   @override
   void initState() {
-     Future.delayed(
+    Future.delayed(
         const Duration(milliseconds: 15000),
-        () => 
-          setState(() {
-              isLoading = false;
-            })
-        );
+        () => {
+              if (mounted)
+                {
+                  setState(() {
+                    isLoading = false;
+                  })
+                }
+            });
+    if (widget.friends.isNotEmpty) {
+      isLoading = true;
+    }
 
-        if(widget.friends.isNotEmpty){
-          isLoading = true;
-        }
-      
     super.initState();
   }
 
@@ -57,14 +59,13 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
 
     return widget.friends.isEmpty
         ? Column(
-          children: [
-            isLoading?const SizedBox(): const Text("Hiện không có bạn bè"),
-            Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: SkeletonCustom().listFriendSkeleton(context)
-              )
-          ],
-        )
+            children: [
+              isLoading ? const SizedBox() : const Text("Hiện không có bạn bè"),
+              Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: SkeletonCustom().listFriendSkeleton(context))
+            ],
+          )
         : Container(
             margin: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Column(
@@ -91,7 +92,9 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
                               if (widget.user != null)
                                 TextDescription(
                                     description:
-                                        " ${widget.user['friends_count']??widget.user['relationships']["mutual_friend_count"]} ""bạn ""${widget.user['friends_count'] != null?"bè ":"chung "} ")
+                                        " ${widget.user['friends_count'] ?? widget.user['relationships']["mutual_friend_count"]} "
+                                        "bạn "
+                                        "${widget.user['friends_count'] != null ? "bè " : "chung "} ")
                             ],
                           ),
                         ),
@@ -132,7 +135,7 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
                               settings: RouteSettings(
                                 arguments: {
                                   'id': widget.friends[index]['id'],
-                                  "user":widget.friends[index]
+                                  "user": widget.friends[index]
                                 },
                               ),
                             ),

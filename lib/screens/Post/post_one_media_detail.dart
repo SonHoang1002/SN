@@ -253,21 +253,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                 : userData)
         : null;
         
-    String path;
-    if (postRender != null &&
-    postRender['media_attachments'] != null &&
-    postRender['media_attachments'].isNotEmpty &&
-    postRender['media_attachments'][0]['url'] != null) {
-  path = postRender['media_attachments'][0]['url'];
-} else if (postRender != null && postRender['url'] != null) {
-  path = postRender['url'];
-} else if (postRender != null && postRender['avatar_media'] != null) {
-  path = postRender['avatar_media']['url'];
-} else if (postRender != null && postRender['banner'] != null) {
-  path = postRender['banner']['preview_url'];
-} else {
-  path = linkBannerDefault;
-}
+    String path = postRender?['url'];
     final size = MediaQuery.sizeOf(context);
     return WillPopScope(
       onWillPop: () async {

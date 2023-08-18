@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:easy_debounce/easy_debounce.dart';
@@ -38,14 +37,17 @@ import 'package:visibility_detector/visibility_detector.dart';
 import '../../apis/friends_api.dart';
 import '../../apis/user_page_api.dart';
 import '../../constant/post_type.dart';
+import '../../data/list_menu.dart';
 import '../../helper/push_to_new_screen.dart';
 import '../../providers/UserPage/user_information_provider.dart';
+import '../../providers/UserPage/user_media_provider.dart';
 import '../../theme/theme_manager.dart';
 import '../../widgets/GeneralWidget/text_content_widget.dart';
 import '../../widgets/chip_menu.dart';
 import '../../widgets/cross_bar.dart';
 import '../../widgets/skeleton.dart';
 import '../Feed/create_post_button.dart';
+import '../Page/PageDetail/photo_page.dart';
 
 class UserPageHome extends StatefulWidget {
   final String? id;
@@ -126,7 +128,8 @@ class UserPage extends ConsumerStatefulWidget {
   ConsumerState<UserPage> createState() => _UserPageState();
 }
 
-class _UserPageState extends ConsumerState<UserPage> {
+class _UserPageState extends ConsumerState<UserPage>
+    with SingleTickerProviderStateMixin {
   dynamic id;
   final scrollController = ScrollController();
   dynamic userData = {};
@@ -137,6 +140,10 @@ class _UserPageState extends ConsumerState<UserPage> {
   List friend = [];
   List pinPost = [];
   List lifeEvent = [];
+  bool showHeaderTabFixed = false;
+  late TabController _tabController;
+
+  String menuSelected = 'user_posts';
 
   ValueNotifier<bool> following = ValueNotifier(false);
   String userType = '';
@@ -176,26 +183,25 @@ class _UserPageState extends ConsumerState<UserPage> {
       Future.delayed(Duration.zero, () async {
         final deviceUserId = await SecureStorage().getKeyStorage('userId');
         if (deviceUserId == id) {
-              userType = 'me';
-            } else {
-              if (userData['relationships'] != null &&
-                  userData['relationships']['friendship_status'] ==
-                      'ARE_FRIENDS') {
-                userType = 'friend';
-              } else if (userData['relationships'] != null &&
-                  userData['relationships']['friendship_status'] ==
-                      'OUTGOING_REQUEST') {
-                userType = 'requested';
-              } else {
-                userType = 'stranger';
-              }
-              following.value = userData?['relationships']?['following'];
-            }
+          userType = 'me';
+        } else {
+          if (userData['relationships'] != null &&
+              userData['relationships']['friendship_status'] == 'ARE_FRIENDS') {
+            userType = 'friend';
+          } else if (userData['relationships'] != null &&
+              userData['relationships']['friendship_status'] ==
+                  'OUTGOING_REQUEST') {
+            userType = 'requested';
+          } else {
+            userType = 'stranger';
+          }
+          following.value = userData['relationships']?['following'];
+        }
         ref.read(userInformationProvider.notifier).getUserInformation(id);
         ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
         ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
         ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
-        
+
 
         ref.read(postControllerProvider.notifier).getListPostPin(id);
 
@@ -207,10 +213,11 @@ class _UserPageState extends ConsumerState<UserPage> {
             await UserPageApi().getUserFriend(id, {'limit': 20}) ?? [];
         if (mounted) {
           setState(() {
-            if(ref.watch(userInformationProvider).userInfor != null && ref.watch(userInformationProvider).userInfor.isNotEmpty){
+            if (ref.watch(userInformationProvider).userInfor != null &&
+                ref.watch(userInformationProvider).userInfor.isNotEmpty) {
               userData = ref.watch(userInformationProvider).userInfor;
             }
-            
+
             userAbout = ref.watch(userInformationProvider).userMoreInfor;
             lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
             postUser = (id == ref.watch(meControllerProvider)[0]['id']
@@ -218,40 +225,54 @@ class _UserPageState extends ConsumerState<UserPage> {
                 : ref.watch(postControllerProvider).postAnotherUserPage);
             pinPost = ref.watch(postControllerProvider).postsPin;
             friend = friendNew;
-            
           });
         }
       });
     }
-
+    _tabController = TabController(vsync: this, length: userImageMenu.length);
     scrollController.addListener(() {
-      if (scrollController.position.userScrollDirection ==
-          ScrollDirection.reverse) {
-        if (double.parse((scrollController.offset).toStringAsFixed(0)) %
-                120.0 ==
-            0) {
-          EasyDebounce.debounce(
-              'my-debouncer', const Duration(milliseconds: 1000), () async {
-            String maxId = "";
-            if (ref.read(postControllerProvider).postUserPage.isEmpty) {
-              if (postUser.isNotEmpty) {
-                maxId = postUser.last['id'];
-              }
-            } else {
-              maxId = ref.read(postControllerProvider).postUserPage.last['id'];
-            }
-            ref.read(postControllerProvider.notifier).getListPostUserPage(
-                id == ref.watch(meControllerProvider)[0]['id'],
-                id,
-                {"max_id": maxId, "exclude_replies": true, "limit": 10});
+      if (!scrollController.hasClients) {
+        return; // Avoid unnecessary operations if no clients are attached
+      }
+
+      final offset = scrollController.offset;
+      final isScrollingDown = scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse;
+
+      if (offset >= 300) {
+        if (!showHeaderTabFixed) {
+          setState(() {
+            showHeaderTabFixed = true;
           });
-          //   DefaultCacheManager().emptyCache();
+        }
+      } else if (offset < 300) {
+        if (showHeaderTabFixed) {
+          setState(() {
+            showHeaderTabFixed = false;
+          });
         }
       }
-    });
-  }
 
-  // void fetchData() async {
+      if (isScrollingDown && offset % 120.0 == 0) {
+        EasyDebounce.debounce(
+            'my-debouncer', const Duration(milliseconds: 1000), () async {
+          String maxId = '';
+          final postUserPage = ref.read(postControllerProvider).postUserPage;
+
+          if (postUserPage.isEmpty && postUser.isNotEmpty) {
+            maxId = postUser.last['id'];
+          } else if (postUserPage.isNotEmpty) {
+            maxId = postUserPage.last['id'];
+          }
+
+          ref.read(postControllerProvider.notifier).getListPostUserPage(
+              id == ref.watch(meControllerProvider)[0]['id'],
+              id,
+              {"max_id": maxId, "exclude_replies": true, "limit": 10});
+        });
+      }
+    });
+  }  // void fetchData() async {
   //   ref.read(postControllerProvider.notifier).getListPostPin(id);
   //   ref.read(postControllerProvider.notifier).getListPostUserPage(
   //       id == ref.watch(meControllerProvider)[0]['id'],
@@ -290,6 +311,7 @@ class _UserPageState extends ConsumerState<UserPage> {
 
   @override
   void dispose() {
+    _tabController.dispose();
     focusCurrentPostIndex.dispose();
     scrollController.dispose();
     super.dispose();
@@ -330,6 +352,21 @@ class _UserPageState extends ConsumerState<UserPage> {
         ],
       ),
     );
+  }
+  PreferredSizeWidget buildAppBarHeader(BuildContext context) {
+    return AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Container(
+          width: MediaQuery.sizeOf(context).width,
+          height: 60,
+          padding: const EdgeInsets.symmetric(horizontal: 5),
+          decoration:
+              BoxDecoration(color: Theme.of(context).scaffoldBackgroundColor),
+          child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal, child: headerTab()),
+        ));
   }
 
   Widget _buildSendMessage() {
@@ -709,6 +746,8 @@ class _UserPageState extends ConsumerState<UserPage> {
             ),
           ),
           if (userAbout != null) const CrossBar(),
+          headerTab(),
+          const CrossBar(),
           if (userAbout != null)
             UserPageInfomationBlock(
               user: userData,
@@ -821,20 +860,880 @@ class _UserPageState extends ConsumerState<UserPage> {
     ]);
   }
 
+  Widget buildReelsBody(BuildContext context) {
+    final userMediaController = ref.read(userMediaControllerProvider.notifier);
+
+    if (userMediaController.state.momentUser.isEmpty) {
+      userMediaController.getUserMoment(
+          id, {"media_type": "video", "post_type": "moment", "limit": 10});
+    }
+
+    final userMoment = ref.watch(userMediaControllerProvider).momentUser;
+    final size = MediaQuery.sizeOf(context);
+    final theme = pv.Provider.of<ThemeManager>(context);
+
+    return CustomScrollView(
+      controller: scrollController,
+      slivers: [
+        SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              BannerBase(
+                object: userData,
+                objectMore: userAbout,
+                type: 'user',
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      height: 35,
+                      width: size.width - 85,
+                      child: userType == 'me'
+                          ? ButtonPrimary(
+                              icon: const Icon(
+                                FontAwesomeIcons.pen,
+                                size: 16,
+                                color: white,
+                              ),
+                              label: "Chỉnh sửa trang cá nhân",
+                              handlePress: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => CreateModalBaseMenu(
+                                      title: "Chỉnh sửa trang cá nhân",
+                                      body: UserPageEditProfile(
+                                          onUpdate: onReset),
+                                      buttonAppbar: const SizedBox(),
+                                    ),
+                                  ),
+                                );
+                              },
+                            )
+                          : userType == 'friend'
+                              ? SizedBox(
+                                  width: size.width * 0.8,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Flexible(
+                                        child: ButtonPrimary(
+                                          icon: const Icon(
+                                            FontAwesomeIcons.userCheck,
+                                            size: 16,
+                                            color: white,
+                                          ),
+                                          label: "Bạn bè",
+                                          handlePress: () {
+                                            showBarModalBottomSheet(
+                                              context: context,
+                                              backgroundColor: Theme.of(context)
+                                                  .scaffoldBackgroundColor,
+                                              builder: (context) {
+                                                return Container(
+                                                  color: Colors.transparent,
+                                                  width: size.width,
+                                                  height: size.height * 0.125,
+                                                  margin: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 20.0,
+                                                    vertical: 10.0,
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      Flexible(
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            if (following
+                                                                .value) {
+                                                              Navigator.pop(
+                                                                  context);
+                                                              ScaffoldMessenger
+                                                                      .of(
+                                                                          context)
+                                                                  .showSnackBar(
+                                                                      const SnackBar(
+                                                                content: Text(
+                                                                    'Đã bỏ theo dõi'),
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            2),
+                                                              ));
+                                                              following.value =
+                                                                  false;
+                                                              FriendsApi()
+                                                                  .unfollow(id);
+                                                              return;
+                                                            } else {
+                                                              Navigator.pop(
+                                                                  context);
+                                                              ScaffoldMessenger
+                                                                      .of(
+                                                                          context)
+                                                                  .showSnackBar(
+                                                                      const SnackBar(
+                                                                content: Text(
+                                                                    'Đã theo dõi lại'),
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            2),
+                                                              ));
+                                                              following.value =
+                                                                  true;
+                                                              FriendsApi()
+                                                                  .follow(id);
+                                                              return;
+                                                            }
+                                                          },
+                                                          child: SizedBox(
+                                                            width: size.width,
+                                                            child: Row(
+                                                              children: [
+                                                                Icon(
+                                                                  FontAwesomeIcons
+                                                                      .squareXmark,
+                                                                  size: 20.0,
+                                                                  color: theme.isDarkMode
+                                                                      ? Colors
+                                                                          .white
+                                                                      : Colors
+                                                                          .black,
+                                                                ),
+                                                                const SizedBox(
+                                                                    width:
+                                                                        15.0),
+                                                                Text(
+                                                                  following
+                                                                          .value
+                                                                      ? "Bỏ theo dõi"
+                                                                      : "Theo dõi lại",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15.0,
+                                                                    color: theme.isDarkMode
+                                                                        ? Colors
+                                                                            .white
+                                                                        : Colors
+                                                                            .black,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Flexible(
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            showCupertinoDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  ((context) {
+                                                                return CupertinoAlertDialog(
+                                                                  content:
+                                                                      Container(
+                                                                    margin: const EdgeInsets
+                                                                            .only(
+                                                                        top:
+                                                                            8.0),
+                                                                    child: Text(
+                                                                      "Bạn có chắc chắn muốn xóa ${userData?['display_name']} khỏi danh sách bạn bè không?",
+                                                                      style: const TextStyle(
+                                                                          fontSize:
+                                                                              14.0),
+                                                                    ),
+                                                                  ),
+                                                                  actions: [
+                                                                    CupertinoDialogAction(
+                                                                      isDefaultAction:
+                                                                          true,
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      child: const Text(
+                                                                          'Hủy'),
+                                                                    ),
+                                                                    CupertinoDialogAction(
+                                                                      isDestructiveAction:
+                                                                          true,
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                        ScaffoldMessenger.of(context)
+                                                                            .showSnackBar(const SnackBar(
+                                                                          content:
+                                                                              Text('Đã hủy kết bạn'),
+                                                                          duration:
+                                                                              Duration(seconds: 2),
+                                                                        ));
+                                                                        setState(
+                                                                            () {
+                                                                          userType =
+                                                                              'stranger';
+                                                                        });
+
+                                                                        FriendsApi()
+                                                                            .unfriend(id);
+                                                                      },
+                                                                      child: const Text(
+                                                                          'Xóa'),
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              }),
+                                                            );
+                                                          },
+                                                          child: SizedBox(
+                                                            width: size.width,
+                                                            child: Row(
+                                                              children: [
+                                                                Icon(
+                                                                  FontAwesomeIcons
+                                                                      .userXmark,
+                                                                  size: 20.0,
+                                                                  color: theme.isDarkMode
+                                                                      ? Colors
+                                                                          .white
+                                                                      : Colors
+                                                                          .black,
+                                                                ),
+                                                                const SizedBox(
+                                                                    width:
+                                                                        15.0),
+                                                                Text(
+                                                                  "Hủy kết bạn",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15.0,
+                                                                    color: theme.isDarkMode
+                                                                        ? Colors
+                                                                            .white
+                                                                        : Colors
+                                                                            .black,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 7.5),
+                                      _buildSendMessage(),
+                                    ],
+                                  ),
+                                )
+                              : userType == 'requested'
+                                  ? SizedBox(
+                                      width: size.width * 0.8,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Flexible(
+                                            child: ButtonPrimary(
+                                              icon: const Icon(
+                                                FontAwesomeIcons.userPlus,
+                                                size: 16,
+                                                color: Colors.white,
+                                              ),
+                                              label: "Hủy lời mời",
+                                              handlePress: () {
+                                                setState(() {
+                                                  userType = 'stranger';
+                                                });
+
+                                                FriendsApi()
+                                                    .cancelFriendRequestApi(id);
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 7.5),
+                                          _buildSendMessage(),
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox(
+                                      width: size.width * 0.8,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Flexible(
+                                            child: ButtonPrimary(
+                                              icon: const Icon(
+                                                FontAwesomeIcons.userPlus,
+                                                size: 16,
+                                                color: Colors.black,
+                                              ),
+                                              colorButton: Colors.grey[300],
+                                              colorText: Colors.black,
+                                              label: "Kết bạn",
+                                              handlePress: () {
+                                                setState(() {
+                                                  userType = 'requested';
+                                                });
+                                                FriendsApi()
+                                                    .sendFriendRequestApi(id);
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 7.5),
+                                          _buildSendMessage(),
+                                        ],
+                                      ),
+                                    ),
+                    ),
+                    SizedBox(
+                      height: 35,
+                      width: 48,
+                      child: ButtonPrimary(
+                        icon: const Icon(
+                          FontAwesomeIcons.ellipsis,
+                          size: 16,
+                          color: Colors.white,
+                        ),
+                        handlePress: () {},
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SliverToBoxAdapter(
+          child: CrossBar(),
+        ),
+        SliverToBoxAdapter(child: headerTab()),
+        const SliverToBoxAdapter(
+          child: CrossBar(),
+        ),
+        SliverToBoxAdapter(
+          child: RenderPhoto(
+            photoData: userMoment,
+            hasTitle: false,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildImageBody(BuildContext context) {
+    setState(() {
+      showHeaderTabFixed = false;
+    });
+      final userMediaController = ref.read(userMediaControllerProvider.notifier);
+    if (userMediaController.state.photoUser.isEmpty && userMediaController.state.albumUser.isEmpty && userMediaController.state.videoUser.isEmpty) {
+      Future.delayed(Duration.zero, () async {
+      userMediaController.getUserPhoto(id, {"media_type": "image", "limit": 10});
+      userMediaController.getUserVideo(id, {"media_type": "video", "limit": 10});
+      userMediaController.getUserAlbum(id, {"limit": 10});
+    });
+    }
+    final userPhoto = ref.watch(userMediaControllerProvider).photoUser;
+    final userVideo = ref.watch(userMediaControllerProvider).videoUser;
+    final userAlbum = ref.watch(userMediaControllerProvider).albumUser;
+
+    final size = MediaQuery.sizeOf(context);
+    final theme = pv.Provider.of<ThemeManager>(context);
+
+    return CustomScrollView(
+      controller: scrollController,
+      slivers: [
+        SliverToBoxAdapter(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              BannerBase(
+                object: userData,
+                objectMore: userAbout,
+                type: 'user',
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      height: 35,
+                      width: size.width - 85,
+                      child: userType == 'me'
+                          ? ButtonPrimary(
+                              icon: const Icon(
+                                FontAwesomeIcons.pen,
+                                size: 16,
+                                color: white,
+                              ),
+                              label: "Chỉnh sửa trang cá nhân",
+                              handlePress: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) => CreateModalBaseMenu(
+                                      title: "Chỉnh sửa trang cá nhân",
+                                      body: UserPageEditProfile(
+                                          onUpdate: onReset),
+                                      buttonAppbar: const SizedBox(),
+                                    ),
+                                  ),
+                                );
+                              },
+                            )
+                          : userType == 'friend'
+                              ? SizedBox(
+                                  width: size.width * 0.8,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Flexible(
+                                        child: ButtonPrimary(
+                                          icon: const Icon(
+                                            FontAwesomeIcons.userCheck,
+                                            size: 16,
+                                            color: white,
+                                          ),
+                                          label: "Bạn bè",
+                                          handlePress: () {
+                                            showBarModalBottomSheet(
+                                              context: context,
+                                              backgroundColor: Theme.of(context)
+                                                  .scaffoldBackgroundColor,
+                                              builder: (context) {
+                                                return Container(
+                                                  color: Colors.transparent,
+                                                  width: size.width,
+                                                  height: size.height * 0.125,
+                                                  margin: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 20.0,
+                                                    vertical: 10.0,
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      Flexible(
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            if (following
+                                                                .value) {
+                                                              Navigator.pop(
+                                                                  context);
+                                                              ScaffoldMessenger
+                                                                      .of(
+                                                                          context)
+                                                                  .showSnackBar(
+                                                                      const SnackBar(
+                                                                content: Text(
+                                                                    'Đã bỏ theo dõi'),
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            2),
+                                                              ));
+                                                              following.value =
+                                                                  false;
+                                                              FriendsApi()
+                                                                  .unfollow(id);
+                                                              return;
+                                                            } else {
+                                                              Navigator.pop(
+                                                                  context);
+                                                              ScaffoldMessenger
+                                                                      .of(
+                                                                          context)
+                                                                  .showSnackBar(
+                                                                      const SnackBar(
+                                                                content: Text(
+                                                                    'Đã theo dõi lại'),
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            2),
+                                                              ));
+                                                              following.value =
+                                                                  true;
+                                                              FriendsApi()
+                                                                  .follow(id);
+                                                              return;
+                                                            }
+                                                          },
+                                                          child: SizedBox(
+                                                            width: size.width,
+                                                            child: Row(
+                                                              children: [
+                                                                Icon(
+                                                                  FontAwesomeIcons
+                                                                      .squareXmark,
+                                                                  size: 20.0,
+                                                                  color: theme.isDarkMode
+                                                                      ? Colors
+                                                                          .white
+                                                                      : Colors
+                                                                          .black,
+                                                                ),
+                                                                const SizedBox(
+                                                                    width:
+                                                                        15.0),
+                                                                Text(
+                                                                  following
+                                                                          .value
+                                                                      ? "Bỏ theo dõi"
+                                                                      : "Theo dõi lại",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15.0,
+                                                                    color: theme.isDarkMode
+                                                                        ? Colors
+                                                                            .white
+                                                                        : Colors
+                                                                            .black,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Flexible(
+                                                        child: InkWell(
+                                                          onTap: () {
+                                                            showCupertinoDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  ((context) {
+                                                                return CupertinoAlertDialog(
+                                                                  content:
+                                                                      Container(
+                                                                    margin: const EdgeInsets
+                                                                            .only(
+                                                                        top:
+                                                                            8.0),
+                                                                    child: Text(
+                                                                      "Bạn có chắc chắn muốn xóa ${userData?['display_name']} khỏi danh sách bạn bè không?",
+                                                                      style: const TextStyle(
+                                                                          fontSize:
+                                                                              14.0),
+                                                                    ),
+                                                                  ),
+                                                                  actions: [
+                                                                    CupertinoDialogAction(
+                                                                      isDefaultAction:
+                                                                          true,
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      child: const Text(
+                                                                          'Hủy'),
+                                                                    ),
+                                                                    CupertinoDialogAction(
+                                                                      isDestructiveAction:
+                                                                          true,
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                        ScaffoldMessenger.of(context)
+                                                                            .showSnackBar(const SnackBar(
+                                                                          content:
+                                                                              Text('Đã hủy kết bạn'),
+                                                                          duration:
+                                                                              Duration(seconds: 2),
+                                                                        ));
+                                                                        setState(
+                                                                            () {
+                                                                          userType =
+                                                                              'stranger';
+                                                                        });
+
+                                                                        FriendsApi()
+                                                                            .unfriend(id);
+                                                                      },
+                                                                      child: const Text(
+                                                                          'Xóa'),
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              }),
+                                                            );
+                                                          },
+                                                          child: SizedBox(
+                                                            width: size.width,
+                                                            child: Row(
+                                                              children: [
+                                                                Icon(
+                                                                  FontAwesomeIcons
+                                                                      .userXmark,
+                                                                  size: 20.0,
+                                                                  color: theme.isDarkMode
+                                                                      ? Colors
+                                                                          .white
+                                                                      : Colors
+                                                                          .black,
+                                                                ),
+                                                                const SizedBox(
+                                                                    width:
+                                                                        15.0),
+                                                                Text(
+                                                                  "Hủy kết bạn",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        15.0,
+                                                                    color: theme.isDarkMode
+                                                                        ? Colors
+                                                                            .white
+                                                                        : Colors
+                                                                            .black,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 7.5),
+                                      _buildSendMessage(),
+                                    ],
+                                  ),
+                                )
+                              : userType == 'requested'
+                                  ? SizedBox(
+                                      width: size.width * 0.8,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Flexible(
+                                            child: ButtonPrimary(
+                                              icon: const Icon(
+                                                FontAwesomeIcons.userPlus,
+                                                size: 16,
+                                                color: Colors.white,
+                                              ),
+                                              label: "Hủy lời mời",
+                                              handlePress: () {
+                                                setState(() {
+                                                  userType = 'stranger';
+                                                });
+
+                                                FriendsApi()
+                                                    .cancelFriendRequestApi(id);
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 7.5),
+                                          _buildSendMessage(),
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox(
+                                      width: size.width * 0.8,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Flexible(
+                                            child: ButtonPrimary(
+                                              icon: const Icon(
+                                                FontAwesomeIcons.userPlus,
+                                                size: 16,
+                                                color: Colors.black,
+                                              ),
+                                              colorButton: Colors.grey[300],
+                                              colorText: Colors.black,
+                                              label: "Kết bạn",
+                                              handlePress: () {
+                                                setState(() {
+                                                  userType = 'requested';
+                                                });
+                                                FriendsApi()
+                                                    .sendFriendRequestApi(id);
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(width: 7.5),
+                                          _buildSendMessage(),
+                                        ],
+                                      ),
+                                    ),
+                    ),
+                    SizedBox(
+                      height: 35,
+                      width: 48,
+                      child: ButtonPrimary(
+                        icon: const Icon(
+                          FontAwesomeIcons.ellipsis,
+                          size: 16,
+                          color: Colors.white,
+                        ),
+                        handlePress: () {},
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SliverToBoxAdapter(
+          child: CrossBar(),
+        ),
+        SliverToBoxAdapter(child: headerTab()),
+        const SliverToBoxAdapter(
+          child: CrossBar(),
+        ),
+        SliverToBoxAdapter(
+          child: TabBar(
+            controller: _tabController,
+            indicatorColor: secondaryColor,
+            dividerColor: secondaryColor,
+            labelColor: Theme.of(context).textTheme.bodyLarge?.color,
+            tabs: List.generate(
+              userImageMenu.length,
+              (index) => Text(
+                userImageMenu[index]['label'],
+              ),
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: SizedBox(
+              height: size.height*0.9, // Đặt chiều cao cố định cho TabBarView
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  RenderPhoto(
+                    photoData: userPhoto,
+                    hasTitle: false,
+                  ),
+                  RenderPhoto(
+                    photoData: userAlbum,
+                    hasTitle: true,
+                    type: 'buttonAlbum',
+                  ),
+                  RenderPhoto(
+                    photoData: userVideo,
+                    hasTitle: false,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget headerTab() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(
+                userMenu.length,
+                (index) => InkWell(
+                      onTap: () {
+                        setState(() {
+                          menuSelected = userMenu[index]['key'];
+                        });
+                      },
+                      child: ChipMenu(
+                          isSelected: menuSelected == userMenu[index]['key'],
+                          label: userMenu[index]['label']),
+                    )),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     pinPost = ref.read(postControllerProvider).postsPin;
     return Scaffold(
-      appBar: buildAppBar(context),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await ref.read(postControllerProvider.notifier).getListPostUserPage(
-              id == ref.watch(meControllerProvider)[0]['id'],
-              id,
-              {"exclude_replies": true, "limit": 20});
-        },
-        child: buildUserPageBody(context),
-      ),
-    );
+        appBar: buildAppBar(context),
+        body: Stack(
+          children: [
+            if (menuSelected == "user_posts")
+              RefreshIndicator(
+                onRefresh: () async {
+                  await ref
+                      .read(postControllerProvider.notifier)
+                      .getListPostUserPage(
+                          id == ref.watch(meControllerProvider)[0]['id'],
+                          id,
+                          {"exclude_replies": true, "limit": 20});
+                },
+                child: buildUserPageBody(context),
+              )
+            else if (menuSelected == "user_reels")
+              Container(
+                child: buildReelsBody(context),
+              )
+            else
+              Container(child: buildImageBody(context)),
+            if (showHeaderTabFixed)
+              Container(
+                width: MediaQuery.sizeOf(context).width,
+                height: 60,
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor),
+                child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal, child: headerTab()),
+              )
+            else
+              const SizedBox(),
+          ],
+        ));
   }
 }

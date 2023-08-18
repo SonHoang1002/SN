@@ -33,10 +33,10 @@ class _ImageCacheRenderState extends State<ImageCacheRender> {
       key: UniqueKey(),
       cacheManager: cacheManager,
       cacheKey: widget.path,
-      placeholder: (context, url) => Image.asset(
-        'assets/grey.png',
-        fit: BoxFit.cover,
-      ),
+      // placeholder: (context, url) => Image.asset(
+      //   'assets/grey.png',
+      //   fit: BoxFit.cover,
+      // ),
       imageUrl: widget.path,
       imageBuilder: (context, imageProvider) {
         return Image(
@@ -50,10 +50,10 @@ class _ImageCacheRenderState extends State<ImageCacheRender> {
       width: widget.width,
       height: widget.height,
       fit: BoxFit.cover,
-      errorWidget: (context, url, error) => Image.asset(
-        'assets/grey.png',
-        fit: BoxFit.cover,
-      ),
+      // errorWidget: (context, url, error) => Image.asset(
+      //   'assets/grey.png',
+      //   fit: BoxFit.cover,
+      // ),
     );
   }
 }

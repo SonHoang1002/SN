@@ -5,13 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/event.dart';
 import 'package:social_network_app_mobile/providers/event_provider.dart';
 import 'package:social_network_app_mobile/screens/Event/event_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
-import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:social_network_app_mobile/widgets/share_modal_bottom.dart';
@@ -62,7 +60,7 @@ class _EventCardState extends ConsumerState<EventCard> {
   Widget build(BuildContext context) {
     List events = ref.watch(eventControllerProvider).events;
     bool isMore = ref.watch(eventControllerProvider).isMore;
-    final theme = pv.Provider.of<ThemeManager>(context);
+    // final theme = pv.Provider.of<ThemeManager>(context);
 
     final size = MediaQuery.sizeOf(context);
     width = size.width;
