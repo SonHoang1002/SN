@@ -48,10 +48,10 @@ class Api {
     }
   }
 
-  Future deleteRequestBase(String path, data) async {
+  Future deleteRequestBase(String path, dynamic data) async {
     try {
       Dio dio = await getDio();
-      var response = await dio.delete(path);
+      var response = await dio.delete(path, data: data);
       return response.data;
     } catch (e) {
       print(e.toString());

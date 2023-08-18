@@ -204,12 +204,16 @@ class _DetailProductMarketPageComsumerState
     if (_listMedia == null || _listMedia!.isEmpty) {
       setState(() {
         if (_detailData!["product_video"] != null) {
-          _listMedia?.add(_detailData!["product_video"]["url"]);
+          _listMedia?.add((_detailData?["product_video"]?["url"]) ??
+              (_detailData?["product_video"]?["preview_url"]) ??
+              linkBannerDefault);
         }
-        if (_detailData!["product_image_attachments"] != null &&
-            _detailData!["product_image_attachments"].isNotEmpty) {
-          _detailData!["product_image_attachments"].forEach((element) {
-            _listMedia?.add(element["attachment"]["url"]);
+        if (_detailData?["product_image_attachments"] != null &&
+            _detailData?["product_image_attachments"].isNotEmpty) {
+          _detailData?["product_image_attachments"].forEach((element) {
+            _listMedia?.add((element?["attachment"]?["url"]) ??
+                (element?["attachment"]?["preview_url"]) ??
+                linkBannerDefault);
           });
         }
       });

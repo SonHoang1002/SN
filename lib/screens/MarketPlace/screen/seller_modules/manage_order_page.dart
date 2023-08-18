@@ -1,6 +1,8 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:market_place/constant/common.dart';
 import 'package:market_place/constant/marketPlace_constants.dart';
 import 'package:market_place/helpers/format_currency.dart';
 import 'package:market_place/helpers/routes.dart';
@@ -228,7 +230,8 @@ class _OrderProductMarketPageState
                   colorWord: greyColor, fontSize: 14),
               const SizedBox(height: 5),
               _selectedPage != null
-                  ? buildTextContent(_selectedPage["title"], true, fontSize: 16)
+                  ? buildTextContent((_selectedPage?["title"]) ?? "--", true,
+                      fontSize: 16)
                   : buildTextContent("-", true, fontSize: 16)
             ],
             prefixWidget: ClipRRect(
@@ -238,7 +241,8 @@ class _OrderProductMarketPageState
                   width: 35,
                   child: _selectedPage != null
                       ? ImageCacheRender(
-                          path: _selectedPage["avatar_media"]["url"])
+                          path: (_selectedPage?["avatar_media"]?["url"]) ??
+                              linkBannerDefault)
                       : Container(
                           color: greyColor,
                         )),
@@ -301,10 +305,14 @@ class _OrderProductMarketPageState
                                                 ),
                                                 child: data["avatar_media"] !=
                                                         null
-                                                    ? ImageCacheRender(
-                                                        path:
-                                                            data["avatar_media"]
-                                                                ["url"])
+                                                    ? ExtendedImage.network(
+                                                        (data?["avatar_media"]
+                                                                ?["url"]) ??
+                                                            linkBannerDefault,
+                                                        fit: BoxFit.cover,
+                                                        filterQuality:
+                                                            FilterQuality.high,
+                                                      )
                                                     : null,
                                               ),
                                             ),
