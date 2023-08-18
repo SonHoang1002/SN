@@ -77,6 +77,7 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
 
   @override
   void dispose() {
+    _watchController.dispose();
     super.dispose();
     watchPost = null;
     listWatch = [];
@@ -113,7 +114,7 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
         ),
         body: CustomScrollView(
           controller: _watchController,
-          slivers: [
+          slivers: <Widget>[
             SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

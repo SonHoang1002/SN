@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/providers/search/search_provider.dart';
 import 'package:social_network_app_mobile/screens/Search/search_result_page_detail.dart';
@@ -11,6 +10,7 @@ import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'package:social_network_app_mobile/widgets/text_action.dart';
 import 'package:social_network_app_mobile/widgets/text_description.dart';
 
+import '../../constant/common.dart';
 import '../../widgets/avatar_social.dart';
 import '../Group/GroupDetail/group_detail.dart';
 import '../Page/PageDetail/page_detail.dart';
@@ -109,8 +109,7 @@ class SearchHistory extends ConsumerWidget {
                                                         arguments:
                                                             searchHistory[index]
                                                                     [
-                                                                    'entity_id']
-                                                                .toString()),
+                                                                    'entity_id']),
                                                   ))
                                               : searchHistory[index]
                                                           ['entity_type'] ==
@@ -139,15 +138,15 @@ class SearchHistory extends ConsumerWidget {
                                     //   width: 35,
                                     //   height: 35,
                                     // ),
-                                     searchHistory[index]['image_url'] != null
-                                        ? searchHistory[index]['entity_type'] ==
+                                     searchHistory[index]['entity_type'] ==
                                                 'Account'
                                             ? AvatarSocial(
                                                 width: 34.0,
                                                 height: 35.0,
                                                 object: searchHistory[index],
                                                 path: searchHistory[index]
-                                                    ['image_url'],
+                                                    ['image_url']??
+                                    linkAvatarDefault,
                                               )
                                             : Container(
                                                 width: 34,
@@ -165,13 +164,13 @@ class SearchHistory extends ConsumerWidget {
                                                           8.0),
                                                   child: ImageCacheRender(
                                                     path: searchHistory[index]
-                                                        ['image_url'],
+                                                        ['image_url']??
+                                    linkAvatarDefault,
                                                     width: 34.0,
                                                     height: 34.0,
                                                   ),
                                                 ),
-                                              )
-                                        : const SizedBox(),
+                                              ),
                                     const SizedBox(
                                       width: 8.0,
                                     ),

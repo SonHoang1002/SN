@@ -124,6 +124,20 @@ List courseMenu = [
     "label": "Thư viện nội dung",
   },
 ];
+List userMenu = [
+  {
+    "key": "user_posts",
+    "label": "Bài viết",
+  },
+  {
+    "key": "user_image",
+    "label": "Ảnh",
+  },
+  {
+    "key": "user_reels",
+    "label": "Khoảnh khắc",
+  },
+];
 List listSocial = [
   {
     "key": 'friendSocial',
@@ -240,6 +254,12 @@ List userMediaMenu = [
   {"key": "album", "label": "Album"},
   {"key": "video", "label": "Video"},
   {"key": "moment", "label": "Khoảnh khắc"},
+];
+
+List userImageMenu = [
+  {"key": "photo", "label": "Ảnh"},
+  {"key": "album", "label": "Album"},
+  {"key": "video", "label": "Video"},
 ];
 
 List musicMenu = [

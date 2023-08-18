@@ -30,6 +30,15 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
   void initState() {
     Future.delayed(
         const Duration(milliseconds: 15000),
+        () => {
+              if (mounted)
+                {
+                  setState(() {
+                    isLoading = false;
+                  })
+                }
+            });
+
         () => setState(() {
               isLoading = false;
             }));
