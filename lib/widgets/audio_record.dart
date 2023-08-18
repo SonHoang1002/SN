@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:audio_waveforms/audio_waveforms.dart';
-import 'package:market_place/theme/colors.dart';
+import 'package:social_network_app_mobile/theme/colors.dart';
 
 class AudioRecord extends StatefulWidget {
   final Function handleDelete;

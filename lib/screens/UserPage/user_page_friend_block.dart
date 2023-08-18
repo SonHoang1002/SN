@@ -41,7 +41,7 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
 
         () => setState(() {
               isLoading = false;
-            }));
+            });
 
     if (widget.friends.isNotEmpty) {
       isLoading = true;
