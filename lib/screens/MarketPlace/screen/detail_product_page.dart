@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:expandable_text/expandable_text.dart';
@@ -10,7 +9,6 @@ import 'package:social_network_app_mobile/apis/market_place_apis/follwer_product
 import 'package:social_network_app_mobile/apis/market_place_apis/products_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/get_min_max_price.dart';
-import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/cart_product_provider.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/detail_product_provider.dart';
@@ -19,7 +17,6 @@ import 'package:social_network_app_mobile/providers/market_place_providers/produ
 import 'package:social_network_app_mobile/providers/market_place_providers/review_product_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/review_all_product.dart';
-import 'package:social_network_app_mobile/screens/MarketPlace/screen/transfer_order_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/preview_video_image.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/cart_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/classify_category_conponent.dart';
@@ -31,7 +28,6 @@ import 'package:social_network_app_mobile/screens/MarketPlace/widgets/review_sho
 import 'package:social_network_app_mobile/apis/market_place_apis/cart_apis.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/tranfer_fee_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/voucher_widget.dart';
-import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/divider_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
@@ -72,8 +68,8 @@ class _DetailProductMarketPageComsumerState
   List<dynamic>? _listComment;
   List<dynamic>? _listPrice;
   bool _isLoading = true;
-  final List<dynamic> _listCheckedColor = [];
-  final List<dynamic> _listCheckedSize = [];
+  List<dynamic> _listCheckedColor = [];
+  List<dynamic> _listCheckedSize = [];
   dynamic _selectedColorValue;
   dynamic _selectedSizeValue;
   String? _priceTitle;
@@ -146,6 +142,7 @@ class _DetailProductMarketPageComsumerState
           });
         }
       });
+    ;
   }
 
   @override
@@ -206,12 +203,16 @@ class _DetailProductMarketPageComsumerState
     if (_listMedia == null || _listMedia!.isEmpty) {
       setState(() {
         if (_detailData!["product_video"] != null) {
-          _listMedia?.add(_detailData!["product_video"]?["url"]);
+          _listMedia?.add((_detailData?["product_video"]?["url"]) ??
+              (_detailData?["product_video"]?["preview_url"]) ??
+              linkBannerDefault);
         }
         if (_detailData?["product_image_attachments"] != null &&
             _detailData?["product_image_attachments"].isNotEmpty) {
           _detailData?["product_image_attachments"].forEach((element) {
-            _listMedia?.add(element?["attachment"]?["url"]);
+            _listMedia?.add((element?["attachment"]?["url"]) ??
+                (element?["attachment"]?["preview_url"]) ??
+                linkBannerDefault);
           });
         }
       });
@@ -553,46 +554,42 @@ class _DetailProductMarketPageComsumerState
               children: [
                 buildSpacer(height: 10),
                 // example color or size product
-                _listMedia != null && _listMedia!.isNotEmpty
-                    ? Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children:
-                                List.generate(_listMedia!.length, (index) {
-                              return InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    mediaIndex = index;
-                                  });
-                                },
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        border: mediaIndex == index
-                                            ? Border.all(
-                                                color: primaryColor, width: 0.6)
-                                            : null),
-                                    margin: const EdgeInsets.only(right: 10),
-                                    child: _listMedia?[index].endsWith(".mp4")
-                                        ? SizedBox(
-                                            height: 120,
-                                            width: 180,
-                                            child: VideoPlayerNoneController(
-                                                path: _listMedia![index],
-                                                type: "network"))
-                                        : ExtendedImageNetWorkCustom(
-                                            path: _listMedia![index],
-                                            height: 120.0,
-                                            width: 120.0,
-                                          )),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      )
-                    : const SizedBox(),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: List.generate(_listMedia!.length, (index) {
+                        return InkWell(
+                          onTap: () {
+                            setState(() {
+                              mediaIndex = index;
+                            });
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  border: mediaIndex == index
+                                      ? Border.all(
+                                          color: primaryColor, width: 0.6)
+                                      : null),
+                              margin: const EdgeInsets.only(right: 10),
+                              child: _listMedia![index].endsWith(".mp4")
+                                  ? SizedBox(
+                                      height: 120,
+                                      width: 180,
+                                      child: VideoPlayerRender(
+                                          path: _listMedia![index]))
+                                  : ExtendedImageNetWorkCustom(
+                                      path: _listMedia![index],
+                                      height: 120.0,
+                                      width: 120.0,
+                                    )),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
                 buildSpacer(height: 10),
                 buildDivider(
                   color: secondaryColor,
@@ -1176,7 +1173,7 @@ class _DetailProductMarketPageComsumerState
                                     height: 30,
                                     width: 30,
                                     child: buildTextContent(
-                                        "$productNumber", true,
+                                        "${productNumber}", true,
                                         isCenterLeft: false),
                                   ),
                                   InkWell(

@@ -17,6 +17,7 @@ import '../../../widgets/GeneralWidget/general_component.dart';
 
 const List<String> tabList = ["Thông báo của tôi", "Cập nhật Người bán"]; 
 
+
 // ignore: must_be_immutable
 class NotificationMarketPage extends StatelessWidget {
   NotificationMarketPage({super.key});
