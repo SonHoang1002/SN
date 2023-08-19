@@ -22,7 +22,7 @@ class EditUserBiographyState extends ConsumerState<EditUserBiography> {
   Widget build(BuildContext context) {
     final userAbout = ref.watch(userInformationProvider).userMoreInfor;
     final generalInformation = userAbout['general_information'];
-    descriptionTxtCtrl.text = generalInformation['description'].toString();
+    descriptionTxtCtrl.text = generalInformation['description']!=null?generalInformation['description'].toString():"";
     return Scaffold(
       appBar: AppBar(title: const Text("Chỉnh sửa tiểu sử"), actions: [
         TextButton(

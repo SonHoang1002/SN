@@ -90,14 +90,14 @@ class UserPageInfomationBlock extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                generalInformation['description'] != null
+                (generalInformation['description'] != null && generalInformation['description'].isNotEmpty)
                     ? const Text(
                         'Giới thiệu',
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 17),
                       )
                     : const SizedBox(),
-                generalInformation['description'] != null
+                (generalInformation['description'] != null && generalInformation['description'].isNotEmpty)
                     ? Center(
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 15.0),
