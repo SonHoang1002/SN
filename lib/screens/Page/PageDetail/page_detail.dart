@@ -45,7 +45,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
   bool showHeaderTabFixed = false;
   String typeMedia = 'image';
   bool isUser = false;
-  Object? arguments;  
+  Object? arguments;
   @override
   void initState() {
     if (!mounted) return;
@@ -419,7 +419,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                 rolePage),
             if (showHeaderTabFixed)
               Container(
-                width: MediaQuery.sizeOf(context).width*0.5,
+                width: MediaQuery.sizeOf(context).width * 0.5,
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
                 decoration: BoxDecoration(
                     color: Theme.of(context).scaffoldBackgroundColor),
@@ -590,7 +590,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
             ],
           ),
           Container(
-            width: MediaQuery.sizeOf(context).width*0.2,
+            width: MediaQuery.sizeOf(context).width,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
             color: Theme.of(context).scaffoldBackgroundColor,
             child: Column(
