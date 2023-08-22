@@ -11,6 +11,7 @@ import 'package:social_network_app_mobile/providers/UserPage/user_information_pr
 import 'package:social_network_app_mobile/screens/UserPage/SettingUser/textfield_settings_user.dart';
 
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+import 'package:social_network_app_mobile/widgets/snack_bar_custom.dart';
 
 class UserGeneralSettings extends ConsumerStatefulWidget {
   final dynamic data;
@@ -115,15 +116,15 @@ class _UserGeneralSettingsState extends ConsumerState<UserGeneralSettings> {
                                       FormData.fromMap({"display_name": value});
                                   var res = await UserPageCredentical()
                                       .updateCredentialUser(formData);
+                                  setState(() {
+                                    if (value != "" && value != null) {
+                                      editUser['display_name'] = value;
+                                    }
+                                  });
                                   if (res?["success"] == true && res != null) {
                                     ref
                                         .read(userInformationProvider.notifier)
                                         .setNewDisplayName(value);
-                                    setState(() {
-                                      if (value != "" && value != null) {
-                                        editUser['display_name'] = value;
-                                      }
-                                    });
                                   }
                                 })),
                       );
@@ -171,17 +172,17 @@ class _UserGeneralSettingsState extends ConsumerState<UserGeneralSettings> {
                                 onChange: (value) async {
                                   FormData formData =
                                       FormData.fromMap({"username": value});
+                                  setState(() {
+                                    if (value != "" && value != null) {
+                                      editUser['username'] = value;
+                                    }
+                                  });
                                   var res = await UserPageCredentical()
                                       .updateCredentialUser(formData);
                                   if (res?["success"] == true) {
                                     ref
                                         .read(userInformationProvider.notifier)
                                         .setNewUsername(value);
-                                    setState(() {
-                                      if (value != "" && value != null) {
-                                        editUser['username'] = value;
-                                      }
-                                    });
                                   }
                                 })),
                       );
@@ -228,15 +229,22 @@ class _UserGeneralSettingsState extends ConsumerState<UserGeneralSettings> {
                                       .updateOtherInformation(
                                           null, {"phone_number": value});
                                   if (res != null) {
-                                    setState(() {
-                                      ref
-                                          .read(
-                                              userInformationProvider.notifier)
-                                          .setUserNewPhone(res);
-                                      if (value != "" && value != null) {
-                                        editUser['phone_number'] = value;
-                                      }
-                                    });
+                                    if (res["content"] != null &&
+                                        res["content"]["error"] != null &&
+                                        mounted) {
+                                      buildSnackBar(
+                                          context, res["content"]["error"]);
+                                    } else {
+                                      setState(() {
+                                        ref
+                                            .read(userInformationProvider
+                                                .notifier)
+                                            .setUserNewPhone(res);
+                                        if (value != "" && value != null) {
+                                          editUser['phone_number'] = value;
+                                        }
+                                      });
+                                    }
                                   }
                                 })),
                       );

@@ -1,8 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/apis/user_page_api.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/forget_password.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+import 'package:social_network_app_mobile/widgets/button_primary.dart';
+import 'package:social_network_app_mobile/widgets/snack_bar_custom.dart';
 
 class PasswordChange extends StatefulWidget {
   const PasswordChange({super.key});
@@ -25,8 +30,8 @@ class _PasswordPageState extends State<PasswordChange> {
   late TextEditingController reEnterPasswordController =
       TextEditingController(text: "");
 
-  bool isClickForChangePasswordButton = false;
-
+  final _formKey = GlobalKey<FormState>();
+  int selectedOption = 0;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -54,60 +59,157 @@ class _PasswordPageState extends State<PasswordChange> {
         onTap: (() {
           FocusManager.instance.primaryFocus!.unfocus();
         }),
-        child: Column(children: [
-          // main content
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              // color: Colors.grey[900],
-              child: ListView(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                children: [
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  //subTitle
-
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  // change password  bien mat khi click vao nut nay
-                  Column(
-                    children: [
-                      //inputs
-                      _buildInput(height, currentPasswordController,
-                          "Mật khẩu hiện tại"),
-                      _buildInput(
-                          height, newPasswordController, "Nhập mật khẩu mới"),
-                      _buildInput(height, reEnterPasswordController,
-                          "Nhập lại mật khẩu"),
-                      //save change
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                            fixedSize: Size(width * 0.9, 40),
-                            backgroundColor: Colors.blue),
-                        child: const Text(
-                          "Lưu",
-                          style: TextStyle(color: white, fontSize: 17),
+        child: Form(
+          key: _formKey,
+          child: Column(children: [
+            // main content
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                // color: Colors.grey[900],
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  children: [
+                    Column(
+                      children: [
+                        //inputs
+                        _buildInput(height, currentPasswordController,
+                            "Mật khẩu hiện tại"),
+                        _buildInput(
+                            height, newPasswordController, "Nhập mật khẩu mới"),
+                        _buildInput(height, reEnterPasswordController,
+                            "Nhập lại mật khẩu"),
+                        const Text(
+                            "Nếu bạn cho rằng ai đó có thể biết mật khẩu cũ của mình, bạn nên đăng xuất khỏi mọi điện thoại, máy tính khác và kiểm tra các thay đổi gần đây cho tài khoản của mình."),
+                        const SizedBox(
+                          height: 10,
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Center(
-                            child: GestureDetector(
-                          onTap: (() {}),
-                          child: buildTextContent("Quên mật khẩu", false,
-                              colorWord: Colors.blue[900], isCenterLeft: false),
-                        )),
-                      )
-                    ],
-                  )
-                ],
+                        ListTile(
+                          contentPadding: const EdgeInsets.all(0),
+                          title: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Duy trì đăng nhập',
+                                  style: TextStyle(fontSize: 16)),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                'Chúng tôi giúp bạn tiếp tục đăng nhập trên thiết bị.',
+                                style:
+                                    TextStyle(color: greyColor, fontSize: 14),
+                              ),
+                            ],
+                          ),
+                          leading: Radio(
+                            value: 0,
+                            activeColor: Colors.blue,
+                            groupValue: selectedOption,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedOption = value!;
+                              });
+                            },
+                          ),
+                        ),
+                        ListTile(
+                          contentPadding: const EdgeInsets.all(0),
+                          title: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Đăng xuất trên tất cả các thiết bị',
+                                  style: TextStyle(fontSize: 16)),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                'Chúng tôi giúp bạn bảo mật thông tin.',
+                                style:
+                                    TextStyle(color: greyColor, fontSize: 14),
+                              ),
+                            ],
+                          ),
+                          leading: Radio(
+                            value: 1,
+                            groupValue: selectedOption,
+                            activeColor: Colors.blue,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedOption = value!;
+                              });
+                            },
+                          ),
+                        ),
+                        ButtonPrimary(
+                          label: 'Lưu',
+                          handlePress: () async {
+                            if (_formKey.currentState!.validate()) {
+                              if (newPasswordController.text.trim() !=
+                                  reEnterPasswordController.text.trim()) {
+                                buildSnackBar(context,
+                                    "Xác nhận mật khẩu mới không đúng, vui lòng kiểm tra lại");
+                              } else {
+                                var res = await UserPageApi().changePassword({
+                                  "current_password":
+                                      currentPasswordController.text.trim(),
+                                  "new_password":
+                                      newPasswordController.text.trim(),
+                                  "new_password_confirmation":
+                                      reEnterPasswordController.text.trim(),
+                                  "revoke_token":
+                                      selectedOption == 1 ? true : false
+                                });
+
+                                if (mounted) {
+                                  if (res == null) {
+                                    buildSnackBar(context,
+                                        "Thay đổi mật khẩu thành công");
+                                  } else {
+                                    if (res["content"] != null &&
+                                        res["content"]["error"] != null) {
+                                      buildSnackBar(
+                                          context, res["content"]["error"]);
+                                    } else {
+                                      buildSnackBar(context,
+                                          "Thay đổi mật khẩu thành công");
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                        ),
+                        ButtonPrimary(
+                          label: 'Huỷ',
+                          isGrey: true,
+                          handlePress: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Center(
+                          child: GestureDetector(
+                        onTap: (() {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) => ForgetPassword()));
+                        }),
+                        child: buildTextContent("Quên mật khẩu", false,
+                            colorWord: Colors.blue[900], isCenterLeft: false),
+                      )),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }
@@ -115,14 +217,22 @@ class _PasswordPageState extends State<PasswordChange> {
 
 _buildInput(double width, TextEditingController controller, String hintText) {
   return Container(
-    margin: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 5),
+    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
     height: 50,
-    width: width * 0.9,
     child: TextFormField(
-      // style: TextStyle(color:  white),
+      obscureText: true,
       controller: controller,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Hãy nhập đầy đủ thông tin';
+        }
+        if (value.length < 8) {
+          return "Mật khẩu phải tối thiểu 8 kí tự";
+        }
+        return null;
+      },
       decoration: InputDecoration(
-        contentPadding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+        contentPadding: const EdgeInsets.all(10),
         enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.grey),
             borderRadius: BorderRadius.all(

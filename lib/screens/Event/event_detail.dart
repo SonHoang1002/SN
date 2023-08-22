@@ -11,6 +11,7 @@ import 'package:social_network_app_mobile/data/event.dart';
 import 'package:social_network_app_mobile/providers/event_provider.dart';
 import 'package:social_network_app_mobile/screens/Event/event_discuss.dart';
 import 'package:social_network_app_mobile/screens/Event/event_intro.dart';
+import 'package:social_network_app_mobile/screens/Event/get_event_later.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/icon_action_ellipsis.dart';
@@ -191,10 +192,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      GetTimeAgo.parse(
-                                        DateTime.parse(
-                                            eventDetail['start_time']),
-                                      ),
+                                      eventDate(eventDetail['start_time']),
                                       style: const TextStyle(
                                         fontSize: 12.0,
                                         fontWeight: FontWeight.w700,

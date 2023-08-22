@@ -86,6 +86,22 @@ class UserPageApi {
   Future getLivingPlaceByKeyword(String keyword) async {
     return await Api().getRequestBase('/api/v1/places', {"keyword": keyword});
   }
+
+  Future changePassword(params) async {
+    return await Api().postRequestBase('/api/v1/change_password', params);
+  }
+
+  Future forgotPassword(params) async {
+    return await Api().postRequestBase('/api/v1/forgot_password', params);
+  }
+
+  Future sendReconfirmation(params) async {
+    return await Api().postRequestBase('/api/v1/reconfirmation', params);
+  }
+
+  Future getWatchHistories(params) async {
+    return await Api().getRequestBase('/api/v1/watch_histories', params);
+  }
 }
 
 class UserPageCredentical {

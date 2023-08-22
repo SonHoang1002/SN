@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -92,7 +93,11 @@ class _PageActivityState extends State<PageActivity> {
         if (include["id"] != null && include["title"] != null) {
           final id = include["id"].toString();
           if (description.contains('[$id]')) {
-            return description = include["avatar"].toString();
+            if (include["avartar"] == null) {
+              return description = linkAvatarDefault;
+            } else {
+              return description = include["avatar"].toString();
+            }
           }
         }
       }
