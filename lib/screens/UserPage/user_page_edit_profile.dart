@@ -298,7 +298,7 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
                   width: 150,
                   height: 150,
                   object: dataPage,
-                  path: dataPage['avatar_media']?['preview_url'] ??
+                  path: dataPage?['avatar_media']?['preview_url'] ??
                       linkAvatarDefault,
                 ),
               ),
@@ -321,7 +321,7 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12.0),
                   child: ExtendedImage.network(
-                    dataPage['banner']?['preview_url'] ?? linkBannerDefault,
+                    dataPage?['banner']?['preview_url'] ?? linkBannerDefault,
                     width: size.width - 30,
                     height: (size.width - 30) * 1.8 / 3,
                     fit: BoxFit.cover,
