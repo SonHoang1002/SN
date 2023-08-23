@@ -1,7 +1,7 @@
 // ignore_for_file: unused_field
 import 'dart:io';
 import 'dart:math';
-
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -126,6 +126,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
       setState(() {
         postRender = widget.postMedia ?? widget.post;
         userData = widget.postMedia;
+        print("postRender: ${jsonEncode(postRender)}");
       });
       if (widget.post != null) {
         setState(() {
@@ -253,7 +254,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                 : userData)
         : null;
         
-    String path = postRender?['url'];
+    String path = postRender?["media_attachments"] != null?postRender?["media_attachments"]?[0]['url']:postRender?['url'];
     final size = MediaQuery.sizeOf(context);
     return WillPopScope(
       onWillPop: () async {

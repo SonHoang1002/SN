@@ -234,11 +234,14 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                     group != null
                                         ? InkWell(
                                             onTap: () {
-                                              pushCustomCupertinoPageRoute(
-                                                  context,
-                                                  UserPageHome(
-                                                    id: account['id']
-                                                        .toString(),
+                                             pushCustomCupertinoPageRoute(
+                                                  context, const UserPageHome(),
+                                                  settings: RouteSettings(
+                                                    arguments: {
+                                                      'id': account['id']
+                                                          .toString(),
+                                                      'user': account
+                                                    },
                                                   ));
                                             },
                                             child: Text(
@@ -599,7 +602,7 @@ class _BlockNamePostState extends ConsumerState<BlockNamePost> {
       } else {
         pushCustomCupertinoPageRoute(context, const UserPageHome(),
             settings: RouteSettings(
-              arguments: {'id': widget.account['id']},
+              arguments: {'id': widget.account['id'], 'user': widget.account},
             ));
       }
     }
@@ -657,7 +660,8 @@ class _BlockNamePostState extends ConsumerState<BlockNamePost> {
                     pushCustomCupertinoPageRoute(context, const UserPageHome(),
                         settings: RouteSettings(
                           arguments: {
-                            'id': widget.post?['target_account']?['id']
+                            'id': widget.post?['target_account']?['id'],
+                            'user': widget.post?["account"]
                           },
                         ));
                   },
@@ -753,7 +757,7 @@ class AvatarPost extends StatelessWidget {
         if (isInGroup == true) {
           pushCustomCupertinoPageRoute(context, const UserPageHome(),
               settings: RouteSettings(
-                arguments: {'id': account['id']},
+                arguments: {'id': account['id'], 'user': account},
               ));
         } else {
           pushCustomCupertinoPageRoute(context, GroupDetail(id: group['id']));
@@ -763,7 +767,7 @@ class AvatarPost extends StatelessWidget {
       } else {
         pushCustomCupertinoPageRoute(context, const UserPageHome(),
             settings: RouteSettings(
-              arguments: {'id': account['id']},
+              arguments: {'id': account['id'], 'user': account},
             ));
       }
     }
