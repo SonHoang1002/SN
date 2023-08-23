@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/apis/user.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/home/PreviewScreen.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/home/preview_screen.dart';
+import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/friend/friend_provider.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
@@ -11,12 +14,14 @@ import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
+import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/onboarding_login_page.dart';
 import 'package:social_network_app_mobile/services/isar_post_service.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
+import 'package:social_network_app_mobile/widgets/snack_bar_custom.dart';
 
 class TranferAccount extends ConsumerStatefulWidget {
   final List listLoginUser;
@@ -51,8 +56,6 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
 
   void completeLogin() async {
     // await IsarPostService().resetPostIsar();
-
-    // ignore: use_build_context_synchronously
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -68,20 +71,36 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
     completeLogin();
   }
 
-  handleTranferAccount(meData, index) {
+  handleTranferAccount(meData, index) async {
     if (meData[0]['username'] != dataLogin[index]['username']) {
-      SecureStorage().deleteKeyStorage('theme');
-
-      ref.read(postControllerProvider.notifier).reset();
-      ref.read(momentControllerProvider.notifier).reset();
-      ref.read(watchControllerProvider.notifier).reset();
-      ref.read(watchControllerProvider.notifier).reset();
-      ref.read(pageControllerProvider.notifier).reset();
-      ref.read(friendControllerProvider.notifier).reset();
-      ref.read(groupListControllerProvider.notifier).reset();
-      ref.read(meControllerProvider.notifier).resetMeData();
-
-      handleLogin(dataLogin[index]['token'], dataLogin[index]['theme']);
+      bool isOK = true;
+      final connectionStatus =
+          ref.read(connectivityControllerProvider).connectInternet;
+      if (connectionStatus) {
+        final response = await UserApi()
+            .getAccountSettingApiWithToken(dataLogin[index]?['token']);
+        if (response == null || response['status_code'] == 403) {
+          buildSnackBar(context,
+              "Tài khoản ${dataLogin[index]['username']} đang bị vô hiệu hoá !!");
+          isOK = false;
+        } else {
+          isOK = true;
+        }
+      }
+      if (isOK) {
+        SecureStorage().deleteKeyStorage('theme');
+        ref.read(postControllerProvider.notifier).reset();
+        ref.read(momentControllerProvider.notifier).reset();
+        ref.read(watchControllerProvider.notifier).reset();
+        ref.read(watchControllerProvider.notifier).reset();
+        ref.read(pageControllerProvider.notifier).reset();
+        ref.read(friendControllerProvider.notifier).reset();
+        ref.read(groupListControllerProvider.notifier).reset();
+        ref.read(meControllerProvider.notifier).resetMeData();
+        handleLogin(dataLogin[index]['token'], dataLogin[index]['theme']);
+      } else {
+        Navigator.pop(context);
+      }
     } else {
       Navigator.pop(context);
     }

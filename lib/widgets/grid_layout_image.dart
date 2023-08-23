@@ -188,6 +188,7 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                             },
                           ),
                         ),
+
                   // Positioned.fill(child: GestureDetector(
                   //   onTap: () {
                   //     medias[0]['file']?.path != null

@@ -8,7 +8,7 @@ import 'package:social_network_app_mobile/apis/authen_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/home/PreviewScreen.dart';
+import 'package:social_network_app_mobile/home/preview_screen.dart';
 import 'package:social_network_app_mobile/home/home.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/confirm_login_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
@@ -155,8 +155,6 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
           .saveKeyStorage(response['access_token'], 'token')
           .then((value) async {
         await _handleSignOut();
-        // completeLogin();
-        // if (mounted) {
         // ignore: use_build_context_synchronously
         Navigator.pushAndRemoveUntil(
             context,

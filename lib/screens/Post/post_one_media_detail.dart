@@ -15,6 +15,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/constant/config.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
@@ -126,7 +127,6 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
       setState(() {
         postRender = widget.postMedia ?? widget.post;
         userData = widget.postMedia;
-        print("postRender: ${jsonEncode(postRender)}");
       });
       if (widget.post != null) {
         setState(() {
@@ -253,8 +253,13 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                 ? ref.watch(currentPostControllerProvider).currentPost
                 : userData)
         : null;
-        
-    String path = postRender?["media_attachments"] != null?postRender?["media_attachments"]?[0]['url']:postRender?['url'];
+
+    String path = (postRender?["media_attachments"] != null &&
+                postRender?["media_attachments"].isNotEmpty
+            ? ((postRender?["media_attachments"]?[0]['preview_url']) ??
+                (postRender?["media_attachments"]?[0]['url']))
+            : (postRender?['url'])) ??
+        linkSocialNetwork;
     final size = MediaQuery.sizeOf(context);
     return WillPopScope(
       onWillPop: () async {
@@ -347,7 +352,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                                 (postRender?['id']) ??
                                 index,
                             child: ExtendedImage.network(
-                              pathImg ,
+                              pathImg,
                               fit: BoxFit.contain,
                               mode: ExtendedImageMode.gesture,
                               initGestureConfigHandler: (handler) {
@@ -417,7 +422,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
           MaterialPageRoute(
             builder: (context) => const UserPageHome(),
             settings: RouteSettings(
-              arguments: {'id': account['id'],'user':account},
+              arguments: {'id': account['id'], 'user': account},
             ),
           ));
     }

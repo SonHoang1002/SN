@@ -13,6 +13,7 @@ import 'package:provider/provider.dart' as pv;
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:social_network_app_mobile/apis/config.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/home/violation_of_standards.dart';
 import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
@@ -39,7 +40,6 @@ import 'package:social_network_app_mobile/widgets/Home/bottom_navigator_bar_emso
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import '../widgets/snack_bar_custom.dart';
-import 'standards_violation.dart';
 
 class Home extends ConsumerStatefulWidget {
   final int? selectedIndex;
@@ -77,11 +77,11 @@ class _HomeState extends ConsumerState<Home>
     if (index == 2) {
       ref.read(disableMomentController.notifier).setDisableMoment(true);
       showBarModalBottomSheet(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              context: context,
-              builder: ((context) => const CreatePost()))
-          .whenComplete(() =>
-              ref.read(disableMomentController.notifier).setDisableMoment(false));
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          context: context,
+          builder: ((context) =>
+              const CreatePost())).whenComplete(() =>
+          ref.read(disableMomentController.notifier).setDisableMoment(false));
     } else {
       setState(() {
         _selectedIndex = index;
