@@ -39,13 +39,17 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
             final connectionStatus =
                 ref.read(connectivityControllerProvider).connectInternet;
             if (connectionStatus) {
-              final response = await UserApi().getAccountSettingApi(value);
-              // final response1 = await PostApi()
-              //     .createStatus({"status": "hdgjhsd", "visibility": "public"});
+              final response =
+                  await UserApi().getAccountSettingApiWithToken(value);
               // {status_code: 403, content: {error: Your login is currently disabled, type: suspended}}
-              if (response == null) {
+              if (response == null || response['status_code'] == 403) {
                 buildSnackBar(
                     context, "Tài khoản của bạn đang bị vô hiệu hoá !!");
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: ((context) => const OnboardingLoginPage())));
+                return;
               }
             }
           });

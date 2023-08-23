@@ -49,7 +49,7 @@ class Post extends ConsumerStatefulWidget {
   const Post(
       {Key? key,
       this.post,
-     required this.type,
+      required this.type,
       this.isHiddenCrossbar,
       this.data,
       this.isHiddenFooter,
@@ -180,7 +180,6 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                                 isInGroup: widget.isInGroup,
                                 updateDataFunction: updateNewPost,
                                 groupData: widget.groupData,
-                                
                               ),
                             ),
                             PostCenter(
@@ -207,18 +206,22 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                           ],
                         ),
                         currentPost?['processing'] == "isProcessing"
-                            ? Container(
-                                height: ref
-                                            .watch(processingPostController)
-                                            .heightOfProcessingPost !=
-                                        0
-                                    ? (ref
-                                            .watch(processingPostController)
-                                            .heightOfProcessingPost -
-                                        80)
-                                    : 0,
+                            ? Positioned.fill(
+                                child: Container(
                                 color: white.withOpacity(0.2),
-                              )
+                              ))
+                            // Container(
+                            //     height: ref
+                            //                 .watch(processingPostController)
+                            //                 .heightOfProcessingPost !=
+                            //             0
+                            //         ? (ref
+                            //                 .watch(processingPostController)
+                            //                 .heightOfProcessingPost -
+                            //             80)
+                            //         : 0,
+                            //     color: white.withOpacity(0.2),
+                            //   )
                             : const SizedBox()
                       ],
                     ),

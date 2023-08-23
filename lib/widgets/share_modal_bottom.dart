@@ -159,7 +159,7 @@ class _ShareModalBottomState extends ConsumerState<ShareModalBottom> {
   @override
   Widget build(BuildContext context) {
     var meData = ref.watch(meControllerProvider)[0];
-    var size = MediaQuery.sizeOf(context);
+    // var size = MediaQuery.sizeOf(context);
     return GestureDetector(
       onTap: () {
         if (focusNode.hasFocus) {

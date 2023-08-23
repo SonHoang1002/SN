@@ -719,7 +719,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         checkin != null ||
         previewUrlData != null ||
         poll != null ||
-        statusQuestion != null) {
+        statusQuestion != null ||
+        lifeEvent != null) {
       return true;
     } else {
       return false;
@@ -1018,7 +1019,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          // ignore: void_checks
                           // widget.popFunction != null
                           //     ? widget.popFunction!()
                           //     : null;

@@ -33,6 +33,41 @@ class Api {
     return dio;
   }
 
+    Future getRequestBaseWithToken(String token ,String path, Map<String, dynamic>? params) async {
+    try {
+
+      Dio dio = await getDio(token);
+      var response = await dio.get(path, queryParameters: params);
+      if (response.statusCode == 200) {
+        return response.data;
+      }
+      if (response.statusCode == 401) {
+        logOutWhenTokenError();
+        return null;
+      }
+      if (response.statusCode == 400) {
+        return {"status": response.statusCode, "content": response.data};
+      }
+      if (response.statusCode == 401) {
+        logOutWhenTokenError();
+      }
+      if (response.statusCode == 422) {
+        return response.data;
+      }
+      if (response.statusCode == 500) {
+        String message = "Server đang có vấn đề. Hãy thử lại sau";
+        return {"status": response.statusCode, "content": message};
+      }
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        logOutWhenTokenError();
+        return null;
+      }
+    }
+    return null;
+  }
+
+
   Future getRequestBase(String path, Map<String, dynamic>? params) async {
     try {
       var userToken = await SecureStorage().getKeyStorage("token");

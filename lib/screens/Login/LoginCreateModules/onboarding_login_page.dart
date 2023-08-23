@@ -5,14 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/apis/user.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/home/home.dart';
+import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/setting_login_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
+import 'package:social_network_app_mobile/widgets/snack_bar_custom.dart';
 
 import '../../../constant/login_constants.dart';
 import '../../../helper/push_to_new_screen.dart';
@@ -39,14 +42,16 @@ class _OnboardingLoginPageState extends ConsumerState<OnboardingLoginPage> {
   @override
   void initState() {
     super.initState();
-
     if (mounted) {
-      fetchDataLogin();
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        fetchDataLogin();
+      });
     }
   }
 
   @override
   void dispose() {
+    dataLogin = [];
     super.dispose();
   }
 
@@ -60,7 +65,6 @@ class _OnboardingLoginPageState extends ConsumerState<OnboardingLoginPage> {
   }
 
   void completeLogin() {
-    context.loaderOverlay.hide();
     Navigator.pushReplacement<void, void>(
       context,
       MaterialPageRoute<void>(
@@ -69,16 +73,30 @@ class _OnboardingLoginPageState extends ConsumerState<OnboardingLoginPage> {
     );
   }
 
-  handleLogin(int index) async { 
+  handleLogin(int index) async {
     final themeData = dataLogin[index]['theme'];
     final token = dataLogin[index]['token'];
-    final theme = pv.Provider.of<ThemeManager>(context, listen: false);
-    theme.toggleTheme(themeData);
-    await SecureStorage().saveKeyStorage(token, 'token');
-    await ref
-        .read(meControllerProvider.notifier)
-        .updateMedata(reversedList(dataLogin, index));
-    completeLogin();
+    Future.delayed(Duration.zero, () async {
+      final connectionStatus =
+          ref.watch(connectivityControllerProvider).connectInternet;
+      if (connectionStatus) {
+        final response = await UserApi().getAccountSettingApiWithToken(token);
+        // {status_code: 403, content: {error: Your login is currently disabled, type: suspended}}
+        if (response == null || response['status_code'] == 403) {
+          buildSnackBar(context, "Tài khoản của bạn đang bị vô hiệu hoá !!");
+          return;
+        }
+      } else {
+        buildSnackBar(context, "Không có kết nối mạng !!");
+      }
+      final theme = pv.Provider.of<ThemeManager>(context, listen: false);
+      theme.toggleTheme(themeData);
+      await SecureStorage().saveKeyStorage(token, 'token');
+      await ref
+          .read(meControllerProvider.notifier)
+          .updateMedata(reversedList(dataLogin, index));
+      completeLogin();
+    });
   }
 
   List reversedList(List data, int index) {
@@ -91,9 +109,7 @@ class _OnboardingLoginPageState extends ConsumerState<OnboardingLoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    width = size.width;
-    height = size.height;
+    // final size = MediaQuery.sizeOf(context);
     return LoaderOverlay(
         useDefaultLoading: false,
         overlayWidget: const Center(
@@ -160,8 +176,9 @@ class _OnboardingLoginPageState extends ConsumerState<OnboardingLoginPage> {
                                           onTap: () {
                                             if (dataLogin[index]['token'] !=
                                                 null) {
-                                              context.loaderOverlay.show();
+                                              // context.loaderOverlay.show();
                                               handleLogin(index);
+                                              // context.loaderOverlay.hide();
                                             } else {
                                               pushToNextScreen(
                                                   context,
