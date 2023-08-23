@@ -208,7 +208,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                         currentPost?['processing'] == "isProcessing"
                             ? Positioned.fill(
                                 child: Container(
-                                color: red.withOpacity(0.2),
+                                color: white.withOpacity(0.2),
                               ))
                             // Container(
                             //     height: ref
