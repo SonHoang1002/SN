@@ -419,7 +419,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                 rolePage),
             if (showHeaderTabFixed)
               Container(
-                width: MediaQuery.sizeOf(context).width * 0.5,
+                width: MediaQuery.sizeOf(context).width,
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
                 decoration: BoxDecoration(
                     color: Theme.of(context).scaffoldBackgroundColor),

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_activity.dart';
 import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_change_password.dart';
 import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_general_settings.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_tag_settings.dart';
 
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -98,6 +99,10 @@ class _UserSettingsState extends ConsumerState<UserSettings> {
                     )));
         break;
       case 'tag':
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => UserTagSetting(data: widget.data)));
         break;
       case 'public':
         break;

@@ -2,28 +2,26 @@ import 'package:provider/provider.dart' as pv;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/apis/user_page_api.dart';
+import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
-import 'package:social_network_app_mobile/constant/post_type.dart';
-import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/UserPage/user_watch_history_provider.dart';
-import 'package:social_network_app_mobile/screens/Post/post_detail.dart';
+import 'package:social_network_app_mobile/providers/me_provider.dart';
+import 'package:social_network_app_mobile/screens/Page/PageDetail/page_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 import 'package:social_network_app_mobile/widgets/skeleton.dart';
-import 'package:social_network_app_mobile/widgets/text_description.dart';
 
-class UserWatchHistory extends ConsumerStatefulWidget {
-  const UserWatchHistory({super.key});
+class UserLikePagesHistory extends ConsumerStatefulWidget {
+  const UserLikePagesHistory({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _UserWatchHistoryState();
+      _UserSearchHistoryState();
 }
 
-class _UserWatchHistoryState extends ConsumerState<UserWatchHistory> {
+class _UserSearchHistoryState extends ConsumerState<UserLikePagesHistory> {
   final scrollController = ScrollController();
   bool _isLoading = true;
   int page = 1;
@@ -36,20 +34,23 @@ class _UserWatchHistoryState extends ConsumerState<UserWatchHistory> {
       if (scrollController.offset ==
           scrollController.position.maxScrollExtent) {
         page += 1;
-        if (ref.read(userHistoryControllerProvider).history.isNotEmpty) {
+        if (ref.read(userHistoryControllerProvider).likePages.isNotEmpty) {
           ref
               .read(userHistoryControllerProvider.notifier)
-              .addInviteListPage(page);
+              .addPageLikeHistoryList(ref.read(meControllerProvider)[0]["id"], {
+            "page": page,
+            "perpage": 15,
+          });
         }
       }
     });
-    //getData();
   }
 
   Future<void> fetchData() async {
     await ref
         .read(userHistoryControllerProvider.notifier)
-        .getInviteListPage(page);
+        .getPageLikeHistoryList(ref.read(meControllerProvider)[0]["id"],
+            {"page": page, "perpage": 15});
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       setState(() {
@@ -91,12 +92,14 @@ class _UserWatchHistoryState extends ConsumerState<UserWatchHistory> {
 
   @override
   Widget build(BuildContext context) {
-    List listWatched = ref.watch(userHistoryControllerProvider).history;
+    Map<String, dynamic> listWatched =
+        ref.watch(userHistoryControllerProvider).likePages;
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
           centerTitle: true,
-          title: const AppBarTitle(title: 'Lịch sử xem bài viết'),
+          title:
+              const AppBarTitle(title: 'Trang, lượt thích Trang và sở thích'),
           leading: InkWell(
             onTap: () {
               Navigator.pop(context);
@@ -128,56 +131,63 @@ class _UserWatchHistoryState extends ConsumerState<UserWatchHistory> {
                         ? ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            itemCount: listWatched.length,
+                            itemCount: listWatched["data"].length,
                             itemBuilder: (context, i) {
-                              return listWatched[i]["status"]
-                                              ["media_attachments"]
-                                          .length !=
-                                      0
-                                  ? Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 5),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 10),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                titleDate(listWatched[i]
-                                                            ["created_at"]) !=
-                                                        ""
-                                                    ? Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                bottom: 10.0),
-                                                        child: Text(
-                                                          dateSection,
-                                                          style: const TextStyle(
-                                                              fontSize: 18,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      )
-                                                    : Container(),
-                                                ListItem(data: listWatched[i]),
-                                              ],
-                                            ),
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 5),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              titleDate(listWatched["data"][i]
+                                                          ["created_at"]) !=
+                                                      ""
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 10.0),
+                                                      child: Text(
+                                                        dateSection,
+                                                        style: const TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    )
+                                                  : Container(),
+                                            ],
                                           ),
-                                          Divider(
-                                            height: 1,
-                                            color: greyColor,
-                                          )
-                                        ],
-                                      ),
+                                        ),
+                                        ListItem(
+                                          data: listWatched["data"][i],
+                                          callbackFunction: () {
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Divider(
+                                      height: 1,
+                                      color: greyColor,
                                     )
-                                  : Container();
+                                  ],
+                                ),
+                              );
                             },
                           )
                         : Container()
@@ -188,10 +198,11 @@ class _UserWatchHistoryState extends ConsumerState<UserWatchHistory> {
 
 class ListItem extends ConsumerWidget {
   final dynamic data;
-
+  final Function? callbackFunction;
   const ListItem({
     Key? key,
     this.data,
+    this.callbackFunction,
   }) : super(key: key);
 
   String formatTime(String dateTimeString) {
@@ -204,13 +215,14 @@ class ListItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = pv.Provider.of<ThemeManager>(context);
     final size = MediaQuery.sizeOf(context);
+
     return GestureDetector(
       onTap: () {
-        pushCustomCupertinoPageRoute(
+        Navigator.push(
             context,
-            PostDetail(
-              postId: data['status']['id'],
-              preType: postDetail,
+            MaterialPageRoute(
+              builder: (context) => const PageDetail(),
+              settings: RouteSettings(arguments: data["page"]['id'].toString()),
             ));
       },
       child: Row(
@@ -221,10 +233,10 @@ class ListItem extends ConsumerWidget {
               AvatarSocial(
                   width: 40,
                   height: 40,
-                  object: data,
-                  path: data["status"]["media_attachments"].length == 0
+                  object: data["page"],
+                  path: data["page"]["avatar_media"] == null
                       ? linkAvatarDefault
-                      : data["status"]["media_attachments"][0]["preview_url"]),
+                      : data["page"]["avatar_media"]["preview_url"]),
               const SizedBox(
                 width: 10,
               ),
@@ -233,10 +245,11 @@ class ListItem extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                      width: size.width - 180,
+                      width: size.width - 120,
                       child: RichText(
                         text: TextSpan(
-                            text: data['account']['display_name'],
+                            text: ref.read(meControllerProvider)[0]
+                                ["display_name"],
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
@@ -244,7 +257,7 @@ class ListItem extends ConsumerWidget {
                                 overflow: TextOverflow.ellipsis),
                             children: [
                               TextSpan(
-                                text: " đã xem một ",
+                                text: " thích ",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 14,
@@ -252,7 +265,7 @@ class ListItem extends ConsumerWidget {
                                         theme.isDarkMode ? white : blackColor),
                               ),
                               TextSpan(
-                                text: "video",
+                                text: "${data['page']['title']}",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 14,
@@ -261,29 +274,18 @@ class ListItem extends ConsumerWidget {
                               )
                             ]),
                       )),
-                  const SizedBox(
-                    height: 4.0,
-                  ),
-                  SizedBox(
-                    width: size.width - 180,
-                    child: TextDescription(
-                      description: formatTime(data["created_at"]),
-                      maxLinesDescription: 1,
-                      size: 14,
-                    ),
-                  ),
                 ],
               ),
             ],
           ),
           GestureDetector(
               onTap: () async {
-                var res = await UserPageApi().removeWatchHistory(data["id"]);
-                if (res != null) {
-                  ref
-                      .read(userHistoryControllerProvider.notifier)
-                      .removeItem(data["id"]);
-                }
+                ref
+                    .read(userHistoryControllerProvider.notifier)
+                    .removePageItem(data["page"]["id"].toString());
+
+                callbackFunction!();
+                await PageApi().unLikePageSuggestion(data["page"]['id']);
               },
               child: const Icon(Icons.delete))
         ],

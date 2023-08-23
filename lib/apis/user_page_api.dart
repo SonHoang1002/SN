@@ -99,8 +99,33 @@ class UserPageApi {
     return await Api().postRequestBase('/api/v1/reconfirmation', params);
   }
 
-  Future getWatchHistories(params) async {
+  Future getWatchHistory(params) async {
     return await Api().getRequestBase('/api/v1/watch_histories', params);
+  }
+
+  Future removeWatchHistory(id) async {
+    return await Api().deleteRequestBase('/api/v1/watch_histories/$id', null);
+  }
+
+  Future getSearchHistory(params) async {
+    return await Api().getRequestBase('/api/v1/search_histories', params);
+  }
+
+  Future removeSearchHistory(id) async {
+    return await Api().deleteRequestBase('/api/v1/search_histories/$id', null);
+  }
+
+  Future getLikePage(id, params) async {
+    return await Api()
+        .getRequestBase('/api/v1/accounts/$id/page_likes', params);
+  }
+
+  Future suspendUser() async {
+    return await Api().postRequestBase('/api/v1/suspend', null);
+  }
+
+  Future getTagSetting() async {
+    return await Api().getRequestBase('/api/v1/account_settings', null);
   }
 }
 

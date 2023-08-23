@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
-import 'package:social_network_app_mobile/screens/UserPage/SettingUser/unavailable_dialog.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_group_history.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_like_pages_history.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_search_history.dart';
 import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_watch_history.dart';
 
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -66,29 +68,23 @@ class _UserHistoryListState extends ConsumerState<UserHistoryList> {
             CupertinoPageRoute(builder: (context) => const UserWatchHistory()));
         break;
       case 'search':
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return const UnavailableDialog(); // Sử dụng lớp UnavailableDialog ở đây
-          },
-        );
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => const UserSearchHistory()));
 
         break;
       case 'group':
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return const UnavailableDialog(); // Sử dụng lớp UnavailableDialog ở đây
-          },
-        );
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => const UserGroupSearchHistory()));
         break;
       case 'page':
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return const UnavailableDialog(); // Sử dụng lớp UnavailableDialog ở đây
-          },
-        );
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => const UserLikePagesHistory()));
         break;
       default:
         break;
