@@ -717,11 +717,8 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                                         const EdgeInsets.only(
                                                             top: 4.0),
                                                     child: Text(
-                                                      GetTimeAgo.parse(
-                                                        DateTime.parse(
-                                                            eventDetail[
-                                                                'start_time']),
-                                                      ),
+                                                      eventDate(eventDetail[
+                                                          'start_time']),
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: const TextStyle(
