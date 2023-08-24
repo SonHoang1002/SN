@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,11 +15,23 @@ class Payment extends ConsumerStatefulWidget {
 
 class _PaymentState extends ConsumerState<Payment> {
   @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () async {
+      dynamic transactions = ref.read(growControllerProvider).growTransactions;
+      if (transactions == null || transactions.isEmpty) {
+        ref.read(growControllerProvider.notifier).getGrowTransactions({});
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     dynamic transactions = ref.watch(growControllerProvider).growTransactions;
-    int balance = transactions["balance"];
+    dynamic balance = transactions?["balance"];
 
-    String formattedBalance = NumberFormat.decimalPattern().format(balance);
+    String formattedBalance =
+        balance != null ? NumberFormat.decimalPattern().format(balance) : "--";
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,17 +66,18 @@ class _PaymentState extends ConsumerState<Payment> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20,),
+                    const SizedBox(
+                      height: 20,
+                    ),
                     Center(
                       child: ElevatedButton(
                         onPressed: () {
                           // Do something
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent[
-                              400], // background (button) color// foreground (text) color
-                          minimumSize: Size(200,40)
-                        ),
+                            backgroundColor: Colors.redAccent[
+                                400], // background (button) color// foreground (text) color
+                            minimumSize: const Size(200, 40)),
                         child: const Text(
                           'Nạp',
                           style: TextStyle(color: Colors.white),

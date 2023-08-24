@@ -18,6 +18,7 @@ import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_post.dart';
 import 'package:social_network_app_mobile/screens/Feed/feed.dart';
@@ -79,8 +80,17 @@ class _HomeState extends ConsumerState<Home>
       showBarModalBottomSheet(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           context: context,
-          builder: ((context) =>
-              const CreatePost())).whenComplete(() =>
+          builder: ((context) => CreatePost(
+                callbackFunction: (type, newData) {
+                  if (newData != null) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      ref
+                          .read(postControllerProvider.notifier)
+                          .changeProcessingPost(newData, isIdCurrentUser: true);
+                    });
+                  }
+                },
+              ))).whenComplete(() =>
           ref.read(disableMomentController.notifier).setDisableMoment(false));
     } else {
       setState(() {

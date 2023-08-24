@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -22,7 +23,6 @@ import 'package:social_network_app_mobile/providers/learn_space/learn_space_prov
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
-import 'package:social_network_app_mobile/providers/posts/processing_post_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_feed_status.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/MenuBody/checkin.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/MenuBody/emoji_activity.dart';
@@ -69,7 +69,7 @@ class CreateNewFeed extends ConsumerStatefulWidget {
   final String? groupId;
   final dynamic postDiscussion;
   final dynamic pageData;
-  final Function? reloadFunction;
+  final Function(dynamic type, dynamic newData)? reloadFunction;
   // This is used to create post in friend wall (must allow to create post from friend)
   final dynamic friendData;
   final bool? isInGroup;
@@ -501,10 +501,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       setState(() {
         _isClickForCreatePost = true;
       });
-      double processingPostHeight = _heightKey.currentContext!.size!.height;
-      ref
-          .read(processingPostController.notifier)
-          .setPostionPost(processingPostHeight);
       String? type = widget.type ?? feedPost;
       if (type == postPage) {
         ref
@@ -596,7 +592,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         data['page_id'] = widget.pageData['id'];
         data['page_owner_id'] = widget.pageData['id'];
       }
-      if (widget.friendData != null) {
+      if (widget.friendData != null &&
+          widget.friendData['id'] != ref.watch(meControllerProvider)[0]['id']) {
         data['target_account_id'] = widget.friendData['id'];
       }
       if (widget.groupId != null && widget.isInGroup == true) {
@@ -604,20 +601,12 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       }
       var response = await PostApi().createStatus(data);
       if (response != null) {
-        // if (isUploadVideo) {
-        //   setState(() {
-        //     isUploadVideo = false;
-        //   });
-        // } else {
-        // chưa check xem link gửi có xấu độc hay không nên lấy luôn link để hiển thị
-        // đợi ghép socket thông báo post xấu độc hay không
         if (previewUrlData != null && response['card'] == null) {
           response['card'] = previewUrlData;
         }
         widget.reloadFunction != null
             ? widget.reloadFunction!(type, response)
             : null;
-        // }
       }
     }
   }

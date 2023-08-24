@@ -10,7 +10,6 @@ import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
-import 'package:social_network_app_mobile/providers/posts/processing_post_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_center.dart';
 import 'package:social_network_app_mobile/screens/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
@@ -210,18 +209,6 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                                 child: Container(
                                 color: white.withOpacity(0.2),
                               ))
-                            // Container(
-                            //     height: ref
-                            //                 .watch(processingPostController)
-                            //                 .heightOfProcessingPost !=
-                            //             0
-                            //         ? (ref
-                            //                 .watch(processingPostController)
-                            //                 .heightOfProcessingPost -
-                            //             80)
-                            //         : 0,
-                            //     color: white.withOpacity(0.2),
-                            //   )
                             : const SizedBox()
                       ],
                     ),
@@ -307,6 +294,10 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
     if (currentPost?['page'] == null || currentPost?['page'].isEmpty) {
       return true;
     }
+    //  why not ????
+    if ([postPageUser].contains(widget.type)) {
+      return false;
+    }
     return false;
 
     // return ((widget.type != postPageUser &&
@@ -331,6 +322,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
       message = (response?['content']?['error']).toString();
       messageColor = red;
     }
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
       message,

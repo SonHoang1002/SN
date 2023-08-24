@@ -101,7 +101,8 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
           (TextSpan(text: widget.post?['page']?['title'], style: bold))
         ];
         listContent = [
-          (TextSpan(text: widget.post?['account']?['display_name'], style: bold))
+          (TextSpan(
+              text: widget.post?['account']?['display_name'], style: bold))
         ];
       }
       dynamic checkVideoImage =
@@ -202,7 +203,8 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
         ];
       } else {
         listContent = [
-          TextSpan(text: (widget.post?['account']?['display_name']), style: bold)
+          TextSpan(
+              text: (widget.post?['account']?['display_name']), style: bold)
         ];
       }
       if (widget.post?['status_target']?['target_status'] == 'completed') {
@@ -244,33 +246,36 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.sizeOf(context);
+    // var size = MediaQuery.sizeOf(context);
     suggestContent = buildSuggestContent();
-    return isShow && widget.post['account']?['id'] != meData?['id']
-        ? Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.only(
-                  left: 12,
-                  right: 12,
-                  bottom: 10,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Flexible(
-                        child: suggestContent != null
-                            ? suggestContent!
-                            : const SizedBox()),
-                    buildSpacer(width: 5),
-                    _buildSuggestActions()
-                  ],
-                ),
-              ),
-              buildDivider(color: greyColor, bottom: 10),
-            ],
-          )
+    return 
+    ![postPageUser].contains(widget.type)
+        ? (isShow && widget.post['account']?['id'] != meData?['id'])
+            ? Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(
+                      left: 12,
+                      right: 12,
+                      bottom: 10,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Flexible(
+                            child: suggestContent != null
+                                ? suggestContent!
+                                : const SizedBox()),
+                        buildSpacer(width: 5),
+                        _buildSuggestActions()
+                      ],
+                    ),
+                  ),
+                  buildDivider(color: greyColor, bottom: 10),
+                ],
+              )
+            : const SizedBox()
         : const SizedBox();
   }
 
