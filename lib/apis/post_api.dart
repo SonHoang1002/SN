@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 
 import 'api_root.dart';
@@ -5,9 +7,9 @@ import 'api_root.dart';
 class PostApi {
   Future getListPostApi(params) async {
     final response =
-        await Api().getRequestBase('/api/v1/timelines/home', params)??[];
+        await Api().getRequestBase('/api/v1/timelines/home', params) ?? [];
     List postList = [];
-    if (response != null ) {
+    if (response != null) {
       response.forEach((ele) {
         var newData = ele;
         newData = {...newData, "visible": true};
@@ -30,11 +32,8 @@ class PostApi {
   }
 
   Future createStatus(data) async {
-    try {
-      return await Api().postRequestBase('/api/v1/statuses', data);
-    } on DioError {
-      rethrow;
-    }
+    final response = await Api().postRequestBase('/api/v1/statuses', data);
+    return response;
   }
 
   Future updatePost(postId, data) async {

@@ -15,6 +15,7 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/helper/reaction.dart';
+import 'package:social_network_app_mobile/helper/refractor_time.dart';
 import 'package:social_network_app_mobile/helper/split_any.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_card.dart';
@@ -757,8 +758,10 @@ class _BoxCommentState extends ConsumerState<BoxComment> {
                                     width: 10,
                                   ),
                                   Text(
-                                    GetTimeAgo.parse(DateTime.parse(widget
-                                        .widget.commentParent['created_at'])),
+                                    getRefractorTime(widget
+                                        .widget.commentParent['created_at'],),
+                                    style: TextStyle(
+                                        color: greyColor.withOpacity(0.5)),
                                   ),
                                 ],
                               ),

@@ -231,10 +231,15 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    group != null
+                                    group != null &&
+                                            widget.groupData?[
+                                                        "group_relationship"]
+                                                    ?['admin'] !=
+                                                true &&
+                                            widget.isInGroup != true
                                         ? InkWell(
                                             onTap: () {
-                                             pushCustomCupertinoPageRoute(
+                                              pushCustomCupertinoPageRoute(
                                                   context, const UserPageHome(),
                                                   settings: RouteSettings(
                                                     arguments: {
@@ -503,7 +508,7 @@ class _BlockNamePostState extends ConsumerState<BlockNamePost> {
   bool isFollowing = false;
 
   renderDisplayName() {
-    if (widget.group != null) {
+    if (widget.group != null && widget.isInGroup != true) {
       return widget.group?['title'] ?? "--";
     } else if (widget.page != null) {
       return widget.post?['place']?['id'] != widget.page?['id']
@@ -515,8 +520,9 @@ class _BlockNamePostState extends ConsumerState<BlockNamePost> {
   }
 
   bool checkHasBlueCertification() {
-    if ((widget.page == null && widget.account?['certified'] == true) ||
-        (widget.page != null && widget.page?['certified'] == true)) {
+    if (((widget.page == null && widget.account?['certified'] == true) ||
+            (widget.page != null && widget.page?['certified'] == true)) &&
+        widget.isInGroup != true) {
       return true;
     } else {
       return false;
@@ -591,9 +597,10 @@ class _BlockNamePostState extends ConsumerState<BlockNamePost> {
           Navigator.pushNamed(context, '/page', arguments: widget.page);
           return;
         }
-      } else if ((widget.group != null || widget.post?['group'] != null) &&
-          (widget.group?['id'] != null ||
-              widget.post?['group']?['id'] != null)) {
+      } else if (((widget.group != null || widget.post?['group'] != null) &&
+              (widget.group?['id'] != null ||
+                  widget.post?['group']?['id'] != null)) &&
+          widget.isInGroup != true) {
         pushCustomCupertinoPageRoute(
           context,
           GroupDetail(id: widget.group['id']),
@@ -680,10 +687,12 @@ class _BlockNamePostState extends ConsumerState<BlockNamePost> {
                       ),
                     )
                   : const TextSpan(text: ''),
-              TextSpan(
-                  text: widget.description,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.normal, fontSize: 15)),
+              widget.post?['target_account'] == null
+                  ? TextSpan(
+                      text: widget.description,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.normal, fontSize: 15))
+                  : const WidgetSpan(child: SizedBox()),
               widget.mentions.isNotEmpty
                   ? TextSpan(text: widget.mentions[0]?['display_name'] ?? "--")
                   : const TextSpan(),
