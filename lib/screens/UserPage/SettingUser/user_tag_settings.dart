@@ -1,12 +1,18 @@
+// ignore_for_file: non_constant_identifier_names
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/user_page_api.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/UserPage/user_tag_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_notification_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/general_component.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
@@ -68,10 +74,6 @@ class _UserTagsSettingState extends ConsumerState<UserTagSetting> {
       "icon": "assets/groups/groupActivity.png",
       "title": "Bạn bè",
     },
-    "friend_of_friend": {
-      "icon": "assets/groups/groupActivity.png",
-      "title": "Bạn của bạn bè",
-    },
     "private": {
       "icon": "assets/groups/privacy.png",
       "title": "Riêng tư",
@@ -81,10 +83,10 @@ class _UserTagsSettingState extends ConsumerState<UserTagSetting> {
   @override
   void initState() {
     super.initState();
-    test();
+    getData();
   }
 
-  void test() async {
+  void getData() async {
     await ref.read(userTagControllerProvider.notifier).getUserTagSetting();
     setState(() {
       monitored_keywords =
@@ -132,22 +134,36 @@ class _UserTagsSettingState extends ConsumerState<UserTagSetting> {
                   sectionTitle(
                     "Trang cá nhân",
                   ),
-                  sectionListModalItem(
-                      theme,
-                      "Ai có thể đăng lên trang cá nhân của bạn?",
-                      false,
-                      listSelected[settings.allow_post_status ?? "friend"]![
-                          "title"],
-                      listSelected[settings.allow_post_status ?? "friend"]![
-                          "icon"]),
-                  sectionListModalItem(
-                      theme,
-                      "Ai có thể xem những gì người khác đăng lên trang cá nhân của bạn?",
-                      false,
-                      listSelectedWithPublic[
-                          settings.allow_view_status ?? "friend"]!["title"],
-                      listSelectedWithPublic[
-                          settings.allow_view_status ?? "friend"]!["icon"]),
+                  GestureDetector(
+                    onTap: () {
+                      buildFilterUsersSelectionBottomSheet(listSelected,
+                          "allow_post_status", settings.allow_post_status);
+                    },
+                    child: sectionListModalItem(
+                        theme,
+                        "Ai có thể đăng lên trang cá nhân của bạn?",
+                        false,
+                        listSelected[settings.allow_post_status ?? "friend"]![
+                            "title"],
+                        listSelected[settings.allow_post_status ?? "friend"]![
+                            "icon"]),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      buildFilterUsersSelectionBottomSheet(
+                          listSelectedWithPublic,
+                          "allow_view_status",
+                          settings.allow_view_status);
+                    },
+                    child: sectionListModalItem(
+                        theme,
+                        "Ai có thể xem những gì người khác đăng lên trang cá nhân của bạn?",
+                        false,
+                        listSelectedWithPublic[
+                            settings.allow_view_status ?? "friend"]!["title"],
+                        listSelectedWithPublic[
+                            settings.allow_view_status ?? "friend"]!["icon"]),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Column(
@@ -217,7 +233,9 @@ class _UserTagsSettingState extends ConsumerState<UserTagSetting> {
                                       alignment: Alignment.bottomCenter,
                                       child: ButtonPrimary(
                                         label: 'Lưu thay đổi',
-                                        handlePress: () async {},
+                                        handlePress: () async {
+                                          saveKeywords();
+                                        },
                                       ),
                                     ),
                                   ),
@@ -255,22 +273,34 @@ class _UserTagsSettingState extends ConsumerState<UserTagSetting> {
                   sectionTitle(
                     "Gắn thẻ",
                   ),
-                  sectionListModalItem(
-                      theme,
-                      "Ai có thể xem bài viết có gắn thẻ bạn trên trang cá nhân của bạn?",
-                      false,
-                      listSelected3[settings.allow_tagging ?? "public"]![
-                          "title"],
-                      listSelected3[settings.allow_tagging ?? "public"]![
-                          "icon"]),
-                  sectionListModalItem(
-                      theme,
-                      "Khi bạn được gắn thẻ trong một bài viết, bạn muốn thêm ai vào đối tượng của bài viết nếu họ chưa thể nhìn thấy bài viết?",
-                      true,
-                      listSelected4[settings.allow_view_tagging ?? "friend"]![
-                          "title"],
-                      listSelected4[settings.allow_view_tagging ?? "friend"]![
-                          "icon"]),
+                  GestureDetector(
+                    onTap: () {
+                      buildFilterUsersSelectionBottomSheet(listSelected3,
+                          "allow_tagging", settings.allow_tagging);
+                    },
+                    child: sectionListModalItem(
+                        theme,
+                        "Ai có thể xem bài viết có gắn thẻ bạn trên trang cá nhân của bạn?",
+                        false,
+                        listSelected3[settings.allow_tagging ?? "public"]![
+                            "title"],
+                        listSelected3[settings.allow_tagging ?? "public"]![
+                            "icon"]),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      buildFilterUsersSelectionBottomSheet(listSelected4,
+                          "allow_view_tagging", settings.allow_view_tagging);
+                    },
+                    child: sectionListModalItem(
+                        theme,
+                        "Khi bạn được gắn thẻ trong một bài viết, bạn muốn thêm ai vào đối tượng của bài viết nếu họ chưa thể nhìn thấy bài viết?",
+                        true,
+                        listSelected4[settings.allow_view_tagging ?? "friend"]![
+                            "title"],
+                        listSelected4[settings.allow_view_tagging ?? "friend"]![
+                            "icon"]),
+                  ),
                 ],
               ),
               const SizedBox(
@@ -286,17 +316,111 @@ class _UserTagsSettingState extends ConsumerState<UserTagSetting> {
                       theme,
                       "Xét duyệt bài viết có gắn thẻ bạn trước khi bài viết đó xuất hiện trên trang cá nhân của bạn",
                       false,
-                      settings.review_tag_on_profile),
+                      settings.review_tag_on_profile,
+                      "review_tag_on_profile"),
                   sectionListToggleItem(
                       theme,
                       "Xem lại thẻ mọi người thêm vào bài viết của bạn trước khi thẻ xuất hiện trên EMSO?",
                       true,
-                      settings.review_tag_on_feed),
+                      settings.review_tag_on_feed,
+                      "review_tag_on_feed"),
                 ],
               )
             ],
           ),
         )));
+  }
+
+  buildFilterUsersSelectionBottomSheet(
+      listItem, String type, String itemValue) {
+    showCustomBottomSheet(context, 250,
+        title: "Chọn đối tượng",
+        isShowCloseButton: false,
+        bgColor: Colors.grey[300], widget: StatefulBuilder(
+      builder: (ctx, setStatefull) {
+        return ListView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            itemCount: listItem.length,
+            itemBuilder: (context, index) {
+              String key = listItem.keys.elementAt(index);
+              String title = listItem[key]!["title"];
+              return InkWell(
+                child: Column(
+                  children: [
+                    GeneralComponent(
+                      [
+                        buildTextContent(title, true),
+                      ],
+                      changeBackground: transparent,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      suffixWidget: Radio(
+                        fillColor: MaterialStateColor.resolveWith(
+                            (states) => secondaryColor),
+                        groupValue: itemValue,
+                        value: key,
+                        onChanged: (value) async {
+                          updateModalField(type, key);
+                        },
+                      ),
+                      function: () async {
+                        updateModalField(type, key);
+                      },
+                    ),
+                    buildSpacer(height: 10)
+                  ],
+                ),
+              );
+            });
+      },
+    ));
+  }
+
+  void updateModalField(type, key) {
+    switch (type) {
+      case "allow_post_status":
+        ref.read(userTagControllerProvider.notifier).updateAllowPostStatus(key);
+        break;
+      case "allow_view_status":
+        ref.read(userTagControllerProvider.notifier).updateAllowViewStatus(key);
+        break;
+      case "allow_tagging":
+        ref
+            .read(userTagControllerProvider.notifier)
+            .updateAllowTaggingStatus(key);
+        break;
+      case "allow_view_tagging":
+        ref
+            .read(userTagControllerProvider.notifier)
+            .updateAllowViewTaggingStatus(key);
+        break;
+
+      default:
+        break;
+    }
+    sendApiUpdateData();
+    popToPreviousScreen(context);
+  }
+
+  void sendApiUpdateData() {
+    var data = ref.read(userTagControllerProvider);
+    var res = UserPageApi().updateTagSetting({
+      "allow_post_status": data.allow_post_status,
+      "allow_view_status": data.allow_view_status,
+      "allow_tagging": data.allow_tagging,
+      "allow_view_tagging": data.allow_view_tagging,
+      "review_tag_on_profile": data.review_tag_on_profile,
+      "review_tag_on_feed": data.review_tag_on_feed,
+    });
+  }
+
+  void saveKeywords() async {
+    var res = await UserPageApi()
+        .updateTagSetting({"monitored_keywords": monitored_keywords});
+    if (res != null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Cập nhật thành công")));
+    }
   }
 
   Widget selectedArea(BuildContext context, dynamic value) {
@@ -345,7 +469,7 @@ class _UserTagsSettingState extends ConsumerState<UserTagSetting> {
   }
 
   Widget sectionListToggleItem(
-      theme, String title, bool isFirstItem, bool checked) {
+      theme, String title, bool isFirstItem, bool checked, String type) {
     return Container(
       padding: const EdgeInsets.only(top: 10, bottom: 10),
       decoration: BoxDecoration(
@@ -381,11 +505,16 @@ class _UserTagsSettingState extends ConsumerState<UserTagSetting> {
           CupertinoSwitch(
               value: checked,
               onChanged: (value) async {
-                setState(() {
+                if (type == "review_tag_on_profile") {
                   ref
                       .read(userTagControllerProvider.notifier)
                       .updateReviewProfile(value);
-                });
+                } else {
+                  ref
+                      .read(userTagControllerProvider.notifier)
+                      .updateReviewFeed(value);
+                }
+                sendApiUpdateData();
               })
         ],
       ),
@@ -447,7 +576,7 @@ class _UserTagsSettingState extends ConsumerState<UserTagSetting> {
                 ),
                 Text(
                   selected,
-                  style: const TextStyle(),
+                  style: const TextStyle(color: white),
                 )
               ],
             ),

@@ -127,6 +127,10 @@ class UserPageApi {
   Future getTagSetting() async {
     return await Api().getRequestBase('/api/v1/account_settings', null);
   }
+
+  Future updateTagSetting(params) async {
+    return await Api().postRequestBase('/api/v1/account_settings', params);
+  }
 }
 
 class UserPageCredentical {

@@ -2,7 +2,7 @@ import 'package:get_time_ago/get_time_ago.dart';
 import 'package:intl/intl.dart';
 
 class GetTimeLater {
-  static String _defaultLocale = 'en';
+  static String _defaultLocale = 'vi';
 
   static final Map<String, Messages> _messageMap = {
     'ar': ArabicMessages(),
@@ -25,13 +25,6 @@ class GetTimeLater {
     'vi': VietnameseMessages(),
   };
 
-  /// Sets the default [locale]. By default it is `en`.
-  ///
-  /// Example:
-  /// ```dart
-  /// setDefaultLocale('hi');
-  /// ```
-
   static void setDefaultLocale(String locale) {
     assert(
       _messageMap.containsKey(locale),
@@ -40,18 +33,6 @@ class GetTimeLater {
     _defaultLocale = locale;
   }
 
-  /// Sets a [customLocale] with the provided [customMessages]
-  /// to be available when using the [parse] function.
-  ///
-  /// Example:
-  /// ```dart
-  /// setLocaleMessages('hi', HindiMessages());
-  /// ```
-  ///
-  /// If you want to define locale message implement
-  /// [Messages] interface with the desired messages
-  ///
-
   static void setCustomLocaleMessages(
     String customLocale,
     Messages customMessages,
@@ -59,30 +40,22 @@ class GetTimeLater {
     _messageMap[customLocale] = customMessages;
   }
 
-  /// [parse] formats provided [dateTime] to a formatted time
-  /// like 'a minute ago'.
-  /// - If [locale] is passed will look for message for that locale.
-  /// - If [pattern] is passed will be used as the DateFormat pattern.
-
   static String parse(
+    String dateString,
     DateTime dateTime, {
     String? locale,
     String? pattern,
   }) {
-    final _locale = 'vi';
-    final _message = _messageMap[_locale] ?? EnglishMessages();
+    final _locale = locale;
+    final _message = _messageMap[_locale] ?? VietnameseMessages();
     final _pattern = pattern ?? "dd MMM, yyyy hh:mm aa";
     final date = DateFormat(_pattern).format(dateTime);
     var _currentClock = DateTime.now();
     var elapsed =
         (_currentClock.millisecondsSinceEpoch - dateTime.millisecondsSinceEpoch)
             .abs();
-
-    var _prefix = _message.prefixAgo();
-    var _suffix = _message.suffixAgo();
-
-    /// Getting [seconds], [minutes], [hours], [days] from
-    /// provided [dateTime] by subtracting it from current [DateTime.now()].
+    var _today = "Hôm nay vào";
+    var _tommorow = "Ngày mai vào";
 
     final num seconds = elapsed / 1000;
     final num minutes = seconds / 60;
@@ -92,77 +65,37 @@ class GetTimeLater {
     String msg;
     String result;
 
-    /// If [elapsed] is less than 1 minute.
-    if (seconds < 59) {
-      msg = _message.secsAgo(seconds.round());
-      result = [_prefix, msg]
+    if (hours < 24) {
+      String timePart = formatTime(dateString.substring(11, 16));
+      result = [_today, timePart]
           .where((res) => res.isNotEmpty)
           .join(_message.wordSeparator());
-    }
-
-    /// If [elapsed] is less than 2 minutes and
-    /// greater than 1 minute.
-    else if (seconds < 119) {
-      msg = _message.minAgo(minutes.round());
-      result = [_prefix, msg]
+    } else if (hours < 48) {
+      String timePart = formatTime(dateString.substring(11, 16));
+      result = [_tommorow, timePart]
           .where((res) => res.isNotEmpty)
           .join(_message.wordSeparator());
-    }
-
-    /// If [elapsed] is less than 1 hour and
-    /// greater than 2 minutes.
-    else if (minutes < 59) {
-      msg = _message.minsAgo(minutes.round());
-      result = [_prefix, msg]
-          .where((res) => res.isNotEmpty)
-          .join(_message.wordSeparator());
-    }
-
-    /// If [elapsed] is less than 2 hours and
-    /// greater than 1 hour.
-    else if (minutes < 119) {
-      msg = _message.hourAgo(hours.round());
-      result = [_prefix, msg]
-          .where((res) => res.isNotEmpty)
-          .join(_message.wordSeparator());
-    }
-
-    /// If [elapsed] is less than 24 hours and
-    /// greater than 2 hours.
-    else if (hours < 24) {
-      msg = _message.hoursAgo(hours.round());
-      result = [_prefix, msg]
-          .where((res) => res.isNotEmpty)
-          .join(_message.wordSeparator());
-    }
-
-    /// If [elapsed] is less than 2 days and
-    /// greater than 24 hours.
-    else if (hours < 48) {
-      msg = _message.dayAgo(hours.round());
-      result = [_prefix, msg]
-          .where((res) => res.isNotEmpty)
-          .join(_message.wordSeparator());
-    }
-
-    /// If [elapsed] is less than 8 days and
-    /// greater than 1 day.
-    else if (days < 8) {
-      msg = _message.daysAgo(days.round());
-      result = [_prefix, msg]
-          .where((res) => res.isNotEmpty)
-          .join(_message.wordSeparator());
-    }
-
-    /// If [elapsed] is greater than 8 days,
-    /// a formatted [Date] will be returned.
-    else {
+    } else {
       msg = date;
       result = date;
     }
 
     return result;
   }
+}
+
+String formatTime(String time) {
+  int hour = int.parse(time.substring(0, 2));
+  int minute = int.parse(time.substring(3, 5));
+
+  String period = hour >= 12 ? "PM" : "AM";
+
+  if (hour > 12) {
+    hour -= 12;
+  }
+  String formattedHour = hour < 10 ? "0$hour" : hour.toString();
+  String formattedMinute = minute < 10 ? "0$minute" : minute.toString();
+  return "$formattedHour:$formattedMinute $period";
 }
 
 String eventDate(dateString) {
@@ -172,7 +105,7 @@ String eventDate(dateString) {
   if (targetDate.isBefore(currentDate)) {
     return GetTimeAgo.parse(DateTime.parse(dateString));
   } else if (targetDate.isAfter(currentDate)) {
-    return GetTimeLater.parse(DateTime.parse(dateString));
+    return GetTimeLater.parse(dateString, DateTime.parse(dateString));
   } else {
     return GetTimeAgo.parse(DateTime.parse(dateString));
   }

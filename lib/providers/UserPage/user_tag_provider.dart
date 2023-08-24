@@ -69,17 +69,74 @@ class UserTagController extends StateNotifier<UserTagState> {
   }
 
   updateReviewProfile(bool value) async {
-    var response = await UserPageApi().getTagSetting();
-    if (response.isNotEmpty) {
-      state = state.copyWith(
-        allow_post_status: state.allow_post_status,
-        allow_view_status: state.allow_view_status,
-        monitored_keywords: state.monitored_keywords,
-        allow_tagging: state.allow_tagging,
-        allow_view_tagging: state.allow_view_tagging,
-        review_tag_on_profile: value,
-        review_tag_on_feed: state.review_tag_on_feed,
-      );
-    }
+    state = state.copyWith(
+      allow_post_status: state.allow_post_status,
+      allow_view_status: state.allow_view_status,
+      monitored_keywords: state.monitored_keywords,
+      allow_tagging: state.allow_tagging,
+      allow_view_tagging: state.allow_view_tagging,
+      review_tag_on_profile: value,
+      review_tag_on_feed: state.review_tag_on_feed,
+    );
+  }
+
+  updateReviewFeed(bool value) async {
+    state = state.copyWith(
+      allow_post_status: state.allow_post_status,
+      allow_view_status: state.allow_view_status,
+      monitored_keywords: state.monitored_keywords,
+      allow_tagging: state.allow_tagging,
+      allow_view_tagging: state.allow_view_tagging,
+      review_tag_on_profile: state.review_tag_on_profile,
+      review_tag_on_feed: value,
+    );
+  }
+
+  void updateAllowPostStatus(String newStatus) {
+    state = state.copyWith(
+      allow_post_status: newStatus,
+      allow_view_status: state.allow_view_status,
+      monitored_keywords: state.monitored_keywords,
+      allow_tagging: state.allow_tagging,
+      allow_view_tagging: state.allow_view_tagging,
+      review_tag_on_profile: state.review_tag_on_profile,
+      review_tag_on_feed: state.review_tag_on_feed,
+    );
+  }
+
+  void updateAllowViewStatus(String newStatus) {
+    state = state.copyWith(
+      allow_post_status: state.allow_post_status,
+      allow_view_status: newStatus,
+      monitored_keywords: state.monitored_keywords,
+      allow_tagging: state.allow_tagging,
+      allow_view_tagging: state.allow_view_tagging,
+      review_tag_on_profile: state.review_tag_on_profile,
+      review_tag_on_feed: state.review_tag_on_feed,
+    );
+  }
+
+  void updateAllowTaggingStatus(String newStatus) {
+    state = state.copyWith(
+      allow_post_status: state.allow_post_status,
+      allow_view_status: state.allow_view_status,
+      monitored_keywords: state.monitored_keywords,
+      allow_tagging: newStatus,
+      allow_view_tagging: state.allow_view_tagging,
+      review_tag_on_profile: state.review_tag_on_profile,
+      review_tag_on_feed: state.review_tag_on_feed,
+    );
+  }
+
+  void updateAllowViewTaggingStatus(String newStatus) {
+    state = state.copyWith(
+      allow_post_status: state.allow_post_status,
+      allow_view_status: state.allow_view_status,
+      monitored_keywords: state.monitored_keywords,
+      allow_tagging: state.allow_tagging,
+      allow_view_tagging: newStatus,
+      review_tag_on_profile: state.review_tag_on_profile,
+      review_tag_on_feed: state.review_tag_on_feed,
+    );
   }
 }
