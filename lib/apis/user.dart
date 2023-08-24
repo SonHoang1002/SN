@@ -75,9 +75,15 @@ class UserApi {
     }
   }
 
-  Future<dynamic> getAccountSettingApi(dynamic token) async {
+  Future<dynamic> getAccountSettingApi() async {
     final response =
         await Api().getRequestBase("/api/v1/account_settings", null);
+    return response;
+  }
+
+  Future<dynamic> getAccountSettingApiWithToken(String token) async {
+    final response = await Api()
+        .getRequestBaseWithToken(token, "/api/v1/account_settings", null);
     return response;
   }
 

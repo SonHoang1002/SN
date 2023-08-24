@@ -68,13 +68,15 @@ class MeController extends StateNotifier<List> {
           .map((e) => e['token'].toString())
           .toList()
           .indexOf(token.toString());
-      var firstData = newDataLoginList[index];
-      newDataLoginList.removeAt(index);
-      newDataLoginList.insert(0, firstData);
-      await SecureStorage()
-          .saveKeyStorage(jsonEncode(newDataLoginList), 'dataLogin');
-      resetMeData();
-      state = newDataLoginList;
+      if (index != -1) {
+        var firstData = newDataLoginList[index];
+        newDataLoginList.removeAt(index);
+        newDataLoginList.insert(0, firstData);
+        await SecureStorage()
+            .saveKeyStorage(jsonEncode(newDataLoginList), 'dataLogin');
+        resetMeData();
+        state = newDataLoginList;
+      }
 
       // resetMeData();
       // SecureStorage().deleteKeyStorage('token');

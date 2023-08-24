@@ -239,13 +239,14 @@ class _CreateFeedStatusState extends ConsumerState<CreateFeedStatus> {
       return;
     }
     List newList = [];
-    if (value.substring(1).isEmpty) {
+    String searchValues = getSearchCharacter(value);
+    if (searchValues.isEmpty) {
       newList = await FriendsApi().getListFriendApi(
               ref.watch(meControllerProvider)[0]['id'], {"limit": 20}) ??
           [];
     } else {
       var response = await SearchApi()
-          .getListSearchApi({"q": value.substring(1), "limit": 5});
+          .getListSearchApi({"q": searchValues, "limit": 5});
       if (response != null) {
         newList = response['accounts'] + response['groups'] + response['pages'];
       }
@@ -261,6 +262,21 @@ class _CreateFeedStatusState extends ConsumerState<CreateFeedStatus> {
     // widget.mentionAction != null
     //     ? widget.mentionAction!(bottomOffset, newList)
     //     : null;
+  }
+
+  String getSearchCharacter(String value) {
+    var splitValueList = value.split("").reversed.toList();
+    var lastSpecialIndex = getIndex(splitValueList);
+    return value.substring(value.length - lastSpecialIndex, value.length);
+  }
+
+  int getIndex(List list) {
+    for (int i = 0; i < list.length; i++) {
+      if (list[i] == "@") {
+        return i;
+      }
+    }
+    return -1;
   }
 
   @override

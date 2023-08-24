@@ -9,7 +9,7 @@ import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail
 import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/widgets/FeedVideo/video_player_none_controller.dart';
 
-import 'home/PreviewScreen.dart';
+import 'home/preview_screen.dart';
 import 'home/home.dart';
 import 'screens/Page/PageDetail/page_detail.dart';
 import 'screens/UserPage/user_page.dart';
