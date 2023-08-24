@@ -390,7 +390,7 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
               child: Column(
                 children: List.generate(data?["items"].length, (index) {
                   final itemData = data?["items"]?[index];
-                  bool isOutOfStock = itemData['quantity'] <
+                  bool isOutOfStock = itemData['quantity'] >
                       itemData?['product_variant']?['inventory_quantity'];
                   return Stack(
                     children: [
@@ -431,8 +431,11 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                                       children: [
                                         Row(
                                           children: [
-                                            !isNotExist
-                                                ? Container(
+                                            isNotExist || isOutOfStock
+                                                ? const SizedBox(
+                                                    width: 30,
+                                                  )
+                                                : Container(
                                                     margin:
                                                         const EdgeInsets.only(
                                                       right: 7,
@@ -458,8 +461,8 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                                                           });
                                                         },
                                                         shape: checkBoxBorder),
-                                                  )
-                                                : const SizedBox(),
+                                                  ),
+                                            // : const SizedBox(),
                                             InkWell(
                                               onTap: () {
                                                 pushToNextScreen(
@@ -684,7 +687,7 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                       isOutOfStock
                           ? Positioned.fill(
                               child: Container(
-                                  color: greyColor.withOpacity(0.2),
+                                  color: greyColor.withOpacity(0.5),
                                   child: Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
