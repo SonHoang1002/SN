@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/public_post_setting.dart';
 import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_activity.dart';
 import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_change_password.dart';
 import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_general_settings.dart';
@@ -105,6 +106,11 @@ class _UserSettingsState extends ConsumerState<UserSettings> {
                 builder: (context) => UserTagSetting(data: widget.data)));
         break;
       case 'public':
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => PublicPostSetting(data: widget.data)));
+
         break;
       case 'block':
         break;
