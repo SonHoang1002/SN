@@ -11,10 +11,8 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart' as POST_TYPE;
 import 'package:social_network_app_mobile/constant/post_type.dart';
-import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Feed/create_post_button.dart';
-import 'package:social_network_app_mobile/screens/Group/GroupDetail/group_detail.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_album.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_image.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_intro.dart';
@@ -51,6 +49,8 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
   File? url;
   bool seeMore = false;
   late File image;
+  List chip = [];
+
   final settings = RestrictedPositions(
     maxCoverage: 0.3,
     minCoverage: 0.2,
@@ -61,6 +61,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
   void initState() {
     if (!mounted) return;
     super.initState();
+    chip = checkVisible()?groupChip:groupChipNotParticipate;
     scrollController.addListener(
       () {
         if (scrollController.position.maxScrollExtent ==
@@ -122,6 +123,25 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
       'label': 'Album',
     },
   ];
+
+  List groupChipNotParticipate = [
+    {
+      'key': 'noticeable',
+      'label': 'Đáng chú ý',
+    },
+    {
+      'key': 'image',
+      'label': 'Ảnh',
+    },
+    {
+      'key': 'event',
+      'label': 'Sự kiện',
+    },
+    {
+      'key': 'album',
+      'label': 'Album',
+    },
+  ];
   void handlePress(value, context) {
     switch (value) {
       case 'intro':
@@ -130,6 +150,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
           MaterialPageRoute(
             builder: (context) => GroupIntro(
               groupDetail: widget.groupDetail,
+              join: true,
             ),
           ),
         );
@@ -167,6 +188,13 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
         );
         break;
     }
+  }
+
+  Widget buildIntroBody(BuildContext context) {
+    return GroupIntro(
+              groupDetail: widget.groupDetail,
+              join: false,
+            );
   }
 
   List mergeAndFilter(List list1, List list2) {
@@ -376,26 +404,26 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                       const SizedBox(
                         height: 10,
                       ),
-                      InkWell(
-                        onTap: () {},
-                        child: AvatarStack(
-                          height: 40,
-                          borderColor:
-                              Theme.of(context).scaffoldBackgroundColor,
-                          settings: settings,
-                          iconEllipse: true,
-                          avatars: [
-                            for (var n = 0; n < avatarGroup.length; n++)
-                              NetworkImage(
-                                avatarGroup[n]['account']['avatar_media'] !=
-                                        null
-                                    ? avatarGroup[n]['account']['avatar_media']
-                                        ['preview_url']
-                                    : linkAvatarDefault,
-                              ),
-                          ],
-                        ),
-                      ),
+                      // InkWell(
+                      //   onTap: () {},
+                      //   child: AvatarStack(
+                      //     height: 40,
+                      //     borderColor:
+                      //         Theme.of(context).scaffoldBackgroundColor,
+                      //     settings: settings,
+                      //     iconEllipse: true,
+                      //     avatars: [
+                      //       for (var n = 0; n < avatarGroup.length; n++)
+                      //         NetworkImage(
+                      //           avatarGroup[n]['account']['avatar_media'] !=
+                      //                   null
+                      //               ? avatarGroup[n]['account']['avatar_media']
+                      //                   ['preview_url']
+                      //               : linkAvatarDefault,
+                      //         ),
+                      //     ],
+                      //   ),
+                      // ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -416,19 +444,19 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                   ),
                   child: Row(
                     children: List.generate(
-                      groupChip.length,
+                      checkVisible()?chip.length:groupChipNotParticipate.length,
                       (index) => InkWell(
                         onTap: () {
                           setState(
                             () {
-                              menuSelected = groupChip[index]['key'];
-                              handlePress(groupChip[index]['key'], context);
+                              menuSelected = chip[index]['key'];
+                              handlePress(chip[index]['key'], context);
                             },
                           );
                         },
                         child: ChipMenu(
-                          isSelected: menuSelected == groupChip[index]['key'],
-                          label: groupChip[index]['label'],
+                          isSelected: menuSelected == chip[index]['key'],
+                          label: chip[index]['label'],
                         ),
                       ),
                     ),
@@ -551,7 +579,9 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                       ],
                     ),
                   )
-                : const SliverToBoxAdapter(),
+                : SliverToBoxAdapter(
+                  child: Container(child: buildIntroBody(context),),
+                ),
             checkVisible()
                 ? postGroup.isEmpty
                     ? SliverToBoxAdapter(
@@ -594,7 +624,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
             SliverToBoxAdapter(
                 child: isLoading
                     ? seeMore
-                        ? SkeletonCustom().postSkeleton(context)
+                        ? checkVisible()?SkeletonCustom().postSkeleton(context):const SizedBox()
                         : const SizedBox()
                     : const SizedBox()),
           ],
@@ -681,7 +711,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
         (!widget.groupDetail?['group_relationship']?['requested']) &&
         (!widget.groupDetail?['group_relationship']?['invited'])) {
       listButtons[0] = (SizedBox(
-        width: size.width * 0.44,
+        width: size.width * 0.895,
         child: ButtonPrimary(
           label: 'Tham gia nhóm',
           handlePress: () {

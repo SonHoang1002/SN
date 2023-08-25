@@ -15,6 +15,7 @@ import 'package:social_network_app_mobile/widgets/button_primary.dart';
 
 import '../../apis/friends_api.dart';
 import '../../apis/group_api.dart';
+import '../../screens/UserPage/user_page.dart';
 import '../../theme/colors.dart';
 
 class SuggestItem extends ConsumerWidget {
@@ -31,7 +32,14 @@ class SuggestItem extends ConsumerWidget {
     return StatefulBuilder(builder: (context, setState) {
       return InkWell(
         onTap: () {
-          // pushCustomCupertinoPageRoute(context, const Moment());
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const UserPageHome(),
+                settings: RouteSettings(
+                  arguments: {'id': suggestData['id'], "user": suggestData},
+                ),
+              ));
         },
         child: Container(
             width: size.width * 0.8,
@@ -88,22 +96,24 @@ class SuggestItem extends ConsumerWidget {
                     Flexible(
                         flex: 10,
                         child: ButtonPrimary(
-                          colorButton: idJoin == suggestData['id']
-                                ? greyColor
-                                : null,
+                            colorButton:
+                                idJoin == suggestData['id'] ? greyColor : null,
                             label: type == suggestFriends
                                 ? idJoin == suggestData['id']
                                     ? "Đã gửi lời mời kết bạn"
                                     : "Thêm bạn bè"
-                                : type == suggestGroups? 
-                                idJoin == suggestData['id']
-                                    ? "Đã tham gia nhóm"
-                                    : "Tham gia nhóm":"",
-                            icon: idJoin != suggestData['id']? const Icon( 
-                              FontAwesomeIcons.user,
-                              size: 12.5,
-                              color: Colors.white,
-                            ):null,
+                                : type == suggestGroups
+                                    ? idJoin == suggestData['id']
+                                        ? "Đã tham gia nhóm"
+                                        : "Tham gia nhóm"
+                                    : "",
+                            icon: idJoin != suggestData['id']
+                                ? const Icon(
+                                    FontAwesomeIcons.user,
+                                    size: 12.5,
+                                    color: Colors.white,
+                                  )
+                                : null,
                             handlePress: () async {
                               if (type == suggestFriends) {
                                 setState(() {
@@ -123,7 +133,7 @@ class SuggestItem extends ConsumerWidget {
                               } else {
                                 await GroupApi()
                                     .fetchGroupRole(suggestData['id']);
-                                
+
                                 setState(() {
                                   idJoin = suggestData['id'];
                                 });
