@@ -105,12 +105,14 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
   final int _preOrderTimeSelectedValue = 7;
   final TextEditingController _createOptionController =
       TextEditingController(text: "");
+  dynamic responseUpdateProductApi;
   @override
   void initState() {
     if (!mounted) {
       return;
     }
     super.initState();
+    _initData();
     newData = {
       "product_images": [],
       "product_video": null,
@@ -130,7 +132,6 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
     final size = MediaQuery.sizeOf(context);
     width = size.width;
     height = size.height;
-    final a = _initData(); 
     return Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
@@ -519,10 +520,12 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
       }
       _isDetailEmpty = _oldData?["product_options"] == null ||
           _oldData?["product_options"].isEmpty;
-      _selectedPage = {
-        "id": _oldData!["page"]["id"],
-        "title": _oldData!["page"]["title"]
-      };
+      if (_oldData != null) {
+        _selectedPage = {
+          "id": _oldData!["page"]["id"],
+          "title": _oldData!["page"]["title"]
+        };
+      }
       _nameController.text = _oldData?["title"];
       _descriptionController.text = _oldData?["description"];
       _branchSelectedValue = _oldData?["brand"] ?? "";
@@ -993,12 +996,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
         "requires_shipping": true
       });
     }
-    _chooseApi();
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(
-      "Cập nhật thành công",
-      style: TextStyle(color: Colors.green),
-    )));
+    await _chooseApi();
     _isLoading = false;
     setState(() {});
   }
@@ -1428,7 +1426,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
         }
       }
     } else {
-      _previewClassifyValues = [];
+      _previewClassifyValues = ["", ""];
     }
     if (_listPage.isNotEmpty) {
       _selectedPage ??= _listPage[0];
@@ -1800,13 +1798,13 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
           newData!['product_attribute_informations_attributes']
     };
     // goi api
-    final response =
+    responseUpdateProductApi =
         await ProductsApi().updateProductApi(_oldData!["id"], updateBodyData);
     await ref.read(productsProvider.notifier).updateProductData([]);
     // ignore: use_build_context_synchronously
     buildMessageDialog(
         context,
-        response != null && response.isNotEmpty
+        responseUpdateProductApi != null && responseUpdateProductApi.isNotEmpty
             ? "Update thành công =))!"
             : "Update không thành  =((", oKFunction: () {
       pushAndReplaceToNextScreen(context, const ManageProductMarketPage());
@@ -1853,9 +1851,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
     return const SizedBox();
   }
 
-  Widget _buildClassifyWidget(
-    BuildContext context,
-    String title) {
+  Widget _buildClassifyWidget(BuildContext context, String title) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       child: Column(
@@ -1971,7 +1967,7 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
               return null;
             case "Nhập giá sản phẩm":
             case "Nhập tồn kho":
-              if (_categoryData!["loai_1"]["name"].text.trim() != "") {
+              if (_categoryData?["loai_1"]["name"].text.trim() != "") {
                 if (hintText != "Nhập giá sản phẩm" &&
                     hintText != "Nhập tồn kho" &&
                     hintText != "Nhập mã sản phẩm" &&
@@ -2779,9 +2775,19 @@ class _UpdateMarketPageState extends ConsumerState<UpdateMarketPage>
             ),
             ElevatedButton(
               child: const Text("Đồng ý"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _setDataForUpdate();
+              onPressed: () async {
+                await _setDataForUpdate();
+                if (responseUpdateProductApi != null) {
+                  Navigator.of(context)
+                    ..pop()
+                    ..pop(true);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text(
+                    "Cập nhật không thành công",
+                    style: TextStyle(color: Colors.red),
+                  )));
+                }
               },
             ),
           ],
