@@ -1,4 +1,5 @@
 import 'dart:io' as io;
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -150,7 +151,9 @@ class _VideoPlayerNoneControllerState
               });
             }
           },
-          key: Key(widget.media?['id'] ?? widget.path ?? '111'),
+          key: Key(widget.media?['id'] ??
+              widget.path ??
+              Random().nextInt(100000).toString()),
           child: Stack(
             children: [
               Hero(

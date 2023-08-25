@@ -166,6 +166,8 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
                           type: widget.type,
                           media: widget.media,
                           isHiddenControl: false,
+                          aspectRatio: widget.post?['media_attachments']?[0]
+                              ?['meta']?['original']?['aspect'],
                         ),
                       )
                     : Container(
@@ -174,6 +176,8 @@ class _WatchDetailState extends ConsumerState<WatchDetail>
                           type: widget.type,
                           media: widget.media,
                           isHiddenControl: false,
+                          aspectRatio: widget.post?['media_attachments']?[0]
+                              ?['meta']?['original']?['aspect'],
                         ),
                       )),
           )
