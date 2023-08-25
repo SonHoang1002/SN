@@ -29,7 +29,7 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
   @override
   void initState() {
     Future.delayed(
-        const Duration(milliseconds: 15000),
+        const Duration(milliseconds: 12000),
         () => {
               if (mounted)
                 {
@@ -63,10 +63,10 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
     return widget.friends.isEmpty
         ? Column(
             children: [
-              isLoading ? const SizedBox() : const Text("Hiện không có bạn bè"),
-              Container(
+              isLoading ? Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: SkeletonCustom().listFriendSkeleton(context))
+                  child: SkeletonCustom().listFriendSkeleton(context)) : const Center(child: Text("Hiện không có bạn bè")),
+
             ],
           )
         : Container(

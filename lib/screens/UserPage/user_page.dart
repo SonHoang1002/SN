@@ -213,11 +213,7 @@ class _UserPageState extends ConsumerState<UserPage>
             await UserPageApi().getUserFriend(id, {'limit': 20}) ?? [];
         if (mounted) {
           setState(() {
-            if (ref.watch(userInformationProvider).userInfor != null &&
-                ref.watch(userInformationProvider).userInfor.isNotEmpty) {
-              userData = ref.watch(userInformationProvider).userInfor;
-            }
-
+            userData = ref.watch(userInformationProvider).userInfor;
             userAbout = ref.watch(userInformationProvider).userMoreInfor;
             lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
             postUser = (id == ref.watch(meControllerProvider)[0]['id']
