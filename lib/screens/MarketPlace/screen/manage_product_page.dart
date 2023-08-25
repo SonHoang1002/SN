@@ -513,9 +513,17 @@ class _ManageProductMarketPageState
                               ListTile(
                                 leading: const Icon(FontAwesomeIcons.pen),
                                 title: const Text("Cập nhật"),
-                                onTap: () {
-                                  pushToNextScreen(
-                                      context, UpdateMarketPage(data['id']));
+                                onTap: () async {
+                                  Navigator.pop(context);
+                                  final isRecallApi = await Navigator.push(
+                                      context, MaterialPageRoute(
+                                    builder: (context) {
+                                      return UpdateMarketPage(data['id']);
+                                    },
+                                  ));
+                                  if (isRecallApi == true) {
+                                    _initMainData();
+                                  }
                                 },
                               ),
                               ListTile(
