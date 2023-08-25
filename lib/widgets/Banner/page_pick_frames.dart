@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:social_network_app_mobile/apis/common.api.dart';
+import 'package:social_network_app_mobile/apis/common_api.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import 'package:social_network_app_mobile/widgets/search_input.dart';
 

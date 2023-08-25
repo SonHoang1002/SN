@@ -153,6 +153,7 @@ class _VideoPlayerHasControllerState
           //  videoPlayerController!.value.aspectRatio > 1
           //     ? 1
           //     :
+          // widget.aspectRatio ?? 
           videoPlayerController!.value.aspectRatio,
       child: VisibilityDetector(
           onVisibilityChanged: (visibilityInfo) {
@@ -185,7 +186,9 @@ class _VideoPlayerHasControllerState
             children: [
               chewieController != null
                   ? AspectRatio(
-                      aspectRatio: videoPlayerController!.value.aspectRatio,
+                      aspectRatio: 
+                      // widget.aspectRatio ??
+                          videoPlayerController!.value.aspectRatio,
                       child: chewieController!
                               .videoPlayerController.value.isInitialized
                           ? selectedVideo != null &&
@@ -257,11 +260,19 @@ class _VideoPlayerHasControllerState
                                         : const SizedBox()
                                   ],
                                 )
-                          : ImageCacheRender(
-                              path: widget.media['preview_remote_url'] ??
-                                  widget.media['preview_url']))
+                          : AspectRatio(
+                              aspectRatio: 
+                              // widget.aspectRatio ??
+                                  videoPlayerController!.value.aspectRatio,
+                              child: ImageCacheRender(
+                                  path: widget.media['preview_remote_url'] ??
+                                      widget.media['preview_url']),
+                            ))
                   : AspectRatio(
-                      aspectRatio: videoPlayerController!.value.aspectRatio,
+                      // aspectRatio: videoPlayerController!.value.aspectRatio,
+                      aspectRatio: 
+                      // widget.aspectRatio ??
+                          videoPlayerController!.value.aspectRatio,
                       child: ImageCacheRender(
                           path: widget.media['preview_remote_url'] ??
                               widget.media['preview_url']),
