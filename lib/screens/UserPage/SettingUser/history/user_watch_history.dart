@@ -39,7 +39,7 @@ class _UserWatchHistoryState extends ConsumerState<UserWatchHistory> {
         if (ref.read(userHistoryControllerProvider).history.isNotEmpty) {
           ref
               .read(userHistoryControllerProvider.notifier)
-              .addInviteListPage(page);
+              .addWatchListPage(page);
         }
       }
     });
@@ -49,7 +49,7 @@ class _UserWatchHistoryState extends ConsumerState<UserWatchHistory> {
   Future<void> fetchData() async {
     await ref
         .read(userHistoryControllerProvider.notifier)
-        .getInviteListPage(page);
+        .getWatchListPage(page);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       setState(() {
