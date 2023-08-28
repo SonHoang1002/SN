@@ -149,6 +149,10 @@ class PageApi {
     return await Api().postRequestBase('/api/v1/pages/$id/blocks', params);
   }
 
+  Future unblockPage(id) async {
+    return await Api().deleteRequestBase('/api/v1/block_pages/$id', null);
+  }
+
   Future pageUnblockAccount(id, params) async {
     return await Api().deleteRequestBase('/api/v1/pages/$id/blocks', params);
   }

@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
-import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_group_history.dart';
-import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_like_pages_history.dart';
-import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_search_history.dart';
-import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_watch_history.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/history/user_group_history.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/history/user_like_pages_history.dart';
+
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/history/user_search_history.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/history/user_watch_history.dart';
 
 import 'package:social_network_app_mobile/theme/colors.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
-import '../../../theme/theme_manager.dart';
 
 class UserHistoryList extends ConsumerStatefulWidget {
   final dynamic data;

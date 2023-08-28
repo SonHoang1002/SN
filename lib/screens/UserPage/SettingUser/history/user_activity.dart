@@ -16,8 +16,8 @@ import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/onboarding_login_page.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/history/user_history_list.dart';
 import 'package:social_network_app_mobile/screens/UserPage/SettingUser/unavailable_dialog.dart';
-import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_history_list.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -25,7 +25,7 @@ import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import '../../../theme/theme_manager.dart';
+import '../../../../theme/theme_manager.dart';
 
 class UserActivityList extends ConsumerStatefulWidget {
   final dynamic data;

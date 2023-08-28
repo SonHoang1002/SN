@@ -18,7 +18,7 @@ class UserHistoryControllerState {
 class UserHistoryController extends StateNotifier<UserHistoryControllerState> {
   UserHistoryController() : super(const UserHistoryControllerState());
 
-  Future<void> getInviteListPage(page) async {
+  Future<void> getWatchListPage(page) async {
     var response = await UserPageApi()
         .getWatchHistory({"page": page, "post_type": "moment"});
     if (response != null) {
@@ -28,7 +28,7 @@ class UserHistoryController extends StateNotifier<UserHistoryControllerState> {
     }
   }
 
-  Future<void> addInviteListPage(page) async {
+  Future<void> addWatchListPage(page) async {
     var response = await UserPageApi()
         .getWatchHistory({"page": page, "post_type": "moment"});
     if (response != null) {
