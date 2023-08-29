@@ -31,6 +31,9 @@ String postWatchDetail = 'post_watch_detail';
 String suggestFriends = 'suggest_friend';
 String suggestGroups = 'suggest_group';
 String postPage = "page_post";
+String postGroup = "post_group";
+String postGrow = "post_grow";
+String postEvent = "post_event";
 String postLearnSpace = "learn_space_post";
 
 String momentUser = "user_moment";

@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/get_min_max_price.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/detail_product_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/rating_star_widget.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
@@ -33,7 +37,12 @@ class _PostProductState extends State<PostProduct> {
     return GestureDetector(
       onTap: () {
         widget.type != 'edit_post' ? null : null;
-        // Navigator.pushNamed(context, '/course', arguments: page);
+        pushCustomCupertinoPageRoute(
+            context,
+            DetailProductMarketPage(
+              simpleData: product,
+              id: product['id'],
+            ));
       },
       child: Column(
         children: [
@@ -58,7 +67,7 @@ class _PostProductState extends State<PostProduct> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         buildTextContent(
-                          "${product["page"]?["title"]}",
+                          "${(product["page"]?["title"]) ?? ""}",
                           false,
                           fontSize: 13,
                           maxLines: 1,
@@ -67,7 +76,7 @@ class _PostProductState extends State<PostProduct> {
                           height: 5,
                         ),
                         buildTextContent(
-                          product['title'],
+                          product?['title'] ?? "",
                           true,
                           fontSize: 15,
                           maxLines: 2,
@@ -91,8 +100,10 @@ class _PostProductState extends State<PostProduct> {
         Flexible(
             flex: 1,
             child: ExtendedImage.network(
-              product['product_image_attachments']?[0]['attachment']
-                      ?['preview_url'] ??
+              (product['product_image_attachments']?[0]['attachment']
+                      ?['url']) ??
+                  (product['product_image_attachments']?[0]['attachment']
+                      ?['preview_url']) ??
                   linkBannerDefault,
               height: 250,
               width: size.width,
@@ -140,45 +151,52 @@ class _PostProductState extends State<PostProduct> {
   Widget buildCarousel(
     List imageList,
   ) {
-    return CarouselSlider(
-      items: imageList.map((child) {
-        int index = imageList.indexOf(child);
-        return GestureDetector(
-          onTap: () {},
-          child: Container(
+    final size = MediaQuery.sizeOf(context);
+    return imageList.length == 1
+        ? ExtendedImage.network(
+            (imageList[0]['attachment']?['url']) ??
+                (imageList[0]['attachment']?['preview_url']) ??
+                linkBannerDefault,
             height: 250,
-            width: 250,
-            margin: const EdgeInsets.symmetric(horizontal: 3),
-            decoration:
-                BoxDecoration(border: Border.all(color: greyColor, width: 0.3)),
-            child: ExtendedImage.network(
-              imageList[index]['attachment']?['preview_url'] ??
-                  linkBannerDefault,
-              height: 250,
-              width: 250,
-              fit: BoxFit.cover,
-            ),
-          ),
-        );
-      }).toList(),
-      options: CarouselOptions(
-          padEnds: !isScrollToLimit,
-          // enlargeStrategy:CenterPageEnlargeStrategy.zoom,
-          enableInfiniteScroll: false,
-          viewportFraction: 0.65,
-          height: 250,
-          scrollPhysics: const BouncingScrollPhysics(),
-          onPageChanged: (value, reason) {
-            if (value == 0 || value == imageList.length) {
-              setState(() {
-                isScrollToLimit = true;
-              });
-              return;
-            }
-            if (isScrollToLimit) {
-              isScrollToLimit = false;
-            }
-          }),
-    );
+            width: size.width,
+            fit: BoxFit.cover,
+          )
+        : CarouselSlider(
+            items: imageList.map((child) {
+              int index = imageList.indexOf(child);
+              return Container(
+                height: 250,
+                width: 250,
+                margin: const EdgeInsets.symmetric(horizontal: 3),
+                decoration: BoxDecoration(
+                    border: Border.all(color: greyColor, width: 0.3)),
+                child: ExtendedImage.network(
+                  imageList[index]['attachment']?['preview_url'] ??
+                      linkBannerDefault,
+                  height: 250,
+                  width: 250,
+                  fit: BoxFit.cover,
+                ),
+              );
+            }).toList(),
+            options: CarouselOptions(
+                padEnds: !isScrollToLimit,
+                // enlargeStrategy:CenterPageEnlargeStrategy.zoom,
+                enableInfiniteScroll: false,
+                viewportFraction: 0.65,
+                height: 250,
+                scrollPhysics: const BouncingScrollPhysics(),
+                onPageChanged: (value, reason) {
+                  if (value == 0 || value == imageList.length) {
+                    setState(() {
+                      isScrollToLimit = true;
+                    });
+                    return;
+                  }
+                  if (isScrollToLimit) {
+                    isScrollToLimit = false;
+                  }
+                }),
+          );
   }
 }

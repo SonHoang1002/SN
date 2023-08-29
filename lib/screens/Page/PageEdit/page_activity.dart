@@ -1,7 +1,9 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/screens/UserPage/user_page.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -91,7 +93,11 @@ class _PageActivityState extends State<PageActivity> {
         if (include["id"] != null && include["title"] != null) {
           final id = include["id"].toString();
           if (description.contains('[$id]')) {
-            return description = include["avatar"].toString();
+            if (include["avartar"] == null) {
+              return description = linkAvatarDefault;
+            } else {
+              return description = include["avatar"].toString();
+            }
           }
         }
       }
@@ -122,34 +128,53 @@ class _PageActivityState extends State<PageActivity> {
         elevation: 0,
         centerTitle: true,
         title: const AppBarTitle(title: 'Nhật ký hoạt động'),
+        leading: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            FontAwesomeIcons.angleLeft,
+            size: 18,
+            color: Theme.of(context).textTheme.titleLarge?.color,
+          ),
+        ),
       ),
-      body: ListView.builder(
-          itemCount: data.length,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return ListTile(
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
-                visualDensity: const VisualDensity(horizontal: -4, vertical: 0),
-                leading: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ClipOval(
-                      child: ExtendedImage.network(extractImage(data[index]))),
-                ),
-                title: extractDescription(data[index]),
-                subtitle: Text(GetTimeAgo.parse(
-                    DateTime.parse(data[index]['created_at']))),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const UserPageHome(),
-                        settings: RouteSettings(
-                          arguments: {'id': id(data[index])},
-                        ),
-                      ));
-                });
-          }),
+      body: data.isNotEmpty
+          ? ListView.builder(
+              itemCount: data.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 0.0),
+                    visualDensity:
+                        const VisualDensity(horizontal: -4, vertical: 0),
+                    leading: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipOval(
+                          child:
+                              ExtendedImage.network(extractImage(data[index]))),
+                    ),
+                    title: extractDescription(data[index]),
+                    subtitle: Text(GetTimeAgo.parse(
+                        DateTime.parse(data[index]['created_at']))),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const UserPageHome(),
+                            settings: RouteSettings(
+                              arguments: {'id': id(data[index])},
+                            ),
+                          ));
+                    });
+              })
+          : const Center(
+              child: Text(
+                "Không có hoạt động của quản trị viên",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
     );
   }
 }

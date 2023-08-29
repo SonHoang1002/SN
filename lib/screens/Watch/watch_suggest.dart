@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,8 +20,18 @@ class WatchSuggest extends ConsumerStatefulWidget {
   final dynamic post;
   final String? preType;
   final Function? updateData;
+  final dynamic friendData;
+  final bool? isInGroup;
+  final dynamic groupData;
   const WatchSuggest(
-      {Key? key, this.media, required this.post, this.preType, this.updateData})
+      {Key? key,
+      this.media,
+      required this.post,
+      this.preType,
+      this.updateData,
+      this.friendData,
+      this.groupData,
+      this.isInGroup})
       : super(key: key);
 
   @override
@@ -68,6 +77,7 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
 
   @override
   void dispose() {
+    _watchController.dispose();
     super.dispose();
     watchPost = null;
     listWatch = [];
@@ -104,7 +114,7 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
         ),
         body: CustomScrollView(
           controller: _watchController,
-          slivers: [
+          slivers: <Widget>[
             SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,6 +125,9 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
                     type: postDetail,
                     updateDataFunction: updateNewPost,
                     isHaveAction: true,
+                    friendData: widget.friendData,
+                    groupData: widget.groupData,
+                    isInGroup: widget.isInGroup,
                   ),
                   const SizedBox(
                     height: 12.0,
@@ -133,9 +146,10 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
                             ?['remote_url']) ??
                         (widget.post?['media_attachments']?[0]?['url']),
                     child: VideoPlayerHasController(
-                      media: widget.media, 
-                      onDoubleTapAction: () { 
-                      },
+                      media: widget.media,
+                      aspectRatio: widget.post?['media_attachments']?[0]
+                          ?['meta']?['original']?['aspect'],
+                      onDoubleTapAction: () {},
                     ),
                   ),
                   PostFooter(
@@ -166,6 +180,7 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
                                     widget.post,
                                 textColor: white,
                                 type: postDetail,
+                                friendData: widget.friendData,
                                 updateDataFunction: updateNewPost,
                               ),
                               const SizedBox(
@@ -194,8 +209,9 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
                                   media: (suggestWatchList[index]
                                           ?['media_attachments']?[0]) ??
                                       widget.media,
-                                  onDoubleTapAction: () { 
-                                  },
+                                  aspectRatio: widget.post?['media_attachments']
+                                      ?[0]?['meta']?['original']?['aspect'],
+                                  onDoubleTapAction: () {},
                                 ),
                               ),
                               // Positioned.fill(child: GestureDetector(

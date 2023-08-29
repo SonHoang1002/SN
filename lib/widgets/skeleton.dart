@@ -86,4 +86,32 @@ class SkeletonCustom {
         ? modeTheme == 'dark'?const DarkGrowSkeleton(): modeTheme == 'light'?const GrowSkeleton():brightness == Brightness.dark?const DarkGrowSkeleton(): const GrowSkeleton()
         : modeTheme == 'dark'?const DarkGrowSkeleton(): modeTheme == 'light'?const GrowSkeleton():brightness == Brightness.dark?const DarkGrowSkeleton(): const GrowSkeleton();
   }
+
+   introduceSkeleton(context) {
+    final theme = Provider.of<ThemeManager>(context);
+    final brightness = MediaQuery.of(context).platformBrightness;
+    String modeTheme = theme.themeMode == ThemeMode.dark
+        ? 'dark'
+        : theme.themeMode == ThemeMode.light
+            ? 'light'
+            : 'system';
+
+    return (brightness == Brightness.dark)
+        ? modeTheme == 'dark'?const DarkUserInformationSkeleton(): modeTheme == 'light'?const UserInformationSkeleton():brightness == Brightness.dark?const DarkUserInformationSkeleton(): const UserInformationSkeleton()
+        : modeTheme == 'dark'?const DarkUserInformationSkeleton(): modeTheme == 'light'?const UserInformationSkeleton():brightness == Brightness.dark?const DarkUserInformationSkeleton(): const UserInformationSkeleton();
+  }
+
+  listFriendSkeleton(context){
+     final theme = Provider.of<ThemeManager>(context);
+    final brightness = MediaQuery.of(context).platformBrightness;
+    String modeTheme = theme.themeMode == ThemeMode.dark
+        ? 'dark'
+        : theme.themeMode == ThemeMode.light
+            ? 'light'
+            : 'system';
+
+    return (brightness == Brightness.dark)
+        ? modeTheme == 'dark'?const DarkUserFriendSkeleton(): modeTheme == 'light'?const UserFriendSkeleton():brightness == Brightness.dark?const DarkUserFriendSkeleton(): const UserFriendSkeleton()
+        : modeTheme == 'dark'?const DarkUserFriendSkeleton(): modeTheme == 'light'?const UserFriendSkeleton():brightness == Brightness.dark?const DarkUserFriendSkeleton(): const UserFriendSkeleton();
+  }
 }

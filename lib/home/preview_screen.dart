@@ -1,9 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/apis/post_api.dart';
+import 'package:social_network_app_mobile/apis/user.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/main_login_page.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/onboarding_login_page.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
+import 'package:social_network_app_mobile/widgets/snack_bar_custom.dart';
 
 import '../theme/colors.dart';
 import 'home.dart';
@@ -21,8 +28,32 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
   @override
   void initState() {
     if (mounted) {
+      Future.delayed(Duration.zero, () async {
+        await ref
+            .read(connectivityControllerProvider.notifier)
+            .checkConnectivity();
+      });
       SecureStorage().getKeyStorage("token").then((value) {
         if (value != 'noData') {
+          Future.delayed(Duration.zero, () async {
+            final connectionStatus =
+                ref.read(connectivityControllerProvider).connectInternet;
+            if (connectionStatus) {
+              final response =
+                  await UserApi().getAccountSettingApiWithToken(value);
+              // {status_code: 403, content: {error: Your login is currently disabled, type: suspended}}
+              if (response == null || response['status_code'] == 403) {
+                // ignore: use_build_context_synchronously
+                buildSnackBar(
+                    context, "Tài khoản của bạn đang bị vô hiệu hoá !!");
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: ((context) => const OnboardingLoginPage())));
+                return;
+              }
+            }
+          });
           Future.delayed(const Duration(seconds: 1), () async {
             await ref.read(meControllerProvider.notifier).getMeData();
             // ignore: use_build_context_synchronously
@@ -53,8 +84,8 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(),
           SizedBox(
@@ -64,11 +95,14 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
               width: 160.0,
             ),
           ),
-         Align(
-          alignment: Alignment.bottomCenter,
-          child: Column(
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
               children: [
-                const Text("From",style: TextStyle(color: greyColor),),
+                const Text(
+                  "From",
+                  style: TextStyle(color: greyColor),
+                ),
                 Image.asset(
                   "assets/Logo_Producer.png",
                   height: 70.0,
@@ -76,7 +110,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
                 ),
               ],
             ),
-        ),
+          ),
         ],
       ),
     );

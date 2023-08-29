@@ -26,12 +26,19 @@ class PostMutipleMediaDetail extends ConsumerStatefulWidget {
   final dynamic post;
   final dynamic preType;
   final Function(dynamic)? updateDataFunction;
+  final dynamic friendData;
+  final dynamic groupData;
+  final bool? isInGroup;
+
   const PostMutipleMediaDetail(
       {Key? key,
       this.post,
       this.preType,
       this.initialIndex,
-      this.updateDataFunction})
+      this.updateDataFunction,
+      this.friendData,
+      this.isInGroup,
+      this.groupData})
       : super(key: key);
 
   @override
@@ -385,8 +392,12 @@ class _PostMutipleMediaDetail1State
                                         height: 12.0,
                                       ),
                                       PostHeader(
-                                          post: postData,
-                                          type: postMultipleMedia),
+                                        post: postData,
+                                        type: postMultipleMedia,
+                                        isInGroup: widget.isInGroup,
+                                        friendData: widget.friendData,
+                                        groupData: widget.groupData,
+                                      ),
                                       const SizedBox(
                                         height: 12.0,
                                       ),
@@ -533,6 +544,8 @@ class _PostMutipleMediaDetail1State
               )
             : VideoPlayerHasController(
                 media: medias[index],
+                aspectRatio: widget.post?['media_attachments']?[0]?['meta']
+                    ?['original']?['aspect'],
                 handleAction: () {
                   pushCustomVerticalPageRoute(
                       context,

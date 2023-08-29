@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,6 +34,9 @@ class PostDetail extends ConsumerStatefulWidget {
   final bool? isInGroup;
   final Function(dynamic)? updateDataFunction;
   final dynamic postId;
+  final dynamic friendData;
+  final dynamic groupData;
+
   const PostDetail(
       {Key? key,
       this.preType,
@@ -42,7 +44,9 @@ class PostDetail extends ConsumerStatefulWidget {
       this.indexImagePost,
       this.updateDataFunction,
       this.postId,
-      this.isInGroup})
+      this.isInGroup,
+      this.friendData,
+      this.groupData})
       : super(key: key);
 
   @override
@@ -333,7 +337,7 @@ class _PostDetailState extends ConsumerState<PostDetail> {
     dynamic updateCountPostData = postData;
     dynamic count = postComment.length;
     for (var element in postComment) {
-      count += element["replies_total"];
+      count += (element?["replies_total"]) ?? 0;
     }
     updateCountPostData['replies_total'] =
         count + countAdditionalIfChild - countSubIfChild;
@@ -356,9 +360,12 @@ class _PostDetailState extends ConsumerState<PostDetail> {
         final response = await PostApi().getPostApi(widget.postId);
         if (response != null) {
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            ref
-                .read(postControllerProvider.notifier)
-                .createUpdatePost(feedPost, response);
+            ref.read(postControllerProvider.notifier).createUpdatePost(
+                feedPost, response,
+                isIdCurrentUser: widget.friendData != null
+                    ? ref.watch(meControllerProvider)[0]['id'] ==
+                        widget.friendData['id']
+                    : true);
             setState(() {
               postFromNoti = response;
             });
@@ -461,15 +468,15 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                    // color: blueColor,
-                                    child: const BackIconAppbar()),
+                                const BackIconAppbar(),
                                 Expanded(
                                   child: SizedBox(
                                     child: PostHeader(
                                       post: postData,
                                       type: postDetail,
                                       isInGroup: widget.isInGroup,
+                                      friendData: widget.friendData,
+                                      groupData: widget.groupData,
                                     ),
                                   ),
                                 ),
@@ -485,6 +492,8 @@ class _PostDetailState extends ConsumerState<PostDetail> {
                                       post: postData,
                                       type: postDetail,
                                       preType: checkPreType(),
+                                      isInGroup: widget.isInGroup,
+                                      groupData: widget.groupData,
                                       backFunction: () async {
                                         List newList = [];
                                         while (newList.isEmpty) {

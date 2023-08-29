@@ -1,6 +1,7 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -146,12 +147,13 @@ class _VideoPlayerHasControllerState
     final selectedVideo = ref.watch(selectedVideoProvider);
     // widget.isFocus == true
     //     ? chewieController?.videoPlayerController.setVolume(5)
-    //     : chewieController?.videoPlayerController.setVolume(0); 
+    //     : chewieController?.videoPlayerController.setVolume(0);
     return AspectRatio(
       aspectRatio:
           //  videoPlayerController!.value.aspectRatio > 1
           //     ? 1
           //     :
+          // widget.aspectRatio ?? 
           videoPlayerController!.value.aspectRatio,
       child: VisibilityDetector(
           onVisibilityChanged: (visibilityInfo) {
@@ -159,11 +161,17 @@ class _VideoPlayerHasControllerState
               setState(() {
                 isVisible = visibilityInfo.visibleFraction > 0.85;
                 if (chewieController == null) return;
-                if (isVisible) {
-                  if (selectedVideo != null) {
+                if (isVisible
+                    // && ref.watch(disableVideoController).isDisable == false
+                    ) {
+                  if (selectedVideo != null
+                      //  || ref.watch(disableVideoController).isDisable == true
+                      ) {
                     chewieController!.videoPlayerController.pause();
                   } else {
-                    if (isPlaying && widget.isFocus == true) {
+                    if (isPlaying && widget.isFocus == true
+                        // && ref.watch(disableVideoController).isDisable == false
+                        ) {
                       chewieController!.videoPlayerController.play();
                     }
                   }
@@ -178,7 +186,9 @@ class _VideoPlayerHasControllerState
             children: [
               chewieController != null
                   ? AspectRatio(
-                      aspectRatio: videoPlayerController!.value.aspectRatio,
+                      aspectRatio: 
+                      // widget.aspectRatio ??
+                          videoPlayerController!.value.aspectRatio,
                       child: chewieController!
                               .videoPlayerController.value.isInitialized
                           ? selectedVideo != null &&
@@ -250,12 +260,23 @@ class _VideoPlayerHasControllerState
                                         : const SizedBox()
                                   ],
                                 )
-                          : ImageCacheRender(
-                              path: widget.media['preview_remote_url'] ??
-                                  widget.media['preview_url']))
-                  : ImageCacheRender(
-                      path: widget.media['preview_remote_url'] ??
-                          widget.media['preview_url']),
+                          : AspectRatio(
+                              aspectRatio: 
+                              // widget.aspectRatio ??
+                                  videoPlayerController!.value.aspectRatio,
+                              child: ImageCacheRender(
+                                  path: widget.media['preview_remote_url'] ??
+                                      widget.media['preview_url']),
+                            ))
+                  : AspectRatio(
+                      // aspectRatio: videoPlayerController!.value.aspectRatio,
+                      aspectRatio: 
+                      // widget.aspectRatio ??
+                          videoPlayerController!.value.aspectRatio,
+                      child: ImageCacheRender(
+                          path: widget.media['preview_remote_url'] ??
+                              widget.media['preview_url']),
+                    ),
             ],
           )),
     );

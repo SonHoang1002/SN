@@ -1,8 +1,7 @@
 // ignore_for_file: unused_field
-
 import 'dart:io';
 import 'dart:math';
-
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -254,11 +253,13 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                 ? ref.watch(currentPostControllerProvider).currentPost
                 : userData)
         : null;
-    String path = (postRender?['media_attachments']?[0]?['url']) ??
-        postRender?['url'] ??
-        (postRender?['avatar_media']?['url']) ??
-        postRender?['banner']?['preview_url'] ??
-        linkBannerDefault;
+
+    String path = (postRender?["media_attachments"] != null &&
+                postRender?["media_attachments"].isNotEmpty
+            ? ((postRender?["media_attachments"]?[0]['preview_url']) ??
+                (postRender?["media_attachments"]?[0]['url']))
+            : (postRender?['url'])) ??
+        linkSocialNetwork;
     final size = MediaQuery.sizeOf(context);
     return WillPopScope(
       onWillPop: () async {
@@ -351,7 +352,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                                 (postRender?['id']) ??
                                 index,
                             child: ExtendedImage.network(
-                              pathImg ,
+                              pathImg,
                               fit: BoxFit.contain,
                               mode: ExtendedImageMode.gesture,
                               initGestureConfigHandler: (handler) {
@@ -421,7 +422,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
           MaterialPageRoute(
             builder: (context) => const UserPageHome(),
             settings: RouteSettings(
-              arguments: {'id': account['id']},
+              arguments: {'id': account['id'], 'user': account},
             ),
           ));
     }

@@ -31,7 +31,8 @@ class UserPageApi {
   }
 
   Future updateOtherInformation(idUser, data) async {
-    return await Api().postRequestBase('/api/v1/account_general_infomation', data);
+    return await Api()
+        .postRequestBase('/api/v1/account_general_infomation', data);
   }
 
   Future getUserMedia(idUser, params) async {
@@ -40,7 +41,8 @@ class UserPageApi {
   }
 
   Future getUserAlbum(idUser, params) async {
-    return await Api().getRequestBase('/api/v1/accounts/$idUser/albums', params);
+    return await Api()
+        .getRequestBase('/api/v1/accounts/$idUser/albums', params);
   }
 
   Future getUserMediaAlbum(idAlbum, params) async {
@@ -50,7 +52,8 @@ class UserPageApi {
 
 //1,2 s
   Future getUserFriend(idUser, params) async {
-    return await Api().getRequestBase('/api/v1/accounts/$idUser/friendships', params);
+    return await Api()
+        .getRequestBase('/api/v1/accounts/$idUser/friendships', params);
   }
 
 //345ms
@@ -66,7 +69,8 @@ class UserPageApi {
   }
 
   Future getHobbiesByCategories(String keyword) async {
-    return await Api().getRequestBase('/api/v1/categories', {"keyword": keyword});
+    return await Api()
+        .getRequestBase('/api/v1/categories', {"keyword": keyword});
   }
 
   Future getMediaAttachment(String userId, params) async {
@@ -75,11 +79,85 @@ class UserPageApi {
   }
 
   Future createNoticeCollection(data) async {
-    return await Api().postRequestBase('/api/v1/account_featured_contents', data);
+    return await Api()
+        .postRequestBase('/api/v1/account_featured_contents', data);
   }
 
   Future getLivingPlaceByKeyword(String keyword) async {
     return await Api().getRequestBase('/api/v1/places', {"keyword": keyword});
+  }
+
+  Future changePassword(params) async {
+    return await Api().postRequestBase('/api/v1/change_password', params);
+  }
+
+  Future forgotPassword(params) async {
+    return await Api().postRequestBase('/api/v1/forgot_password', params);
+  }
+
+  Future sendReconfirmation(params) async {
+    return await Api().postRequestBase('/api/v1/reconfirmation', params);
+  }
+
+  Future getWatchHistory(params) async {
+    return await Api().getRequestBase('/api/v1/watch_histories', params);
+  }
+
+  Future removeWatchHistory(id) async {
+    return await Api().deleteRequestBase('/api/v1/watch_histories/$id', null);
+  }
+
+  Future getSearchHistory(params) async {
+    return await Api().getRequestBase('/api/v1/search_histories', params);
+  }
+
+  Future removeSearchHistory(id) async {
+    return await Api().deleteRequestBase('/api/v1/search_histories/$id', null);
+  }
+
+  Future getLikePage(id, params) async {
+    return await Api()
+        .getRequestBase('/api/v1/accounts/$id/page_likes', params);
+  }
+
+  Future suspendUser() async {
+    return await Api().postRequestBase('/api/v1/suspend', null);
+  }
+
+  Future getTagSetting() async {
+    return await Api().getRequestBase('/api/v1/account_settings', null);
+  }
+
+  Future updateTagSetting(params) async {
+    return await Api().postRequestBase('/api/v1/account_settings', params);
+  }
+
+  Future getBlockUserList() async {
+    return await Api().getRequestBase('/api/v1/blocks', null);
+  }
+
+  Future getBlockUserMessageList() async {
+    return await Api().getRequestBase('/api/v1/block_messages', null);
+  }
+
+  Future getUserBlockPageList() async {
+    return await Api().getRequestBase('/api/v1/block_pages', null);
+  }
+
+  Future blockUser(params) async {
+    return await Api().postRequestBase('/api/v1/blocks', params);
+  }
+
+  Future unblockUser(id) async {
+    return await Api().deleteRequestBase('/api/v1/blocks/$id', null);
+  }
+
+  Future blockUserMessage(params) async {
+    return await Api().postRequestBase('/api/v1/block_messages', params);
+  }
+
+  Future unblockUserMessage(id) async {
+    return await Api().deleteRequestBase('/api/v1/block_messages/$id', null);
   }
 }
 
@@ -116,5 +194,9 @@ class UserPageCredentical {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future checkUsername(data) async {
+    return await Api().getRequestBase('/api/v1/validate_username', data);
   }
 }

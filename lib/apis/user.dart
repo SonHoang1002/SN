@@ -1,11 +1,13 @@
 // ignore_for_file: unnecessary_brace_in_string_interps
 
 import 'dart:convert';
+import 'package:social_network_app_mobile/apis/api_root.dart';
 import 'package:social_network_app_mobile/constant/config.dart';
-import 'package:http/http.dart' as http; 
-import 'package:social_network_app_mobile/storage/storage.dart'; 
+import 'package:http/http.dart' as http;
+import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/storage/storage.dart';
 
-class ApiUser {
+class UserApi {
   Future<dynamic> getDataUserApi(token) async {
     try {
       var response = await http.get(Uri.parse('${urlSocialNetwork}/api/v1/me'),
@@ -74,24 +76,20 @@ class ApiUser {
   }
 
   Future<dynamic> getAccountSettingApi() async {
-    try {
-      var token = await SecureStorage().getKeyStorage("token");
-      var response = await http.get(
-          Uri.parse('${urlSocialNetwork}/api/v1/account_settings'),
-          headers: {"Authorization": "Bearer ${token}"});
+    final response =
+        await Api().getRequestBase("/api/v1/account_settings", null);
+    return response;
+  }
 
-      if (response.statusCode == 200) {
-        const utf8Decoder = Utf8Decoder(allowMalformed: true);
-        return json.decode(utf8Decoder.convert(response.bodyBytes));
-      }
-    } catch (e) {
-      print(e.toString());
-    }
+  Future<dynamic> getAccountSettingApiWithToken(String token) async {
+    final response = await Api()
+        .getRequestBaseWithToken(token, "/api/v1/account_settings", null);
+    return response;
   }
 
   Future<dynamic> updateAccountSettingApi(key, value) async {
     try {
-      var body = jsonEncode({key: value}); 
+      var body = jsonEncode({key: value});
       var token = await SecureStorage().getKeyStorage("token");
       var response = await http.post(
           Uri.parse('${urlSocialNetwork}/api/v1/account_settings'),

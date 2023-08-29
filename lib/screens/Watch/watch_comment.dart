@@ -51,6 +51,8 @@ class _WatchCommentState extends State<WatchComment> {
               tag: widget.post['media_attachments'][0]['remote_url'] ??
                   widget.post['media_attachments'][0]['url'],
               child: VideoPlayerHasController(
+                aspectRatio: widget.post?['media_attachments']?[0]
+                          ?['meta']?['original']?['aspect'],
                 media: widget.post['media_attachments'][0],
               ),
             ),

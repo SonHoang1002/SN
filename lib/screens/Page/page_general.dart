@@ -8,10 +8,10 @@ import 'package:social_network_app_mobile/screens/Page/PageCreate/page_create.da
 import 'package:social_network_app_mobile/screens/Page/page_discover.dart';
 import 'package:social_network_app_mobile/screens/Page/page_invite.dart';
 import 'package:social_network_app_mobile/screens/Page/page_liked.dart';
+import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/chip_menu.dart';
 import 'package:social_network_app_mobile/widgets/page_item.dart';
 import 'package:social_network_app_mobile/widgets/skeleton.dart';
-
 
 class PageGeneral extends ConsumerStatefulWidget {
   const PageGeneral({Key? key}) : super(key: key);
@@ -46,20 +46,18 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
     await ref
         .read(pageListControllerProvider.notifier)
         .getListPageAdmin({'limit': 20});
-    await ref
+    ref
         .read(pageListControllerProvider.notifier)
         .getListPageSuggest({'limit': 10});
-    await ref
+    ref
         .read(pageListControllerProvider.notifier)
         .getListPageLiked({'page': 1, 'sort_direction': 'asc'});
 
     if (ref.read(pageListControllerProvider).pageInvitedLike.isEmpty) {
-      await ref
-          .read(pageListControllerProvider.notifier)
-          .getListPageInvited('like');
+      ref.read(pageListControllerProvider.notifier).getListPageInvited('like');
     }
     if (ref.read(pageListControllerProvider).pageInvitedManage.isEmpty) {
-      await ref
+      ref
           .read(pageListControllerProvider.notifier)
           .getListPageInvited('manage');
     }
@@ -190,19 +188,68 @@ class _PageGeneralState extends ConsumerState<PageGeneral> {
                         child: SkeletonCustom().postSkeletonInList(context),
                       );
                     })
-                : ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: pagesAdmin.length,
-                    itemBuilder: (context, i) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        child: PageItem(page: pagesAdmin[i]),
-                      );
-                    },
-                  ),
-            if (isMorePageAdmin)
+                : pagesAdmin.isNotEmpty
+                    ? ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: pagesAdmin.length,
+                        itemBuilder: (context, i) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            child: PageItem(page: pagesAdmin[i]),
+                          );
+                        },
+                      )
+                    : Container(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              'assets/reaction/wow.gif',
+                              width: 80.0,
+                              height: 80.0,
+                              fit: BoxFit.contain,
+                            ),
+                            const Center(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 25.0),
+                                child: Text(
+                                  "Hiện bạn chưa có Trang nào, vui lòng tạo trang",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                    builder: (context) =>
+                                        const CreateModalBaseMenu(
+                                      title: "Tạo",
+                                      body: PageCreate(),
+                                      buttonAppbar: SizedBox(),
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: const ButtonPrimary(
+                                  label: "Tạo trang ngay",
+                                  colorText: Colors.white,
+                                  icon: Icon(Icons.add, color: Colors.white),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+            if (isMorePageAdmin && pagesAdmin.isNotEmpty)
               Center(
                 child: SkeletonCustom().postSkeletonInList(context),
               )

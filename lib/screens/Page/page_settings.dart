@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/apis/page_api.dart';
+import 'package:social_network_app_mobile/providers/page/page_follower_management_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_notification_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_role_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_settings_provider.dart';
@@ -56,6 +55,12 @@ class _PageSettingsState extends ConsumerState<PageSettings> {
     ref
         .read(pageRoleControllerProvider.notifier)
         .getInviteListPage(widget.data['id']);
+    ref
+        .read(pageRoleControllerProvider.notifier)
+        .getAdminListPage(widget.data['id']);
+    ref
+        .read(pageFollowControllerProvider.notifier)
+        .getDataFollowPage(widget.data['id']);
   }
 
   void updatePageEllipsis() {

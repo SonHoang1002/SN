@@ -10,7 +10,15 @@ class GroupApi {
   }
 
   Future fetchGroupRole(id) async {
-    return await Api().getRequestBase('/api/v1/groups/$id/accounts',null);
+    return await Api().getRequestBase('/api/v1/groups/$id/accounts', null);
+  }
+
+  Future joinGroupRequest(id) async {
+    return await Api().postRequestBase('/api/v1/groups/$id/accounts', null);
+  }
+
+  Future removeGroupRequest(id) async {
+    return await Api().deleteRequestBase('/api/v1/groups/$id/leave', null);
   }
 
   Future fetchCategories(params) async {
@@ -58,7 +66,8 @@ class GroupApi {
   }
 
   getMemberQuestion(dynamic id) async {
-    return await Api().getRequestBase("/api/v1/groups/$id/member_questions", null);
+    return await Api()
+        .getRequestBase("/api/v1/groups/$id/member_questions", null);
   }
 
   fetchJoinRequest(dynamic id) async {
@@ -66,7 +75,8 @@ class GroupApi {
   }
 
   fetchPendingStatus(dynamic id) async {
-    return await Api().getRequestBase("/api/v1/groups/$id/pending_statuses", null);
+    return await Api()
+        .getRequestBase("/api/v1/groups/$id/pending_statuses", null);
   }
 
   fetchUpdatePendingStatus(
@@ -82,19 +92,22 @@ class GroupApi {
   }
 
   fetchMediaImage(params, dynamic id) async {
-    return await Api().getRequestBase("/api/v1/groups/$id/media_attachments", params);
+    return await Api()
+        .getRequestBase("/api/v1/groups/$id/media_attachments", params);
   }
 
   fetchAlbum(params, dynamic id) async {
-    return await  Api().getRequestBase("/api/v1/groups/$id/albums", params);
+    return await Api().getRequestBase("/api/v1/groups/$id/albums", params);
   }
 
   fetchDetailAlbum(params, dynamic id) async {
-    return await Api().getRequestBase("/api/v1/albums/$id/media_attachments", params);
+    return await Api()
+        .getRequestBase("/api/v1/albums/$id/media_attachments", params);
   }
 
   fetchReportedStatus(dynamic id) async {
-    return await Api().getRequestBase("/api/v1/groups/$id/reported_statuses", null);
+    return await Api()
+        .getRequestBase("/api/v1/groups/$id/reported_statuses", null);
   }
 
   fetchStatusAlert(dynamic id) async {
@@ -102,10 +115,15 @@ class GroupApi {
   }
 
   fetchScheduledStatus(dynamic id) async {
-    return await Api().getRequestBase("/api/v1/groups/$id/scheduled_statuses", null);
+    return await Api()
+        .getRequestBase("/api/v1/groups/$id/scheduled_statuses", null);
   }
 
   fetchRules(dynamic id) async {
     return await Api().getRequestBase("/api/v1/groups/$id/rules", null);
+  }
+
+  getGroupRelationship(dynamic groupId,dynamic params) async {
+    return await Api().postRequestBase("/api/v1/group_relationships", params);
   }
 }

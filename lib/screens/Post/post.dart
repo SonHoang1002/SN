@@ -10,7 +10,6 @@ import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
-import 'package:social_network_app_mobile/providers/posts/processing_post_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/post_center.dart';
 import 'package:social_network_app_mobile/screens/Post/PostFooter/post_footer.dart';
 import 'package:social_network_app_mobile/screens/Post/post_header.dart';
@@ -25,7 +24,7 @@ import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 
 class Post extends ConsumerStatefulWidget {
   final dynamic post;
-  final String? type;
+  final String type;
   final bool? isHiddenCrossbar;
   final bool? isHiddenFooter;
   final dynamic data;
@@ -42,13 +41,14 @@ class Post extends ConsumerStatefulWidget {
   final bool? haveSuggest;
   final bool? isInGroup;
   final dynamic friendData;
+  final dynamic groupData;
 
   final Function(Offset)? jumpToOffsetFunction;
 
   const Post(
       {Key? key,
       this.post,
-      this.type,
+      required this.type,
       this.isHiddenCrossbar,
       this.data,
       this.isHiddenFooter,
@@ -62,7 +62,9 @@ class Post extends ConsumerStatefulWidget {
       this.approvalFunction,
       this.haveSuggest = true,
       this.isInGroup = false,
-      this.jumpToOffsetFunction,this.friendData})
+      this.jumpToOffsetFunction,
+      this.friendData,
+      this.groupData})
       : super(key: key);
 
   @override
@@ -112,6 +114,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     meData ??= ref.watch(meControllerProvider)[0];
+
     if (isNeedInitPost) {
       currentPost = widget.post;
     }
@@ -132,14 +135,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ((widget.type != postPageUser &&
-                                    currentPost?['account']?['id'] !=
-                                        meData['id']) &&
-                                widget.haveSuggest == true) ||
-                            (currentPost?['group'] == null ||
-                                currentPost?['group'].isEmpty) ||
-                            (currentPost?['page'] == null ||
-                                currentPost?['page'].isEmpty)
+                    checkShowSuggestWidget()
                         ? PostSuggest(
                             post: currentPost,
                             type: widget.type,
@@ -170,17 +166,20 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                                       ? const EdgeInsets.only(top: 7)
                                       : null,
                               child: PostHeader(
-                                  post: currentPost,
-                                  type: widget.type,
-                                  isHaveAction: widget.type != postPageUser
-                                      ? !isHaveSuggest
-                                      : true,
-                                  reloadFunction: () {
-                                    setState(() {});
-                                  },
-                                  friendData: widget.friendData,
-                                  isInGroup: widget.isInGroup,
-                                  updateDataFunction: updateNewPost),
+                                post: currentPost,
+                                type: widget.type,
+                                isHaveAction: widget.type != postPageUser &&
+                                        isHaveSuggest == true
+                                    ? false
+                                    : true,
+                                reloadFunction: () {
+                                  setState(() {});
+                                },
+                                friendData: widget.friendData,
+                                isInGroup: widget.isInGroup,
+                                updateDataFunction: updateNewPost,
+                                groupData: widget.groupData,
+                              ),
                             ),
                             PostCenter(
                                 post: currentPost,
@@ -198,24 +197,18 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                                 preType: widget.preType,
                                 isFocus: widget.isFocus,
                                 updateDataFunction: updateNewPost,
+                                isInGroup: widget.isInGroup,
+                                groupData: widget.groupData,
                                 showCmtBoxFunction: () {
                                   _changeShowCommentBox();
                                 }),
                           ],
                         ),
                         currentPost?['processing'] == "isProcessing"
-                            ? Container(
-                                height: ref
-                                            .watch(processingPostController)
-                                            .heightOfProcessingPost !=
-                                        0
-                                    ? (ref
-                                            .watch(processingPostController)
-                                            .heightOfProcessingPost -
-                                        80)
-                                    : 0,
+                            ? Positioned.fill(
+                                child: Container(
                                 color: white.withOpacity(0.2),
-                              )
+                              ))
                             : const SizedBox()
                       ],
                     ),
@@ -256,6 +249,9 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
                                 updateDataFunction: updateNewPost,
                                 isShowCommentBox: _isShowCommentBox.value,
                                 preType: widget.preType,
+                                friendData: widget.friendData,
+                                isInGroup: widget.isInGroup,
+                                groupData: widget.groupData,
                                 jumpToOffsetFunction:
                                     widget.jumpToOffsetFunction),
                   ],
@@ -274,6 +270,43 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
         : const SizedBox();
   }
 
+  bool checkShowSuggestWidget() {
+    // người đang sử dụng -> nsd
+    // Hiện suggest trong các trường hợp sau:
+    // - là post ở FEED
+    //   + chủ của bài viết không là chủ của nó
+    //   + bạn của nsd thực hiện thao tác gì đó trong trang, group mà nsd chưa follow hoặc là thành viên trong đó
+    //   + nsd không phải là admin(chủ) hoặc moderator(kiểm duyệt viên) của page, group
+    //   + nsd không phải bạn của chủ bài viết
+    // - không phải là post của user page, page, group
+    //
+    if (widget.isInGroup == true) {
+      return false;
+    }
+    if ((widget.type == feedPost &&
+            (currentPost?['account']?['id']) != meData['id']) &&
+        widget.haveSuggest == true) {
+      return true;
+    }
+    if (currentPost?['group'] == null || currentPost?['group'].isEmpty) {
+      return true;
+    }
+    if (currentPost?['page'] == null || currentPost?['page'].isEmpty) {
+      return true;
+    }
+    //  why not ????
+    if ([postPageUser].contains(widget.type)) {
+      return false;
+    }
+    return false;
+
+    // return ((widget.type != postPageUser &&
+    //             (currentPost?['account']?['id']) != meData['id']) &&
+    //         widget.haveSuggest == true) ||
+    //     (currentPost?['group'] == null || currentPost?['group'].isEmpty) ||
+    //     (currentPost?['page'] == null || currentPost?['page'].isEmpty);
+  }
+
   handleApprovePost(bool approve) async {
     // approve : true -> phê duyệt
     // approve : false -> từ chối phê duyệt
@@ -289,6 +322,7 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
       message = (response?['content']?['error']).toString();
       messageColor = red;
     }
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
       message,

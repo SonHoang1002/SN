@@ -1,10 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/page/page_role_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
@@ -23,16 +23,16 @@ class PageOwnerSetting extends ConsumerStatefulWidget {
 }
 
 class _PageOwnerSettingState extends ConsumerState<PageOwnerSetting> {
-  bool accountSelected = false;
-
+  Map<String, dynamic> accountSelected = {};
+  List<dynamic> listAdmin = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    listAdmin = ref.watch(pageRoleControllerProvider).accounts;
     return Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -131,7 +131,7 @@ class _PageOwnerSettingState extends ConsumerState<PageOwnerSetting> {
                             border: Border.all(color: greyColor)),
                         child: Padding(
                           padding: const EdgeInsets.all(16),
-                          child: !accountSelected
+                          child: accountSelected.isEmpty
                               ? const Text(
                                   'Cập nhật chủ tài khoản',
                                   style:
@@ -144,13 +144,13 @@ class _PageOwnerSettingState extends ConsumerState<PageOwnerSetting> {
                                     AvatarSocial(
                                         width: 40,
                                         height: 40,
-                                        object: widget.data["account_holder"],
-                                        path: widget.data["account_holder"] !=
-                                                    null &&
-                                                widget.data["account_holder"]
+                                        object: accountSelected,
+                                        path: accountSelected.isEmpty ==
+                                                    false &&
+                                                accountSelected["account"]
                                                         ['avatar_media'] !=
                                                     null
-                                            ? widget.data["account_holder"]
+                                            ? accountSelected["account"]
                                                 ['avatar_media']['preview_url']
                                             : linkAvatarDefault),
                                     const SizedBox(
@@ -165,19 +165,17 @@ class _PageOwnerSettingState extends ConsumerState<PageOwnerSetting> {
                                         Row(
                                           children: [
                                             Text(
-                                              widget.data["account_holder"]
-                                                      ?['display_name'] ??
+                                              accountSelected["account"]
+                                                      ['display_name'] ??
                                                   'Không xác định',
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: 14,
                                               ),
                                             ),
-                                            widget.data["account_holder"] !=
-                                                        null &&
-                                                    widget.data[
-                                                            "account_holder"]
-                                                        ?["certified"]
+                                            accountSelected.isEmpty == false &&
+                                                    accountSelected["account"]
+                                                        ["certified"]
                                                 ? buildBlueCertifiedWidget()
                                                 : const SizedBox()
                                           ],
@@ -193,13 +191,35 @@ class _PageOwnerSettingState extends ConsumerState<PageOwnerSetting> {
                 ),
               ),
               Expanded(child: Container()),
-              accountSelected
+              accountSelected.isEmpty == false
                   ? Align(
                       alignment: Alignment.bottomCenter,
                       child: ButtonPrimary(
                         label: 'Cập nhật',
-                        handlePress: () {
-                          Navigator.pop(context);
+                        handlePress: () async {
+                          var res = await PageApi().updatePageHolder(
+                              widget.data["id"], {
+                            "account_holder_id": accountSelected["account"]
+                                ["id"]
+                          });
+                          if (mounted) {
+                            if (res == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          "Tài khoản chưa xác minh danh tính hoặc không phải quản trị viên")));
+                            } else {
+                              setState(() {
+                                widget.data["account_holder"] =
+                                    accountSelected["account"];
+                              });
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          "Cập nhật chủ trang thành công")));
+                            }
+                          }
+                          //Navigator.pop(context);
                         },
                       ),
                     )
@@ -209,11 +229,6 @@ class _PageOwnerSettingState extends ConsumerState<PageOwnerSetting> {
         ));
   }
 
-  List test = [
-    1,
-    2,
-    3,
-  ];
   buildFilterUsersSelectionBottomSheet() {
     showCustomBottomSheet(context, 420,
         title: "Cập nhật chủ tài khoản",
@@ -225,12 +240,12 @@ class _PageOwnerSettingState extends ConsumerState<PageOwnerSetting> {
           child: ListView.builder(
               shrinkWrap: true,
               padding: EdgeInsets.zero,
-              itemCount: test.length,
+              itemCount: listAdmin.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
                     setState(() {
-                      accountSelected = true;
+                      accountSelected = listAdmin[index];
                     });
                     popToPreviousScreen(context);
                   },
@@ -248,12 +263,12 @@ class _PageOwnerSettingState extends ConsumerState<PageOwnerSetting> {
                               AvatarSocial(
                                   width: 40,
                                   height: 40,
-                                  object: widget.data["account_holder"],
-                                  path: widget.data["account_holder"] != null &&
-                                          widget.data["account_holder"]
+                                  object: listAdmin[index]["account"],
+                                  path: listAdmin[index]["account"] != null &&
+                                          listAdmin[index]["account"]
                                                   ['avatar_media'] !=
                                               null
-                                      ? widget.data["account_holder"]
+                                      ? listAdmin[index]["account"]
                                           ['avatar_media']['preview_url']
                                       : linkAvatarDefault),
                               const SizedBox(
@@ -266,7 +281,7 @@ class _PageOwnerSettingState extends ConsumerState<PageOwnerSetting> {
                                   Row(
                                     children: [
                                       Text(
-                                        widget.data["account_holder"]
+                                        listAdmin[index]["account"]
                                                 ?['display_name'] ??
                                             'Không xác định',
                                         style: const TextStyle(
@@ -274,8 +289,8 @@ class _PageOwnerSettingState extends ConsumerState<PageOwnerSetting> {
                                           fontSize: 14,
                                         ),
                                       ),
-                                      widget.data["account_holder"] != null &&
-                                              widget.data["account_holder"]
+                                      listAdmin[index]["account"] != null &&
+                                              listAdmin[index]["account"]
                                                   ?["certified"]
                                           ? buildBlueCertifiedWidget()
                                           : const SizedBox()

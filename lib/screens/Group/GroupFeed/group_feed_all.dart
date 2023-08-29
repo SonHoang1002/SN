@@ -8,6 +8,7 @@ import 'package:social_network_app_mobile/screens/Post/post.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 
+import '../../../constant/post_type.dart';
 import '../../../widgets/skeleton.dart';
 
 class GroupFeedAll extends ConsumerStatefulWidget {
@@ -133,6 +134,7 @@ class _GroupFeedAllState extends ConsumerState<GroupFeedAll> {
                       itemCount: groupFeed.length,
                       itemBuilder: ((context, index) => Post(
                             post: groupFeed[index],
+                            type: postGroup,
                           ))),
                 )
         ],

@@ -112,6 +112,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   context: context,
                   width: width,
                   function: () {
+                    widget.dataCreate['isCreate'] = true;
                     Navigator.pushReplacementNamed(context, '/page',
                         arguments: widget.dataCreate);
                   },

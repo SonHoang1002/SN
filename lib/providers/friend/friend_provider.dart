@@ -81,7 +81,7 @@ class FriendController extends StateNotifier<FriendState> {
   }
 
   getListFriendSuggest(params) async {
-    List response = await FriendsApi().getListFriendSuggestApi(params);
+    List response = await FriendsApi().getListFriendSuggestApi(params) ?? [];
     if (response.isNotEmpty) {
       state = state.copyWith(
           friendExcludes: state.friendExcludes,

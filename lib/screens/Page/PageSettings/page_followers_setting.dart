@@ -1,7 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+
+import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
+import 'package:social_network_app_mobile/providers/page/page_follower_management_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
@@ -36,124 +41,178 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
       "label": "Bạn bè",
     },
   ];
-  List users = [
-    User(name: "Nguyễn Thanh Bình", date: "27/08/2000", isChecked: false),
-    User(name: "John Doe", date: "27/08/2000", isChecked: false),
-    User(name: "Jane Smith", date: "27/08/2000", isChecked: false),
-    User(name: "Bob Johnson", date: "27/08/2000", isChecked: false),
-  ];
-  List users_follow = [
-    User(name: "John Doe", date: "27/08/2000", isChecked: false),
-    User(name: "Jane Smith", date: "27/08/2000", isChecked: false),
-    User(name: "Bob Johnson", date: "27/08/2000", isChecked: false),
-  ];
-  List users_blocked = [
-    User(name: "Bob Johnson", date: "27/08/2000", isChecked: false),
-  ];
+  List users = [];
+  List users_follow = [];
+  List users_blocked = [];
   List filteredUserList = [];
+  List checkIndex = [];
   @override
   void initState() {
     super.initState();
+    getData();
+  }
+
+  void getData() {
+    users = ref.read(pageFollowControllerProvider).like;
     filteredUserList = List.from(users);
+    checkboxList();
+  }
+
+  void checkboxList() {
+    checkIndex = [];
+    for (int i = 0; i < filteredUserList.length; i++) {
+      checkIndex.add(false);
+    }
+  }
+
+  List<String> arrayToStringList() {
+    List<String> saved = [];
+    for (var i = 0; i < filteredUserList.length; i++) {
+      if (checkIndex[i] == true) {
+        if (menuSelected == "blocked") {
+          saved.add(filteredUserList[i]["target_account"]["id"]);
+        } else {
+          saved.add(filteredUserList[i]["id"]);
+        }
+      }
+    }
+    return saved;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        title: const AppBarTitle(title: 'Người và trang khác'),
-        leading: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(
-            FontAwesomeIcons.angleLeft,
-            size: 18,
-            color: Theme.of(context).textTheme.titleLarge?.color,
-          ),
-        ),
-        shape: const Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
+    users = ref.watch(pageFollowControllerProvider).like;
+    users_follow = ref.watch(pageFollowControllerProvider).follower;
+    users_blocked = ref.watch(pageFollowControllerProvider).block;
+    return LoaderOverlay(
+      useDefaultLoading: false,
+      overlayWidget: const Center(
+        child: CupertinoActivityIndicator(),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
-              child: Text(
-                "Người và trang khác",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          centerTitle: true,
+          title: const AppBarTitle(title: 'Người và trang khác'),
+          leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              FontAwesomeIcons.angleLeft,
+              size: 18,
+              color: Theme.of(context).textTheme.titleLarge?.color,
+            ),
+          ),
+          shape:
+              const Border(bottom: BorderSide(color: Colors.grey, width: 0.5)),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(bottom: 10.0),
+                child: Text(
+                  "Người và trang khác",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                ),
               ),
-            ),
-            const Text(
-              "Đây là nơi hiển thị những người và Trang khác đã thích tam hon trong sang. Từ danh sách người thích Trang, hãy nhấp vào để xóa hoặc cấm ai đó khỏi danh sách này. Người bị cấm không thể đăng, bình luận, gửi tin nhắn hoặc thực hiện các hành động khác trên Trang.",
-              style: TextStyle(fontSize: 14),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              decoration: const InputDecoration(
-                hintText: 'Tìm kiếm...',
-                prefixIcon: Icon(Icons.search),
+              const Text(
+                "Đây là nơi hiển thị những người và Trang khác đã thích tam hon trong sang. Từ danh sách người thích Trang, hãy nhấp vào để xóa hoặc cấm ai đó khỏi danh sách này. Người bị cấm không thể đăng, bình luận, gửi tin nhắn hoặc thực hiện các hành động khác trên Trang.",
+                style: TextStyle(fontSize: 14),
               ),
-              onChanged: (value) {
-                onSearchTextChanged(value);
-              },
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: HeaderTabs(
-                    chooseTab: (tab) {
-                      showButton = false;
-                      if (mounted) {
-                        setState(() {
-                          selectAll = false;
-                          menuSelected = tab;
-                        });
-                        onClickToggleChecked(false);
-                      }
-                      if (tab == 'like') {
+              const SizedBox(
+                height: 10,
+              ),
+              TextFormField(
+                decoration: const InputDecoration(
+                  hintText: 'Tìm kiếm...',
+                  prefixIcon: Icon(Icons.search),
+                ),
+                onChanged: (value) {
+                  onSearchTextChanged(value);
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: HeaderTabs(
+                      chooseTab: (tab) {
+                        showButton = false;
                         if (mounted) {
                           setState(() {
-                            filteredUserList = users;
+                            selectAll = false;
+                            menuSelected = tab;
                           });
+                          onClickToggleChecked(false);
                         }
-                      } else if (tab == 'follower') {
-                        if (mounted) {
-                          setState(() {
-                            filteredUserList = users_follow;
-                          });
-                        }
-                      } else if (tab == 'blocked') {
-                        if (mounted) {
-                          setState(() {
+                        if (tab == 'like') {
+                          if (mounted) {
+                            setState(() {
+                              filteredUserList = users;
+                            });
+                          }
+                        } else if (tab == 'follower') {
+                          if (mounted) {
+                            setState(() {
+                              filteredUserList = users_follow;
+                            });
+                          }
+                        } else if (tab == 'blocked') {
+                          if (mounted) {
                             filteredUserList = users_blocked;
-                          });
+                          }
                         }
-                      }
-                    },
-                    listTabs: pageUsersType,
-                    tabCurrent: menuSelected)),
-            Expanded(child: renderTab(widget.data)),
-            showButton
-                ? Align(
-                    alignment: Alignment.bottomCenter,
-                    child: ButtonPrimary(
-                      label: 'Cấm trên trang',
-                      handlePress: () {
-                        Navigator.pop(context);
+                        checkboxList();
                       },
-                    ),
-                  )
-                : Container(),
-          ],
+                      listTabs: pageUsersType,
+                      tabCurrent: menuSelected)),
+              Expanded(child: renderTab(widget.data)),
+              showButton
+                  ? Align(
+                      alignment: Alignment.bottomCenter,
+                      child: ButtonPrimary(
+                        label: menuSelected == "blocked"
+                            ? "Bỏ cấm trên trang"
+                            : 'Cấm trên trang',
+                        handlePress: () async {
+                          context.loaderOverlay.show();
+                          var res;
+                          if (menuSelected != "blocked") {
+                            res = await PageApi().pageBlockAccount(
+                                widget.data["id"],
+                                {"target_account_ids": arrayToStringList()});
+                          } else {
+                            res = await PageApi().pageUnblockAccount(
+                                widget.data["id"],
+                                {"target_account_ids": arrayToStringList()});
+                          }
+                          await ref
+                              .read(pageFollowControllerProvider.notifier)
+                              .getDataFollowPage(widget.data['id']);
+                          if (mounted) {
+                            context.loaderOverlay.hide();
+                            if (res != null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Cập nhật thành công")));
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Cập nhật thất bại")));
+                            }
+                          }
+                          //Navigator.pop(context);
+                        },
+                      ),
+                    )
+                  : Container(),
+            ],
+          ),
         ),
       ),
     );
@@ -162,15 +221,15 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
   void onClickToggleChecked(value) {
     setState(() {
       for (int i = 0; i < filteredUserList.length; i++) {
-        filteredUserList[i].isChecked = value;
+        checkIndex[i] = value;
       }
     });
   }
 
   bool checkAvailableButton() {
     int count = 0;
-    for (int i = 0; i < filteredUserList.length; i++) {
-      if (filteredUserList[i].isChecked) {
+    for (int i = 0; i < checkIndex.length; i++) {
+      if (checkIndex[i] == true) {
         count++;
       }
     }
@@ -179,10 +238,11 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
     } else {
       selectAll = false;
     }
-    if (count > 0)
+    if (count > 0) {
       return true;
-    else
+    } else {
       return false;
+    }
   }
 
   void onSearchTextChanged(String searchText) {
@@ -210,12 +270,21 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
           default:
             searchList = List.from(users);
         }
-        filteredUserList = searchList
-            .where((user) => user.name
-                .trim()
-                .toLowerCase()
-                .contains(searchText.trim().toLowerCase()))
-            .toList();
+        if (menuSelected != "blocked") {
+          filteredUserList = searchList
+              .where((user) => user["display_name"]
+                  .trim()
+                  .toLowerCase()
+                  .contains(searchText.trim().toLowerCase()))
+              .toList();
+        } else {
+          filteredUserList = searchList
+              .where((user) => user["target_account"]["display_name"]
+                  .trim()
+                  .toLowerCase()
+                  .contains(searchText.trim().toLowerCase()))
+              .toList();
+        }
       }
     });
   }
@@ -275,8 +344,7 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
               itemBuilder: (context, index) => GestureDetector(
                     onTap: () {
                       setState(() {
-                        filteredUserList[index].isChecked =
-                            !filteredUserList[index].isChecked;
+                        checkIndex[index] = !checkIndex[index];
                         showButton = checkAvailableButton();
                       });
                     },
@@ -286,11 +354,11 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                         Container(
                           width: width * 0.1,
                           child: Checkbox(
-                            value: filteredUserList[index].isChecked,
+                            value: checkIndex[index],
                             activeColor: secondaryColor,
                             onChanged: (value) {
                               setState(() {
-                                filteredUserList[index].isChecked = value;
+                                checkIndex[index] = value;
                                 showButton = checkAvailableButton();
                               });
                             },
@@ -298,10 +366,12 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                         ),
                         Container(
                             width: width * 0.6,
-                            child: Text(filteredUserList[index].name)),
+                            child:
+                                Text(filteredUserList[index]["display_name"])),
                         Container(
                             width: width * 0.3,
-                            child: Text(filteredUserList[index].date)),
+                            child: Text(
+                                filteredUserList[index]["last_status_at"])),
                       ],
                     ),
                   )),
@@ -350,8 +420,7 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
               itemBuilder: (context, index) => GestureDetector(
                     onTap: () {
                       setState(() {
-                        filteredUserList[index].isChecked =
-                            !filteredUserList[index].isChecked;
+                        checkIndex[index] = !checkIndex[index];
                         showButton = checkAvailableButton();
                       });
                     },
@@ -361,11 +430,11 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                         Container(
                           width: width * 0.1,
                           child: Checkbox(
-                            value: filteredUserList[index].isChecked,
+                            value: checkIndex[index],
                             activeColor: secondaryColor,
                             onChanged: (value) {
                               setState(() {
-                                filteredUserList[index].isChecked = value;
+                                checkIndex[index] = value;
                                 showButton = checkAvailableButton();
                               });
                             },
@@ -373,13 +442,16 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                         ),
                         Container(
                             width: width * 0.4,
-                            child: Text(filteredUserList[index].name)),
+                            child: Text(filteredUserList[index]
+                                ["target_account"]["display_name"])),
                         Container(
                             width: width * 0.3,
-                            child: Text(filteredUserList[index].date)),
+                            child: Text(filteredUserList[index]
+                                ["target_account"]["last_status_at"])),
                         Container(
                           width: width * 0.2,
-                          child: Text("Nguyễn Đình Đạt"),
+                          child: Text(filteredUserList[index]["account"]
+                              ["display_name"]),
                         )
                       ],
                     ),
@@ -388,12 +460,4 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
       ],
     );
   }
-}
-
-class User {
-  String name;
-  String date;
-  bool isChecked;
-
-  User({required this.name, required this.date, this.isChecked = false});
 }

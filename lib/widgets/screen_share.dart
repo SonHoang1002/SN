@@ -231,25 +231,32 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
       }
 
       if (['post', 'moment'].contains(widget.entityType)) {
-        data['reblog_of_id'] = widget.entityShare['id']; 
-        
-        var response = await PostApi().createStatus(data); 
+        data['reblog_of_id'] = widget.entityShare['id'];
+        var response = await PostApi().createStatus(data);
         if (response != null) {
           if (context.mounted) {
             context.loaderOverlay.hide();
             Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Chia sẻ bài viết thành công")));
+            if (response?['status_code'] != null) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                "${(response?['content']?['error'])}",
+                style: const TextStyle(color: red, fontSize: 15),
+              )));
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Chia sẻ bài viết thành công")));
+            }
           }
-
           if (widget.entityType == 'moment') {
             ref
                 .read(momentControllerProvider.notifier)
                 .updateMomentDetail(widget.entityShare['typePage'], response);
           } else if (groupShareSelected == null && pageShareSelected == null) {
-            ref
-                .read(postControllerProvider.notifier)
-                .createUpdatePost(widget.type, response);
+            ref.read(postControllerProvider.notifier).createUpdatePost(
+                  widget.type,
+                  response,
+                );
           }
         }
       }

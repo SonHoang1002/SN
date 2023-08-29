@@ -74,13 +74,6 @@ class _WatchHomeState extends ConsumerState<WatchHome>
     watchData.isEmpty
         ? null
         : focusIdNotifier ??= ValueNotifier(watchData[0]?['id']);
-
-    // [110750106876372619, 110750102990006995, 110673932458552076,
-    // 110673674660771731, 110673437079587627, 110673200636080428]
-
-    // [110687626644559367, 110568916833729667, 110568899606375321,
-    // 110568797742857620, 110568789090500908, 110512206994112364]
-    print(widget.type.toString() + widget.isFocus.toString());
     return Expanded(
         child: watchData.isNotEmpty
             ? Column(
@@ -104,26 +97,39 @@ class _WatchHomeState extends ConsumerState<WatchHome>
                                     setState(() {});
                                   }
                                 },
-                                child: Post(
-                                    key: Key((watchData[index]?['id']) ??
-                                        Random().nextInt(10000).toString()),
-                                    post: watchData[index],
-                                    type: postWatch,
-                                    isFocus:
-                                        // widget.isFocus == true && (
-                                        focusIdNotifier!.value ==
-                                            watchData[index]['id'],
-                                    // ),
-                                    preType: widget.type == 'watch_home'
-                                        ? "suggest"
-                                        : "follow"),
+                                child: Column(
+                                  children: [
+                                    Post(
+                                        key: Key((watchData[index]?['id']) ??
+                                            Random().nextInt(10000).toString()),
+                                        post: watchData[index],
+                                        type: postWatch,
+                                        isFocus:
+                                            // widget.isFocus == true && (
+                                            focusIdNotifier!.value ==
+                                                watchData[index]['id'],
+                                        // ),
+                                        preType: widget.type == 'watch_home'
+                                            ? "suggest"
+                                            : "follow"),
+                                    index == watchData.length - 1
+                                        ? (widget.type == 'watch_home'
+                                                ? ref
+                                                    .watch(
+                                                        watchControllerProvider)
+                                                    .isMoreSuggest
+                                                : ref
+                                                    .watch(
+                                                        watchControllerProvider)
+                                                    .isMoreFollow)
+                                            ? const SizedBox()
+                                            : const Center(
+                                                child: Text(
+                                                    'Không còn bài viết gợi ý nào nữa'))
+                                        : const SizedBox()
+                                  ],
+                                ),
                               ))),
-                  (widget.type == 'watch_home'
-                          ? ref.watch(watchControllerProvider).isMoreSuggest
-                          : ref.watch(watchControllerProvider).isMoreFollow)
-                      ? const SizedBox()
-                      : const Center(
-                          child: Text('Không còn bài viết gợi ý nào nữa'))
                 ],
               )
             : ListView.builder(

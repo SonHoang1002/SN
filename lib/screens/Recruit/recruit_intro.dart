@@ -184,10 +184,8 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                         recruitDetail['account']
                                                     ['avatar_media'] !=
                                                 null
-                                            ? recruitDetail['account']
-                                                ['avatar_media']['url']
-                                            : recruitDetail['account']
-                                                ['avatar_static'],
+                                            ? recruitDetail['account']['avatar_media']['url'] ?? recruitDetail['account']['avatar_media']['preview_url']
+                                            : recruitDetail['account']['avatar_static'],
                                         fit: BoxFit.cover,
                                         width: 180.0,
                                         height: 180.0,
@@ -213,7 +211,8 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                     builder: (context) => const UserPageHome(),
                                     settings: RouteSettings(
                                       arguments: {
-                                        'id': recruitDetail['account']['id']
+                                        'id': recruitDetail['account']['id'],
+                                        "user":recruitDetail['account']
                                       },
                                     ),
                                   ));
@@ -267,7 +266,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                           settings: RouteSettings(
                                             arguments: {
                                               'id': recruitDetail['account']
-                                                  ['id']
+                                                  ['id'],"user":recruitDetail['account']
                                             },
                                           ),
                                         ));

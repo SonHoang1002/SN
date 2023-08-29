@@ -9,6 +9,7 @@ import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/event_provider.dart';
 import 'package:social_network_app_mobile/screens/Event/event_detail.dart';
+import 'package:social_network_app_mobile/screens/Event/get_event_later.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/card_components.dart';
@@ -230,9 +231,8 @@ class _EventHostState extends ConsumerState<EventHost> {
                                       Padding(
                                         padding: const EdgeInsets.all(2.0),
                                         child: Text(
-                                          GetTimeAgo.parse(DateTime.parse(
-                                              events[indexInteresting]
-                                                  ['start_time'])),
+                                          eventDate(events[indexInteresting]
+                                              ['start_time']),
                                           maxLines: 2,
                                           style: const TextStyle(
                                             fontSize: 12.0,

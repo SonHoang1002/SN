@@ -47,10 +47,12 @@ class _TextFieldEditState extends State<TextFieldEdit> {
   }
 
   void _handleTextChanged(String value) async {
-    if (value.isEmpty) {
-      widget.onChange(widget.label);
+    if (value == "") {
+      //widget.onChange(widget.label);
+      valueText = value;
+      await Future.delayed(Duration(milliseconds: 200));
       setState(() {
-        errorText = false;
+        errorText = true;
       });
     } else {
       EasyDebounce.debounce(
@@ -61,8 +63,7 @@ class _TextFieldEditState extends State<TextFieldEdit> {
             valueText = value;
           });
           if (widget.validateInput != null) {
-            bool isValid = await widget.validateInput!(value);
-
+            bool isValid = await widget.validateInput!(valueText);
             setState(() {
               errorText = isValid;
             });

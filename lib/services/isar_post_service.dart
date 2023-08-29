@@ -1,11 +1,14 @@
 import 'dart:convert';
 
 import 'package:isar/isar.dart';
-import 'package:social_network_app_mobile/model/post_model.dart';
 import 'package:social_network_app_mobile/services/isar_service.dart';
 
 class IsarPostService {
-  Future<List> getPostsWithNumber(int number, dynamic lastPost) async {
+  Future<dynamic> getCurrentUser(String token){
+    List listUser = 
+    for()
+  }
+  Future<List> getPostsWithNumber(int number, dynamic lastPost,) async {
     List postsOnIsar = await getAllPostsFromIsar();
     int indexOnIsar = postsOnIsar.indexWhere((e) => e['id'] == lastPost['id']);
     if (indexOnIsar >= 0) {
@@ -27,7 +30,7 @@ class IsarPostService {
 
   Future<List> getAllPostsFromIsar() async {
     final instance = await IsarService.instance;
-    final postsModelIsar = await instance.postModels.where().findAll();
+    final postsModelIsar = await instance.po.where().findAll();
     return postsModelIsar.map((e) => jsonDecode(e.objectPost!)).toList();
   }
 

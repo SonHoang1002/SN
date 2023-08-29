@@ -10,7 +10,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:social_network_app_mobile/apis/create_post_apis/preview_url_post_api.dart';
 import 'package:social_network_app_mobile/apis/media_api.dart';
@@ -20,11 +19,11 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/data/background_post.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
-import 'package:social_network_app_mobile/providers/posts/processing_post_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_feed_status.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/MenuBody/checkin.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/MenuBody/emoji_activity.dart';
@@ -68,20 +67,26 @@ const EDIT_POST = "edit_post";
 class CreateNewFeed extends ConsumerStatefulWidget {
   final dynamic post;
   final String? type;
+  final String? groupId;
   final dynamic postDiscussion;
   final dynamic pageData;
-  final Function? reloadFunction;
+  final Function(dynamic type, dynamic newData)? reloadFunction;
   // This is used to create post in friend wall (must allow to create post from friend)
   final dynamic friendData;
+  final bool? isInGroup;
+  final bool? beforeHasVideo;
 
   const CreateNewFeed(
       {Key? key,
       this.post,
       this.type,
+      this.groupId,
       this.postDiscussion,
       this.reloadFunction,
       this.pageData,
-      this.friendData})
+      this.friendData,
+      this.isInGroup,
+      this.beforeHasVideo = false})
       : super(key: key);
 
   @override
@@ -116,13 +121,21 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   bool showPreviewImage = true;
   ScrollController menuController = ScrollController();
   bool isMenuMinExtent = true;
-
   final GlobalKey _heightKey = GlobalKey();
   bool _isClickForCreatePost = false;
   final FocusNode _focusNode = FocusNode();
+  List _listMenuPost = [];
+
+  List listMentions = [];
+  Offset textFieldOffset = const Offset(0, 150.6);
+
   @override
   void initState() {
     super.initState();
+    _listMenuPost = listMenuPost;
+    if (widget.isInGroup == true) {
+      _listMenuPost.add(pollOptionMenuPost);
+    }
     if (widget.post != null) {
       _isShow = false;
     }
@@ -246,7 +259,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         break;
       case 'update_content':
         setState(() {
-          content = data;
+          content = data['content'];
+          listMentions = data['mentions'];
           _isShow = false;
         });
 
@@ -488,10 +502,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       setState(() {
         _isClickForCreatePost = true;
       });
-      double processingPostHeight = _heightKey.currentContext!.size!.height;
-      ref
-          .read(processingPostController.notifier)
-          .setPostionPost(processingPostHeight);
       String? type = widget.type ?? feedPost;
       if (type == postPage) {
         ref
@@ -514,12 +524,19 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       } else {
         ref.read(postControllerProvider.notifier).createUpdatePost(
             type, _createFakeData(),
-            isIdCurrentUser: widget.friendData['id'] ==
-                ref.watch(meControllerProvider)[0]['id']);
+            isIdCurrentUser: widget.friendData != null
+                ? widget.friendData['id'] ==
+                    ref.watch(meControllerProvider)[0]['id']
+                : true);
         widget.reloadFunction != null
             ? widget.reloadFunction!(null, null)
             : null;
       }
+      // re-run video (option)
+      if (widget.beforeHasVideo!) {
+        ref.read(disableMomentController.notifier).setDisableMoment(false);
+      }
+
       Navigator.pop(context);
       // prepare data for api
       var data = {"status": content, "visibility": visibility['key']};
@@ -581,25 +598,21 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         data['page_id'] = widget.pageData['id'];
         data['page_owner_id'] = widget.pageData['id'];
       }
-      if (widget.friendData != null) {
+      if (widget.friendData != null &&
+          widget.friendData['id'] != ref.watch(meControllerProvider)[0]['id']) {
         data['target_account_id'] = widget.friendData['id'];
+      }
+      if (widget.groupId != null && widget.isInGroup == true) {
+        data = {...data, "group_id": widget.groupId};
       }
       var response = await PostApi().createStatus(data);
       if (response != null) {
-        // if (isUploadVideo) {
-        //   setState(() {
-        //     isUploadVideo = false;
-        //   });
-        // } else {
-        // chưa check xem link gửi có xấu độc hay không nên lấy luôn link để hiển thị
-        // đợi ghép socket thông báo post xấu độc hay không
         if (previewUrlData != null && response['card'] == null) {
           response['card'] = previewUrlData;
         }
         widget.reloadFunction != null
             ? widget.reloadFunction!(type, response)
             : null;
-        // }
       }
     }
   }
@@ -680,8 +693,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     } else {
       ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
           widget.type, response,
-          isIdCurrentUser: widget.friendData['id'] ==
-              ref.watch(meControllerProvider)[0]['id']);
+          isIdCurrentUser: widget.friendData != null
+              ? widget.friendData['id'] ==
+                  ref.watch(meControllerProvider)[0]['id']
+              : true);
     }
 
     if (response != null && mounted) {
@@ -699,7 +714,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         checkin != null ||
         previewUrlData != null ||
         poll != null ||
-        statusQuestion != null) {
+        statusQuestion != null ||
+        lifeEvent != null) {
       return true;
     } else {
       return false;
@@ -870,6 +886,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                     checkin: checkin,
                                     previewUrlData: previewUrlData,
                                     poll: poll));
+                            ref
+                                .read(disableMomentController.notifier)
+                                .setDisableMoment(false);
                             popToPreviousScreen(context);
                             popToPreviousScreen(context);
                           }),
@@ -934,6 +953,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                               isCenterLeft: false,
                               colorWord: red),
                           onPressed: () {
+                            ref
+                                .read(disableMomentController.notifier)
+                                .setDisableMoment(false);
                             popToPreviousScreen(context);
                             popToPreviousScreen(context);
                           }),
@@ -974,6 +996,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     width = size.width;
     return WillPopScope(
       onWillPop: () async {
+        if (widget.beforeHasVideo!) {
+          ref.read(disableMomentController.notifier).setDisableMoment(false);
+        }
         return checkSaveDraft();
       },
       child: LoaderOverlay(
@@ -997,7 +1022,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          // ignore: void_checks
+                          ref
+                              .read(disableMomentController.notifier)
+                              .setDisableMoment(false);
                           return checkSaveDraft();
                         },
                         child: Icon(
@@ -1056,234 +1083,251 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       key: _heightKey,
       // decoration: getDecoration(Theme.of(context).scaffoldBackgroundColor),
       child: SingleChildScrollView(
-        child: Column(
+        child: Stack(
           children: [
-            CreateFeedStatus(
-                content: content,
-                checkin: checkin,
-                friendSelected: friendSelected,
-                statusActivity: statusActivity,
-                isShowBackground: checkisShowBackground(),
-                visibility: visibility,
-                backgroundSelected: files.isNotEmpty || checkin != null
-                    ? null
-                    : backgroundSelected,
-                focusNode: _focusNode,
-                handleUpdateData: handleUpdateData,
-                handleGetPreviewUrl: handleGetPreviewUrl,
-                friendData: widget.friendData,
-                pageData: widget.pageData),
-            previewUrlData != null
-                ? PreviewUrlPost(
-                    detailData: previewUrlData,
-                    resetPreview: handleResetPreviewUrl,
-                    deleteImagePreview: handleHidePreviewUrl,
-                    showImage: showPreviewImage,
-                  )
-                : const SizedBox(),
-            Stack(
+            Column(
               children: [
-                Column(
+                CreateFeedStatus(
+                  content: content,
+                  checkin: checkin,
+                  friendSelected: friendSelected,
+                  statusActivity: statusActivity,
+                  isShowBackground: checkisShowBackground(),
+                  visibility: visibility,
+                  backgroundSelected: files.isNotEmpty || checkin != null
+                      ? null
+                      : backgroundSelected,
+                  focusNode: _focusNode,
+                  handleUpdateData: handleUpdateData,
+                  handleGetPreviewUrl: handleGetPreviewUrl,
+                  friendData: widget.friendData,
+                  pageData: widget.pageData,
+                  // mentionAction: (Offset offset, List newMentionList) {
+                  //   setState(() {
+                  //     listMentions = newMentionList;
+                  //     if (offset.dy < 250) {
+                  //       textFieldOffset = offset;
+                  //     }
+                  //   });
+                  // },
+                ),
+
+                previewUrlData != null
+                    ? PreviewUrlPost(
+                        detailData: previewUrlData,
+                        resetPreview: handleResetPreviewUrl,
+                        deleteImagePreview: handleHidePreviewUrl,
+                        showImage: showPreviewImage,
+                      )
+                    : const SizedBox(),
+                Stack(
                   children: [
-                    files.isNotEmpty
-                        ? GridLayoutImage(
-                            post: widget.post,
-                            medias: files,
-                            handlePress: (media) {
-                              if (files.length > 1) {
-                                pushCustomCupertinoPageRoute(
-                                    context,
-                                    PageEditMediaUpload(
-                                        post: widget.post,
-                                        files: files,
-                                        handleUpdateData: handleUpdateData));
-                              }
-                            })
-                        : const SizedBox(),
-                    gifLink.isNotEmpty
-                        ? ImageCacheRender(
-                            path: gifLink,
-                            width: size.width,
-                          )
-                        : const SizedBox(),
-                    statusQuestion != null
-                        ? PostTarget(
-                            type: statusQuestion['postType'] == 'target'
-                                ? 'target_create'
-                                : postCreateQuestionAnwer,
-                            statusQuestion: statusQuestion,
-                          )
-                        : const SizedBox(),
-                    poll != null
-                        ? PostPoll(
-                            pollData: poll,
-                            functionClose: () {
-                              setState(() {
-                                poll = null;
-                              });
-                            },
-                            functionAdditional: () {
-                              pushCustomCupertinoPageRoute(
-                                  context,
-                                  CreateModalBaseMenu(
-                                      title: "Thăm dò ý kiến",
-                                      body: PollBody(
-                                          handleUpdateData: handleUpdateData,
-                                          poll: poll,
-                                          type: widget.type!),
-                                      buttonAppbar: const SizedBox()));
-                            },
-                          )
-                        : const SizedBox(),
-                    checkin != null &&
-                            (files.isEmpty &&
-                                gifLink == "" &&
-                                poll == null &&
-                                statusQuestion == null &&
-                                lifeEvent == null) &&
-                            showMap
-                        ? MapWidgetItem(checkin: checkin)
-                        : const SizedBox(),
-                    lifeEvent != null
-                        ? PostLifeEvent(
-                            post: {'life_event': lifeEvent},
-                          )
-                        : const SizedBox(),
+                    Column(
+                      children: [
+                        files.isNotEmpty
+                            ? GridLayoutImage(
+                                post: widget.post,
+                                medias: files,
+                                handlePress: (media) {
+                                  if (files.length > 1) {
+                                    pushCustomCupertinoPageRoute(
+                                        context,
+                                        PageEditMediaUpload(
+                                            post: widget.post,
+                                            files: files,
+                                            handleUpdateData:
+                                                handleUpdateData));
+                                  }
+                                })
+                            : const SizedBox(),
+                        gifLink.isNotEmpty
+                            ? ImageCacheRender(
+                                path: gifLink,
+                                width: size.width,
+                              )
+                            : const SizedBox(),
+                        statusQuestion != null
+                            ? PostTarget(
+                                type: statusQuestion['postType'] == 'target'
+                                    ? 'target_create'
+                                    : postCreateQuestionAnwer,
+                                statusQuestion: statusQuestion,
+                              )
+                            : const SizedBox(),
+                        poll != null
+                            ? PostPoll(
+                                pollData: poll,
+                                functionClose: () {
+                                  setState(() {
+                                    poll = null;
+                                  });
+                                },
+                                functionAdditional: () {
+                                  pushCustomCupertinoPageRoute(
+                                      context,
+                                      CreateModalBaseMenu(
+                                          title: "Thăm dò ý kiến",
+                                          body: PollBody(
+                                              handleUpdateData:
+                                                  handleUpdateData,
+                                              poll: poll,
+                                              type: widget.type!),
+                                          buttonAppbar: const SizedBox()));
+                                },
+                              )
+                            : const SizedBox(),
+                        checkin != null &&
+                                (files.isEmpty &&
+                                    gifLink == "" &&
+                                    poll == null &&
+                                    statusQuestion == null &&
+                                    lifeEvent == null) &&
+                                showMap
+                            ? MapWidgetItem(checkin: checkin)
+                            : const SizedBox(),
+                        lifeEvent != null
+                            ? PostLifeEvent(
+                                post: {'life_event': lifeEvent},
+                              )
+                            : const SizedBox(),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        files.length == 1 &&
+                                widget.post == null &&
+                                files[0]['type'] != "video"
+                            ? Container(
+                                margin: const EdgeInsets.only(
+                                  top: 2,
+                                  left: 10,
+                                ),
+                                child: SizedBox(
+                                  child: ButtonPrimary(
+                                    isPrimary: true,
+                                    label: "Chỉnh sửa",
+                                    handlePress: handleEditOneImage,
+                                    colorButton: blackColor,
+                                    fontSize: 12,
+                                    icon: Image.asset(
+                                      "assets/icons/edit_create_feed_icon.png",
+                                      height: 12,
+                                      width: 12,
+                                    ),
+                                  ),
+                                ))
+                            : const SizedBox(),
+                        if ((gifLink.isNotEmpty ||
+                            files.isNotEmpty ||
+                            statusQuestion != null ||
+                            (checkin != null && showMap)))
+                          Container(
+                              margin: EdgeInsets.only(
+                                  top: statusQuestion != null ? 20 : 10,
+                                  right: statusQuestion != null ? 20 : 10),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    files = [];
+                                    gifLink = '';
+                                    statusQuestion = null;
+                                    lifeEvent = null;
+                                    menuSelected = null;
+                                    showMap = false;
+                                  });
+                                },
+                                child: Container(
+                                  width: 28,
+                                  height: 28,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Colors.black.withOpacity(0.5)),
+                                  child: const Icon(
+                                    FontAwesomeIcons.xmark,
+                                    color: white,
+                                    size: 20,
+                                  ),
+                                ),
+                              )),
+                      ],
+                    )
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    files.length == 1 &&
-                            widget.post == null &&
-                            files[0]['type'] != "video"
-                        ? Container(
-                            margin: const EdgeInsets.only(
-                              top: 2,
-                              left: 10,
-                            ),
-                            child: SizedBox(
-                              child: ButtonPrimary(
-                                isPrimary: true,
-                                label: "Chỉnh sửa",
-                                handlePress: handleEditOneImage,
-                                colorButton: blackColor,
-                                fontSize: 12,
-                                icon: Image.asset(
-                                  "assets/icons/edit_create_feed_icon.png",
-                                  height: 12,
-                                  width: 12,
-                                ),
-                              ),
-                            ))
-                        : const SizedBox(),
-                    if ((gifLink.isNotEmpty ||
-                        files.isNotEmpty ||
-                        statusQuestion != null ||
-                        (checkin != null && showMap)))
-                      Container(
-                          margin: EdgeInsets.only(
-                              top: statusQuestion != null ? 20 : 10,
-                              right: statusQuestion != null ? 20 : 10),
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                files = [];
-                                gifLink = '';
-                                statusQuestion = null;
-                                lifeEvent = null;
-                                menuSelected = null;
-                                showMap = false;
-                              });
-                            },
-                            child: Container(
-                              width: 28,
-                              height: 28,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.black.withOpacity(0.5)),
-                              child: const Icon(
-                                FontAwesomeIcons.xmark,
-                                color: white,
-                                size: 20,
-                              ),
-                            ),
-                          )),
-                  ],
-                )
-              ],
-            ),
 
-            widget.post != null && widget.post?['shared_course'] != null
-                ? PostCourse(
-                    post: widget.post,
-                    type: EDIT_POST,
-                  )
-                : const SizedBox(),
-            widget.post != null && widget.post?['shared_project'] != null
-                ? PostProject(
-                    post: widget.post,
-                    type: EDIT_POST,
-                  )
-                : const SizedBox(),
-            widget.post != null && widget.post?['shared_recruit'] != null
-                ? PostRecruit(
-                    post: widget.post,
-                    type: EDIT_POST,
-                  )
-                : const SizedBox(),
-            widget.post != null && widget.post['shared_group'] != null
-                ? PostShareGroup(
-                    post: widget.post,
-                    type: EDIT_POST,
-                  )
-                : const SizedBox(),
-            widget.post != null && widget.post['shared_page'] != null
-                ? PostSharePage(
-                    post: widget.post,
-                    type: EDIT_POST,
-                  )
-                : const SizedBox(),
-            widget.post != null && widget.post['reblog'] != null
-                ? PostShare(
-                    post: widget.post,
-                    type: EDIT_POST,
-                  )
-                : const SizedBox(),
-            // add navi to product when have market place
-            widget.post != null && widget.post?['shared_product'] != null
-                ? PostProduct(
-                    post: widget.post,
-                    type: EDIT_POST,
-                  )
-                : const SizedBox(),
-            widget.post != null && widget.post?['shared_event'] != null
-                ? PostShareEvent(
-                    post: widget.post,
-                    type: EDIT_POST,
-                  )
-                : const SizedBox(),
-            widget.post != null && widget.post['post_type'] != null
-                ? ([postAvatarAccount, postBannerAccount]
-                        .contains(widget.post['post_type'])
-                    ? AvatarBanner(
-                        postType: widget.post['post_type'], post: widget.post)
-                    : [postTarget, postVisibleQuestion]
+                widget.post != null && widget.post?['shared_course'] != null
+                    ? PostCourse(
+                        post: widget.post,
+                        type: EDIT_POST,
+                      )
+                    : const SizedBox(),
+                widget.post != null && widget.post?['shared_project'] != null
+                    ? PostProject(
+                        post: widget.post,
+                        type: EDIT_POST,
+                      )
+                    : const SizedBox(),
+                widget.post != null && widget.post?['shared_recruit'] != null
+                    ? PostRecruit(
+                        post: widget.post,
+                        type: EDIT_POST,
+                      )
+                    : const SizedBox(),
+                widget.post != null && widget.post['shared_group'] != null
+                    ? PostShareGroup(
+                        post: widget.post,
+                        type: EDIT_POST,
+                      )
+                    : const SizedBox(),
+                widget.post != null && widget.post['shared_page'] != null
+                    ? PostSharePage(
+                        post: widget.post,
+                        type: EDIT_POST,
+                      )
+                    : const SizedBox(),
+                widget.post != null && widget.post['reblog'] != null
+                    ? PostShare(
+                        post: widget.post,
+                        type: EDIT_POST,
+                      )
+                    : const SizedBox(),
+                // add navi to product when have market place
+                widget.post != null && widget.post?['shared_product'] != null
+                    ? PostProduct(
+                        post: widget.post,
+                        type: EDIT_POST,
+                      )
+                    : const SizedBox(),
+                widget.post != null && widget.post?['shared_event'] != null
+                    ? PostShareEvent(
+                        post: widget.post,
+                        type: EDIT_POST,
+                      )
+                    : const SizedBox(),
+                widget.post != null && widget.post['post_type'] != null
+                    ? ([postAvatarAccount, postBannerAccount]
                             .contains(widget.post['post_type'])
-                        ? PostTarget(
-                            post: widget.post,
-                            type:
-                                widget.post['post_type'] == postVisibleQuestion
+                        ? AvatarBanner(
+                            postType: widget.post['post_type'],
+                            post: widget.post)
+                        : [postTarget, postVisibleQuestion]
+                                .contains(widget.post['post_type'])
+                            ? PostTarget(
+                                post: widget.post,
+                                type: widget.post['post_type'] ==
+                                        postVisibleQuestion
                                     ? postQuestionAnwer
                                     : postTarget,
-                            statusQuestion: widget.post['status_question'],
-                          )
-                        : const SizedBox())
-                : const SizedBox(),
-            Container(
-              height: 80,
-              color: transparent,
-            )
+                                statusQuestion: widget.post['status_question'],
+                              )
+                            : const SizedBox())
+                    : const SizedBox(),
+                Container(
+                  height: 80,
+                  color: transparent,
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -1448,7 +1492,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                             }
                           },
                           child: index != 4
-                              ? listMenuPost[index]['image'] != null
+                              ? _listMenuPost[index]['image'] != null
                                   ? IconButton(
                                       onPressed: (menuSelected?['disabled'] ??
                                                   [])
@@ -1469,10 +1513,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                                                 files,
                                                           )));
                                             },
-                                      icon: listMenuPost[index]['image']
+                                      icon: _listMenuPost[index]['image']
                                               .endsWith(".svg")
                                           ? SvgPicture.asset(
-                                              listMenuPost[index]['image'],
+                                              _listMenuPost[index]['image'],
                                               height: 28,
                                               width: 28,
                                               fit: BoxFit.scaleDown,
@@ -1484,7 +1528,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                                       : null,
                                             )
                                           : Image.asset(
-                                              listMenuPost[index]['image'],
+                                              _listMenuPost[index]['image'],
                                               height: 28,
                                               width: 28,
                                               fit: BoxFit.scaleDown,
@@ -1499,21 +1543,21 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                   : GestureDetector(
                                       onTap: (menuSelected?['disabled'] ?? [])
                                               ?.contains(
-                                                  listMenuPost[index]['key'])
+                                                  _listMenuPost[index]['key'])
                                           ? null
                                           : () {
                                               handleChooseMenu(
-                                                  listMenuPost[index],
+                                                  _listMenuPost[index],
                                                   'menu_out');
                                             },
                                       child: Icon(
-                                        listMenuPost[index]['icon'],
+                                        _listMenuPost[index]['icon'],
                                         color: (menuSelected?['disabled'] ?? [])
                                                 ?.contains(
-                                                    listMenuPost[index]['key'])
+                                                    _listMenuPost[index]['key'])
                                             ? greyColor
                                             : Color(
-                                                listMenuPost[index]['color']),
+                                                _listMenuPost[index]['color']),
                                         size: 24,
                                       ),
                                     )
@@ -1568,15 +1612,15 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
               //     ? const NeverScrollableScrollPhysics()
               //     : const BouncingScrollPhysics(),
               shrinkWrap: true,
-              itemCount: listMenuPost.length,
+              itemCount: _listMenuPost.length,
               itemBuilder: (context, index) {
                 bool isDisabled =
-                    menuDisabled.contains(listMenuPost[index]['key']);
+                    menuDisabled.contains(_listMenuPost[index]['key']);
                 return InkWell(
                   onTap: isDisabled
                       ? null
                       : () {
-                          handleChooseMenu(listMenuPost[index], 'menu_in');
+                          handleChooseMenu(_listMenuPost[index], 'menu_in');
                         },
                   child: Container(
                     padding:
@@ -1587,30 +1631,30 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                         const SizedBox(
                           width: 8,
                         ),
-                        listMenuPost[index]['image'] != null
+                        _listMenuPost[index]['image'] != null
                             ? Container(
                                 // padding: const EdgeInsets.only(left: 10),
-                                child: listMenuPost[index]['image']
+                                child: _listMenuPost[index]['image']
                                         .endsWith(".svg")
                                     ? SvgPicture.asset(
-                                        listMenuPost[index]['image'],
+                                        _listMenuPost[index]['image'],
                                         width: 20,
                                         color: isDisabled ? greyColor : null,
                                       )
                                     : Image.asset(
-                                        listMenuPost[index]['image'],
+                                        _listMenuPost[index]['image'],
                                         height: 20,
                                         width: 20,
                                         color: isDisabled ? greyColor : null,
                                       ),
                               )
                             : const SizedBox(),
-                        listMenuPost[index]['icon'] != null
+                        _listMenuPost[index]['icon'] != null
                             ? Icon(
-                                listMenuPost[index]['icon'],
+                                _listMenuPost[index]['icon'],
                                 color: isDisabled
                                     ? greyColor
-                                    : Color(listMenuPost[index]['color']),
+                                    : Color(_listMenuPost[index]['color']),
                                 size: 20,
                               )
                             : const SizedBox(),
@@ -1618,7 +1662,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                           width: 20,
                         ),
                         Text(
-                          listMenuPost[index]['label'],
+                          _listMenuPost[index]['label'],
                           style: TextStyle(
                               fontSize: 16,
                               color: isDisabled ? greyColor : null),

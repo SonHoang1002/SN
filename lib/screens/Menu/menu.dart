@@ -83,9 +83,11 @@ class _MenuState extends ConsumerState<Menu> {
 
       final theme = pv.Provider.of<ThemeManager>(context, listen: false);
       theme.toggleTheme('system');
-      await SecureStorage().saveKeyStorage("token", "noData");
+      await SecureStorage().deleteKeyStorage('token');
+      // ???? why after change value of token still is old token , not noData ????
       await SecureStorage().deleteKeyStorage("userId");
       await SecureStorage().deleteKeyStorage('theme');
+      await SecureStorage().saveKeyStorage("token", "noData");
       ref.read(meControllerProvider.notifier).resetMeData();
       if (mounted) {
         pushAndReplaceToNextScreen(context, const OnboardingLoginPage());

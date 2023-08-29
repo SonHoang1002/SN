@@ -31,4 +31,7 @@ class ConnectivityProvider extends StateNotifier<ConnectivityState> {
       state = state.copyWith(connectInternet: false);
     }
   }
+  updateConnectivity(bool status){
+     state = state.copyWith(connectInternet: status);
+  }
 }

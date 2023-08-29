@@ -16,6 +16,7 @@ import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/model/post_model.dart';
+import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
@@ -56,13 +57,13 @@ class _FeedState extends ConsumerState<Feed> {
   void initState() {
     super.initState();
     if (!mounted) return;
-
     updatePostIsar();
     initRiverpodData();
     addScrollListener();
     // getListPost();
     _isMore.value = ref.read(postControllerProvider).isMore;
   }
+  
 
   // init 4  first post for riverpod post
   initRiverpodData() async {
@@ -78,7 +79,7 @@ class _FeedState extends ConsumerState<Feed> {
       } else {
         ref.read(postControllerProvider.notifier).addListPost(
               isarPostDataList,
-              paramsConfig,
+              paramsConfig
             );
       }
     }
@@ -90,15 +91,15 @@ class _FeedState extends ConsumerState<Feed> {
 
   Future<void> updatePostIsar() async {
     final isarPostCount = await IsarPostService().getCountPostIsar();
-    while (isarPostCount < 100 ||
-        isarPostCount == ref.read(postControllerProvider).posts.length) {
-      if (isarPostCount > 0) {
-        _isMore.value = true;
-      } else {
-        _isMore.value = false;
-      }
-      await useIsolate(paramsConfig);
-    }
+    // while (isarPostCount < 100 ||
+    //   isarPostCount == ref.read(postControllerProvider).posts.length) {
+    // if (isarPostCount > 0) {
+    //   _isMore.value = true;
+    // } else {
+    //   _isMore.value = false;
+    // }
+    await useIsolate(paramsConfig);
+    // }
   }
 
   void addScrollListener() {
@@ -115,8 +116,16 @@ class _FeedState extends ConsumerState<Feed> {
             scrollController.offset ==
                 scrollController.position.maxScrollExtent) {
           EasyDebounce.debounce(
-              'my-debouncer', const Duration(milliseconds: 300), () async {
-            getDataFromIsar();
+              'my-debouncer', const Duration(milliseconds: 180), () async {
+            // kiểm tra không có kết nối hoặc có kết nối mà không còn bài viết nào khác nữa --> lấy data từ isar
+            if (!ref.watch(connectivityControllerProvider).connectInternet ||
+                ((_isMore.value != true ||
+                        ref.watch(postControllerProvider).isMore != true) &&
+                    ref
+                        .watch(connectivityControllerProvider)
+                        .connectInternet)) {
+              getDataFromIsar();
+            }
             updatePostIsar();
           });
         }
@@ -177,6 +186,12 @@ class _FeedState extends ConsumerState<Feed> {
     }
     final response = await receivePort.first;
     await IsarPostService().addPostIsar(response);
+    if (ref.watch(connectivityControllerProvider).connectInternet) {
+      ref.read(postControllerProvider.notifier).addListPost(
+            response,
+            paramsConfig,
+          );
+    }
     return response;
   }
 
@@ -199,13 +214,15 @@ class _FeedState extends ConsumerState<Feed> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(postControllerProvider.notifier).changeProcessingPost(newData);
         bool isHaveVideo = false;
-        newData['media_attachments'].forEach((ele) {
-          if (ele['type'] == "video") {
-            isHaveVideo = true;
+        if (newData?['media_attachments'] != null) {
+          newData?['media_attachments'].forEach((ele) {
+            if (ele['type'] == "video") {
+              isHaveVideo = true;
+            }
+          });
+          if (isHaveVideo) {
+            buildSnackBar(context, "Video của bạn đã sẵn sàng.");
           }
-        });
-        if (isHaveVideo) {
-          buildSnackBar(context, "Video của bạn đã sẵn sàng.");
         }
       });
     }
@@ -229,10 +246,6 @@ class _FeedState extends ConsumerState<Feed> {
   Widget build(BuildContext context) {
     List posts = List.from(ref.watch(postControllerProvider).posts);
     theme ??= pv.Provider.of<ThemeManager>(context);
-    var countInIsar;
-    Future.delayed(Duration.zero, () async {
-      countInIsar = await IsarPostService().getCountPostIsar();
-    });
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(postControllerProvider.notifier).refreshListPost(paramsConfig);
@@ -308,6 +321,8 @@ class _FeedState extends ConsumerState<Feed> {
                                     reloadFunction: () {
                                       setState(() {});
                                     },
+                                    friendData:
+                                        ref.watch(meControllerProvider)[0],
                                     jumpToOffsetFunction: _jumpToOffsetFunction,
                                     isFocus: focusCurrentPostIndex.value ==
                                         posts[index]['id']),
@@ -338,6 +353,7 @@ class _FeedState extends ConsumerState<Feed> {
   }
 
   Widget _buildSuggestGroupWidget() {
+    final meData = ref.watch(meControllerProvider)[0];
     return Suggest(
         type: suggestGroups,
         headerWidget: Image.asset(
@@ -347,7 +363,7 @@ class _FeedState extends ConsumerState<Feed> {
         subHeaderWidget: Column(children: [
           buildSpacer(height: 5),
           buildTextContent(
-              ref.watch(meControllerProvider)[0]['display_name'] +
+              (meData?['display_name'] ?? meData?['name']) +
                   " ơi, bạn có thể sẽ thích các nhóm sau ",
               true,
               fontSize: 17),

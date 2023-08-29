@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -8,10 +11,13 @@ import 'package:social_network_app_mobile/constant/marketPlace_constants.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/market_place_providers/cart_product_provider.dart';
+import 'package:social_network_app_mobile/providers/market_place_providers/products_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/detail_product_page.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/main_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/notification_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/payment_modules/payment_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/widgets/classify_category_conponent.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/market_button_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_message_dialog_widget.dart';
@@ -47,9 +53,25 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
   bool _isLoading = true;
   final TextEditingController _searchController =
       TextEditingController(text: "");
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(() async {
+      if (double.parse((_scrollController.offset).toStringAsFixed(0)) ==
+          (double.parse((_scrollController.position.maxScrollExtent)
+              .toStringAsFixed(0)))) {
+        EasyDebounce.debounce('my-debouncer', const Duration(milliseconds: 300),
+            () async {
+          dynamic params = {
+            "offset": ref.watch(productsProvider).list.length,
+            ...paramConfigProductSearch,
+          };
+          ref.read(productsProvider.notifier).getProductsSearch(params);
+        });
+      }
+    });
   }
 
   Future _initData() async {
@@ -89,45 +111,45 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
     setState(() {});
   }
 
-  _deleteProduct(dynamic indexCategory, dynamic indexProduct) {
+  _deleteProduct(dynamic indexCategory, dynamic indexProduct) async {
     // call api
-    _callDeleteProductApi(
-        _cartData![indexCategory]["items"][indexProduct]["product_variant"]
-            ["product_id"],
-        {
-          "product_variant_id": int.parse(_cartData![indexCategory]["items"]
-              [indexProduct]["product_variant"]["id"])
-        });
 
+    final productId = _cartData![indexCategory]["items"][indexProduct]
+        ["product_variant"]["product_id"];
+    final payload = {
+      "product_variant_id": _cartData![indexCategory]["items"][indexProduct]
+          ["product_variant"]["id"]
+    };
     setState(() {
       _cartData![indexCategory]["items"].removeAt(indexProduct);
       if (_cartData![indexCategory]["items"].isEmpty) {
         _cartData!.removeAt(indexCategory);
       }
     });
+    await _callDeleteProductApi(productId, payload);
   }
 
-  _updateQuantity(bool isPlus, dynamic indexCategory, dynamic indexProduct) {
+  _updateQuantity(
+      bool isPlus, dynamic indexCategory, dynamic indexProduct) async {
     // call api
-    _callUpdateQuantityApi(
-        _cartData![indexCategory]["items"][indexProduct]["product_variant"]
-            ["product_id"],
-        {
-          "product_variant_id": _cartData![indexCategory]["items"][indexProduct]
-              ["product_variant"]["id"],
-          "quantity": _cartData![indexCategory]["items"][indexProduct]
-              ["quantity"]
-        });
+    final productId = _cartData![indexCategory]["items"][indexProduct]
+        ["product_variant"]["product_id"];
+    final payload = {
+      "product_variant_id": _cartData![indexCategory]["items"][indexProduct]
+          ["product_variant"]["id"],
+      "quantity": _cartData![indexCategory]["items"][indexProduct]["quantity"]
+    };
     if (isPlus) {
       _cartData![indexCategory]["items"][indexProduct]["quantity"] += 1;
     } else {
       if (_cartData![indexCategory]["items"][indexProduct]["quantity"] != 0) {
         _cartData![indexCategory]["items"][indexProduct]["quantity"] -= 1;
       } else {
-        _deleteProduct(indexCategory, indexProduct);
+        await _deleteProduct(indexCategory, indexProduct);
       }
     }
     setState(() {});
+    await _callUpdateQuantityApi(productId, payload);
   }
 
   Future _callDeleteProductApi(dynamic id, dynamic data) async {
@@ -190,22 +212,82 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
             child: Column(
               children: [
                 Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: [
-                      buildDivider(color: greyColor),
-                      _isLoading
-                          ? buildCircularProgressIndicator()
-                          : Column(
-                              children:
-                                  List.generate(_cartData!.length, (index) {
-                              final data = _cartData![index];
-                              return _buildCartProductItem(data, index);
-                            })),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ListView(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: [
+                            buildDivider(color: greyColor),
+                            _isLoading
+                                ? buildCircularProgressIndicator()
+                                : _cartData!.isNotEmpty
+                                    ? Column(
+                                        children: List.generate(
+                                            _cartData!.length, (index) {
+                                        final data = _cartData![index];
+                                        return _buildCartProductItem(
+                                            data, index);
+                                      }))
+                                    : Column(
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/empty_cart.png",
+                                            height: 120,
+                                            fit: BoxFit.cover,
+                                          ),
+                                          buildSpacer(height: 20),
+                                          buildTextContent(
+                                              "Giỏ hàng trống !!", false,
+                                              fontSize: 16,
+                                              isCenterLeft: false),
+                                          // buildSpacer(height: 20),
+                                          // buildTextContent(
+                                          //     "Giỏ hàng trống !!", false,
+                                          //     fontSize: 16,
+                                          //     isCenterLeft: false),
+                                        ],
+                                      ),
+                          ],
+                        ),
+                        buildSpacer(height: 10),
+                        SuggestListComponent(
+                          context: context,
+                          title: Flex(direction: Axis.horizontal, children: [
+                            Flexible(
+                                flex: 5,
+                                child: Container(
+                                  color: greyColor,
+                                  height: 2,
+                                )),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: buildTextContent(
+                                  "Có thể bạn cũng thích", false,
+                                  fontSize: 13, isCenterLeft: false),
+                            ),
+                            Flexible(
+                                flex: 5,
+                                child: Container(
+                                  color: greyColor,
+                                  height: 2,
+                                )),
+                          ]),
+                          controller: _scrollController,
+                          contentList: ref.watch(productsProvider).list,
+                          isLoading: true,
+                          isLoadingMore: ref.watch(productsProvider).isMore,
+                        )
+                      ],
+                    ),
                   ),
                 ),
-                _voucherAndBuyComponent()
+                _cartData != null && _cartData!.isNotEmpty
+                    ? _voucherAndBuyComponent()
+                    : const SizedBox(),
               ],
             ),
           ),
@@ -230,18 +312,18 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                             height: 30,
                             width: 30,
                             child: Checkbox(
-                                value: _cartData![indexComponent]["items"]
+                                value: _cartData![indexComponent]?["items"]
                                     .every((element) {
-                                  return element["check"] == true;
+                                  return element?["check"] == true;
                                 }),
                                 onChanged: (value) {
                                   for (int i = 0;
                                       i <
-                                          _cartData?[indexComponent]["items"]
+                                          _cartData?[indexComponent]?["items"]
                                               .length;
                                       i++) {
-                                    _cartData![indexComponent]["items"][i]
-                                        ["check"] = value as bool;
+                                    _cartData![indexComponent]?["items"]?[i]
+                                        ?["check"] = value as bool;
                                   }
                                   setState(() {});
                                 },
@@ -258,7 +340,8 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
                         ),
                         SizedBox(
                             width: 180,
-                            child: buildTextContent(data["title"], true,
+                            child: buildTextContent(
+                                (data?["title"]) ?? "--", true,
                                 fontSize: 16, overflow: TextOverflow.ellipsis)),
                         const SizedBox(
                           height: 40,
@@ -294,280 +377,390 @@ class _CartMarketPageState extends ConsumerState<CartMarketPage> {
             ],
           ),
         ),
-        buildDivider(
-          color: greyColor,
-        ),
-        buildSpacer(height: 10),
-        Container(
-          margin: const EdgeInsets.only(bottom: 5.0),
-          child: Column(
-            children: List.generate(data["items"].length, (index) {
-              final itemData = data["items"][index];
-              return Column(
-                children: [
-                  index != 0
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 5),
-                          child: buildDivider(color: greyColor),
-                        )
-                      : const SizedBox(),
-                  Slidable(
-                    endActionPane: ActionPane(
-                      motion: const ScrollMotion(),
-                      children: [
-                        SlidableAction(
-                          onPressed: (context) {
-                            _deleteProduct(indexComponent, index);
-                          },
-                          backgroundColor: const Color(0xFFFE4A49),
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: 'Delete',
-                        ),
-                      ],
-                    ),
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: 110,
-                          width: width,
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: SizedBox(
-                            height: 80,
-                            child: Row(
+        Column(
+          children: [
+            buildDivider(
+              color: greyColor,
+            ),
+            buildSpacer(
+              height: 5,
+            ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 5.0),
+              child: Column(
+                children: List.generate(data?["items"].length, (index) {
+                  final itemData = data?["items"]?[index];
+                  bool isOutOfStock = itemData['quantity'] >
+                      itemData?['product_variant']?['inventory_quantity'];
+                  return Stack(
+                    children: [
+                      Column(
+                        children: [
+                          index != 0
+                              ? Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 5),
+                                  child: buildDivider(color: greyColor),
+                                )
+                              : const SizedBox(),
+                          Slidable(
+                            endActionPane: ActionPane(
+                              motion: const ScrollMotion(),
                               children: [
-                                Row(
-                                  children: [
-                                    !isNotExist
-                                        ? Container(
-                                            margin: const EdgeInsets.only(
-                                              right: 7,
-                                              bottom: 25.0,
-                                            ),
-                                            height: 30,
-                                            width: 30,
-                                            alignment: Alignment.topCenter,
-                                            child: Checkbox(
-                                                value:
-                                                    _cartData![indexComponent]
-                                                            ["items"][index]
-                                                        ["check"] as bool,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _cartData![indexComponent]
-                                                                ["items"][index]
-                                                            ["check"] =
-                                                        value as bool;
-                                                  });
-                                                },
-                                                shape: checkBoxBorder),
-                                          )
-                                        : const SizedBox(),
-                                    InkWell(
-                                      onTap: () {
-                                        pushToNextScreen(
-                                            context,
-                                            DetailProductMarketPage(
-                                              id: itemData["product_variant"]
-                                                      ["product_id"]
-                                                  .toString(),
-                                            ));
-                                      },
-                                      child: Container(
-                                        alignment: Alignment.topCenter,
-                                        margin:
-                                            const EdgeInsets.only(right: 10),
-                                        child: ImageCacheRender(
-                                          height: 80.0,
-                                          width: 80.0,
-                                          path: itemData["product_variant"]
-                                                          ["image"] !=
-                                                      null &&
-                                                  itemData["product_variant"]
-                                                          ["image"]
-                                                      .isNotEmpty
-                                              ? itemData["product_variant"]
-                                                  ["image"]["url"]
-                                              : "https://www.w3schools.com/w3css/img_lights.jpg",
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                SlidableAction(
+                                  onPressed: (context) async {
+                                    await _deleteProduct(indexComponent, index);
+                                  },
+                                  backgroundColor: const Color(0xFFFE4A49),
+                                  foregroundColor: Colors.white,
+                                  icon: Icons.delete,
+                                  label: 'Delete',
                                 ),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          pushToNextScreen(
-                                              context,
-                                              DetailProductMarketPage(
-                                                id: itemData["product_variant"]
-                                                        ["product_id"]
-                                                    .toString(),
-                                              ));
-                                        },
-                                        child: Column(
+                              ],
+                            ),
+                            child: Stack(
+                              children: [
+                                Container(
+                                  height: 110,
+                                  width: width,
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: SizedBox(
+                                    height: 80,
+                                    child: Row(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            isNotExist || isOutOfStock
+                                                ? const SizedBox(
+                                                    width: 30,
+                                                  )
+                                                : Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      right: 7,
+                                                      bottom: 25.0,
+                                                    ),
+                                                    height: 30,
+                                                    width: 30,
+                                                    alignment:
+                                                        Alignment.topCenter,
+                                                    child: Checkbox(
+                                                        value: _cartData![
+                                                                    indexComponent]
+                                                                ["items"][index]
+                                                            ["check"] as bool,
+                                                        onChanged: (value) {
+                                                          setState(() {
+                                                            _cartData![indexComponent]
+                                                                            [
+                                                                            "items"]
+                                                                        [index]
+                                                                    ["check"] =
+                                                                value as bool;
+                                                          });
+                                                        },
+                                                        shape: checkBoxBorder),
+                                                  ),
+                                            // : const SizedBox(),
+                                            InkWell(
+                                              onTap: () {
+                                                pushToNextScreen(
+                                                    context,
+                                                    DetailProductMarketPage(
+                                                      id: itemData?[
+                                                                  "product_variant"]
+                                                              ?["product_id"]
+                                                          .toString(),
+                                                    ));
+                                              },
+                                              child: Container(
+                                                alignment: Alignment.topCenter,
+                                                margin: const EdgeInsets.only(
+                                                    right: 10),
+                                                child: ImageCacheRender(
+                                                  height: 80.0,
+                                                  width: 80.0,
+                                                  path: itemData?["product_variant"]
+                                                                  ?["image"] !=
+                                                              null &&
+                                                          itemData?["product_variant"]
+                                                                  ?["image"]
+                                                              .isNotEmpty
+                                                      ? (itemData?["product_variant"]
+                                                                  ?["image"]
+                                                              ?["url"]) ??
+                                                          (itemData?["product_variant"]
+                                                                  ?["image"]
+                                                              ?["preview_url"])
+                                                      : "https://www.w3schools.com/w3css/img_lights.jpg",
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Flexible(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  pushToNextScreen(
+                                                      context,
+                                                      DetailProductMarketPage(
+                                                        id: itemData[
+                                                                    "product_variant"]
+                                                                ["product_id"]
+                                                            .toString(),
+                                                      ));
+                                                },
+                                                child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          SizedBox(
+                                                            width: 190,
+                                                            child: Text(
+                                                              itemData[
+                                                                      "product_variant"]
+                                                                  ["title"],
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              maxLines: 1,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 15,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          isNotExist
+                                                              ? GestureDetector(
+                                                                  onTap:
+                                                                      () async {
+                                                                    await _deleteProduct(
+                                                                        indexComponent,
+                                                                        index);
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    decoration:
+                                                                        boxDecoration,
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(5),
+                                                                    child:
+                                                                        buildTextContent(
+                                                                      "Xóa",
+                                                                      false,
+                                                                      fontSize:
+                                                                          10,
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : const SizedBox()
+                                                        ],
+                                                      ),
+                                                      buildSpacer(height: 8),
+                                                      buildTextContent(
+                                                          itemData["product_variant"]
+                                                                          [
+                                                                          "option1"] ==
+                                                                      null &&
+                                                                  itemData["product_variant"]
+                                                                          [
+                                                                          "option2"] ==
+                                                                      null
+                                                              ? "Phân loại: Không có"
+                                                              : "Phân loại  ${itemData["product_variant"]["option1"] ?? ""} ${itemData["product_variant"]["option2"] ?? ""}",
+                                                          false,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 1,
+                                                          fontSize: 11,
+                                                          colorWord: greyColor),
+                                                      buildSpacer(height: 8),
+                                                      buildTextContent(
+                                                          "₫ ${formatCurrency(itemData["product_variant"]["price"]).toString()}",
+                                                          true,
+                                                          fontSize: 15,
+                                                          colorWord: red),
+                                                      buildSpacer(height: 8),
+                                                    ]),
+                                              ),
+                                              buildSpacer(height: 5),
                                               Row(
                                                 children: [
-                                                  SizedBox(
-                                                    width: 190,
-                                                    child: Text(
-                                                      itemData[
-                                                              "product_variant"]
-                                                          ["title"],
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      style: const TextStyle(
-                                                        fontSize: 15,
+                                                  InkWell(
+                                                    onTap: () {
+                                                      _updateQuantity(
+                                                          false,
+                                                          indexComponent,
+                                                          index);
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              color: greyColor,
+                                                              width: 0.4)),
+                                                      height: 25,
+                                                      width: 25,
+                                                      child: const Icon(
+                                                        FontAwesomeIcons.minus,
+                                                        size: 16,
                                                       ),
                                                     ),
                                                   ),
-                                                  isNotExist
-                                                      ? GestureDetector(
-                                                          onTap: () {
-                                                            _deleteProduct(
-                                                                indexComponent,
-                                                                index);
-                                                          },
-                                                          child: Container(
-                                                            decoration:
-                                                                boxDecoration,
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(5),
-                                                            child:
-                                                                buildTextContent(
-                                                              "Xóa",
-                                                              false,
-                                                              fontSize: 10,
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : const SizedBox()
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: greyColor,
+                                                            width: 0.2)),
+                                                    height: 25,
+                                                    width: 30,
+                                                    child: Center(
+                                                        child: Text(
+                                                            itemData["quantity"]
+                                                                .toString())),
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () {
+                                                      _updateQuantity(
+                                                          true,
+                                                          indexComponent,
+                                                          index);
+                                                    },
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              color: greyColor,
+                                                              width: 0.2)),
+                                                      height: 25,
+                                                      width: 25,
+                                                      child: const Icon(
+                                                          FontAwesomeIcons.plus,
+                                                          size: 16),
+                                                    ),
+                                                  )
                                                 ],
                                               ),
-                                              buildSpacer(height: 8),
-                                              buildTextContent(
-                                                  itemData["product_variant"]
-                                                                  ["option1"] ==
-                                                              null &&
-                                                          itemData["product_variant"]
-                                                                  ["option2"] ==
-                                                              null
-                                                      ? "Phân loại: Không có"
-                                                      : "Phân loại  ${itemData["product_variant"]["option1"] ?? ""} ${itemData["product_variant"]["option2"] ?? ""}",
-                                                  false,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 1,
-                                                  fontSize: 11,
-                                                  colorWord: greyColor),
-                                              buildSpacer(height: 8),
-                                              buildTextContent(
-                                                  "₫ ${formatCurrency(itemData["product_variant"]["price"]).toString()}",
-                                                  true,
-                                                  fontSize: 15,
-                                                  colorWord: red),
-                                              buildSpacer(height: 8),
-                                            ]),
-                                      ),
-                                      buildSpacer(height: 5),
-                                      Row(
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              _updateQuantity(
-                                                  false, indexComponent, index);
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: greyColor,
-                                                      width: 0.4)),
-                                              height: 25,
-                                              width: 25,
-                                              child: const Icon(
-                                                FontAwesomeIcons.minus,
-                                                size: 16,
-                                              ),
-                                            ),
+                                            ],
                                           ),
-                                          Container(
-                                            decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: greyColor,
-                                                    width: 0.2)),
-                                            height: 25,
-                                            width: 30,
-                                            child: Center(
-                                                child: Text(itemData["quantity"]
-                                                    .toString())),
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              _updateQuantity(
-                                                  true, indexComponent, index);
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: greyColor,
-                                                      width: 0.2)),
-                                              height: 25,
-                                              width: 25,
-                                              child: const Icon(
-                                                  FontAwesomeIcons.plus,
-                                                  size: 16),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ],
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                )
+                                ),
+                                isNotExist
+                                    ? Container(
+                                        alignment: Alignment.bottomRight,
+                                        height: 110,
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(right: 10),
+                                          width: 90,
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: red, width: 0.4),
+                                              borderRadius:
+                                                  BorderRadius.circular(4)),
+                                          child: buildTextContent(
+                                              "Tương tự", false,
+                                              fontSize: 14,
+                                              colorWord: red,
+                                              isCenterLeft: false),
+                                        ),
+                                      )
+                                    : const SizedBox()
                               ],
                             ),
                           ),
-                        ),
-                        isNotExist
-                            ? Container(
-                                alignment: Alignment.bottomRight,
-                                height: 110,
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 10),
-                                  width: 90,
-                                  height: 35,
-                                  decoration: BoxDecoration(
-                                      border:
-                                          Border.all(color: red, width: 0.4),
-                                      borderRadius: BorderRadius.circular(4)),
-                                  child: buildTextContent("Tương tự", false,
-                                      fontSize: 14,
-                                      colorWord: red,
-                                      isCenterLeft: false),
-                                ),
-                              )
-                            : const SizedBox()
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            }),
-          ),
-        ),
-        const CrossBar(
-          height: 7,
-          opacity: 0.2,
+                        ],
+                      ),
+                      isOutOfStock
+                          ? Positioned.fill(
+                              child: Container(
+                                  color: greyColor.withOpacity(0.5),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      // Container(
+                                      //     padding: EdgeInsets.symmetric(
+                                      //         horizontal: 7, vertical: 5),
+                                      //     decoration: BoxDecoration(
+                                      //       borderRadius:
+                                      //           BorderRadius.circular(7),
+                                      //       color: greyColor,
+                                      //     ),
+                                      //     child: Text(
+                                      //       "Xóa",
+                                      //       style: TextStyle(fontSize: 13),
+                                      //     )),
+                                      const SizedBox(),
+                                      Container(
+                                        margin:
+                                            const EdgeInsets.only(right: 10),
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              elevation: 0.0,
+                                              shadowColor: transparent,
+                                              fixedSize: const Size(120, 20),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                  side: const BorderSide(
+                                                      color: greyColor)),
+                                              backgroundColor: transparent),
+                                          onPressed: () {},
+                                          child: Text(
+                                            "Tương tự",
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .color),
+                                          ),
+                                        ),
+                                      ),
+                                      // buildMarketButton(
+                                      //     contents: [
+                                      //       Text(
+                                      //         "Tương tự",
+                                      //         style: TextStyle(
+                                      //             color: Theme.of(context)
+                                      //                 .textTheme
+                                      //                 .bodyLarge!
+                                      //                 .color),
+                                      //       ),
+                                      //     ],
+                                      //     width: 150,
+                                      //     height: 10,
+                                      //     bgColor: transparent,
+                                      //     isHaveBoder: true),
+                                    ],
+                                  )),
+                            )
+                          : const SizedBox()
+                    ],
+                  );
+                }),
+              ),
+            ),
+            const CrossBar(
+              height: 7,
+              opacity: 0.2,
+              margin: 4,
+            )
+          ],
         )
       ],
     );

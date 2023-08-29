@@ -11,9 +11,8 @@ final meControllerProvider =
 class MeController extends StateNotifier<List> {
   MeController() : super([]);
 
-  getMeData() async {
+  getMeData({bool connectStatus = true}) async {
     var response = await MeApi().fetchDataMeApi();
-
     if (response != null) {
       var token = await SecureStorage().getKeyStorage("token");
       var theme = await SecureStorage().getKeyStorage('theme');
@@ -23,7 +22,6 @@ class MeController extends StateNotifier<List> {
       if (newList != null && newList != 'noData') {
         listAccount = jsonDecode(newList) ?? [];
       }
-
       var newTheme =
           listAccount.map((e) => e['id']).toList().contains(response['id'])
               ? (listAccount
@@ -59,29 +57,35 @@ class MeController extends StateNotifier<List> {
     } else {
       var newList = await SecureStorage().getKeyStorage('dataLogin');
       var token = await SecureStorage().getKeyStorage("token");
-
       List listAccount = [];
 
       if (newList != null && newList != 'noData') {
         listAccount = jsonDecode(newList) ?? [];
       }
-      await SecureStorage().saveKeyStorage(
-          jsonEncode(listAccount
-              .map((element) => element['token'] == token
-                  ? {...element, token: null}
-                  : element)
-              .toList()),
-          'dataLogin');
-      resetMeData();
-      SecureStorage().deleteKeyStorage('token');
-      SecureStorage().deleteKeyStorage('userId');
+      List newDataLoginList = listAccount;
+
+      var index = newDataLoginList
+          .map((e) => e['token'].toString())
+          .toList()
+          .indexOf(token.toString());
+      if (index != -1) {
+        var firstData = newDataLoginList[index];
+        newDataLoginList.removeAt(index);
+        newDataLoginList.insert(0, firstData);
+        await SecureStorage()
+            .saveKeyStorage(jsonEncode(newDataLoginList), 'dataLogin');
+        resetMeData();
+        state = newDataLoginList;
+      }
+
+      // resetMeData();
+      // SecureStorage().deleteKeyStorage('token');
+      // SecureStorage().deleteKeyStorage('userId');
     }
   }
 
-  updateMedata(data) async {
-    if (data != null) {
-      state = [data];
-    }
+  updateMedata(List data) async {
+    state = data;
   }
 
   resetMeData() {

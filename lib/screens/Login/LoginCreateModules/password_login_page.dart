@@ -21,13 +21,22 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
   late double width = 0;
 
   late double height = 0;
-  bool _iShowPassword = true;
-  final TextEditingController _passwordController = TextEditingController(text: "");
+  List<bool> _isHintTextInput = [true, true];
+  final TextEditingController _passwordController =
+      TextEditingController(text: "");
   final TextEditingController _passwordConfirmController =
       TextEditingController(text: "");
 
   RegExp numbersRegex = RegExp(r'\d');
   RegExp specialCharRegex = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+  FocusNode focusNode = FocusNode();
+  @override
+  void initState() {
+    super.initState();
+    if (!focusNode.hasFocus) {
+      focusNode.requestFocus();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +48,15 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
+        leading: InkWell(
+            onTap: () {
+              popToPreviousScreen(context);
+            },
+            child: const Icon(
+              FontAwesomeIcons.chevronLeft,
+              size: 20,
+              color: blackColor,
+            )),
       ),
       resizeToAvoidBottomInset: true,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -69,7 +87,8 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
                                 _passwordController,
                                 EmailLoginConstants
                                     .EMAIL_LOGIN_NAME_PLACEHOLODER,
-                                handleUpdate: (value) {
+                                0,
+                                focusNode: focusNode, handleUpdate: (value) {
                               setState(() {});
                             }),
                             !checkPassValidate()
@@ -84,9 +103,8 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
                                 : const SizedBox(),
                             buildSpacer(height: 15),
                             // input
-                            _buildTextFormField(
-                                _passwordConfirmController, "Xác nhận mật khẩu",
-                                handleUpdate: (value) {
+                            _buildTextFormField(_passwordConfirmController,
+                                "Xác nhận mật khẩu", 1, handleUpdate: (value) {
                               setState(() {});
                             }),
                             _passwordConfirmController.text.trim() !=
@@ -165,10 +183,11 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
   }
 
   Widget _buildTextFormField(
-      TextEditingController controller, String placeHolder,
+      TextEditingController controller, String placeHolder, int indexHintText,
       {Function? handleUpdate,
       double? borderRadius = 5,
-      bool? numberType = false}) {
+      bool? numberType = false,
+      FocusNode? focusNode}) {
     return SizedBox(
       height: 40,
       child: TextFormField(
@@ -179,7 +198,8 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
         validator: (value) {
           return null;
         },
-        obscureText: _iShowPassword,
+        focusNode: focusNode,
+        obscureText: _isHintTextInput[indexHintText],
         keyboardType: numberType! ? TextInputType.number : TextInputType.text,
         maxLength: numberType ? 10 : 100,
         decoration: InputDecoration(
@@ -198,11 +218,12 @@ class _PasswordLoginPageState extends State<PasswordLoginPage> {
               child: InkWell(
                 onTap: () {
                   setState(() {
-                    _iShowPassword = !_iShowPassword;
+                    _isHintTextInput[indexHintText] =
+                        !_isHintTextInput[indexHintText];
                   });
                 },
                 child: Icon(
-                  !_iShowPassword
+                  !_isHintTextInput[indexHintText]
                       ? FontAwesomeIcons.eyeSlash
                       : FontAwesomeIcons.eye,
                   color: greyColor,

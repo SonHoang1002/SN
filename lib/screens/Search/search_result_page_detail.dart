@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/search/search_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
 import 'package:social_network_app_mobile/screens/Search/search.dart';
@@ -230,7 +231,7 @@ class StatusWidget extends ConsumerWidget {
     }
     return Column(
         children: List.generate(searchStatusDetail?.length,
-            (index) => Post(post: searchStatusDetail?[index])));
+            (index) => Post(type: feedPost, post: searchStatusDetail?[index])));
   }
 }
 

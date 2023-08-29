@@ -146,6 +146,7 @@ dependencies:
   multi_image_picker: ^4.8.1
   flutter_persistent_keyboard_height: ^1.0.5
   qr_code_scanner: ^1.0.1
+  qr_flutter: ^4.1.0
   
 dev_dependencies:
   flutter_test:
@@ -189,6 +190,8 @@ flutter:
     - assets/images/
     - assets/effect_frame/
     - assets/sounds/
+    - assets/qrDM.png
+    - assets/qrLM.png
     - assets/images_and_video.png
     # - assets/image_upload.png
     - assets/camera_menu.png
@@ -202,7 +205,6 @@ flutter:
     - assets/icon/
     - assets/reaction/
     - assets/post_media.svg
-    - assets/target.svg
     - assets/win.svg
     - assets/chat.svg
     - assets/Plus.svg
@@ -210,8 +212,7 @@ flutter:
     - assets/WatchFC.svg
     - assets/home.svg
     - assets/HomeFC.svg
-    - assets/notification.svg
-    - assets/blood.png
+    - assets/notification.svg 
     - assets/event.svg
     - assets/friend.svg
     - assets/Groups_1.svg
@@ -219,7 +220,6 @@ flutter:
     - assets/job.svg
     - assets/learnspace.svg
     - assets/Maket.svg
-    - assets/moment_menu.png
     - assets/music.svg
     - assets/Page.svg
     - assets/saved.svg
@@ -228,16 +228,13 @@ flutter:
     - assets/NotiDM.svg
     - assets/Live.svg
     - assets/post_background.png
-    - assets/live_event.png
-    - assets/camera.png
-    - assets/LogoEmso.svg
-    - assets/loading.gif
+    - assets/live_event.png 
+    - assets/LogoEmso.svg 
     - assets/IconCoin.svg
     - assets/disc.png
     - assets/grey.png
     - assets/Payment.svg
     - assets/MomentFC.png
-    - assets/MomentDM_1.png
     - assets/MomentLM.png
     - assets/MomentMenu.png
     - assets/Chat_3.png
@@ -251,7 +248,11 @@ flutter:
     - assets/Noti/
     - assets/pages/
     - assets/groups/
-    - assets/
+    - assets/memories_banner.jpg
+    - assets/memories_layout_1.jpg
+    - assets/memories_layout_2.jpg
+    - assets/memories_layout_3.jpg
+    - assets/memories_layout_4.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

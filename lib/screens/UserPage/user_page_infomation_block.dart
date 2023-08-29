@@ -9,6 +9,7 @@ import 'package:social_network_app_mobile/widgets/StoryView/story_page.dart';
 import 'package:social_network_app_mobile/widgets/chip_menu.dart';
 
 import '../../theme/theme_manager.dart';
+import '../../widgets/skeleton.dart';
 
 class UserPageInfomationBlock extends StatelessWidget {
   final dynamic userAbout;
@@ -79,22 +80,24 @@ class UserPageInfomationBlock extends StatelessWidget {
     final theme = Provider.of<ThemeManager>(context);
     final size = MediaQuery.sizeOf(context);
     final createdDate =
-        user['created_at'] != null ? DateTime.parse(user['created_at']) : null;
-    return generalInformation == null
-        ? const SizedBox()
+        user?['created_at'] != null ? DateTime.parse(user['created_at']) : null;
+    return (generalInformation == null)
+        ? Container(
+            child: SkeletonCustom().introduceSkeleton(context),
+          )
         : Container(
             margin: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                generalInformation['description'] != null
+                (generalInformation['description'] != null && generalInformation['description'].isNotEmpty)
                     ? const Text(
                         'Giới thiệu',
                         style: TextStyle(
                             fontWeight: FontWeight.w500, fontSize: 17),
                       )
                     : const SizedBox(),
-                generalInformation['description'] != null
+                (generalInformation['description'] != null && generalInformation['description'].isNotEmpty)
                     ? Center(
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 15.0),

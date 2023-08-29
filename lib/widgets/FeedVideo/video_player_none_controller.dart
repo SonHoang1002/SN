@@ -1,4 +1,5 @@
 import 'dart:io' as io;
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -124,9 +125,10 @@ class _VideoPlayerNoneControllerState
       }
     }
     return AspectRatio(
-      aspectRatio: videoPlayerController.value.aspectRatio > 1
-          ? 1
-          : videoPlayerController.value.aspectRatio,
+      aspectRatio: widget.aspectRatio ??
+          (videoPlayerController.value.aspectRatio > 1
+              ? 1
+              : videoPlayerController.value.aspectRatio),
       child: VisibilityDetector(
           onVisibilityChanged: (visibilityInfo) {
             if (mounted) {
@@ -149,15 +151,18 @@ class _VideoPlayerNoneControllerState
               });
             }
           },
-          key: Key(widget.media?['id'] ?? widget.path ?? '111'),
+          key: Key(widget.media?['id'] ??
+              widget.path ??
+              Random().nextInt(100000).toString()),
           child: Stack(
             children: [
               Hero(
                   tag: widget.path,
                   child: AspectRatio(
-                      aspectRatio: videoPlayerController.value.aspectRatio > 1
-                          ? 1
-                          : videoPlayerController.value.aspectRatio,
+                      aspectRatio: widget.aspectRatio ??
+                          (videoPlayerController.value.aspectRatio > 1
+                              ? 1
+                              : videoPlayerController.value.aspectRatio),
                       child: VideoPlayer(videoPlayerController))),
               widget.isShowVolumn != null && widget.isShowVolumn == false
                   ? const SizedBox()

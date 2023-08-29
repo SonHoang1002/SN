@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screens/Moment/video_description.dart';
 import 'package:video_player/video_player.dart';
@@ -11,7 +12,9 @@ class MomentVideo extends ConsumerStatefulWidget {
   final dynamic moment;
   final String? type;
   final bool? isPlayBack;
-  const MomentVideo({Key? key, this.moment, this.type, this.isPlayBack})
+  final bool? isDisable;
+  const MomentVideo(
+      {Key? key, this.moment, this.type, this.isPlayBack, this.isDisable})
       : super(key: key);
 
   @override
@@ -35,6 +38,8 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
 
   dynamic imageThumbnail;
   Timer? timer;
+
+  bool _setIsPlayWithTap = true;
 
   @override
   void initState() {
@@ -124,6 +129,20 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
 
   @override
   Widget build(BuildContext context) {
+    // widget.isDisable == true ||
+    //         ref.watch(disableVideoController).isDisable == true
+    //     ? videoPlayerController.pause()
+    //     : videoPlayerController.play();
+
+    if (widget.isDisable == true ||
+        ref.watch(disableMomentController).isDisable == true ||
+        isVisible != true) {
+      videoPlayerController.pause();
+    } else {
+      _setIsPlayWithTap
+          ? videoPlayerController.play()
+          : videoPlayerController.pause();
+    }
     final size = MediaQuery.sizeOf(context);
     return VisibilityDetector(
       key: Key('moment_video_${widget.moment['id']}'),
@@ -131,7 +150,10 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
         if (mounted) {
           setState(() {
             isVisible = visibilityInfo.visibleFraction > 0.5;
-            if (isVisible) {
+            if (isVisible
+                // && widget.isDisable == false
+                // || ref.watch(disableVideoController).isDisable == false)
+                ) {
               videoPlayerController.play();
             } else {
               videoPlayerController.pause();
@@ -142,9 +164,10 @@ class _MomentVideoState extends ConsumerState<MomentVideo>
       child: GestureDetector(
         onTap: () {
           setState(() {
-            videoPlayerController.value.isPlaying
-                ? videoPlayerController.pause()
-                : videoPlayerController.play();
+            // ref
+            //     .read(disableVideoController.notifier)
+            //     .setDisableVideo(!(ref.watch(disableVideoController).isDisable));
+            _setIsPlayWithTap = !_setIsPlayWithTap;
           });
         },
         onDoubleTapDown: (TapDownDetails tapDetails) {

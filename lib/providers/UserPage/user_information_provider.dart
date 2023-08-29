@@ -51,6 +51,48 @@ final userInformationProvider =
 class UserInformationController extends StateNotifier<UserInformationState> {
   UserInformationController() : super(const UserInformationState());
 
+  setUserNewPhone(data) async {
+    state = state.copyWith(
+      userInfor: state.userInfor,
+      userMoreInfor: {
+        ...state.userMoreInfor,
+        "general_information": data,
+      },
+      friends: state.friends,
+      friendsNear: state.friendsNear,
+      featureContent: state.featureContent,
+      userLifeEvent: state.userLifeEvent,
+    );
+  }
+
+  setNewUsername(data) async {
+    state = state.copyWith(
+      userInfor: state.userInfor,
+      userMoreInfor: {
+        ...state.userMoreInfor,
+        "username": data,
+      },
+      friends: state.friends,
+      friendsNear: state.friendsNear,
+      featureContent: state.featureContent,
+      userLifeEvent: state.userLifeEvent,
+    );
+  }
+
+  setNewDisplayName(data) async {
+    state = state.copyWith(
+      userInfor: state.userInfor,
+      userMoreInfor: {
+        ...state.userMoreInfor,
+        "display_name": data,
+      },
+      friends: state.friends,
+      friendsNear: state.friendsNear,
+      featureContent: state.featureContent,
+      userLifeEvent: state.userLifeEvent,
+    );
+  }
+
   getUserInformation(idUser) async {
     var response = await UserPageApi().getAccountInfor(idUser) ?? [];
     if (response != null && mounted) {
@@ -162,8 +204,8 @@ class UserInformationController extends StateNotifier<UserInformationState> {
   removeUserInfo() async {
     if (mounted) {
       state = state.copyWith(
-        userInfor: {},
-        userMoreInfor: {},
+        // userInfor: {},
+        // userMoreInfor: {},
         friends: [],
         friendsNear: [],
       );

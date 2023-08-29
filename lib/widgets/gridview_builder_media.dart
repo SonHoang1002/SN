@@ -91,7 +91,9 @@ class _GridViewBuilderMediaState extends State<GridViewBuilderMedia> {
                             : Hero(
                                 tag: widget.medias[indexBg]['id'] ?? indexBg,
                                 child: ExtendedImage.network(
-                                    (widget.medias[indexBg]?['url']) ??(widget.medias[indexBg]?['show_url'])??linkAvatarDefault ,
+                                    (widget.medias[indexBg]?['url']) ??
+                                        (widget.medias[indexBg]?['show_url']) ??
+                                        linkAvatarDefault,
                                     fit: BoxFit.cover,
                                     width: size.width, loadStateChanged:
                                         (ExtendedImageState state) {

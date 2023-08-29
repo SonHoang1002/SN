@@ -12,7 +12,7 @@ class EventPublish extends StatefulWidget {
 }
 
 class _EventPublishState extends State<EventPublish> {
-  String defaultValue = '';
+  String defaultValue = 'public';
 
   @override
   Widget build(BuildContext context) {
