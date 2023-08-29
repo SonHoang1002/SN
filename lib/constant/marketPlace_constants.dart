@@ -615,6 +615,10 @@ class PersonalMarketPlaceConstants {
         "title": "Tạo sản phẩm mới",
         "icon": FontAwesomeIcons.add,
       },
+      {
+        "title": "Mã giảm giá của tôi",
+        "icon": FontAwesomeIcons.ticket,
+      },
     ]
   };
   static const Map<String, dynamic> PERSONAL_MARKET_PLACE_YOUR_ACCOUNT = {
@@ -1378,7 +1382,7 @@ class OrderProductMarketConstant {
   static List<Map<String, dynamic>> ORDER_PRODUCT_MARKET_TAB_LIST = [
     {
       "key": "all",
-      "icon":MarketPlaceConstants.PATH_ICON + "pending.png",
+      "icon": MarketPlaceConstants.PATH_ICON + "pending.png",
       "title": "Tất cả",
     },
     {

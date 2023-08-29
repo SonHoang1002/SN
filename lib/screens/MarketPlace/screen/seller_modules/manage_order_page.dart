@@ -567,15 +567,17 @@ class _OrderProductMarketPageState
               child: Row(
                 children: [
                   ImageCacheRender(
-                    height: 100.0,
-                    width: 100.0,
-                    path: childfilterData["product_variant"] != null &&
-                            childfilterData["product_variant"].isNotEmpty
-                        ? childfilterData["product_variant"]["image"] != null
-                            ? childfilterData["product_variant"]["image"]["url"]
-                            : "https://kynguyenlamdep.com/wp-content/uploads/2022/01/hinh-anh-meo-con-sieu-cute-700x467.jpg"
-                        : "https://kynguyenlamdep.com/wp-content/uploads/2022/01/hinh-anh-meo-con-sieu-cute-700x467.jpg",
-                  ),
+                      height: 100.0,
+                      width: 100.0,
+                      path:
+                          // childfilterData["product_variant"] != null &&
+                          //         childfilterData["product_variant"].isNotEmpty
+                          //     ? childfilterData?["product_variant"]?["image"] != null
+                          //         ? childfilterData?["product_variant"]?["image"]
+                          //             ?["url"]
+                          //         : "https://kynguyenlamdep.com/wp-content/uploads/2022/01/hinh-anh-meo-con-sieu-cute-700x467.jpg"
+                          //     : "https://kynguyenlamdep.com/wp-content/uploads/2022/01/hinh-anh-meo-con-sieu-cute-700x467.jpg",
+                          "https://kynguyenlamdep.com/wp-content/uploads/2022/01/hinh-anh-meo-con-sieu-cute-700x467.jpg"),
                   buildSpacer(width: 10),
                   Expanded(
                     child: Column(
