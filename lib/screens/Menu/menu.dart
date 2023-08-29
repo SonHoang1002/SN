@@ -79,7 +79,7 @@ class _MenuState extends ConsumerState<Menu> {
       ref.read(pageControllerProvider.notifier).reset();
       ref.read(friendControllerProvider.notifier).reset();
       ref.read(groupListControllerProvider.notifier).reset();
-      // await IsarPostService().resetPostIsar();
+      await IsarPostService().resetPostIsar();
 
       final theme = pv.Provider.of<ThemeManager>(context, listen: false);
       theme.toggleTheme('system');

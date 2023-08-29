@@ -102,6 +102,7 @@ class PostController extends StateNotifier<PostState> {
   }
 
   addListPost(List newData, dynamic params) {
+    print("addListPost addListPost ${newData.length} ${params}");
     if (mounted) {
       state = state.copyWith(
           posts: checkObjectUniqueInList(state.posts + newData, 'id'),
@@ -109,7 +110,7 @@ class PostController extends StateNotifier<PostState> {
           postUserPage: state.postUserPage,
           postAnotherUserPage: state.postAnotherUserPage,
           isMoreAnother: state.isMoreAnother,
-          isMore: newData.length < params['limit'] ? false : true,
+          isMore: newData.length == params['limit'] - 1,
           isMoreUserPage: state.isMoreUserPage);
     }
   }

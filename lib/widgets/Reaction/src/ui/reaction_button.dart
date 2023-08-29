@@ -115,7 +115,7 @@ class _ReactionButtonState<T> extends ConsumerState<ReactionButton<T>> {
     super.initState();
     _init();
     Future.delayed(Duration.zero, () async {
-      if (ref.watch(showPositionFillProvider).showPositionFillStatus == null) {
+      if (ref.read(showPositionFillProvider).showPositionFillStatus == null) {
         ref.read(showPositionFillProvider.notifier).setShowPositionFill(false);
       }
     });

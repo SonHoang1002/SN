@@ -19,6 +19,7 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/data/background_post.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
@@ -73,7 +74,7 @@ class CreateNewFeed extends ConsumerStatefulWidget {
   // This is used to create post in friend wall (must allow to create post from friend)
   final dynamic friendData;
   final bool? isInGroup;
-  final Function? popFunction;
+  final bool? beforeHasVideo;
 
   const CreateNewFeed(
       {Key? key,
@@ -85,7 +86,7 @@ class CreateNewFeed extends ConsumerStatefulWidget {
       this.pageData,
       this.friendData,
       this.isInGroup,
-      this.popFunction})
+      this.beforeHasVideo = false})
       : super(key: key);
 
   @override
@@ -531,6 +532,11 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             ? widget.reloadFunction!(null, null)
             : null;
       }
+      // re-run video (option)
+      if (widget.beforeHasVideo!) {
+        ref.read(disableMomentController.notifier).setDisableMoment(false);
+      }
+
       Navigator.pop(context);
       // prepare data for api
       var data = {"status": content, "visibility": visibility['key']};
@@ -880,6 +886,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                     checkin: checkin,
                                     previewUrlData: previewUrlData,
                                     poll: poll));
+                            ref
+                                .read(disableMomentController.notifier)
+                                .setDisableMoment(false);
                             popToPreviousScreen(context);
                             popToPreviousScreen(context);
                           }),
@@ -944,6 +953,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                               isCenterLeft: false,
                               colorWord: red),
                           onPressed: () {
+                            ref
+                                .read(disableMomentController.notifier)
+                                .setDisableMoment(false);
                             popToPreviousScreen(context);
                             popToPreviousScreen(context);
                           }),
@@ -984,7 +996,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     width = size.width;
     return WillPopScope(
       onWillPop: () async {
-        // widget.popFunction != null ? widget.popFunction!() : null;
+        if (widget.beforeHasVideo!) {
+          ref.read(disableMomentController.notifier).setDisableMoment(false);
+        }
         return checkSaveDraft();
       },
       child: LoaderOverlay(
@@ -1008,9 +1022,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          // widget.popFunction != null
-                          //     ? widget.popFunction!()
-                          //     : null;
+                          ref
+                              .read(disableMomentController.notifier)
+                              .setDisableMoment(false);
                           return checkSaveDraft();
                         },
                         child: Icon(
