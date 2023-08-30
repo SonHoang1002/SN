@@ -103,7 +103,7 @@ class _WatchHomeState extends ConsumerState<WatchHome>
                                         key: Key((watchData[index]?['id']) ??
                                             Random().nextInt(10000).toString()),
                                         post: watchData[index],
-                                        type: postWatch,
+                                        type: widget.type ?? postWatch,
                                         isFocus:
                                             // widget.isFocus == true && (
                                             focusIdNotifier!.value ==

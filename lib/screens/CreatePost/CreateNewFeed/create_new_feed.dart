@@ -16,6 +16,7 @@ import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/constant/type_constant.dart';
 import 'package:social_network_app_mobile/data/background_post.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
@@ -65,6 +66,7 @@ import '../../../providers/create_feed/feed_draft_provider.dart';
 const EDIT_POST = "edit_post";
 
 class CreateNewFeed extends ConsumerStatefulWidget {
+  /// If [post] is not null -> Update Status, if null -> Create Status
   final dynamic post;
   final String? type;
   final String? groupId;
@@ -1126,6 +1128,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                       children: [
                         files.isNotEmpty
                             ? GridLayoutImage(
+                              type:widget.post!=null ? updateStatus:createStatus,
                                 post: widget.post,
                                 medias: files,
                                 handlePress: (media) {

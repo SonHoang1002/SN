@@ -21,8 +21,8 @@ void main() async {
     const ProviderScope(
       child: App(),
     ),
-  ); 
-    await IsarPostService().getEarlyPost();
+  );
+  await IsarPostService().getEarlyPost();
 }
 
 class MyHttpOverrides extends HttpOverrides {

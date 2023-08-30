@@ -1,7 +1,9 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/type_constant.dart';
 import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
+import 'package:social_network_app_mobile/providers/disable_watch_provider.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -142,6 +144,31 @@ class _VideoPlayerHasControllerState
     }
   }
 
+  bool checkLicenseVideoWithType() {
+    print("widget.type ${widget.type}");
+    if (widget.type == watchHome &&
+        ref.watch(disableVideoController).isDisableWatchHome == true) {
+      return false;
+    }
+    if (widget.type == watchFollow &&
+        ref.watch(disableVideoController).isDisableWatchFollow == true) {
+      return false;
+    }
+    if (widget.type == watchLive &&
+        ref.watch(disableVideoController).isDisableWatchLive == true) {
+      return false;
+    }
+    if (widget.type == watchProgram &&
+        ref.watch(disableVideoController).isDisableWatchProgram == true) {
+      return false;
+    }
+    if (widget.type == watchSaved &&
+        ref.watch(disableVideoController).isDisableWatchSaved == true) {
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     final selectedVideo = ref.watch(selectedVideoProvider);
@@ -153,25 +180,19 @@ class _VideoPlayerHasControllerState
           //  videoPlayerController!.value.aspectRatio > 1
           //     ? 1
           //     :
-          // widget.aspectRatio ?? 
+          // widget.aspectRatio ??
           videoPlayerController!.value.aspectRatio,
       child: VisibilityDetector(
           onVisibilityChanged: (visibilityInfo) {
-            if (mounted) {
+            if (mounted && checkLicenseVideoWithType()) {
               setState(() {
                 isVisible = visibilityInfo.visibleFraction > 0.85;
                 if (chewieController == null) return;
-                if (isVisible
-                    // && ref.watch(disableVideoController).isDisable == false
-                    ) {
-                  if (selectedVideo != null
-                      //  || ref.watch(disableVideoController).isDisable == true
-                      ) {
+                if (isVisible) {
+                  if (selectedVideo != null) {
                     chewieController!.videoPlayerController.pause();
                   } else {
-                    if (isPlaying && widget.isFocus == true
-                        // && ref.watch(disableVideoController).isDisable == false
-                        ) {
+                    if (isPlaying && widget.isFocus == true) {
                       chewieController!.videoPlayerController.play();
                     }
                   }
@@ -186,8 +207,8 @@ class _VideoPlayerHasControllerState
             children: [
               chewieController != null
                   ? AspectRatio(
-                      aspectRatio: 
-                      // widget.aspectRatio ??
+                      aspectRatio:
+                          // widget.aspectRatio ??
                           videoPlayerController!.value.aspectRatio,
                       child: chewieController!
                               .videoPlayerController.value.isInitialized
@@ -261,8 +282,8 @@ class _VideoPlayerHasControllerState
                                   ],
                                 )
                           : AspectRatio(
-                              aspectRatio: 
-                              // widget.aspectRatio ??
+                              aspectRatio:
+                                  // widget.aspectRatio ??
                                   videoPlayerController!.value.aspectRatio,
                               child: ImageCacheRender(
                                   path: widget.media['preview_remote_url'] ??
@@ -270,8 +291,8 @@ class _VideoPlayerHasControllerState
                             ))
                   : AspectRatio(
                       // aspectRatio: videoPlayerController!.value.aspectRatio,
-                      aspectRatio: 
-                      // widget.aspectRatio ??
+                      aspectRatio:
+                          // widget.aspectRatio ??
                           videoPlayerController!.value.aspectRatio,
                       child: ImageCacheRender(
                           path: widget.media['preview_remote_url'] ??

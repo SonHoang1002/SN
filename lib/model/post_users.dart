@@ -6,13 +6,17 @@ part 'post_users.g.dart';
 @Name("PostUsersSchema")
 class PostDataUsers {
   Id id = Isar.autoIncrement;
-  
-  @ignore
-  List<UserAndPost?>? listUser;
+  // save list user that is parsed from listData
+  String? listUser;
 }
 
-class UserAndPost {
-  List<String?>? listObjectPost;
-  /// user data include [token] and many attributes of user
-  String? userData;
-}
+
+
+// data truyền vào listUser có dạng như sau:
+//  {
+//  "userData":{...},
+//  "objectPosts":[
+//     {...},
+//     {...}
+//  ]
+//  }

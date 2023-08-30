@@ -16,7 +16,13 @@ extension GetPostDataUsersCollection on Isar {
 const PostDataUsersSchema = CollectionSchema(
   name: r'PostUsersSchema',
   id: -7045986472829456806,
-  properties: {},
+  properties: {
+    r'listUser': PropertySchema(
+      id: 0,
+      name: r'listUser',
+      type: IsarType.string,
+    )
+  },
   estimateSize: _postDataUsersEstimateSize,
   serialize: _postDataUsersSerialize,
   deserialize: _postDataUsersDeserialize,
@@ -37,6 +43,12 @@ int _postDataUsersEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.listUser;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -45,7 +57,10 @@ void _postDataUsersSerialize(
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
-) {}
+) {
+  writer.writeString(offsets[0], object.listUser);
+}
+
 PostDataUsers _postDataUsersDeserialize(
   Id id,
   IsarReader reader,
@@ -54,6 +69,7 @@ PostDataUsers _postDataUsersDeserialize(
 ) {
   final object = PostDataUsers();
   object.id = id;
+  object.listUser = reader.readStringOrNull(offsets[0]);
   return object;
 }
 
@@ -64,6 +80,8 @@ P _postDataUsersDeserializeProp<P>(
   Map<Type, List<int>> allOffsets,
 ) {
   switch (propertyId) {
+    case 0:
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -218,6 +236,160 @@ extension PostDataUsersQueryFilter
       ));
     });
   }
+
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterFilterCondition>
+      listUserIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'listUser',
+      ));
+    });
+  }
+
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterFilterCondition>
+      listUserIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'listUser',
+      ));
+    });
+  }
+
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterFilterCondition>
+      listUserEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'listUser',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterFilterCondition>
+      listUserGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'listUser',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterFilterCondition>
+      listUserLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'listUser',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterFilterCondition>
+      listUserBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'listUser',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterFilterCondition>
+      listUserStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'listUser',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterFilterCondition>
+      listUserEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'listUser',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterFilterCondition>
+      listUserContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'listUser',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterFilterCondition>
+      listUserMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'listUser',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterFilterCondition>
+      listUserIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'listUser',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterFilterCondition>
+      listUserIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'listUser',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension PostDataUsersQueryObject
@@ -227,7 +399,20 @@ extension PostDataUsersQueryLinks
     on QueryBuilder<PostDataUsers, PostDataUsers, QFilterCondition> {}
 
 extension PostDataUsersQuerySortBy
-    on QueryBuilder<PostDataUsers, PostDataUsers, QSortBy> {}
+    on QueryBuilder<PostDataUsers, PostDataUsers, QSortBy> {
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterSortBy> sortByListUser() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'listUser', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterSortBy>
+      sortByListUserDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'listUser', Sort.desc);
+    });
+  }
+}
 
 extension PostDataUsersQuerySortThenBy
     on QueryBuilder<PostDataUsers, PostDataUsers, QSortThenBy> {
@@ -242,16 +427,42 @@ extension PostDataUsersQuerySortThenBy
       return query.addSortBy(r'id', Sort.desc);
     });
   }
+
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterSortBy> thenByListUser() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'listUser', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PostDataUsers, PostDataUsers, QAfterSortBy>
+      thenByListUserDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'listUser', Sort.desc);
+    });
+  }
 }
 
 extension PostDataUsersQueryWhereDistinct
-    on QueryBuilder<PostDataUsers, PostDataUsers, QDistinct> {}
+    on QueryBuilder<PostDataUsers, PostDataUsers, QDistinct> {
+  QueryBuilder<PostDataUsers, PostDataUsers, QDistinct> distinctByListUser(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'listUser', caseSensitive: caseSensitive);
+    });
+  }
+}
 
 extension PostDataUsersQueryProperty
     on QueryBuilder<PostDataUsers, PostDataUsers, QQueryProperty> {
   QueryBuilder<PostDataUsers, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<PostDataUsers, String?, QQueryOperations> listUserProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'listUser');
     });
   }
 }
