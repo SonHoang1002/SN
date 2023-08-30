@@ -197,13 +197,11 @@ class _UserPageState extends ConsumerState<UserPage>
             userType = 'stranger';
           }
           following.value = userData['relationships']?['following'];
-
         }
         ref.read(userInformationProvider.notifier).getUserInformation(id);
         ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
         ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
         ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
-
 
         ref.read(postControllerProvider.notifier).getListPostPin(id);
 
@@ -215,11 +213,7 @@ class _UserPageState extends ConsumerState<UserPage>
             await UserPageApi().getUserFriend(id, {'limit': 20}) ?? [];
         if (mounted) {
           setState(() {
-            if (ref.watch(userInformationProvider).userInfor != null &&
-                ref.watch(userInformationProvider).userInfor.isNotEmpty) {
-              userData = ref.watch(userInformationProvider).userInfor;
-            }
-
+            userData = ref.watch(userInformationProvider).userInfor;
             userAbout = ref.watch(userInformationProvider).userMoreInfor;
             lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
             postUser = (id == ref.watch(meControllerProvider)[0]['id']
@@ -274,7 +268,7 @@ class _UserPageState extends ConsumerState<UserPage>
         });
       }
     });
-  }  // void fetchData() async {
+  } // void fetchData() async {
   //   ref.read(postControllerProvider.notifier).getListPostPin(id);
   //   ref.read(postControllerProvider.notifier).getListPostUserPage(
   //       id == ref.watch(meControllerProvider)[0]['id'],
@@ -355,6 +349,7 @@ class _UserPageState extends ConsumerState<UserPage>
       ),
     );
   }
+
   PreferredSizeWidget buildAppBarHeader(BuildContext context) {
     return AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -1262,13 +1257,17 @@ class _UserPageState extends ConsumerState<UserPage>
     setState(() {
       showHeaderTabFixed = false;
     });
-      final userMediaController = ref.read(userMediaControllerProvider.notifier);
-    if (userMediaController.state.photoUser.isEmpty && userMediaController.state.albumUser.isEmpty && userMediaController.state.videoUser.isEmpty) {
+    final userMediaController = ref.read(userMediaControllerProvider.notifier);
+    if (userMediaController.state.photoUser.isEmpty &&
+        userMediaController.state.albumUser.isEmpty &&
+        userMediaController.state.videoUser.isEmpty) {
       Future.delayed(Duration.zero, () async {
-      userMediaController.getUserPhoto(id, {"media_type": "image", "limit": 10});
-      userMediaController.getUserVideo(id, {"media_type": "video", "limit": 10});
-      userMediaController.getUserAlbum(id, {"limit": 10});
-    });
+        userMediaController
+            .getUserPhoto(id, {"media_type": "image", "limit": 10});
+        userMediaController
+            .getUserVideo(id, {"media_type": "video", "limit": 10});
+        userMediaController.getUserAlbum(id, {"limit": 10});
+      });
     }
     final userPhoto = ref.watch(userMediaControllerProvider).photoUser;
     final userVideo = ref.watch(userMediaControllerProvider).videoUser;
@@ -1658,7 +1657,7 @@ class _UserPageState extends ConsumerState<UserPage>
           child: Padding(
             padding: const EdgeInsets.only(top: 16.0),
             child: SizedBox(
-              height: size.height*0.9, // Đặt chiều cao cố định cho TabBarView
+              height: size.height * 0.9, // Đặt chiều cao cố định cho TabBarView
               child: TabBarView(
                 controller: _tabController,
                 children: [

@@ -12,7 +12,7 @@ import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 class CreatePostButton extends ConsumerWidget {
   final dynamic postDiscussion;
   final dynamic preType;
-  final Function? reloadFunction;
+  final Function(dynamic type,dynamic newData)? reloadFunction;
   final dynamic pageData;
   final String? groupId;
 

@@ -404,7 +404,7 @@ class _UserTagsSettingState extends ConsumerState<UserTagSetting> {
 
   void sendApiUpdateData() {
     var data = ref.read(userTagControllerProvider);
-    var res = UserPageApi().updateTagSetting({
+    UserPageApi().updateTagSetting({
       "allow_post_status": data.allow_post_status,
       "allow_view_status": data.allow_view_status,
       "allow_tagging": data.allow_tagging,
@@ -547,7 +547,7 @@ class _UserTagsSettingState extends ConsumerState<UserTagSetting> {
                 Text(
                   title,
                   style: const TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.bold),
+                      fontSize: 14, fontWeight: FontWeight.w500),
                 ),
               ],
             ),

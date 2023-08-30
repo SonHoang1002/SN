@@ -5,10 +5,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/screens/UserPage/SettingUser/payment/user_payment_settings.dart';
 import 'package:social_network_app_mobile/screens/UserPage/SettingUser/public_post/public_post_setting.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/history/user_activity.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/block/user_block_list.dart';
 import 'package:social_network_app_mobile/screens/UserPage/SettingUser/password/user_change_password.dart';
-import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_activity.dart';
-import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_general_settings.dart';
-import 'package:social_network_app_mobile/screens/UserPage/SettingUser/user_tag_settings.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/general/user_general_settings.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/tag/user_tag_settings.dart';
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/unavailable_dialog.dart';
+
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
@@ -110,9 +113,12 @@ class _UserSettingsState extends ConsumerState<UserSettings> {
             context,
             CupertinoPageRoute(
                 builder: (context) => PublicPostSetting(data: widget.data)));
-
         break;
       case 'block':
+        Navigator.push(
+            context,
+            CupertinoPageRoute(
+                builder: (context) => UserBlockList(data: widget.data)));
         break;
       case 'money':
         /* showDialog(

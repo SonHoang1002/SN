@@ -397,7 +397,7 @@ class AlertDialogDelete extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     handleDeletePost(key) async {
-      var response = await PostApi().deletePostApi(post!['id']);
+      final postId = post!['id'];
       if (type == postLearnSpace) {
         ref
             .read(learnSpaceStateControllerProvider.notifier)
@@ -412,13 +412,16 @@ class AlertDialogDelete extends ConsumerWidget {
             isIdCurrentUser:
                 friendData['id'] == ref.watch(meControllerProvider)[0]['id']);
       }
-
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Xóa bài viết thành công")));
+      var response = await PostApi().deletePostApi(postId);
       if (response != null) {
-        // ignore: use_build_context_synchronously
-        Navigator.pop(context);
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Xóa bài viết thành công")));
+        // Navigator.pop(context);
+        if (response['status_code'] != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text((response?['content']?['error']))));
+        }
       }
     }
 

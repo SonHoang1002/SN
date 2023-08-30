@@ -5,15 +5,17 @@ class MomentApi {
     return await Api().getRequestBase('/api/v1/timelines/moment', params);
   }
 
-  Future getListMomentSuggest(params) async { 
-    return await Api().getRequestBase('/api/v1/suggestions/moment', params);
+  Future getListMomentSuggest(params) async {
+    final response =
+        await Api().getRequestBase('/api/v1/suggestions/moment', params);
+    return response;
   }
 
   Future getListMomentHashtag(hashtag, params) async {
     return await Api().getRequestBase('/api/v1/timelines/tag/$hashtag', params);
   }
 
-  Future favoriteReactionMoment(id,data) async {
+  Future favoriteReactionMoment(id, data) async {
     return await Api().postRequestBase('/api/v1/statuses/$id/favourite', data);
   }
 

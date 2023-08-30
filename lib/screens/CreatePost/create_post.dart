@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-// import 'package:social_network_app_mobile/apis/config.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
-// import 'package:social_network_app_mobile/screens/CreatePost/CreateMoment/create_moment.dart';
+import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -13,7 +12,7 @@ import 'CreateMoment/camera_moment_controller.dart';
 
 class CreatePost extends ConsumerStatefulWidget {
   final Function? callbackFunction;
-  const CreatePost({Key? key,this.callbackFunction}) : super(key: key);
+  const CreatePost({Key? key, this.callbackFunction}) : super(key: key);
 
   @override
   ConsumerState<CreatePost> createState() => _CreatePostState();
@@ -138,6 +137,12 @@ class _CreatePostState extends ConsumerState<CreatePost> {
                                                   .read(disableMomentController
                                                       .notifier)
                                                   .setDisableMoment(false);
+                                            },
+                                            reloadFunction: (type, newData) {
+                                              widget.callbackFunction != null
+                                                  ? widget.callbackFunction!(
+                                                      type, newData)
+                                                  : null;
                                             },
                                           )
                                         : const SizedBox());

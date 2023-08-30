@@ -18,7 +18,7 @@ class PostContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    var backgroundObject = post['status_background'];
+    var backgroundObject = post?['status_background'];
 
     return backgroundObject != null
         ? Container(
@@ -35,7 +35,7 @@ class PostContent extends StatelessWidget {
               padding: const EdgeInsets.all(15.0),
               child: Center(
                 child: Text(
-                  post['content'] ?? '',
+                  post?['content'] ?? '',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: backgroundObject?['style'] != null
@@ -61,7 +61,10 @@ class PostContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ExpandableTextContent(
-                  content: post?['content'] ?? '',
+                  content:
+                      post?['content'] != null && (post?['content'] is String)
+                          ? (post?['content'])
+                          : '',
                   postData: post,
                   linkColor: textColor ??
                       Theme.of(context).textTheme.bodyLarge!.color ??

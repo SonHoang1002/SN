@@ -2,7 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:social_network_app_mobile/apis/common.api.dart';
+import 'package:social_network_app_mobile/apis/common_api.dart';
 import 'package:social_network_app_mobile/data/emoji_activity.dart';
 import 'package:social_network_app_mobile/data/old_emoji_activity.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/create_modal_base_menu.dart';

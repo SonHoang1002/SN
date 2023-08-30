@@ -544,6 +544,8 @@ class _PostMutipleMediaDetail1State
               )
             : VideoPlayerHasController(
                 media: medias[index],
+                aspectRatio: widget.post?['media_attachments']?[0]?['meta']
+                    ?['original']?['aspect'],
                 handleAction: () {
                   pushCustomVerticalPageRoute(
                       context,

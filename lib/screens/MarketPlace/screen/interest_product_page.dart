@@ -198,7 +198,7 @@ class _InterestProductMarketPageState
                       width: width * 0.6,
                       function: () async {
                         setState(() {
-                          _concernList![index] = !_concernList![index];
+                          _interestProductList!.removeAt(index);
                         });
                         if (_concernList![index]) {
                           await FollwerProductsApi()

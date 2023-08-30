@@ -152,6 +152,8 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                           child: VideoPlayerHasController(
                             media: medias[0],
                             isFocus: (widget.isFocus == true),
+                            aspectRatio:widget.post?['media_attachments']?[0]
+                          ?['meta']?['original']?['aspect'],
                             // (isFocus == true &&
                             //     currentFocusVideoId == medias[0]['id']),
                             handleAction: () {

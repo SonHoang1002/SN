@@ -43,6 +43,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
                   await UserApi().getAccountSettingApiWithToken(value);
               // {status_code: 403, content: {error: Your login is currently disabled, type: suspended}}
               if (response == null || response['status_code'] == 403) {
+                // ignore: use_build_context_synchronously
                 buildSnackBar(
                     context, "Tài khoản của bạn đang bị vô hiệu hoá !!");
                 Navigator.pushReplacement(
