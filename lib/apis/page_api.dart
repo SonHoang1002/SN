@@ -219,6 +219,10 @@ class PageApi {
     return await Api().patchRequestBase('/api/v1/pages/$id/settings', data);
   }
 
+  Future activeEarnMoney(params) async {
+    return await Api().postRequestBase('/api/v1/earn_moneys', params);
+  }
+
   Future<http.Response> createPage(data) async {
     // return await Api().postRequestBase("/api/v1/pages", params);
     var token = await SecureStorage().getKeyStorage("token");

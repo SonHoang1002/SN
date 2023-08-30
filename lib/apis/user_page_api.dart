@@ -131,6 +131,48 @@ class UserPageApi {
   Future updateTagSetting(params) async {
     return await Api().postRequestBase('/api/v1/account_settings', params);
   }
+
+  Future getBlockUserList() async {
+    return await Api().getRequestBase('/api/v1/blocks', null);
+  }
+
+  Future getBlockUserMessageList() async {
+    return await Api().getRequestBase('/api/v1/block_messages', null);
+  }
+
+  Future getUserBlockPageList() async {
+    return await Api().getRequestBase('/api/v1/block_pages', null);
+  }
+
+  Future blockUser(params) async {
+    return await Api().postRequestBase('/api/v1/blocks', params);
+  }
+
+  Future unblockUser(id) async {
+    return await Api().deleteRequestBase('/api/v1/blocks/$id', null);
+  }
+
+  Future blockUserMessage(params) async {
+    return await Api().postRequestBase('/api/v1/block_messages', params);
+  }
+
+  Future unblockUserMessage(id) async {
+    return await Api().deleteRequestBase('/api/v1/block_messages/$id', null);
+  }
+
+  Future verifyUserRequest(params) async {
+    return await Api()
+        .postRequestBase('/api/v1/identity_verifications', params);
+  }
+
+  Future getVerifyUserRequest() async {
+    return await Api().getRequestBase('/api/v1/identity_verifications', null);
+  }
+
+  Future sendPageIdentityVerify(params) async {
+    return await Api()
+        .postRequestBase('/api/v1/page_identity_verifications', params);
+  }
 }
 
 class UserPageCredentical {

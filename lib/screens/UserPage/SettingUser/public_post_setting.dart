@@ -240,40 +240,48 @@ Bạn có thể cập nhật cài đặt này cho từng bài viết mà không 
         children: [
           Text(
             title,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 12),
           ),
-          GestureDetector(
-            onTap: () {
-              buildFilterUsersSelectionBottomSheet(listDataModal, key, type);
-            },
-            child: Container(
-              margin: const EdgeInsets.only(top: 20),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8), color: blueColor),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    color: Colors.transparent,
-                    child: Center(
-                      child: Image.asset(
-                        icon,
-                        width: 20,
-                        height: 20,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  buildFilterUsersSelectionBottomSheet(
+                      listDataModal, key, type);
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: greyColorOutlined),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        color: Colors.transparent,
+                        child: Center(
+                          child: Image.asset(
+                            icon,
+                            width: 20,
+                            height: 20,
+                            color: blackColor,
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        selected,
+                        style: const TextStyle(color: blackColor),
+                      )
+                    ],
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    selected,
-                    style: const TextStyle(color: white),
-                  )
-                ],
+                ),
               ),
-            ),
+            ],
           )
         ],
       ),
