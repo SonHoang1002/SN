@@ -558,7 +558,8 @@ class _UserTagsSettingState extends ConsumerState<UserTagSetting> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8), color: blueColor),
+                borderRadius: BorderRadius.circular(8),
+                color: greyColorOutlined),
             child: Row(
               children: [
                 Container(
@@ -568,6 +569,7 @@ class _UserTagsSettingState extends ConsumerState<UserTagSetting> {
                       icon,
                       width: 20,
                       height: 20,
+                      color: blackColor,
                     ),
                   ),
                 ),
@@ -576,8 +578,7 @@ class _UserTagsSettingState extends ConsumerState<UserTagSetting> {
                 ),
                 Text(
                   selected,
-                  style: const TextStyle(
-                      color: white, fontWeight: FontWeight.bold),
+                  style: const TextStyle(color: blackColor),
                 )
               ],
             ),
