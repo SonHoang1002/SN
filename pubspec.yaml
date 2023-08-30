@@ -253,6 +253,12 @@ flutter:
     - assets/memories_layout_2.jpg
     - assets/memories_layout_3.jpg
     - assets/memories_layout_4.jpg
+    - assets/Quangcaotrongluong.png
+    - assets/Congtacthuonghieu.png
+    - assets/BVTT.png
+    - assets/Binhluan.png
+    - assets/Tangsao.png
+    - assets/Dangkytheodoi.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

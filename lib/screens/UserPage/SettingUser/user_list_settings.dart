@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/screens/UserPage/SettingUser/payment/user_payment_settings.dart';
 import 'package:social_network_app_mobile/screens/UserPage/SettingUser/public_post/public_post_setting.dart';
 import 'package:social_network_app_mobile/screens/UserPage/SettingUser/history/user_activity.dart';
 import 'package:social_network_app_mobile/screens/UserPage/SettingUser/block/user_block_list.dart';
@@ -120,16 +121,16 @@ class _UserSettingsState extends ConsumerState<UserSettings> {
                 builder: (context) => UserBlockList(data: widget.data)));
         break;
       case 'money':
-        showDialog(
+        /* showDialog(
           context: context,
           builder: (BuildContext context) {
-            return const UnavailableDialog(); // Sử dụng lớp UnavailableDialog ở đây
+            return const UnavailableDialog();
           },
-        );
-        /* Navigator.push(
+        ); */
+        Navigator.push(
             context,
             CupertinoPageRoute(
-                builder: (context) => const UserPaymentSetting())); */
+                builder: (context) => const UserPaymentSetting()));
         break;
       default:
     }
