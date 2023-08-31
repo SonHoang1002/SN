@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/group_api.dart';
@@ -216,10 +215,10 @@ class GroupListController extends StateNotifier<GroupListState> {
     if (response != null) {
       state = state.copyWith(
         groupAdmin: tab == 'admin'
-            ? checkObjectUniqueInList(state.groupAdmin + response, "id")
+            ? response /* checkObjectUniqueInList(state.groupAdmin + response, "id") */
             : state.groupAdmin,
         groupMember: tab == 'member'
-            ? checkObjectUniqueInList(state.groupMember + response, "id")
+            ? response /* checkObjectUniqueInList(state.groupMember + response, "id") */
             : state.groupMember,
         isMoreGroupAdmin: tab == 'admin' && response.length < limit
             ? false
@@ -1037,6 +1036,40 @@ class GroupListController extends StateNotifier<GroupListState> {
         groupInviteAdmin: state.groupInviteAdmin,
         groupInviteMember: state.groupInviteMember,
         groupInviteJoin: response,
+      );
+    }
+  }
+
+  updateGroupDetails(response) async {
+    if (response != null) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: response,
+        contentReported: state.contentReported,
+        waitingApproval: state.waitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
       );
     }
   }

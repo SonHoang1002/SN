@@ -5,6 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/screens/UserPage/EditUser/Details/change_place_live.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
+import '../../../../constant/common.dart';
+import '../../../../data/life_event_categories.dart';
 import '../../../../helper/push_to_new_screen.dart';
 import '../../../../providers/UserPage/user_information_provider.dart';
 import '../../../../theme/theme_manager.dart';
@@ -15,6 +17,7 @@ import '../../../../widgets/button_primary.dart';
 import 'package:provider/provider.dart' as pv;
 
 import '../../../CreatePost/MenuBody/life_event_categories.dart';
+import '../../../CreatePost/MenuBody/user_relationship.dart';
 import '../../../CreatePost/create_modal_base_menu.dart';
 import 'add_website_link.dart';
 
@@ -27,6 +30,37 @@ class EditUserDetail extends ConsumerStatefulWidget {
 
 class EditUserDetailState extends ConsumerState<EditUserDetail> {
   bool isLoading = false;
+  List friendSelected = [];
+  List files = [];
+
+  String content = '';
+  String gifLink = '';
+
+  bool _isShow = true;
+  dynamic menuSelected;
+  dynamic visibility = typeVisibility[0];
+  dynamic backgroundSelected;
+  dynamic statusActivity;
+  dynamic statusQuestion;
+  dynamic checkin;
+  dynamic lifeEvent;
+  dynamic poll;
+
+  bool isUploadVideo = false;
+  bool showMap = true;
+
+  bool isActiveBackground = false;
+  double height = 0;
+  double width = 0;
+  dynamic postDiscussion;
+  dynamic previewUrlData;
+  bool showPreviewImage = true;
+  ScrollController menuController = ScrollController();
+  bool isMenuMinExtent = true;
+
+  List listMentions = [];
+  Offset textFieldOffset = const Offset(0, 150.6);
+  String type = "";
 
   Text buildBoldTxt(String title, ThemeManager theme) {
     return Text(
@@ -96,6 +130,132 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
     );
   }
 
+  
+  handleUpdateData(
+    String type,
+    dynamic data,
+  ) {
+    switch (type) {
+      case 'update_visibility':
+        setState(() {
+          visibility = data;
+          _isShow = false;
+        });
+        break;
+      case 'update_content':
+        setState(() {
+          content = data['content'];
+          listMentions = data['mentions'];
+          _isShow = false;
+        });
+
+        if (data.length > 150) {
+          setState(() {
+            backgroundSelected = null;
+            _isShow = false;
+          });
+        }
+        break;
+      case 'update_friend':
+        setState(() {
+          friendSelected = data;
+          _isShow = false;
+        });
+        break;
+      case 'update_background':
+        setState(() {
+          backgroundSelected = data;
+          _isShow = false;
+        });
+        break;
+      case 'update_gif':
+        setState(() {
+          gifLink = data;
+          _isShow = false;
+        });
+        break;
+      case 'update_status_activity':
+        setState(() {
+          statusActivity = data;
+          _isShow = false;
+        });
+        break;
+      case 'update_status_question':
+        setState(() {
+          statusQuestion = data;
+          _isShow = false;
+        });
+        break;
+      case 'update_checkin':
+        setState(() {
+          checkin = data;
+          _isShow = false;
+        });
+        break;
+      case 'update_file':
+        List listPath = [];
+        List newFiles = [];
+
+        for (var item in data) {
+          if (!listPath.contains(item?['id'])) {
+            newFiles.add(item);
+            listPath.add(item?['id']);
+          } else if (item['file'] != null) {
+            if (item['file'].path != null &&
+                (!listPath.contains(item['file']!.path))) {
+              newFiles.add(item);
+              listPath.add(item['file']!.path);
+            }
+          }
+        }
+        setState(() {
+          files = newFiles;
+          _isShow = false;
+        });
+        break;
+      case 'update_file_description':
+        setState(() {
+          if (files.length == 1) {
+            files = [data];
+          } else {
+            files = data;
+          }
+          _isShow = false;
+        });
+        break;
+      case 'update_poll':
+        setState(() {
+          poll = data;
+          _isShow = false;
+        });
+        break;
+      case 'updateLifeEvent':
+        setState(() {
+          lifeEvent = data;
+          _isShow = false;
+        });
+    }
+  }
+
+  handlePress(event, school, relationship) {
+    if (event['children'] != null && event['children'].isNotEmpty) {
+      Navigator.push(
+          context,
+          CupertinoPageRoute(
+              builder: (context) => CreateModalBaseMenu(
+                  title: event['name'],
+                  body: LifeEventCategories(
+                    type: 'children',
+                    eventSelected: event,
+                    listLifeEvent: event['children'],
+                    handleUpdateData: handleUpdateData,
+                    edit: true,
+                    school: school,
+                  ),
+                  buttonAppbar: const SizedBox())));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
@@ -114,6 +274,8 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
     final universityEvents = lifeEvent
         .where((e) => e['life_event']['school_type'] == 'UNIVERSITY')
         .toList();
+    List listData = lifeEventCategories;
+
 
     return Scaffold(
       appBar: AppBar(
@@ -165,13 +327,13 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                             itemCount: workEvents.length,
                             itemBuilder: (context, index) {
                               String preWord = workEvents[index]['life_event']
-                                      ['position'] ??
+                                      ['name'] ??
                                   'Làm việc';
                               return Container(
                                 margin:
                                     const EdgeInsets.symmetric(vertical: 7.5),
                                 child: buildRowInfo(
-                                    "$preWord tại ${workEvents[index]['life_event']['company']}",
+                                    "$preWord tại ${workEvents[index]['life_event']["place"] != null ? workEvents[index]['life_event']["place"]['title'] : ""}",
                                     const Icon(FontAwesomeIcons.briefcase,
                                         size: 18),
                                     () {},
@@ -184,18 +346,7 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                       colorButton: greyColor[300],
                       colorText: Colors.black54,
                       handlePress: () {
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => CreateModalBaseMenu(
-                              title: 'Sự kiện trong đời',
-                              body: LifeEventCategories(
-                                handleUpdateData: () {},
-                              ),
-                              buttonAppbar: const SizedBox(),
-                            ),
-                          ),
-                        );
+                        handlePress(listData[3], null, null);
                       },
                     ),
                     buildDrawer(),
@@ -206,11 +357,14 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                             shrinkWrap: true,
                             itemCount: highSchoolEvents.length,
                             itemBuilder: (context, index) {
+                              String school = highSchoolEvents[index]
+                                      ['life_event']['name'] ??
+                                  'Từng học';
                               return Container(
                                 margin:
                                     const EdgeInsets.symmetric(vertical: 7.5),
                                 child: buildRowInfo(
-                                    "Từng học tại ${highSchoolEvents[index]['life_event']['company']}",
+                                    "$school tại ${highSchoolEvents[index]['life_event']["place"] != null ? highSchoolEvents[index]['life_event']["place"]['title'] : ""}",
                                     const Icon(FontAwesomeIcons.briefcase,
                                         size: 18),
                                     () {},
@@ -223,18 +377,7 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                       colorButton: greyColor[300],
                       colorText: Colors.black54,
                       handlePress: () {
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => CreateModalBaseMenu(
-                              title: 'Sự kiện trong đời',
-                              body: LifeEventCategories(
-                                handleUpdateData: () {},
-                              ),
-                              buttonAppbar: const SizedBox(),
-                            ),
-                          ),
-                        );
+                        handlePress(listData[10], "HIGH_SCHOOL", null);
                       },
                     ),
                     buildDrawer(),
@@ -245,11 +388,14 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                             shrinkWrap: true,
                             itemCount: universityEvents.length,
                             itemBuilder: (context, index) {
+                              String university = universityEvents[index]
+                                      ['life_event']['name'] ??
+                                  'Từng học';
                               return Container(
                                 margin:
                                     const EdgeInsets.symmetric(vertical: 7.5),
                                 child: buildRowInfo(
-                                    "Từng học tại ${universityEvents[index]['life_event']['company'] ?? "Trường mới"}",
+                                     "$university tại ${universityEvents[index]['life_event']["place"] != null ? universityEvents[index]['life_event']["place"]['title'] : "Trường mới"}",
                                     const Icon(FontAwesomeIcons.briefcase,
                                         size: 18),
                                     () {},
@@ -262,18 +408,7 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                       colorButton: greyColor[300],
                       colorText: Colors.black54,
                       handlePress: () {
-                        Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => CreateModalBaseMenu(
-                              title: 'Sự kiện trong đời',
-                              body: LifeEventCategories(
-                                handleUpdateData: () {},
-                              ),
-                              buttonAppbar: const SizedBox(),
-                            ),
-                          ),
-                        );
+                        handlePress(listData[10], "UNIVERSITY", null);
                       },
                     ),
                     buildDrawer(),
@@ -318,15 +453,32 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                             label: "Thêm quê quán",
                             colorButton: greyColor[300],
                             colorText: Colors.black54,
+                            handlePress: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => const ChangeLivingPlace(
+                                    city: false,
+                                  ),
+                                ),
+                              );
+                            },
                           )
                         : buildRowInfo(
                             "Đến từ ${infor['hometown']['title']}",
                             Checkbox(
                                 activeColor: secondaryColor,
                                 value: true,
-                                onChanged: (value) {}),
-                            () {},
-                            theme),
+                                 onChanged: (value) {}), () {
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => const ChangeLivingPlace(
+                                  city: false,
+                                ),
+                              ),
+                            );
+                          }, theme),
                     buildDrawer(),
                     buildBoldTxt("Mối quan hệ", theme),
                     relationship != null &&
@@ -336,13 +488,46 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                             Checkbox(
                                 activeColor: secondaryColor,
                                 value: true,
-                                onChanged: (value) {}),
-                            () {},
-                            theme)
+                                 onChanged: (value) {}), () {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => CreateModalBaseMenu(
+                                        title: listData[11]['name'],
+                                        body: Relationship(
+                                          type: 'children',
+                                          eventSelected: listData[11],
+                                          listLifeEvent: listData[11]
+                                              ['children'],
+                                          handleUpdateData: handleUpdateData,
+                                          edit: true,
+                                          school: null,
+                                          relationship: relationship,
+                                        ),
+                                        buttonAppbar: const SizedBox())));
+                          }, theme)
                         : ButtonPrimary(
                             label: "Thêm mối quan hệ",
                             colorButton: greyColor[300],
                             colorText: Colors.black54,
+                             handlePress: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => CreateModalBaseMenu(
+                                        title: listData[11]['name'],
+                                        body: Relationship(
+                                          type: 'children',
+                                          eventSelected: listData[11],
+                                          listLifeEvent: listData[11]
+                                              ['children'],
+                                          handleUpdateData: handleUpdateData,
+                                          edit: true,
+                                          school: null,
+                                          relationship: relationship,
+                                        ),
+                                        buttonAppbar: const SizedBox())));
+                            },
                           ),
                     buildDrawer(),
                     buildBoldTxt("Trang web", theme),

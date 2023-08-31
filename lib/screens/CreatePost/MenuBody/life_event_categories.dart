@@ -2,35 +2,43 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/widgets/snack_bar_custom.dart';
 
 import '../../../data/life_event_categories.dart';
+import '../../../providers/create_feed/feed_draft_provider.dart';
 import '../../../theme/colors.dart';
 import '../../../widgets/button_primary.dart';
+import '../CreateNewFeed/create_new_feed.dart';
 import '../create_modal_base_menu.dart';
 import 'life_event_detail.dart';
 
-class LifeEventCategories extends StatefulWidget {
+class LifeEventCategories extends ConsumerStatefulWidget {
   final List? listLifeEvent;
   final dynamic eventSelected;
   final Function handleUpdateData;
   final String? type;
+  final bool? edit;
+  final String? school;
+  
   const LifeEventCategories(
       {Key? key,
       this.listLifeEvent,
       this.eventSelected,
       required this.handleUpdateData,
-      this.type})
+      this.type,
+      this.edit,
+      this.school,})
       : super(key: key);
 
-  @override
-  State<LifeEventCategories> createState() => _LifeEventCategoriesState();
+ @override
+  _LifeEventCategoriesState createState() => _LifeEventCategoriesState();
 }
 
-class _LifeEventCategoriesState extends State<LifeEventCategories> {
+class _LifeEventCategoriesState extends ConsumerState<LifeEventCategories> {
   dynamic lifeEvent = {
     // "default_media_url": '',
     // "life_event_category_id": '',
@@ -38,8 +46,12 @@ class _LifeEventCategoriesState extends State<LifeEventCategories> {
     // "place_id": null,
     // "start_date": ""
   };
+  String? selectedValue;
+  List friendSelected = [];
+  Widget body = const SizedBox();
+  Widget buttonAppbar = const SizedBox();
 
-  handlePress(event) {
+  handlePress(event, lifeEventCategoryId) {
     if (event['children'] != null && event['children'].isNotEmpty) {
       Navigator.push(
           context,
@@ -51,6 +63,7 @@ class _LifeEventCategoriesState extends State<LifeEventCategories> {
                     eventSelected: event,
                     listLifeEvent: event['children'],
                     handleUpdateData: widget.handleUpdateData,
+                    edit: widget.edit,
                   ),
                   buttonAppbar: const SizedBox())));
     } else {
@@ -64,7 +77,12 @@ class _LifeEventCategoriesState extends State<LifeEventCategories> {
                       updateLifeEvent: (type, value) {
                         if (mounted) {
                           setState(() {
-                            lifeEvent = {...lifeEvent, type: value};
+                            lifeEvent = {
+                              ...lifeEvent,
+                              "life_event_category_id": lifeEventCategoryId,
+                              "school_type": widget.school,
+                              type: value
+                            };
                           });
                         }
                       }),
@@ -74,10 +92,24 @@ class _LifeEventCategoriesState extends State<LifeEventCategories> {
                       if (lifeEvent['place_id'] != null) {
                         widget.handleUpdateData('updateLifeEvent', lifeEvent);
                         if (widget.type != null && widget.type == 'children') {
-                          Navigator.of(context)
-                            ..pop()
-                            ..pop()
-                            ..pop();
+                          print("aaaaaaaaaaaaaaaaaaaa");
+                          print("widget.edit: ${widget.edit}");
+                          ref
+                              .read(draftFeedController.notifier)
+                              .saveDraftFeed(DraftFeed(lifeEvent: lifeEvent));
+                          if (widget.edit == true) {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: ((context) => const CreateNewFeed(
+                                          edit: true,
+                                        ))));
+                          } else {
+                            Navigator.of(context)
+                              ..pop()
+                              ..pop()
+                              ..pop();
+                          }
                         } else {
                           Navigator.of(context)
                             ..pop()
@@ -101,7 +133,7 @@ class _LifeEventCategoriesState extends State<LifeEventCategories> {
           widget.listLifeEvent != null
               ? InkWell(
                   onTap: () {
-                    handlePress({});
+                    handlePress({}, {});
                   },
                   child: Container(
                     padding: const EdgeInsets.all(12.0),
@@ -192,7 +224,7 @@ class _LifeEventCategoriesState extends State<LifeEventCategories> {
               itemCount: listData.length,
               itemBuilder: (context, index) => InkWell(
                     onTap: () {
-                      handlePress(listData[index]);
+                      handlePress(listData[index], listData[index]["id"]);
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
