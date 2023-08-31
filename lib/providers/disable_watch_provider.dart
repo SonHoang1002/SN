@@ -36,7 +36,10 @@ final disableVideoController =
 
 class DisableVideoController extends StateNotifier<DisableWatchState> {
   DisableVideoController() : super(const DisableWatchState());
-  setDisableVideo(String type, bool newStatus) {
+  setDisableVideo(String type, bool newStatus, {bool? disableBefore = false}) {
+    if (disableBefore == true) {
+      disableAllVideo();
+    }
     state = state.copyWith(
       isDisableWatchHome:
           type == watchHome ? newStatus : state.isDisableWatchHome,
@@ -53,5 +56,29 @@ class DisableVideoController extends StateNotifier<DisableWatchState> {
 
   disableAllVideo() {
     state = const DisableWatchState();
+  }
+
+  String getProperties() {
+    return "Home:${state.isDisableWatchHome},Follow: ${state.isDisableWatchFollow}, Live: ${state.isDisableWatchLive},Program:  ${state.isDisableWatchProgram},Saved:  ${state.isDisableWatchSaved}";
+  }
+}
+
+final videoCurrentTabController =
+    StateNotifierProvider<VideoCurrentTabController, VideoCurrentTabState>(
+        (ref) => VideoCurrentTabController());
+
+class VideoCurrentTabState {
+  final String videoCurrentTab;
+  const VideoCurrentTabState({this.videoCurrentTab = ""});
+  VideoCurrentTabState copyWith({String videoCurrentTab = ""}) {
+    return VideoCurrentTabState(videoCurrentTab: videoCurrentTab);
+  }
+}
+
+class VideoCurrentTabController extends StateNotifier<VideoCurrentTabState> {
+  VideoCurrentTabController() : super(const VideoCurrentTabState());
+
+  setVideoCurrentTab(String newValue) {
+    state = state.copyWith(videoCurrentTab: newValue);
   }
 }

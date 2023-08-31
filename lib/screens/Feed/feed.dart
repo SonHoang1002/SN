@@ -58,7 +58,6 @@ class _FeedState extends ConsumerState<Feed> {
     super.initState();
     if (!mounted) return;
     Future.delayed(Duration.zero, () async {
-      print("feed feed feed");
       updatePostIsar();
       initRiverpodData();
       addScrollListener();

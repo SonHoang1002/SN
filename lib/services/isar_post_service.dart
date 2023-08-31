@@ -46,7 +46,6 @@ class IsarPostService {
   resetPostIsar() async {
     final instance = await IsarService.instance;
     if (instance.isOpen == true) {
-      print("resetPostIsar resetPostIsar resetPostIsar");
       instance.writeTxn(() async {
         await instance.postModels.where().deleteAll();
       });
@@ -68,18 +67,15 @@ class IsarPostService {
         });
       }
     } else {
-      print("cba cba cba cba");
     }
   }
 }
 
 class IsarPostUsers {
   Future getCurrentUserByToken(String token) async {
-    print("-----");
     final instance = await IsarService.instance;
     final listUser =
         await instance.postDataUsers.where(distinct: true).findAll();
-    print("listUser ${listUser[0]}");
     // if (instance.isOpen == true) {
     //   // final listUser = await instance.postDataUsers.where().findAll();
     //   // print("listUser ${jsonDecode(listUser[0].listUser!)}");
@@ -110,7 +106,6 @@ class IsarPostUsers {
           ]
         },
       ];
-      print("primaryList ${jsonEncode(primaryList)}");
       await instance.postDataUsers
           .put(PostDataUsers()..listUser = jsonEncode(primaryList));
     });

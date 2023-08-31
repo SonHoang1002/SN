@@ -145,7 +145,6 @@ class _VideoPlayerHasControllerState
   }
 
   bool checkLicenseVideoWithType() {
-    print("widget.type ${widget.type}");
     if (widget.type == watchHome &&
         ref.watch(disableVideoController).isDisableWatchHome == true) {
       return false;

@@ -25,8 +25,11 @@ class _WatchRenderState extends ConsumerState<WatchRender>
     super.initState();
     Future.delayed(Duration.zero, () async {
       ref
+          .read(videoCurrentTabController.notifier)
+          .setVideoCurrentTab(watchHome);
+      ref
           .read(disableVideoController.notifier)
-          .setDisableVideo(watchHome, true);
+          .setDisableVideo(watchHome, false, disableBefore: true);
     });
     fetchDataWatch(menuSelected, {'limit': 3});
   }
@@ -63,10 +66,12 @@ class _WatchRenderState extends ConsumerState<WatchRender>
                 setState(() {
                   menuSelected = tab;
                 });
-                ref.read(disableVideoController.notifier).disableAllVideo();
+                ref
+                    .read(videoCurrentTabController.notifier)
+                    .setVideoCurrentTab(tab);
                 ref
                     .read(disableVideoController.notifier)
-                    .setDisableVideo(tab, true);
+                    .setDisableVideo(tab, false, disableBefore: true);
                 fetchDataWatch(tab, {'limit': 3});
               }
             },

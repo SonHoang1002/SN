@@ -149,7 +149,7 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
                         (widget.post?['media_attachments']?[0]?['url']),
                     child: VideoPlayerHasController(
                       media: widget.media,
-                      type:widget.type,
+                      type: widget.type,
                       aspectRatio: widget.post?['media_attachments']?[0]
                           ?['meta']?['original']?['aspect'],
                       onDoubleTapAction: () {},
@@ -212,7 +212,7 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
                                   media: (suggestWatchList[index]
                                           ?['media_attachments']?[0]) ??
                                       widget.media,
-                                      type:widget.type,
+                                  type: widget.type,
                                   aspectRatio: widget.post?['media_attachments']
                                       ?[0]?['meta']?['original']?['aspect'],
                                   onDoubleTapAction: () {},

@@ -660,11 +660,13 @@ class _HomeState extends ConsumerState<Home>
                 child: const Menu(),
               ),
         onDrawerChanged: (isOpened) {
-          if(isOpened==true){
-            ref.read(disableVideoController.notifier).disableAllVideo();
-
+          if (_selectedIndex == 3) {
+            if (isOpened == true) {
+              // ref.read(disableVideoController.notifier).disableAllVideo();
+              print("_selectedIndex isOpened");
+            }
           }
-        }, 
+        },
         appBar: _selectedIndex == 1 || _selectedIndex == 4
             ? null
             : AppBar(

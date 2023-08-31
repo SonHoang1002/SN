@@ -102,7 +102,6 @@ class PostController extends StateNotifier<PostState> {
   }
 
   addListPost(List newData, dynamic params) {
-    print("addListPost addListPost ${newData.length} ${params}");
     if (mounted) {
       state = state.copyWith(
           posts: checkObjectUniqueInList(state.posts + newData, 'id'),
