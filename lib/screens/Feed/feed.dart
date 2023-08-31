@@ -116,8 +116,8 @@ class _FeedState extends ConsumerState<Feed> {
                 0 ||
             scrollController.offset ==
                 scrollController.position.maxScrollExtent) {
-          // EasyDebounce.debounce(
-          //     'my-debouncer', const Duration(milliseconds: 180), () async {
+          EasyDebounce.debounce(
+              'my-debouncer', const Duration(milliseconds: 180), () async {
           // kiểm tra không có kết nối hoặc có kết nối mà không còn bài viết nào khác nữa --> lấy data từ isar
           if (!ref.watch(connectivityControllerProvider).connectInternet ||
               ((_isMore.value != true ||
@@ -126,7 +126,7 @@ class _FeedState extends ConsumerState<Feed> {
             getDataFromIsar();
           }
           updatePostIsar();
-          // });
+          });
         }
       } else if (scrollController.position.userScrollDirection ==
           ScrollDirection.forward) {
@@ -160,7 +160,7 @@ class _FeedState extends ConsumerState<Feed> {
           .sublist(index + 1, index + 7);
       ref.read(postControllerProvider.notifier).addListPost(
             newDataList,
-            paramsConfig,
+            paramsConfig
           );
     } else {
       ref.read(postControllerProvider.notifier).addListPost(

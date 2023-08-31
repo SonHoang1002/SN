@@ -16,6 +16,7 @@ import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/home/violation_of_standards.dart';
 import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
+import 'package:social_network_app_mobile/providers/disable_watch_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
@@ -658,6 +659,12 @@ class _HomeState extends ConsumerState<Home>
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 child: const Menu(),
               ),
+        onDrawerChanged: (isOpened) {
+          if(isOpened==true){
+            ref.read(disableVideoController.notifier).disableAllVideo();
+
+          }
+        }, 
         appBar: _selectedIndex == 1 || _selectedIndex == 4
             ? null
             : AppBar(

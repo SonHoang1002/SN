@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_network_app_mobile/a_TEST/fake_video_data.dart';
+import 'package:social_network_app_mobile/a_test/fake_video_data.dart';
 import 'package:social_network_app_mobile/apis/watch_api.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
@@ -57,6 +57,9 @@ class WatchController extends StateNotifier<WatchState> {
   getListWatchFollow(params) async {
     final limit = params['limit'];
     List response = await WatchApi().getListWatchFollow(params) ?? [];
+    if(response.isEmpty){
+      response = fakeWatchFollow;
+    }
     if (mounted) {
       state = state.copyWith(
           mediaSelected: state.mediaSelected,
@@ -76,7 +79,9 @@ class WatchController extends StateNotifier<WatchState> {
   getListWatchSuggest(params) async {
     final limit = params['limit'];
     List response = await WatchApi().getListWatchSuggest(params) ?? [];
-    response.addAll(fakeWatchDatas);
+    if(response.isEmpty){
+      response = fakeWatchSuggest;
+    }
     if (mounted) {
       final newWatch =
           response.where((item) => !state.watchSuggest.contains(item)).toList();
