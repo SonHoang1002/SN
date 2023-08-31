@@ -29,10 +29,10 @@ import 'package:social_network_app_mobile/widgets/skeleton.dart';
 import '../../../widgets/AvatarStack/positions.dart';
 
 class HomeGroup extends ConsumerStatefulWidget {
-  final dynamic groupDetail;
+  dynamic groupDetail;
   final Function? onTap;
 
-  const HomeGroup({
+  HomeGroup({
     Key? key,
     this.onTap,
     this.groupDetail,
@@ -61,7 +61,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
   void initState() {
     if (!mounted) return;
     super.initState();
-    chip = checkVisible()?groupChip:groupChipNotParticipate;
+    chip = checkVisible() ? groupChip : groupChipNotParticipate;
     scrollController.addListener(
       () {
         if (scrollController.position.maxScrollExtent ==
@@ -192,9 +192,9 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
 
   Widget buildIntroBody(BuildContext context) {
     return GroupIntro(
-              groupDetail: widget.groupDetail,
-              join: false,
-            );
+      groupDetail: widget.groupDetail,
+      join: false,
+    );
   }
 
   List mergeAndFilter(List list1, List list2) {
@@ -242,6 +242,19 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
+          await ref
+              .read(groupListControllerProvider.notifier)
+              .getGroupDetail(widget.groupDetail["id"])
+              .then(
+            (value) {
+              setState(
+                () {
+                  widget.groupDetail =
+                      ref.read(groupListControllerProvider).groupDetail;
+                },
+              );
+            },
+          );
           ref.read(groupListControllerProvider.notifier).getPostGroup({
             "sort_by": "new_post",
             "exclude_replies": true,
@@ -444,7 +457,9 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                   ),
                   child: Row(
                     children: List.generate(
-                      checkVisible()?chip.length:groupChipNotParticipate.length,
+                      checkVisible()
+                          ? chip.length
+                          : groupChipNotParticipate.length,
                       (index) => InkWell(
                         onTap: () {
                           setState(
@@ -580,8 +595,10 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                     ),
                   )
                 : SliverToBoxAdapter(
-                  child: Container(child: buildIntroBody(context),),
-                ),
+                    child: Container(
+                      child: buildIntroBody(context),
+                    ),
+                  ),
             checkVisible()
                 ? postGroup.isEmpty
                     ? SliverToBoxAdapter(
@@ -624,7 +641,9 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
             SliverToBoxAdapter(
                 child: isLoading
                     ? seeMore
-                        ? checkVisible()?SkeletonCustom().postSkeleton(context):const SizedBox()
+                        ? checkVisible()
+                            ? SkeletonCustom().postSkeleton(context)
+                            : const SizedBox()
                         : const SizedBox()
                     : const SizedBox()),
           ],

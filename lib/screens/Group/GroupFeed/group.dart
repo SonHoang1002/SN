@@ -79,40 +79,55 @@ class _GroupState extends ConsumerState<Group> {
     });
   }
 
+  fetchData() {
+    ref
+        .read(groupListControllerProvider.notifier)
+        .getListGroupAdminMember({'tab': 'member', 'limit': 20});
+    ref
+        .read(groupListControllerProvider.notifier)
+        .getListGroupAdminMember({'tab': 'admin', 'limit': 20});
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              Row(
-                children: List.generate(
-                    menuGroup.length,
-                    (index) => GestureDetector(
-                          onTap: () => handlePress(menuGroup[index]['key']),
-                          child: ChipMenu(
-                            isSelected: menuSelected == menuGroup[index]['key'],
-                            label: menuGroup[index]['label'],
-                            icon: Icon(
-                              menuGroup[index]['icon'],
-                              size: 16,
-                              color: menuSelected == menuGroup[index]['key']
-                                  ? white
-                                  : null,
+    return RefreshIndicator(
+      onRefresh: () async {
+        fetchData();
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                Row(
+                  children: List.generate(
+                      menuGroup.length,
+                      (index) => GestureDetector(
+                            onTap: () => handlePress(menuGroup[index]['key']),
+                            child: ChipMenu(
+                              isSelected:
+                                  menuSelected == menuGroup[index]['key'],
+                              label: menuGroup[index]['label'],
+                              icon: Icon(
+                                menuGroup[index]['icon'],
+                                size: 16,
+                                color: menuSelected == menuGroup[index]['key']
+                                    ? white
+                                    : null,
+                              ),
                             ),
-                          ),
-                        )),
-              ),
-            ],
+                          )),
+                ),
+              ],
+            ),
           ),
-        ),
-        const CrossBar(),
-        _buildBody()
-      ],
+          const CrossBar(),
+          _buildBody()
+        ],
+      ),
     );
   }
 
