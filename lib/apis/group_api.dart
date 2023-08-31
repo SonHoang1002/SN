@@ -123,7 +123,11 @@ class GroupApi {
     return await Api().getRequestBase("/api/v1/groups/$id/rules", null);
   }
 
-  getGroupRelationship(dynamic groupId,dynamic params) async {
+  getGroupRelationship(dynamic groupId, dynamic params) async {
     return await Api().postRequestBase("/api/v1/group_relationships", params);
+  }
+
+  updateGroupDetails(id, params) async {
+    return await Api().patchRequestBase("/api/v1/groups/$id", params);
   }
 }
