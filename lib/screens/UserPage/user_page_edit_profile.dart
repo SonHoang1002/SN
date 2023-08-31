@@ -1,4 +1,3 @@
-
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -99,20 +98,20 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
   void handleSaveHobbies() {
     final newHobbies =
         ref.read(userInformationProvider).userMoreInfor['tempHobbies'];
-    ref.read(userInformationProvider.notifier).updateHobbies(newHobbies);
+        ref.read(userInformationProvider.notifier).updateHobbies(newHobbies);
   }
 
   String renderContent(dynamic data) {
     if (data['life_event']['school_type'] == "HIGH_SCHOOL") {
       if (data['life_event']['place'] != null) {
-        return '${data?['life_event']?['name']} tại ${data['life_event']['place']['title']}';
+        return '${data?['life_event']?['name']} tại ${data['life_event']['place']?['title']}';
       } else {
-        return '${data?['life_event']?['currently'] == true ? "Đã học" : "Học"} tại ${data['life_event']['company'] ?? data['life_event']['name']}';
+        return '${data?['life_event']?['name']} tại ${data['life_event']['place']?['title']}';
       }
     } else if (data['life_event']['school_type'] == "UNIVERSITY") {
-      return '${data?['life_event']?['currently'] == true ? "Từng học" : "Học"} tại ${data['life_event']['company'] ?? data['life_event']['name']}';
-    } else if (data['life_event']['position'] != null) {
-      return '${data?['life_event']?['position']} tại ${data['life_event']['company']}';
+      return '${data?['life_event']?['name']} tại ${data['life_event']['place'] == null ? "..." : data['life_event']['place']['title']}';
+    } else if (data['life_event']['place'] != null) {
+      return '${data?['life_event']?['name']} tại ${data['life_event']['place'] == null ? "..." : data['life_event']['place']['title']}';
     } else {
       return data['life_event']['company'] ?? '';
     }
@@ -272,317 +271,336 @@ class UserPageEditProfileState extends ConsumerState<UserPageEditProfile> {
     final meData = ref.watch(meControllerProvider)[0];
     final lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
     final userAbout = ref.watch(userInformationProvider).userMoreInfor;
-    final generalInformation = userAbout['general_information'];
-    descriptionTxtCtrl.text = generalInformation['description'].toString();
+    final generalInformation = userAbout?['general_information'];
+    descriptionTxtCtrl.text = generalInformation?['description'].toString() ?? "";
     List featureContents = ref.watch(userInformationProvider).featureContent;
     final createdDate = meData['created_at'] != null
         ? DateTime.parse(meData['created_at'])
         : null;
-    final relationshipPartner = userAbout['account_relationship'];
-    return SingleChildScrollView(
-      child: Container(
-        margin: const EdgeInsets.all(15),
-        child: Column(
-          children: [
-            // BLOCK 1: Avatar
-            BlockProfile(
-              title: "Ảnh đại diện",
-              widgetChild: Container(
-                width: 151,
-                height: 151,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(width: 0.1, color: greyColor),
-                ),
-                child: AvatarSocial(
-                  width: 150,
-                  height: 150,
-                  object: dataPage,
-                  path: dataPage?['avatar_media']?['preview_url'] ??
-                      linkAvatarDefault,
-                ),
-              ),
-              updateProfile: () {
-                showModal(context, 'avatar');
-              },
-            ),
-            buildLine(),
-            //
-            // BLOCK 2: Cover Image
-            BlockProfile(
-              title: "Ảnh bìa",
-              widgetChild: Container(
-                width: size.width - 30 + 1,
-                height: (size.width - 30) * 1.8 / 3 + 1,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  border: Border.all(width: 0.1, color: greyColor),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12.0),
-                  child: ExtendedImage.network(
-                    dataPage?['banner']?['preview_url'] ?? linkBannerDefault,
-                    width: size.width - 30,
-                    height: (size.width - 30) * 1.8 / 3,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              updateProfile: () {
-                showModal(context, 'banner');
-              },
-            ),
-            buildLine(),
-            //
-            // Block 3: Description
-            BlockProfile(
-              title: "Tiểu sử",
-              widgetChild: Text(
-                '${((userAbout['general_information']['description'] != null) && (userAbout['general_information']['description'] != "")) 
-                    ? userAbout['general_information']['description'] : "Mô tả bản thân ..."}',
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 18, color: greyColor),
-              ),
-              updateProfile: () {
-                pushToNextScreen(
-                    context,
-                    EditUserBiography(
-                        dataPage: dataPage, onUpdate: widget.onUpdate));
-              },
-            ),
-            buildLine(),
-            //
-            // Block 4: Detail about user (high school, university)
-            BlockProfile(
-              title: "Chi tiết",
-              widgetChild: Column(
-                children: [
-                  SingleChildScrollView(
-                    child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: lifeEvent.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            dense: true,
-                            horizontalTitleGap: 0.0,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 0.0, vertical: 0.0),
-                            visualDensity: const VisualDensity(
-                                horizontal: -4, vertical: -4),
-                            leading: const Icon(FontAwesomeIcons.briefcase,
-                                size: 18),
-                            title: Text(
-                              renderContent(lifeEvent[index]),
-                              style: const TextStyle(fontSize: 15),
-                            ),
-                          );
-                        }),
-                  ),
-                  if (generalInformation['place_live'] != null)
-                    buildListTile(
-                      'Sống tại',
-                      '${generalInformation['place_live']['title'] ?? generalInformation['place_live']['name']}',
-                      theme,
-                      FontAwesomeIcons.house,
-                    ),
-                  if (generalInformation['hometown'] != null)
-                    buildListTile(
-                      'Đến từ',
-                      '${generalInformation['hometown']['title'] ?? generalInformation['hometown']['name']}',
-                      theme,
-                      FontAwesomeIcons.locationDot,
-                    ),
-                  if (relationshipPartner != null &&
-                      relationshipPartner['relationship_category'] != null &&
-                      relationshipPartner['partner'] != null)
-                    buildListTile(
-                      '${relationshipPartner['relationship_category']['name']} cùng với ',
-                      '${relationshipPartner['partner']['display_name']}',
-                      theme,
-                      FontAwesomeIcons.heart,
-                    ),
-                  if (generalInformation['phone_number'] != null)
-                    buildListTile(
-                      generalInformation['phone_number'],
-                      '',
-                      theme,
-                      FontAwesomeIcons.phone,
-                    ),
-                  if (createdDate != null)
-                    buildListTile(
-                      'Tham gia vào',
-                      '${createdDate.day} tháng ${createdDate.month} năm ${createdDate.year}',
-                      theme,
-                      FontAwesomeIcons.clock,
-                    ),
-                ],
-              ),
-              updateProfile: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => const EditUserDetail(),
-                  ),
-                );
-              },
-            ),
-            buildLine(),
-
-            // Block 5: Hobbies
-            BlockProfile(
-              title: "Sở thích",
-              widgetChild: Wrap(
-                runSpacing: 10.0,
-                children: userAbout['hobbies']
-                    .map<Widget>(
-                      (e) => ChipMenu(
-                        isSelected: false,
-                        label: e['text'],
-                        icon: e['icon'] != null
-                            ? ExtendedImage.network(
-                                e['icon'],
-                                width: 20.0,
-                                height: 20.0,
-                              )
-                            : Container(
-                                height: 20,
-                                width: 20,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: const Icon(
-                                  FontAwesomeIcons.circleUser,
-                                  size: 20.0,
-                                  color: greyColor,
-                                ),
-                              ),
+    final relationshipPartner = userAbout?['account_relationship'];
+    return Container(
+        child: RefreshIndicator(
+            onRefresh: () async {
+              ref.read(userInformationProvider.notifier).getUserInformation(userData["id"]);
+              ref.read(userInformationProvider.notifier).getUserMoreInformation(userData["id"]);
+              ref.read(userInformationProvider.notifier).getUserLifeEvent(userData["id"]);
+              ref.read(userInformationProvider.notifier).getUserFeatureContent(userData["id"]);
+          },
+            child: SingleChildScrollView(
+              child: Container(
+                margin: const EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    // BLOCK 1: Avatar
+                    BlockProfile(
+                      title: "Ảnh đại diện",
+                      widgetChild: Container(
+                        width: 151,
+                        height: 151,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(width: 0.1, color: greyColor),
+                        ),
+                        child: AvatarSocial(
+                          width: 150,
+                          height: 150,
+                          object: dataPage,
+                          path: dataPage?['avatar_media']?['preview_url'] ??
+                              linkAvatarDefault,
+                        ),
                       ),
-                    )
-                    .toList(),
-              ),
-              updateProfile: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => CreateModalBaseMenu(
-                      title: "Chỉnh sửa sở thích",
-                      body: const EditUserHobby(),
-                      buttonAppbar: TextButton(
-                        onPressed: () {
-                          handleSaveHobbies();
-                          Navigator.pop(context);
-                          widget.onUpdate();
-                          setState(() {});
-                        },
-                        child: Text(
-                          "Lưu",
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            color:
-                                theme.isDarkMode ? Colors.white : Colors.black,
+                      updateProfile: () {
+                        showModal(context, 'avatar');
+                      },
+                    ),
+                    buildLine(),
+                    //
+                    // BLOCK 2: Cover Image
+                    BlockProfile(
+                      title: "Ảnh bìa",
+                      widgetChild: Container(
+                        width: size.width - 30 + 1,
+                        height: (size.width - 30) * 1.8 / 3 + 1,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.0),
+                          border: Border.all(width: 0.1, color: greyColor),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12.0),
+                          child: ExtendedImage.network(
+                            dataPage?['banner']?['preview_url'] ??
+                                linkBannerDefault,
+                            width: size.width - 30,
+                            height: (size.width - 30) * 1.8 / 3,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
+                      updateProfile: () {
+                        showModal(context, 'banner');
+                      },
                     ),
-                  ),
-                );
-              },
-            ),
-            buildLine(),
-            //
-            // Block 6: Noticable
-            BlockProfile(
-              title: "Đáng chú ý",
-              widgetChild: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: List.generate(
-                      featureContents.length,
-                      (index) => InkWell(
-                            borderRadius: BorderRadius.circular(10.0),
-                            onTap: () {
-                              showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  barrierColor: transparent,
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(20))),
-                                  builder: (BuildContext context) {
-                                    return StoryPage(
-                                        user: userData,
-                                        story: featureContents[index]);
-                                  });
-                            },
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: (size.width - 50) / 3,
-                                  height: 2 * (size.width - 70) / 3,
-                                  margin: const EdgeInsets.only(right: 10.0),
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(10.0)),
-                                  child: Stack(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        child: ExtendedImage.network(
-                                          featureContents[index]['banner']
-                                              ['preview_url'],
-                                          width: size.width / 3,
-                                          height: 2 * size.width / 3,
-                                          fit: BoxFit.cover,
+                    buildLine(),
+                    //
+                    // Block 3: Description
+                    BlockProfile(
+                      title: "Tiểu sử",
+                      widgetChild: Text(
+                        '${((userAbout?['general_information']?['description'] != null) && (userAbout?['general_information']?['description'] != "")) ? userAbout['general_information']['description'] : "Mô tả bản thân ..."}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 18, color: greyColor),
+                      ),
+                      updateProfile: () {
+                        pushToNextScreen(
+                            context,
+                            EditUserBiography(
+                                dataPage: dataPage, onUpdate: widget.onUpdate));
+                      },
+                    ),
+                    buildLine(),
+                    //
+                    // Block 4: Detail about user (high school, university)
+                    BlockProfile(
+                      title: "Chi tiết",
+                      widgetChild: Column(
+                        children: [
+                          SingleChildScrollView(
+                            child: ListView.builder(
+                                padding: EdgeInsets.zero,
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: lifeEvent.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    dense: true,
+                                    horizontalTitleGap: 0.0,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 0.0, vertical: 0.0),
+                                    visualDensity: const VisualDensity(
+                                        horizontal: -4, vertical: -4),
+                                    leading: const Icon(
+                                        FontAwesomeIcons.briefcase,
+                                        size: 18),
+                                    title: Text(
+                                      renderContent(lifeEvent[index]),
+                                      style: const TextStyle(fontSize: 15),
+                                    ),
+                                  );
+                                }),
+                          ),
+                          if (generalInformation?['place_live'] != null)
+                            buildListTile(
+                              'Sống tại',
+                              '${generalInformation?['place_live']['title'] ?? generalInformation?['place_live']['name']}',
+                              theme,
+                              FontAwesomeIcons.house,
+                            ),
+                          if (generalInformation?['hometown'] != null)
+                            buildListTile(
+                              'Đến từ',
+                              '${generalInformation?['hometown']['title'] ?? generalInformation?['hometown']['name']}',
+                              theme,
+                              FontAwesomeIcons.locationDot,
+                            ),
+                          if (relationshipPartner != null &&
+                              relationshipPartner['relationship_category'] !=
+                                  null &&
+                              relationshipPartner['partner'] != null)
+                            buildListTile(
+                              '${relationshipPartner['relationship_category']['name']} cùng với ',
+                              '${relationshipPartner['partner']['display_name']}',
+                              theme,
+                              FontAwesomeIcons.heart,
+                            ),
+                          if (generalInformation?['phone_number'] != null)
+                            buildListTile(
+                              generalInformation?['phone_number'],
+                              '',
+                              theme,
+                              FontAwesomeIcons.phone,
+                            ),
+                          if (createdDate != null)
+                            buildListTile(
+                              'Tham gia vào',
+                              '${createdDate.day} tháng ${createdDate.month} năm ${createdDate.year}',
+                              theme,
+                              FontAwesomeIcons.clock,
+                            ),
+                        ],
+                      ),
+                      updateProfile: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => const EditUserDetail(),
+                          ),
+                        );
+                      },
+                    ),
+                    buildLine(),
+
+                    // Block 5: Hobbies
+                    BlockProfile(
+                      title: "Sở thích",
+                      widgetChild: Wrap(
+                        runSpacing: 10.0,
+                        children: userAbout?['hobbies']
+                            .map<Widget>(
+                              (e) => ChipMenu(
+                                isSelected: false,
+                                label: e['text'],
+                                icon: e['icon'] != null
+                                    ? ExtendedImage.network(
+                                        e['icon'],
+                                        width: 20.0,
+                                        height: 20.0,
+                                      )
+                                    : Container(
+                                        height: 20,
+                                        width: 20,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        child: const Icon(
+                                          FontAwesomeIcons.circleUser,
+                                          size: 20.0,
+                                          color: greyColor,
                                         ),
                                       ),
-                                      featureContents[index]['media_count'] > 1
-                                          ? Positioned(
-                                              bottom: 5,
-                                              left: 5,
-                                              child: Text(
-                                                '+ ${featureContents[index]['media_count'] - 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 15, color: white),
-                                              ))
-                                          : const SizedBox()
-                                    ],
+                              ),
+                            )
+                            .toList(),
+                      ),
+                      updateProfile: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => CreateModalBaseMenu(
+                              title: "Chỉnh sửa sở thích",
+                              body: const EditUserHobby(),
+                              buttonAppbar: TextButton(
+                                onPressed: () {
+                                  handleSaveHobbies();
+                                  Navigator.pop(context);
+                                  widget.onUpdate();
+                                  setState(() {});
+                                },
+                                child: Text(
+                                  "Lưu",
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    color: theme.isDarkMode
+                                        ? Colors.white
+                                        : Colors.black,
                                   ),
                                 ),
-                                const SizedBox(
-                                  height: 8.0,
-                                ),
-                                SizedBox(
-                                    width: (size.width - 50) / 3,
-                                    child: Text(
-                                      featureContents[index]['title'],
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 13),
-                                    ))
-                              ],
+                              ),
                             ),
-                          )),
+                          ),
+                        );
+                      },
+                    ),
+                    buildLine(),
+                    //
+                    // Block 6: Noticable
+                    BlockProfile(
+                      title: "Đáng chú ý",
+                      widgetChild: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: List.generate(
+                              featureContents.length,
+                              (index) => InkWell(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          isScrollControlled: true,
+                                          barrierColor: transparent,
+                                          clipBehavior:
+                                              Clip.antiAliasWithSaveLayer,
+                                          shape: const RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                      top:
+                                                          Radius.circular(20))),
+                                          builder: (BuildContext context) {
+                                            return StoryPage(
+                                                user: userData,
+                                                story: featureContents[index]);
+                                          });
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          width: (size.width - 50) / 3,
+                                          height: 2 * (size.width - 70) / 3,
+                                          margin: const EdgeInsets.only(
+                                              right: 10.0),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0)),
+                                          child: Stack(
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(12.0),
+                                                child: ExtendedImage.network(
+                                                  featureContents[index]
+                                                      ['banner']['preview_url'],
+                                                  width: size.width / 3,
+                                                  height: 2 * size.width / 3,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              featureContents[index]
+                                                          ['media_count'] >
+                                                      1
+                                                  ? Positioned(
+                                                      bottom: 5,
+                                                      left: 5,
+                                                      child: Text(
+                                                        '+ ${featureContents[index]['media_count'] - 1}',
+                                                        style: const TextStyle(
+                                                            fontSize: 15,
+                                                            color: white),
+                                                      ))
+                                                  : const SizedBox()
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 8.0,
+                                        ),
+                                        SizedBox(
+                                            width: (size.width - 50) / 3,
+                                            child: Text(
+                                              featureContents[index]['title'],
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 13),
+                                            ))
+                                      ],
+                                    ),
+                                  )),
+                        ),
+                      ),
+                      updateProfile: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => const EditNoticeStory(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
-              updateProfile: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => const EditNoticeStory(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
+            )));
   }
 }
 

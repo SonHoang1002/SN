@@ -11,8 +11,9 @@ import 'package:social_network_app_mobile/widgets/search_input.dart';
 class FriendTag extends ConsumerStatefulWidget {
   final Function handleUpdateData;
   final List friendsPrePage;
+  final bool? user_relationship;
   const FriendTag(
-      {Key? key, required this.handleUpdateData, required this.friendsPrePage})
+      {Key? key, required this.handleUpdateData, required this.friendsPrePage, this.user_relationship})
       : super(key: key);
 
   @override
@@ -74,6 +75,11 @@ class _FriendTagState extends ConsumerState<FriendTag> {
 
     setState(() {
       friendSelected = newList;
+      if(widget.user_relationship != null)
+      {
+        Navigator.pop(context, friendSelected);
+        print("friendSelected: $friendSelected");
+      }
     });
     widget.handleUpdateData('update_friend', newList);
   }
