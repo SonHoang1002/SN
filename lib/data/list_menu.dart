@@ -1,22 +1,24 @@
+import 'package:social_network_app_mobile/constant/type_constant.dart';
+
 List watchMenu = [
   {
-    "key": "watch_home",
+    "key": watchHome,
     "label": "Trang chủ",
   },
   {
-    "key": "watch_follow",
+    "key": watchFollow,
     "label": "Đang theo dõi",
   },
   {
-    "key": "watch_live",
+    "key": watchLive,
     "label": "Trực tiếp",
   },
   {
-    "key": "watch_program",
+    "key": watchProgram,
     "label": "Chương trình",
   },
   {
-    "key": "watch_saved",
+    "key": watchSaved,
     "label": "Video đã lưu",
   }
 ];

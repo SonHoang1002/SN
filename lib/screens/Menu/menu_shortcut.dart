@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/friend/friend_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
@@ -74,10 +75,10 @@ class _MenuShortcutState extends ConsumerState<MenuShortcut> {
                                     isGroup: true,
                                     object:  listShortCut![index],
                                     path:  (listShortCut?[index]?['avatar_media']) != null
-                                        ?  (listShortCut?[index]?['avatar_media']?
-                                            ['preview_url'])
-                                        :  (listShortCut?[index]?['banner']
-                                            ['preview_url']))
+                                        ?  ((listShortCut?[index]?['avatar_media']?
+                                            ['preview_url']) ?? linkAvatarDefault)
+                                        :  ((listShortCut?[index]?['banner']?
+                                            ['preview_url']) ?? linkAvatarDefault))
                               ],
                             ),
                             const SizedBox(
