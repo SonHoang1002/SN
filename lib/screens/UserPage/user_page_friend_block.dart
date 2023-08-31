@@ -95,7 +95,7 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
                               if (widget.user != null)
                                 TextDescription(
                                     description:
-                                        " ${widget.user['friends_count'] ?? widget.user['relationships']["mutual_friend_count"]} "
+                                        " ${widget.user['friends_count'] ?? widget.user['relationships']?["mutual_friend_count"]} "
                                         "bạn "
                                         "${widget.user['friends_count'] != null ? "bè " : "chung "} ")
                             ],

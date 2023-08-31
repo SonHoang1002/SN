@@ -74,6 +74,7 @@ class CreateNewFeed extends ConsumerStatefulWidget {
   final dynamic friendData;
   final bool? isInGroup;
   final Function? popFunction;
+  final bool? edit;
 
   const CreateNewFeed(
       {Key? key,
@@ -85,7 +86,8 @@ class CreateNewFeed extends ConsumerStatefulWidget {
       this.pageData,
       this.friendData,
       this.isInGroup,
-      this.popFunction})
+      this.popFunction,
+      this.edit})
       : super(key: key);
 
   @override
@@ -493,6 +495,14 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         isHaveVideo = true;
       }
     }
+
+    ref.read(draftFeedController.notifier).saveDraftFeed(DraftFeed(
+        gifLink: "",
+        files: [],
+        content: "",
+        checkin: null,
+        previewUrlData: null,
+        lifeEvent: null));
     if (isHaveVideo) {
       _buildSnackBar(
           "Video của bạn đang trong quá trình xử lý, chúng tôi sẽ thông báo cho bạn khi video đã sẵn sàng.");
@@ -530,6 +540,15 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         widget.reloadFunction != null
             ? widget.reloadFunction!(null, null)
             : null;
+      }
+       if(widget.edit == true){
+        Navigator.of(context)..pop()
+                              ..pop()
+                              ..pop()
+                              ..pop();
+      }else{
+        
+        Navigator.pop(context);
       }
       Navigator.pop(context);
       // prepare data for api
@@ -879,7 +898,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                     content: content,
                                     checkin: checkin,
                                     previewUrlData: previewUrlData,
-                                    poll: poll));
+                                    poll: poll,
+                                    lifeEvent: lifeEvent));
                             popToPreviousScreen(context);
                             popToPreviousScreen(context);
                           }),
@@ -898,6 +918,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                   content: "",
                                   checkin: null,
                                   previewUrlData: null,
+                                  lifeEvent: null
                                 ));
                             popToPreviousScreen(context);
                             popToPreviousScreen(context);

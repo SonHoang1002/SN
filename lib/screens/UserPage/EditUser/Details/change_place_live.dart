@@ -15,7 +15,8 @@ import 'package:provider/provider.dart' as pv;
 import '../../../../widgets/search_input.dart';
 
 class ChangeLivingPlace extends ConsumerStatefulWidget {
-  const ChangeLivingPlace({super.key});
+  final bool? city;
+  const ChangeLivingPlace({Key? key, this.city}): super(key: key);
 
   @override
   ChangeLivingPlaceState createState() => ChangeLivingPlaceState();
@@ -54,15 +55,18 @@ class ChangeLivingPlaceState extends ConsumerState<ChangeLivingPlace> {
       "account_display_fields": infor['account_display_fields'],
       "account_social": infor['account_social'],
       "account_web_link": infor['account_web_link'],
-      "address": infor['address'],
+      "address":infor['address'],
       "birth_date": infor['birth_date'],
       "birth_month": infor['birth_month'],
       "birth_year": infor['birth_year'],
       "gender": infor['gender'],
       "other_name": infor['other_name'],
       "phone_number": infor['phone_number'],
-      "place_live_id": newPlaceId,
-    };
+      if (widget.city==null)
+        "place_live_id":newPlaceId
+      else
+        "hometown_id":newPlaceId
+      };
 
     final userId = ref.read(meControllerProvider)[0]['id'];
     final res = await UserPageApi().updateOtherInformation(userId, payload);
