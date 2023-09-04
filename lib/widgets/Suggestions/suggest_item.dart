@@ -15,6 +15,7 @@ import 'package:social_network_app_mobile/widgets/button_primary.dart';
 
 import '../../apis/friends_api.dart';
 import '../../apis/group_api.dart';
+import '../../screens/Group/GroupDetail/group_detail.dart';
 import '../../screens/UserPage/user_page.dart';
 import '../../theme/colors.dart';
 
@@ -32,14 +33,20 @@ class SuggestItem extends ConsumerWidget {
     return StatefulBuilder(builder: (context, setState) {
       return InkWell(
         onTap: () {
-          Navigator.push(
+          type == suggestFriends?Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => const UserPageHome(),
                 settings: RouteSettings(
                   arguments: {'id': suggestData['id'], "user": suggestData},
                 ),
-              ));
+              )): Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return GroupDetail(
+                                id: suggestData['id'],
+                              );
+                            },
+                          ));
         },
         child: Container(
             width: size.width * 0.8,
