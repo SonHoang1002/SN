@@ -29,7 +29,7 @@ const tokenVideoUpload = '21fbd3b2e427d9b9bae405e6480695e6bd233e44';
 //a Luu
 // const userToken = 'zRo-Aka_TJvXPzLJdfbHTs6SnLPEU8cHalDViC2Aixs';
 //a Dat
-const userToken = '1WJ_KeBJDF9pLtaUeV33sXjCshUzEDcanptxXD0Vn7A';
+const userToken = 'Mt7Pc2x2sXj2mnZ7kpNSqxl_0SeEDLGZlNak5aixI9A';
 
 const urlWebEmso = 'https://cmc-fe.emso.vn';
 
