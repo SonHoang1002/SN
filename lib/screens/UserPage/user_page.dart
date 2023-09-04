@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:easy_debounce/easy_debounce.dart';
@@ -62,6 +63,7 @@ class UserPageHome extends StatefulWidget {
 class _UserPageHomeState extends State<UserPageHome> {
   int _selectedIndex = 0;
   ValueNotifier<bool> isClickedHome = ValueNotifier(false);
+  List<Widget> pageUserRoutes = [];
 
   List<Widget> pageHomeRoutes = [
     const Home(),
@@ -70,6 +72,21 @@ class _UserPageHomeState extends State<UserPageHome> {
     const Watch(),
     const MainMarketPage(isBack: false)
   ];
+
+  void initState(){
+    super.initState();
+    pageUserRoutes = [
+      UserPage(
+        id: widget.id,
+        user: widget.user,
+      ),
+      const Moment(typePage: 'home'),
+      const SizedBox(),
+      const Watch(),
+      const MainMarketPage(isBack: false)
+    ];
+  }
+  
   void _onItemTapped(int index) {
     if (index == 2) {
       showBarModalBottomSheet(
@@ -97,16 +114,6 @@ class _UserPageHomeState extends State<UserPageHome> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> pageUserRoutes = [
-      UserPage(
-        id: widget.id,
-        user: widget.user,
-      ),
-      const Moment(typePage: 'home'),
-      const SizedBox(),
-      const Watch(),
-      const MainMarketPage(isBack: false)
-    ];
     return Scaffold(
         body: IndexedStack(
           index: _selectedIndex,
@@ -143,6 +150,7 @@ class _UserPageState extends ConsumerState<UserPage>
   List lifeEvent = [];
   bool showHeaderTabFixed = false;
   late TabController _tabController;
+  var friendNew;
 
   String menuSelected = 'user_posts';
 
@@ -182,6 +190,10 @@ class _UserPageState extends ConsumerState<UserPage>
         }
       });
       Future.delayed(Duration.zero, () async {
+        // ref.read(userInformationProvider.notifier).getUserInformation(id);
+        // ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
+        // ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
+        // ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
         final deviceUserId = await SecureStorage().getKeyStorage('userId');
         if (deviceUserId == id) {
           userType = 'me';
@@ -198,10 +210,6 @@ class _UserPageState extends ConsumerState<UserPage>
           }
           following.value = userData['relationships']?['following'];
         }
-        ref.read(userInformationProvider.notifier).getUserInformation(id);
-        ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
-        ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
-        ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
 
         ref.read(postControllerProvider.notifier).getListPostPin(id);
 
@@ -209,9 +217,8 @@ class _UserPageState extends ConsumerState<UserPage>
             id == ref.watch(meControllerProvider)[0]['id'],
             id,
             {"limit": 3, "exclude_replies": true});
-        var friendNew =
-            await UserPageApi().getUserFriend(id, {'limit': 20}) ?? [];
-        if (mounted) {
+      friendNew = await UserPageApi().getUserFriend(id, {'limit': 20}) ?? [];
+      if (mounted) {
           setState(() {
             userData = ref.watch(userInformationProvider).userInfor;
             userAbout = ref.watch(userInformationProvider).userMoreInfor;
@@ -220,10 +227,18 @@ class _UserPageState extends ConsumerState<UserPage>
                 ? ref.watch(postControllerProvider).postUserPage
                 : ref.watch(postControllerProvider).postAnotherUserPage);
             pinPost = ref.watch(postControllerProvider).postsPin;
-            friend = friendNew;
           });
         }
+      friend = friendNew;
       });
+    }
+
+    if(userData == null){
+      final queryParams = ModalRoute.of(context)?.settings.arguments
+              as Map<String, dynamic>;
+      setState(() {
+            userData = queryParams['user'];
+          });
     }
     _tabController = TabController(vsync: this, length: userImageMenu.length);
     scrollController.addListener(() {
@@ -290,6 +305,17 @@ class _UserPageState extends ConsumerState<UserPage>
   //     friend = friendNew;
   //   });
   // }
+
+  @override
+  void didChangeDependencies(){
+    super.didChangeDependencies();
+    Future.delayed(Duration.zero, () async {
+       ref.read(userInformationProvider.notifier).getUserInformation(id);
+        ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
+        ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
+        ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
+    });
+  }
 
   _reloadFunction(dynamic type, dynamic newData) {
     if (type == null && newData == null) {
@@ -1711,6 +1737,7 @@ class _UserPageState extends ConsumerState<UserPage>
   @override
   Widget build(BuildContext context) {
     pinPost = ref.read(postControllerProvider).postsPin;
+    
     return Scaffold(
         appBar: buildAppBar(context),
         body: Stack(

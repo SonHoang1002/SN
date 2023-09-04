@@ -1,7 +1,6 @@
 // ignore_for_file: unused_field
 import 'dart:io';
 import 'dart:math';
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +13,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
-import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/config.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
