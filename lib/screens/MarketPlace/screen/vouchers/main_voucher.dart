@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:market_place/apis/market_place_apis/products_api.dart';
 import 'package:market_place/apis/market_place_apis/voucher_api.dart';
 
 import 'package:market_place/constant/common.dart';
@@ -19,6 +20,7 @@ import 'package:market_place/widgets/back_icon_appbar.dart';
 import 'package:market_place/widgets/image_cache.dart';
 import 'package:market_place/widgets/messenger_app_bar/app_bar_title.dart';
 import '../../../../theme/colors.dart';
+import 'create_voucher.dart';
 
 class MainVoucher extends ConsumerStatefulWidget {
   const MainVoucher({super.key});
@@ -36,6 +38,7 @@ class _MainVoucherState extends ConsumerState<MainVoucher> {
   dynamic _selectedPage;
   int _selectedTab = 0;
   List vouchers = [];
+
 
   @override
   void initState() {
@@ -142,14 +145,17 @@ class _MainVoucherState extends ConsumerState<MainVoucher> {
                               ContentVoucherPage(
                                 vouchers: vouchers,
                                 statusVoucher: "now",
+                                pageId: _selectedPage['id'],
                               ),
                               ContentVoucherPage(
                                 vouchers: vouchers,
                                 statusVoucher: "upcoming",
+                                pageId: _selectedPage['id']
                               ),
                               ContentVoucherPage(
                                 vouchers: vouchers,
                                 statusVoucher: "past",
+                                pageId: _selectedPage['id']
                               ),
                             ],
                           ),
@@ -166,6 +172,7 @@ class _MainVoucherState extends ConsumerState<MainVoucher> {
   Future _initMainData() async {
     await _initPageList();
     if (_selectedPage != null && _selectedPage!.isNotEmpty) {
+      
       if (vouchers.isEmpty) {
         if (_selectedTab == 0) {
           final response =
@@ -337,8 +344,9 @@ class _MainVoucherState extends ConsumerState<MainVoucher> {
 class ContentVoucherPage extends StatefulWidget {
   final List vouchers;
   final String statusVoucher;
+  final String pageId;
   const ContentVoucherPage(
-      {super.key, required this.vouchers, required this.statusVoucher});
+      {super.key, required this.vouchers, required this.statusVoucher, required this.pageId});
 
   @override
   State<ContentVoucherPage> createState() => _ContentVoucherPageState();
@@ -359,6 +367,11 @@ class _ContentVoucherPageState extends State<ContentVoucherPage> {
 
   @override
   Widget build(BuildContext context) {
+    Color colorWord = ThemeMode.dark == true
+        ? white
+        : true == ThemeMode.light
+            ? blackColor
+            : greyColor;
     final size = MediaQuery.sizeOf(context);
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -368,7 +381,8 @@ class _ContentVoucherPageState extends State<ContentVoucherPage> {
                 child: _isLoading
                     ? buildCircularProgressIndicator()
                     : buildTextContent("Bạn chưa tạo voucher nào", true,
-                        colorWord: Theme.of(context).textTheme.bodyLarge!.color,
+                        colorWord:
+                            Theme.of(context).textTheme.bodyMedium!.color,
                         isCenterLeft: false),
               )
             : Expanded(
@@ -408,7 +422,84 @@ class _ContentVoucherPageState extends State<ContentVoucherPage> {
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16),
               )),
-          onPressed: () {},
+          onPressed: () {
+            showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return Container(
+                    height: MediaQuery.sizeOf(context).height * 0.4,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    child: Column(
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CreateVoucherPage(type: 'shop', pageId: widget.pageId,),
+                                ),
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                buildTextContent("Tạo voucher toàn Shop", true,
+                                    colorWord: colorWord,
+                                    fontSize: 18,
+                                    isCenterLeft: false),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                buildTextContent(
+                                    "Có thể áp dụng voucher này cho toàn bộ sản phẩm trong shop của bạn",
+                                    false,
+                                    colorWord: colorWord,
+                                    isCenterLeft: false,
+                                    fontSize: 14),
+                              ],
+                            )),
+                        const Divider(),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CreateVoucherPage(type: 'products', pageId: widget.pageId,),
+                                ),
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                buildTextContent("Tạo voucher sản phẩm", true,
+                                    colorWord: colorWord,
+                                    fontSize: 18,
+                                    isCenterLeft: false),
+                                buildTextContent(
+                                    "Có thể áp dụng voucher này cho một số sản phẩm nhật định trong shop của bạn",
+                                    false,
+                                    colorWord: colorWord,
+                                    isCenterLeft: false,
+                                    fontSize: 14),
+                              ],
+                            )),
+                        const Divider(),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: buildTextContent("Thoát", true,
+                                colorWord: colorWord,
+                                fontSize: 20,
+                                isCenterLeft: false)),
+                      ],
+                    ),
+                  );
+                });
+          },
         ),
         const SizedBox(
           height: 15,
