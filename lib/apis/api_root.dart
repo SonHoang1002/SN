@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:market_place/constant/config.dart';
+import 'package:market_place/constant/config.dart' as cf;
 import 'package:market_place/screens/Auth/storage.dart';
 
 class Api {
@@ -8,9 +8,9 @@ class Api {
     final userToken =
         primaryToken != null && primaryToken != "" && primaryToken != "noData"
             ? primaryToken
-            : "1WJ_KeBJDF9pLtaUeV33sXjCshUzEDcanptxXD0Vn7A";
+            : cf.userToken;
     BaseOptions options = BaseOptions(
-      baseUrl: urlSocialNetwork,
+      baseUrl: cf.urlSocialNetwork,
       connectTimeout: 30 * 1000,
       receiveTimeout: 30 * 1000,
       headers: {'authorization': 'Bearer ${userToken}'},

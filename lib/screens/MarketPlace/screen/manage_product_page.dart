@@ -176,7 +176,7 @@ class _ManageProductMarketPageState
                   data["product_variants"][i]["option2"] == null
               ? "Không có mô tả"
               : "${data["product_variants"][i]["option1"]} ${data["product_variants"][i]["option2"] != null ? " - ${data["product_variants"][i]["option2"]}" : ""}")),
-          DataCell(Text(data["product_variants"][i]["sku"])),
+          DataCell(Text(data?["product_variants"]?[i]?["sku"] ?? "")),
           DataCell(Text(data["product_variants"][i]["price"].toString())),
           DataCell(Text(data["brand"].toString())),
         ]),
