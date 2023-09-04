@@ -658,7 +658,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
                                 SizedBox(
                                   width: width * 0.7,
                                   child: buildTextContent(
-                                    data["data"]["page"]["title"],
+                                    data?["data"]?["page"]?["title"] ?? "",
                                     false,
                                     fontSize: 18,
                                     overflow: TextOverflow.ellipsis,
@@ -677,7 +677,7 @@ class _MyOrderPageState extends ConsumerState<MyOrderPage> {
                               : 1,
                           (index) {
                             return buildOrderItem(
-                                data["data"]["order_items"][index]);
+                                data["data"]?["order_items"]?[index] ?? 0);
                           },
                         ),
                       ),

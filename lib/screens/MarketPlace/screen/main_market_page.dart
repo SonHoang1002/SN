@@ -21,6 +21,7 @@ import 'package:social_network_app_mobile/screens/MarketPlace/screen/request_pro
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/search_modules/search_market_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/see_more_page.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/screen/seller_modules/manage_order_page.dart';
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/vouchers/main_voucher.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/banner_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/cart_widget.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/category_product_item.dart';
@@ -888,7 +889,8 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
   }
 
   dynamic _showMenuOptions() {
-    return showCustomBottomSheet(context, 450,
+    return showCustomBottomSheet(
+        context, MediaQuery.sizeOf(context).height * 0.7,
         isNoHeader: true,
         widget: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -981,6 +983,9 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
         break;
       case "Đơn mua của tôi":
         pushToNextScreen(context, const MyOrderPage());
+        break;
+      case "Mã giảm giá của tôi":
+        pushToNextScreen(context, const MainVoucher());
         break;
       case "Lời mời":
         pushToNextScreen(
