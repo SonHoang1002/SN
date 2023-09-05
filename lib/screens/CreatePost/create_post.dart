@@ -119,40 +119,40 @@ class _CreatePostState extends ConsumerState<CreatePost> {
                       (index) => GestureDetector(
                             onTap: () {
                               String key = postTypeCreate[index]['key'];
-                              if (key == 'moment') {
+                              popToPreviousScreen(context);
+                              if (['moment', "live"].contains(key)) {
+                                /// moment
                                 // _startVideoEditorDefault();
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const CameraMomentController()));
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) =>
+                                //             const CameraMomentController()));
+                                Future.delayed(
+                                    const Duration(milliseconds: 100), () {
+                                  ref
+                                      .read(disableMomentController.notifier)
+                                      .setDisableMoment(false);
+                                });
                               } else {
-                                popToPreviousScreen(context);
                                 pushCustomCupertinoPageRoute(
                                     context,
-                                    key == 'post'
-                                        ? CreateNewFeed(
-                                            popFunction: () {
-                                              ref
-                                                  .read(disableMomentController
-                                                      .notifier)
-                                                  .setDisableMoment(false);
-                                            },
-                                            reloadFunction: (type, newData) {
-                                              widget.callbackFunction != null
-                                                  ? widget.callbackFunction!(
-                                                      type, newData)
-                                                  : null;
-                                            },
-                                          )
-                                        : const SizedBox());
+                                    CreateNewFeed(
+                                      beforeHasVideo: true,
+                                      reloadFunction: (type, newData) {
+                                        widget.callbackFunction != null
+                                            ? widget.callbackFunction!(
+                                                type, newData)
+                                            : null;
+                                      },
+                                    ));
+                                Future.delayed(
+                                    const Duration(milliseconds: 100), () {
+                                  ref
+                                      .read(disableMomentController.notifier)
+                                      .setDisableMoment(true);
+                                });
                               }
-                              Future.delayed(const Duration(milliseconds: 100),
-                                  () {
-                                ref
-                                    .read(disableMomentController.notifier)
-                                    .setDisableMoment(true);
-                              });
                             },
                             child: Container(
                               height: 60,

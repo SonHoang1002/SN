@@ -109,6 +109,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
           _checkVideoImage(widget.post?['media_attachments']);
       if ((checkVideoImage["video"] != null && checkVideoImage["video"] != 0) &&
           (checkVideoImage["image"] != null && checkVideoImage["image"] != 0)) {
+        listContent = [];
         listContent.addAll([
           const TextSpan(
             text: ' đã thêm ',
@@ -124,7 +125,8 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
         ]);
       } else if (checkVideoImage["image"] != null &&
           checkVideoImage["image"] != 0) {
-        listContent.addAll([
+        listContent = [];
+        listContent = [
           const TextSpan(
             text: ' đã thêm ',
           ),
@@ -132,9 +134,10 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
           const TextSpan(
             text: ' ảnh mới',
           ),
-        ]);
+        ];
       } else if (checkVideoImage["video"] != null &&
           checkVideoImage["video"] != 0) {
+        listContent = [];
         listContent.addAll([
           const TextSpan(
             text: ' đã thêm ',
@@ -146,13 +149,13 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
         ]);
       }
       if (widget.post?['group'] != null) {
-        listContent.addAll([
+        listContent = [
           TextSpan(text: widget.post?['account']?['display_name'], style: bold),
           const TextSpan(
             text: ' đã đăng bài trong nhóm ',
           ),
           TextSpan(text: '${widget.post?['group']?['title']}.', style: bold),
-        ]);
+        ];
       }
     }
 
@@ -248,8 +251,7 @@ class _PostSuggestState extends ConsumerState<PostSuggest> {
   Widget build(BuildContext context) {
     // var size = MediaQuery.sizeOf(context);
     suggestContent = buildSuggestContent();
-    return 
-    ![postPageUser].contains(widget.type)
+    return ![postPageUser].contains(widget.type)
         ? (isShow && widget.post['account']?['id'] != meData?['id'])
             ? Column(
                 children: [

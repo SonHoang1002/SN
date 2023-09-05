@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/type_constant.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
+import 'package:social_network_app_mobile/providers/disable_watch_provider.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch_home.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch_saved.dart';
@@ -16,25 +18,33 @@ class WatchRender extends ConsumerStatefulWidget {
 
 class _WatchRenderState extends ConsumerState<WatchRender>
     with AutomaticKeepAliveClientMixin {
-  String menuSelected = 'watch_home';
+  String menuSelected = watchHome;
 
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero, () async {
+      ref
+          .read(videoCurrentTabController.notifier)
+          .setVideoCurrentTab(watchHome);
+      ref
+          .read(disableVideoController.notifier)
+          .setDisableVideo(watchHome, false, disableBefore: true);
+    });
     fetchDataWatch(menuSelected, {'limit': 3});
   }
 
   void fetchDataWatch(type, params) {
     bool isFetchData =
         (ref.read(watchControllerProvider).watchSuggest.isEmpty &&
-                menuSelected == 'watch_home') ||
+                menuSelected == watchHome) ||
             (ref.read(watchControllerProvider).watchFollow.isEmpty &&
-                menuSelected == 'watch_follow');
+                menuSelected == watchFollow);
 
     if (isFetchData || params['max_id'] != null) {
-      if (type == 'watch_home') {
+      if (type == watchHome) {
         ref.read(watchControllerProvider.notifier).getListWatchSuggest(params);
-      } else if (type == 'watch_follow') {
+      } else if (type == watchFollow) {
         ref.read(watchControllerProvider.notifier).getListWatchFollow(params);
       }
     }
@@ -52,10 +62,17 @@ class _WatchRenderState extends ConsumerState<WatchRender>
           scrollDirection: Axis.horizontal,
           child: HeaderTabs(
             chooseTab: (tab) {
+                ref
+                    .read(videoCurrentTabController.notifier)
+                    .setVideoCurrentTab(tab);
+                    ref
+                    .read(disableVideoController.notifier)
+                    .setDisableVideo(tab, false, disableBefore: true);
               if (mounted) {
                 setState(() {
                   menuSelected = tab;
                 });
+                 
                 fetchDataWatch(tab, {'limit': 3});
               }
             },
@@ -66,12 +83,18 @@ class _WatchRenderState extends ConsumerState<WatchRender>
         const CrossBar(
           height: 1,
         ),
-        if (menuSelected == 'watch_home')
-          WatchHome(type: menuSelected, fetchDataWatch: fetchDataWatch,isFocus : menuSelected == 'watch_home')
-          else if (menuSelected == 'watch_follow')
-          WatchHome(type: menuSelected, fetchDataWatch: fetchDataWatch,isFocus : menuSelected == 'watch_follow')
+        if (menuSelected == watchHome)
+          WatchHome(
+              type: menuSelected,
+              fetchDataWatch: fetchDataWatch,
+              isFocus: menuSelected == watchHome)
+        else if (menuSelected == watchFollow)
+          WatchHome(
+              type: menuSelected,
+              fetchDataWatch: fetchDataWatch,
+              isFocus: menuSelected == watchFollow)
         else
-          menuSelected == 'watch_saved' ? const WatchSaved() : const SizedBox()
+          menuSelected == watchSaved ? const WatchSaved() : const SizedBox()
       ],
     );
   }

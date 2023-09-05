@@ -15,6 +15,7 @@ import 'package:social_network_app_mobile/storage/storage.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+import 'package:social_network_app_mobile/widgets/cross_bar.dart';
 
 import '../../helper/push_to_new_screen.dart';
 import '../Login/LoginCreateModules/onboarding_login_page.dart';
@@ -79,7 +80,7 @@ class _MenuState extends ConsumerState<Menu> {
       ref.read(pageControllerProvider.notifier).reset();
       ref.read(friendControllerProvider.notifier).reset();
       ref.read(groupListControllerProvider.notifier).reset();
-      // await IsarPostService().resetPostIsar();
+      await IsarPostService().resetPostIsar();
 
       final theme = pv.Provider.of<ThemeManager>(context, listen: false);
       theme.toggleTheme('system');
@@ -151,9 +152,8 @@ class _MenuState extends ConsumerState<Menu> {
                 const SizedBox(
                   height: 8,
                 ),
-                Container(
-                  height: 0.3,
-                  decoration: const BoxDecoration(color: greyColor),
+                const CrossBar(
+                  height: 1,
                 ),
                 const SizedBox(
                   height: 15,

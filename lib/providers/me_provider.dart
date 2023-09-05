@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/me_api.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/services/isar_post_service.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
 
 final meControllerProvider =
@@ -44,6 +45,10 @@ class MeController extends StateNotifier<List> {
             ...listAccount,
           ], 'id')),
           'dataLogin');
+
+      // await IsarPostUsers().initPostUsers(newAccount);
+      // await IsarPostUsers().getCurrentUserByToken("12831");
+
       await SecureStorage().saveKeyStorage(response['id'], 'userId');
       if (theme == 'noData') {
         await SecureStorage().saveKeyStorage(

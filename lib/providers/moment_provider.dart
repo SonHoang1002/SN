@@ -9,6 +9,7 @@ import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/moment_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:video_compress/video_compress.dart';
 
@@ -49,9 +50,10 @@ class MomentController extends StateNotifier<MomentState> {
 
   getListMomentFollow(params) async {
     List response = await MomentApi().getListMomentFollow(params) ?? [];
-
+    List listResult = checkObjectUniqueInList(state.momentFollow + response, "id");
     state = state.copyWith(
-        momentFollow: state.momentFollow + response,
+        momentFollow:
+            listResult,
         momentSuggest: state.momentSuggest);
   }
 
@@ -126,7 +128,7 @@ class MomentController extends StateNotifier<MomentState> {
       state = state.copyWith(
           momentFollow: state.momentFollow,
           momentSuggest: params.containsKey('max_id')
-              ? [...state.momentSuggest, ...newMoment]
+              ? checkObjectUniqueInList([...state.momentSuggest, ...newMoment], "id")
               : newMoment);
     }
   }

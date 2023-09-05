@@ -65,7 +65,7 @@ class _OnboardingLoginPageState extends ConsumerState<OnboardingLoginPage> {
   }
 
   void completeLogin() {
-    Navigator.pushReplacement<void, void>(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute<void>(
         builder: (BuildContext context) => const Home(),

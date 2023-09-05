@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:isar/isar.dart';
 import 'package:social_network_app_mobile/model/post_model.dart';
+import 'package:social_network_app_mobile/model/post_users.dart';
 import 'package:social_network_app_mobile/services/isar_service.dart';
 
 class IsarPostService {
@@ -45,8 +46,12 @@ class IsarPostService {
   resetPostIsar() async {
     final instance = await IsarService.instance;
     if (instance.isOpen == true) {
-      instance.writeTxn(() async {
-        await instance.postModels.where().deleteAll();
+      List<PostModel> isarPostList =
+          await instance.postModels.where().findAll();
+      await instance.writeTxn(() async {
+        for (var post in isarPostList) {
+          await instance.postModels.delete(post.id);
+        }
       });
     }
   }
@@ -65,6 +70,47 @@ class IsarPostService {
           }
         });
       }
+    } else {}
+  }
+}
+
+class IsarPostUsers {
+  Future getCurrentUserByToken(String token) async {
+    final instance = await IsarService.instance;
+    final listUser =
+        await instance.postDataUsers.where(distinct: true).findAll();
+    // if (instance.isOpen == true) {
+    //   // final listUser = await instance.postDataUsers.where().findAll();
+    //   // print("listUser ${jsonDecode(listUser[0].listUser!)}");
+    //   print("listUser listUser listUser listUser");
+    // } else {
+    //   print("0909090990");
+    // }
+  }
+
+  resetPostUsers() async {
+    final instance = await IsarService.instance;
+    if (instance.isOpen == true) {
+      await instance.writeTxn(() async {
+        await instance.postDataUsers.where().deleteAll();
+      });
     }
+  }
+
+  initPostUsers(dynamic userData) async {
+    final instance = await IsarService.instance;
+    await instance.writeTxn(() async {
+      var primaryList = [
+        {
+          "userData": userData,
+          "objectPosts": [
+            {"1": "shdfsd"},
+            {"2": "jhsgdjfsgdjfh"}
+          ]
+        },
+      ];
+      await instance.postDataUsers
+          .put(PostDataUsers()..listUser = jsonEncode(primaryList));
+    });
   }
 }

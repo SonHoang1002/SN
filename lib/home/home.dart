@@ -12,10 +12,12 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:social_network_app_mobile/apis/config.dart';
+import 'package:social_network_app_mobile/constant/type_constant.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/home/violation_of_standards.dart';
 import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
+import 'package:social_network_app_mobile/providers/disable_watch_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
@@ -93,6 +95,12 @@ class _HomeState extends ConsumerState<Home>
               ))).whenComplete(() =>
           ref.read(disableMomentController.notifier).setDisableMoment(false));
     } else {
+      if(index == 3){
+        final currentTab = ref.watch(videoCurrentTabController).videoCurrentTab ;
+        if(currentTab != ""){
+          ref.read(disableVideoController.notifier).setDisableVideo(currentTab, false ,disableBefore: true);
+        }
+      }
       setState(() {
         _selectedIndex = index;
         ref
@@ -658,6 +666,19 @@ class _HomeState extends ConsumerState<Home>
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 child: const Menu(),
               ),
+        onDrawerChanged: (isOpened) {
+         if (_selectedIndex == 3) {
+            if (isOpened == true) {
+              ref.read(disableVideoController.notifier).disableAllVideo();
+            }else{
+              final currentTab = ref.watch(videoCurrentTabController).videoCurrentTab;
+              if( currentTab != ""){
+                 ref.read(disableVideoController.notifier).setDisableVideo(currentTab, false, disableBefore: true);
+              }
+            }
+          }
+
+        },
         appBar: _selectedIndex == 1 || _selectedIndex == 4
             ? null
             : AppBar(

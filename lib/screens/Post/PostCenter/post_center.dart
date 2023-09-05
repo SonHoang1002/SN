@@ -21,7 +21,7 @@ import 'post_share.dart';
 
 class PostCenter extends StatelessWidget {
   final dynamic post;
-  final String? type;
+  final String type;
   final dynamic data;
   final dynamic preType;
   final Function? backFunction;
@@ -34,14 +34,16 @@ class PostCenter extends StatelessWidget {
   const PostCenter(
       {Key? key,
       this.post,
-      this.type,
+      required this.type,
       this.data,
       this.preType,
       this.backFunction,
       this.reloadFunction,
       this.showCmtBoxFunction,
       this.updateDataFunction,
-      this.isFocus,this.isInGroup,this.groupData})
+      this.isFocus,
+      this.isInGroup,
+      this.groupData})
       : super(key: key);
 
   @override

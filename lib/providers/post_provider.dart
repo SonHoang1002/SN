@@ -109,7 +109,7 @@ class PostController extends StateNotifier<PostState> {
           postUserPage: state.postUserPage,
           postAnotherUserPage: state.postAnotherUserPage,
           isMoreAnother: state.isMoreAnother,
-          isMore: newData.length < params['limit'] ? false : true,
+          isMore: newData.length == params['limit'] - 1,
           isMoreUserPage: state.isMoreUserPage);
     }
   }

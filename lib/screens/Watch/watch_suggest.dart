@@ -23,9 +23,11 @@ class WatchSuggest extends ConsumerStatefulWidget {
   final dynamic friendData;
   final bool? isInGroup;
   final dynamic groupData;
+  final String type;
   const WatchSuggest(
       {Key? key,
       this.media,
+      required this.type,
       required this.post,
       this.preType,
       this.updateData,
@@ -147,6 +149,7 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
                         (widget.post?['media_attachments']?[0]?['url']),
                     child: VideoPlayerHasController(
                       media: widget.media,
+                      type: widget.type,
                       aspectRatio: widget.post?['media_attachments']?[0]
                           ?['meta']?['original']?['aspect'],
                       onDoubleTapAction: () {},
@@ -209,6 +212,7 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
                                   media: (suggestWatchList[index]
                                           ?['media_attachments']?[0]) ??
                                       widget.media,
+                                  type: widget.type,
                                   aspectRatio: widget.post?['media_attachments']
                                       ?[0]?['meta']?['original']?['aspect'],
                                   onDoubleTapAction: () {},

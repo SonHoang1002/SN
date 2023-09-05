@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/a_test/fake_video_data.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
 import 'package:social_network_app_mobile/screens/Post/post.dart';
@@ -66,11 +67,14 @@ class _WatchHomeState extends ConsumerState<WatchHome>
     scrollController.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     List watchData = widget.type == 'watch_home'
         ? ref.watch(watchControllerProvider).watchSuggest
         : ref.watch(watchControllerProvider).watchFollow;
+        
     watchData.isEmpty
         ? null
         : focusIdNotifier ??= ValueNotifier(watchData[0]?['id']);
@@ -103,7 +107,7 @@ class _WatchHomeState extends ConsumerState<WatchHome>
                                         key: Key((watchData[index]?['id']) ??
                                             Random().nextInt(10000).toString()),
                                         post: watchData[index],
-                                        type: postWatch,
+                                        type: widget.type ?? postWatch,
                                         isFocus:
                                             // widget.isFocus == true && (
                                             focusIdNotifier!.value ==

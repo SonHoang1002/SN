@@ -18,6 +18,7 @@ class GridLayoutImage extends ConsumerStatefulWidget {
   final Function? updateDataFunction;
   final bool? isFocus;
   final String? preType;
+  final String type;
 
   /// id of video
   final dynamic currentFocusVideoId;
@@ -26,6 +27,7 @@ class GridLayoutImage extends ConsumerStatefulWidget {
       {Key? key,
       required this.medias,
       required this.handlePress,
+      required this.type,
       this.post,
       this.updateDataFunction,
       this.isFocus,
@@ -150,10 +152,11 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                               (medias[0]?['remote_url']) ??
                               (medias[0]?['url']),
                           child: VideoPlayerHasController(
+                            type: widget.type,
                             media: medias[0],
                             isFocus: (widget.isFocus == true),
-                            aspectRatio:widget.post?['media_attachments']?[0]
-                          ?['meta']?['original']?['aspect'],
+                            aspectRatio: widget.post?['media_attachments']?[0]
+                                ?['meta']?['original']?['aspect'],
                             // (isFocus == true &&
                             //     currentFocusVideoId == medias[0]['id']),
                             handleAction: () {
@@ -174,6 +177,7 @@ class _GridLayoutImageState extends ConsumerState<GridLayoutImage> {
                                           CupertinoPageRoute(
                                               builder: (context) =>
                                                   WatchSuggest(
+                                                      type: widget.type,
                                                       post: widget.post,
                                                       preType: widget.preType,
                                                       media: medias[0])));

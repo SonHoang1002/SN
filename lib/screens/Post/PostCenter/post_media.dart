@@ -9,7 +9,7 @@ import 'package:social_network_app_mobile/widgets/grid_layout_image.dart';
 
 class PostMedia extends StatefulWidget {
   final dynamic post;
-  final String? type;
+  final String type;
   final dynamic preType;
   final Function? backFunction;
   final Function? reloadFunction;
@@ -23,13 +23,15 @@ class PostMedia extends StatefulWidget {
   const PostMedia(
       {Key? key,
       this.post,
-      this.type,
+      required this.type,
       this.preType,
       this.backFunction,
       this.reloadFunction,
       this.showCmtBoxFunction,
       this.updateDataFunction,
-      this.isFocus,this.isInGroup,this.groupData})
+      this.isFocus,
+      this.isInGroup,
+      this.groupData})
       : super(key: key);
 
   @override
@@ -146,6 +148,7 @@ class _PostMediaState extends State<PostMedia> {
                         : transparent,
                     width: 0.2)),
             child: GridLayoutImage(
+              type: widget.type,
               post: widget.post,
               medias: medias,
               handlePress: handlePress,
