@@ -43,10 +43,24 @@ class _PageGeneralSettingsState extends ConsumerState<PageGeneralSettings> {
     'over21': 'Người dùng trên 21 tuổi',
   };
   dynamic _filterSelection;
+
+  Future<void> getSettings() async {
+    setData();
+    var response = await PageApi().getSettingsPage(widget.data["id"]) ?? [];
+    var pSettings = PageSettingsState(
+        visitor_posts: response["visitor_posts"] ?? "",
+        age_restrictions: response["age_restrictions"],
+        cencored: widget.data["monitored_keywords"]);
+    ref.read(pageSettingsControllerProvider.notifier).updateState(pSettings);
+    setState(() {
+      setData();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    setData();
+    getSettings();
   }
 
   void setData() {

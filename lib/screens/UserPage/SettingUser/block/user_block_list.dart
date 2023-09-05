@@ -7,6 +7,7 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/widgets/button_primary.dart';
 
 class UserBlockList extends ConsumerStatefulWidget {
   final dynamic data;
@@ -147,20 +148,26 @@ class _UserBlockListState extends ConsumerState<UserBlockList> {
                             description: description,
                           )));
             },
-            child: Container(
+            child: /* Container(
               padding: const EdgeInsets.all(10),
               margin: const EdgeInsets.only(top: 10),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8), color: blueColor),
+                  borderRadius: BorderRadius.circular(8),
+                  color: greyColorOutlined),
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     "Chỉnh sửa",
-                    style: TextStyle(color: white, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: blackColor, fontWeight: FontWeight.bold),
                   )
                 ],
               ),
+            ) */
+                const ButtonPrimary(
+              label: "Chỉnh sửa",
+              colorText: white,
             ),
           )
         ],

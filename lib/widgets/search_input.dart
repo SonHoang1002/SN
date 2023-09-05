@@ -11,6 +11,7 @@ class SearchInput extends StatefulWidget {
   final Function? handleSearchClick;
   final String? type;
   final String? initValue;
+  final bool? autoFocus;
 
   String? title = "Tìm kiếm";
 
@@ -21,7 +22,8 @@ class SearchInput extends StatefulWidget {
       this.handleUpdateFocus,
       this.title,
       this.initValue,
-      this.handleSearchClick});
+      this.handleSearchClick,
+      this.autoFocus});
 
   @override
   State<SearchInput> createState() => _SearchInputState();
@@ -63,7 +65,7 @@ class _SearchInputState extends State<SearchInput> {
             borderRadius: BorderRadius.circular(20)),
         child: TextFormField(
             focusNode: _focusNode,
-            autofocus: true,
+            autofocus: widget.autoFocus ?? true,
             controller: controller,
             onChanged: (value) {
               _onTextChanged(value);

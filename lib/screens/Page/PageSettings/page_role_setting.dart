@@ -49,6 +49,13 @@ class _PageRoleSettingsState extends ConsumerState<PageRoleSettings> {
     _filterSelection = 'admin';
     _controller.text = filterUserList['admin']!;
     getUserRole();
+    getInvite();
+  }
+
+  getInvite() async {
+    ref
+        .read(pageRoleControllerProvider.notifier)
+        .getInviteListPage(widget.data['id']);
   }
 
   String getUserRole() {

@@ -200,6 +200,13 @@ class _ManagerDetailState extends ConsumerState<ManagerDetail> {
                 title: 'Quy tắc nhóm',
               ),
               const SizedBox(
+                height: 5,
+              ),
+              const FeatureItem(
+                imagePath: 'assets/groups/questionJoin.png',
+                title: 'Câu hỏi chọn thành viên',
+              ),
+              const SizedBox(
                 height: 10,
               ),
               const Text(

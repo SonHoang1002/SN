@@ -24,6 +24,13 @@ class _PageNotificationsSettingState
   @override
   void initState() {
     super.initState();
+    getSetting();
+  }
+
+  getSetting() {
+    ref
+        .read(pageNotificationsControllerProvider.notifier)
+        .getNotificationsPage(widget.data['id']);
   }
 
   @override

@@ -13,6 +13,7 @@ import 'package:social_network_app_mobile/constant/post_type.dart' as POST_TYPE;
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Feed/create_post_button.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupDetail/group_member_questions.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_album.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_image.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_intro.dart';
@@ -734,7 +735,11 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
         child: ButtonPrimary(
           label: 'Tham gia nhóm',
           handlePress: () {
-            widget.onTap!();
+            Navigator.push(
+                context,
+                CupertinoPageRoute(
+                    builder: (context) =>
+                        GroupMemberQuestions(groupDetail: widget.groupDetail)));
           },
         ),
       ));
@@ -747,7 +752,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
         child: ButtonPrimary(
           label: 'Xác nhận',
           handlePress: () {
-            widget.onTap!();
+            //widget.onTap!();
           },
         ),
       ));
@@ -760,7 +765,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
         child: ButtonPrimary(
           label: 'Hủy lời mời',
           handlePress: () {
-            widget.onTap!();
+            //widget.onTap!();
           },
         ),
       ));
@@ -786,7 +791,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
         child: ButtonPrimary(
           label: 'Đã tham gia',
           handlePress: () {
-            widget.onTap!();
+            //widget.onTap!();
           },
         ),
       ));
@@ -795,7 +800,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
         child: ButtonPrimary(
           label: 'Mời',
           handlePress: () {
-            widget.onTap!();
+            //widget.onTap!();
           },
         ),
       )));
