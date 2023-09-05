@@ -46,8 +46,12 @@ class IsarPostService {
   resetPostIsar() async {
     final instance = await IsarService.instance;
     if (instance.isOpen == true) {
-      instance.writeTxn(() async {
-        await instance.postModels.where().deleteAll();
+      List<PostModel> isarPostList =
+          await instance.postModels.where().findAll();
+      await instance.writeTxn(() async {
+        for (var post in isarPostList) {
+          await instance.postModels.delete(post.id);
+        }
       });
     }
   }
@@ -66,8 +70,7 @@ class IsarPostService {
           }
         });
       }
-    } else {
-    }
+    } else {}
   }
 }
 

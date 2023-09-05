@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/friend/friend_provider.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
@@ -47,59 +48,70 @@ class _MenuShortcutState extends ConsumerState<MenuShortcut> {
           const SizedBox(
             height: 8,
           ),
-          listShortCut !=null ?
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: List.generate(
-                  listShortCut!.length,
-                  (index) => InkWell(
-                        // margin: const EdgeInsets.only(),
-                        onTap: () {
-                          Navigator.push(context, CustomPageRoute(
-                            builder: (context) {
-                              return GroupDetail(
-                                id: listShortCut![index]['id'],
-                              );
-                            },
-                          ));
-                        },
-                        child: Column(
-                          children: [
-                            Stack(
-                              children: [
-                                AvatarSocial(
-                                    width: 65,
-                                    height: 65,
-                                    isGroup: true,
-                                    object:  listShortCut![index],
-                                    path:  (listShortCut?[index]?['avatar_media']) != null
-                                        ?  (listShortCut?[index]?['avatar_media']?
-                                            ['preview_url'])
-                                        :  (listShortCut?[index]?['banner']
-                                            ['preview_url']))
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            SizedBox(
-                              width: 80,
-                              child: Text(
-                                listShortCut![index]['title'] ?? (listShortCut?[index]?['display_name']) ??"",
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    color: greyColor,
-                                    fontWeight: FontWeight.w500,
-                                    overflow: TextOverflow.ellipsis),
+          listShortCut != null
+              ? SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: List.generate(
+                        listShortCut!.length,
+                        (index) => InkWell(
+                              // margin: const EdgeInsets.only(),
+                              onTap: () {
+                                Navigator.push(context, CustomPageRoute(
+                                  builder: (context) {
+                                    return GroupDetail(
+                                      id: listShortCut![index]['id'],
+                                    );
+                                  },
+                                ));
+                              },
+                              child: Column(
+                                children: [
+                                  Stack(
+                                    children: [
+                                      AvatarSocial(
+                                          width: 65,
+                                          height: 65,
+                                          isGroup: true,
+                                          object: listShortCut![index],
+                                          path: (listShortCut?[index]
+                                                      ?['avatar_media']) !=
+                                                  null
+                                              ? (listShortCut?[index]
+                                                      ?['avatar_media']
+                                                  ?['preview_url'])
+                                              : (listShortCut?[index]?['banner']
+                                                      ?['preview_url']) ??
+                                                  linkAvatarDefault)
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  SizedBox(
+                                    width: 80,
+                                    child: Text(
+                                     ( listShortCut?[index]?['title']) ??
+                                          (listShortCut?[index]
+                                              ?['display_name']) ??
+                                          "",
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          color: greyColor,
+                                          fontWeight: FontWeight.w500,
+                                          overflow: TextOverflow.ellipsis),
+                                    ),
+                                  )
+                                ],
                               ),
-                            )
-                          ],
-                        ),
-                      )),
-            ),
-          ):buildCircularProgressIndicator()
+                            )),
+                  ),
+                )
+              : Container(
+                  height: 65,
+                  alignment: Alignment.center,
+                  child: buildCircularProgressIndicator())
         ],
       ),
     );

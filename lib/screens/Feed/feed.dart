@@ -117,14 +117,16 @@ class _FeedState extends ConsumerState<Feed> {
                 scrollController.position.maxScrollExtent) {
           EasyDebounce.debounce(
               'my-debouncer', const Duration(milliseconds: 180), () async {
-          // kiểm tra không có kết nối hoặc có kết nối mà không còn bài viết nào khác nữa --> lấy data từ isar
-          if (!ref.watch(connectivityControllerProvider).connectInternet ||
-              ((_isMore.value != true ||
-                      ref.watch(postControllerProvider).isMore != true) &&
-                  ref.watch(connectivityControllerProvider).connectInternet)) {
-            getDataFromIsar();
-          }
-          updatePostIsar();
+            // kiểm tra không có kết nối hoặc có kết nối mà không còn bài viết nào khác nữa --> lấy data từ isar
+            if (!ref.watch(connectivityControllerProvider).connectInternet ||
+                ((_isMore.value != true ||
+                        ref.watch(postControllerProvider).isMore != true) &&
+                    ref
+                        .watch(connectivityControllerProvider)
+                        .connectInternet)) {
+              getDataFromIsar();
+            }
+            updatePostIsar();
           });
         }
       } else if (scrollController.position.userScrollDirection ==
@@ -157,10 +159,9 @@ class _FeedState extends ConsumerState<Feed> {
           .map((e) => jsonDecode(e.objectPost!))
           .toList()
           .sublist(index + 1, index + 7);
-      ref.read(postControllerProvider.notifier).addListPost(
-            newDataList,
-            paramsConfig
-          );
+      ref
+          .read(postControllerProvider.notifier)
+          .addListPost(newDataList, paramsConfig);
     } else {
       ref.read(postControllerProvider.notifier).addListPost(
             isarPostList.map((e) => jsonDecode(e.objectPost!)).toList(),
@@ -244,6 +245,10 @@ class _FeedState extends ConsumerState<Feed> {
   Widget build(BuildContext context) {
     List posts = List.from(ref.watch(postControllerProvider).posts);
     theme ??= pv.Provider.of<ThemeManager>(context);
+    Future.delayed(Duration.zero, () async {
+      final count = await IsarPostService().getCountPostIsar();
+      print("isar length ${count}");
+    });
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(postControllerProvider.notifier).refreshListPost(paramsConfig);

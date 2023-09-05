@@ -662,8 +662,12 @@ class _HomeState extends ConsumerState<Home>
         onDrawerChanged: (isOpened) {
           if (_selectedIndex == 3) {
             if (isOpened == true) {
-              // ref.read(disableVideoController.notifier).disableAllVideo();
-              print("_selectedIndex isOpened");
+              ref.read(disableVideoController.notifier).disableAllVideo();
+            }else{ 
+              final currenttab = ref.watch(videoCurrentTabController).videoCurrentTab;
+              if( currenttab !=""){
+                 ref.read(disableVideoController.notifier).setDisableVideo(currenttab, false,disableBefore: true);
+              }
             }
           }
         },
