@@ -8,18 +8,18 @@ class DisableWatchState {
   final bool isDisableWatchProgram;
   final bool isDisableWatchSaved;
   const DisableWatchState(
-      {this.isDisableWatchHome = false,
-      this.isDisableWatchFollow = false,
-      this.isDisableWatchLive = false,
-      this.isDisableWatchProgram = false,
-      this.isDisableWatchSaved = false});
+      {this.isDisableWatchHome = true,
+      this.isDisableWatchFollow = true,
+      this.isDisableWatchLive = true,
+      this.isDisableWatchProgram = true,
+      this.isDisableWatchSaved = true});
 
   DisableWatchState copyWith(
-      {bool isDisableWatchHome = false,
-      bool isDisableWatchFollow = false,
-      bool isDisableWatchLive = false,
-      bool isDisableWatchProgram = false,
-      bool isDisableWatchSaved = false}) {
+      {bool isDisableWatchHome = true,
+      bool isDisableWatchFollow = true,
+      bool isDisableWatchLive = true,
+      bool isDisableWatchProgram = true,
+      bool isDisableWatchSaved = true}) {
     return DisableWatchState(
         isDisableWatchHome: isDisableWatchHome,
         isDisableWatchFollow: isDisableWatchFollow,
@@ -36,7 +36,7 @@ final disableVideoController =
 
 class DisableVideoController extends StateNotifier<DisableWatchState> {
   DisableVideoController() : super(const DisableWatchState());
-  setDisableVideo(String type, bool newStatus, {bool? disableBefore = false}) {
+  setDisableVideo(String type, bool newStatus, {bool? disableBefore = true}) {
     if (disableBefore == true) {
       disableAllVideo();
     }
@@ -55,7 +55,17 @@ class DisableVideoController extends StateNotifier<DisableWatchState> {
   }
 
   disableAllVideo() {
-    state = const DisableWatchState();
+    state = state.copyWith(
+      isDisableWatchHome:true,
+      isDisableWatchFollow:
+         true,
+      isDisableWatchLive:
+          true,
+      isDisableWatchProgram:
+         true,
+      isDisableWatchSaved:
+          true,
+    );
   }
 
   String getProperties() {

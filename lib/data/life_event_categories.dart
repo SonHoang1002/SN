@@ -350,5 +350,146 @@ List lifeEventCategories = [
         "dark_mode_url": null
       }
     ]
-  }
+  },
+  {
+    "id": 61,
+    "name": "Mối quan hệ",
+    "url": "https://media.emso.vn/sn/moi_quan_he_lm.svg",
+    "video_url": null,
+    "dark_mode_url": "https://media.emso.vn/sn/moi_quan_he_dm.svg",
+    "children": [
+      {
+        "id": 0,
+        "name": "Tình trạng mối quan hệ",
+        "url": null,
+        "video_url": [
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc1.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc2.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc3.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc4.mp4"
+        ],
+        "dark_mode_url": null
+      },
+      {
+        "id": 1,
+        "name": "Đã kết hôn",
+        "url": null,
+        "video_url": [
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc1.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc2.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc3.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc4.mp4"
+        ],
+        "dark_mode_url": null
+      },
+      {
+        "id": 2,
+        "name": "Độc thân",
+        "url": null,
+        "video_url": [
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc1.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc2.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc3.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc4.mp4"
+        ],
+        "dark_mode_url": null
+      },
+      {
+        "id": 3,
+        "name": "Hẹn hò",
+        "url": null,
+        "video_url": [
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc1.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc2.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc3.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc4.mp4"
+        ],
+        "dark_mode_url": null
+      },
+      {
+        "id": 4,
+        "name": "Có mối quan hệ phức tạp",
+        "url": null,
+        "video_url": [
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc1.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc2.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc3.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc4.mp4"
+        ],
+        "dark_mode_url": null
+      },
+      {
+        "id": 5,
+        "name": "Đã đính hôn",
+        "url": null,
+        "video_url": [
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc1.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc2.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc3.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc4.mp4"
+        ],
+        "dark_mode_url": null
+      },
+      {
+        "id": 6,
+        "name": "Chung sống có đăng kí",
+        "url": null,
+        "video_url": [
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc1.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc2.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc3.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc4.mp4"
+        ],
+        "dark_mode_url": null
+      },
+      {
+        "id": 7,
+        "name": "Chung sống",
+        "url": null,
+        "video_url": [
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc1.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc2.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc3.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc4.mp4"
+        ],
+        "dark_mode_url": null
+      },
+      {
+        "id": 8,
+        "name": "Ly thân",
+        "url": null,
+        "video_url": [
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc1.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc2.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc3.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc4.mp4"
+        ],
+        "dark_mode_url": null
+      },
+      {
+        "id": 9,
+        "name": "Ly hôn",
+        "url": null,
+        "video_url": [
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc1.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc2.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc3.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc4.mp4"
+        ],
+        "dark_mode_url": null
+      },
+      {
+        "id": 10,
+        "name": "Góa",
+        "url": null,
+        "video_url": [
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc1.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc2.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc3.mp4",
+          "https://trial103.easyedu.vn/sites/default/files/easyschool/upload/2022/06/cong_khai_thien_huong_tinh_duc4.mp4"
+        ],
+        "dark_mode_url": null
+      },
+    ]
+  },
 ];

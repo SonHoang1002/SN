@@ -146,34 +146,39 @@ class _VideoPlayerHasControllerState
 
   bool checkLicenseVideoWithType() {
     if (widget.type == watchHome &&
-        ref.watch(disableVideoController).isDisableWatchHome == true) {
-      return false;
+        ref.watch(disableVideoController).isDisableWatchHome == false) {
+      return true;
     }
     if (widget.type == watchFollow &&
-        ref.watch(disableVideoController).isDisableWatchFollow == true) {
-      return false;
+        ref.watch(disableVideoController).isDisableWatchFollow == false) {
+      return true;
     }
     if (widget.type == watchLive &&
-        ref.watch(disableVideoController).isDisableWatchLive == true) {
-      return false;
+        ref.watch(disableVideoController).isDisableWatchLive == false) {
+      return true;
     }
     if (widget.type == watchProgram &&
-        ref.watch(disableVideoController).isDisableWatchProgram == true) {
-      return false;
+        ref.watch(disableVideoController).isDisableWatchProgram == false) {
+      return true;
     }
     if (widget.type == watchSaved &&
-        ref.watch(disableVideoController).isDisableWatchSaved == true) {
-      return false;
+        ref.watch(disableVideoController).isDisableWatchSaved == false) {
+      return true;
     }
-    return true;
+    return false;
   }
 
   @override
   Widget build(BuildContext context) {
     final selectedVideo = ref.watch(selectedVideoProvider);
-    // widget.isFocus == true
-    //     ? chewieController?.videoPlayerController.setVolume(5)
-    //     : chewieController?.videoPlayerController.setVolume(0);
+    if (selectedVideo != null) {
+      chewieController!.videoPlayerController.pause();  
+    }
+    if(checkLicenseVideoWithType() && isVisible && isPlaying && widget.isFocus == true ){ 
+      chewieController?.videoPlayerController.play();
+    }else{ 
+      chewieController?.videoPlayerController.pause();
+    }
     return AspectRatio(
       aspectRatio:
           //  videoPlayerController!.value.aspectRatio > 1

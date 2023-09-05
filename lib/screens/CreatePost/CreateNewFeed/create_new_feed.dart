@@ -77,6 +77,8 @@ class CreateNewFeed extends ConsumerStatefulWidget {
   final dynamic friendData;
   final bool? isInGroup;
   final bool? beforeHasVideo;
+  final Function? popFunction;
+  final bool? edit;
 
   const CreateNewFeed(
       {Key? key,
@@ -88,7 +90,9 @@ class CreateNewFeed extends ConsumerStatefulWidget {
       this.pageData,
       this.friendData,
       this.isInGroup,
-      this.beforeHasVideo = false})
+      this.beforeHasVideo = false,
+      this.popFunction,
+      this.edit})
       : super(key: key);
 
   @override
@@ -496,6 +500,14 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         isHaveVideo = true;
       }
     }
+
+    ref.read(draftFeedController.notifier).saveDraftFeed(DraftFeed(
+        gifLink: "",
+        files: [],
+        content: "",
+        checkin: null,
+        previewUrlData: null,
+        lifeEvent: null));
     if (isHaveVideo) {
       _buildSnackBar(
           "Video của bạn đang trong quá trình xử lý, chúng tôi sẽ thông báo cho bạn khi video đã sẵn sàng.");
@@ -539,6 +551,15 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         ref.read(disableMomentController.notifier).setDisableMoment(false);
       }
 
+       if(widget.edit == true){
+        Navigator.of(context)..pop()
+                              ..pop()
+                              ..pop()
+                              ..pop();
+      }else{
+        
+        Navigator.pop(context);
+      }
       Navigator.pop(context);
       // prepare data for api
       var data = {"status": content, "visibility": visibility['key']};
@@ -887,7 +908,8 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                     content: content,
                                     checkin: checkin,
                                     previewUrlData: previewUrlData,
-                                    poll: poll));
+                                    poll: poll,
+                                    lifeEvent: lifeEvent));
                             ref
                                 .read(disableMomentController.notifier)
                                 .setDisableMoment(false);
@@ -909,6 +931,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                   content: "",
                                   checkin: null,
                                   previewUrlData: null,
+                                  lifeEvent: null
                                 ));
                             popToPreviousScreen(context);
                             popToPreviousScreen(context);

@@ -62,16 +62,17 @@ class _WatchRenderState extends ConsumerState<WatchRender>
           scrollDirection: Axis.horizontal,
           child: HeaderTabs(
             chooseTab: (tab) {
+                ref
+                    .read(videoCurrentTabController.notifier)
+                    .setVideoCurrentTab(tab);
+                    ref
+                    .read(disableVideoController.notifier)
+                    .setDisableVideo(tab, false, disableBefore: true);
               if (mounted) {
                 setState(() {
                   menuSelected = tab;
                 });
-                ref
-                    .read(videoCurrentTabController.notifier)
-                    .setVideoCurrentTab(tab);
-                ref
-                    .read(disableVideoController.notifier)
-                    .setDisableVideo(tab, false, disableBefore: true);
+                 
                 fetchDataWatch(tab, {'limit': 3});
               }
             },

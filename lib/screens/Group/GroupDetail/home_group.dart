@@ -29,10 +29,10 @@ import 'package:social_network_app_mobile/widgets/skeleton.dart';
 import '../../../widgets/AvatarStack/positions.dart';
 
 class HomeGroup extends ConsumerStatefulWidget {
-  final dynamic groupDetail;
+  dynamic groupDetail;
   final Function? onTap;
 
-  const HomeGroup({
+  HomeGroup({
     Key? key,
     this.onTap,
     this.groupDetail,
@@ -242,6 +242,19 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
+          await ref
+              .read(groupListControllerProvider.notifier)
+              .getGroupDetail(widget.groupDetail["id"])
+              .then(
+            (value) {
+              setState(
+                () {
+                  widget.groupDetail =
+                      ref.read(groupListControllerProvider).groupDetail;
+                },
+              );
+            },
+          );
           ref.read(groupListControllerProvider.notifier).getPostGroup({
             "sort_by": "new_post",
             "exclude_replies": true,

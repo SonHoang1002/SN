@@ -7,6 +7,7 @@ class DraftFeed {
   final dynamic checkin;
   final dynamic previewUrlData;
   final dynamic poll;
+  final dynamic lifeEvent;
 
   DraftFeed(
       {this.gifLink = "",
@@ -14,14 +15,16 @@ class DraftFeed {
       this.content = "",
       this.checkin,
       this.previewUrlData,
-      this.poll});
+      this.poll,
+      this.lifeEvent});
   DraftFeed copyWith({
     String gifLink = "",
     List files = const [],
     String content = "",
     dynamic checkin,
     dynamic previewUrlData,
-    dynamic poll
+    dynamic poll,
+    dynamic lifeEvent
   }) {
     return DraftFeed(
       gifLink: gifLink,
@@ -29,12 +32,13 @@ class DraftFeed {
       content: content,
       checkin: checkin,
       previewUrlData: previewUrlData,
-      poll: poll
+      poll: poll,
+      lifeEvent: lifeEvent
     );
   }
 
   String toContentString() {
-    return 'DraftFeed{ gifLink: $gifLink, files: $files, content: $content, checkin: $checkin, previewUrlData: $previewUrlData, poll: $poll }';
+    return 'DraftFeed{ gifLink: $gifLink, files: $files, content: $content, checkin: $checkin, previewUrlData: $previewUrlData, poll: $poll, lifeEvent $lifeEvent }';
   }
 }
 
@@ -52,7 +56,8 @@ class DraftFeedContentController extends StateNotifier<DraftFeed> {
       content: draftFeed.content,
       checkin: draftFeed.checkin,
       previewUrlData: draftFeed.previewUrlData,
-      poll:draftFeed.poll
+      poll:draftFeed.poll,
+      lifeEvent: draftFeed.lifeEvent
     );
   }
 }
