@@ -28,6 +28,13 @@ class _PageOwnerSettingState extends ConsumerState<PageOwnerSetting> {
   @override
   void initState() {
     super.initState();
+    getAdminList();
+  }
+
+  getAdminList() async {
+    ref
+        .read(pageRoleControllerProvider.notifier)
+        .getAdminListPage(widget.data['id']);
   }
 
   @override

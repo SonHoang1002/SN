@@ -56,9 +56,6 @@ class _PageSettingsState extends ConsumerState<PageSettings> {
         .read(pageRoleControllerProvider.notifier)
         .getInviteListPage(widget.data['id']);
     ref
-        .read(pageRoleControllerProvider.notifier)
-        .getAdminListPage(widget.data['id']);
-    ref
         .read(pageFollowControllerProvider.notifier)
         .getDataFollowPage(widget.data['id']);
   }

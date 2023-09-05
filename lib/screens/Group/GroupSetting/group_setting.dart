@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/config.dart';
 import 'package:social_network_app_mobile/apis/group_api.dart';
+import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupCreate/create_group_screen.dart';
@@ -335,7 +336,8 @@ class _GroupSettingState extends ConsumerState<GroupSetting> {
                                       setState(() {
                                         categoryValue = value;
                                         categoryController.text = value['text'];
-                                        iconTag = value['icon'];
+                                        iconTag =
+                                            value['icon'] ?? linkAvatarDefault;
                                       });
                                       Navigator.pop(context);
                                     },

@@ -49,10 +49,13 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
   @override
   void initState() {
     super.initState();
-    getData();
+    setData();
   }
 
-  void getData() {
+  void setData() async {
+    await ref
+        .read(pageFollowControllerProvider.notifier)
+        .getDataFollowPage(widget.data['id']);
     users = ref.read(pageFollowControllerProvider).like;
     filteredUserList = List.from(users);
     checkboxList();
