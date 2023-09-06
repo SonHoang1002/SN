@@ -85,6 +85,7 @@ dependencies:
   logger: ^1.4.0
   extended_image: ^8.0.0
   expandable_text: ^2.3.0
+  qrscan: ^0.3.3
 
 dev_dependencies:
   flutter_test:

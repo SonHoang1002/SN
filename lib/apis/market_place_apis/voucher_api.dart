@@ -89,4 +89,9 @@ class VoucerApis {
           "product_ids": product_ids,
         }));
   }
+
+  Future getMyVoucher(String? time, String? voucherType) async {
+    return await Api().getRequestBase("/api/v1/my_vouchers",
+        {"limit": 20, "time": time, "voucher_type": voucherType});
+  }
 }
