@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_skeleton/loader_skeleton.dart';
 import 'package:market_place/constant/common.dart';
 import 'package:market_place/constant/get_min_max_price.dart';
+import 'package:market_place/helpers.dart';
 import 'package:market_place/helpers/routes.dart';
 import 'package:market_place/providers/market_place_providers/cart_product_provider.dart';
 import 'package:market_place/providers/market_place_providers/discover_product_provider.dart';
@@ -23,6 +24,7 @@ import 'package:market_place/screens/MarketPlace/screen/search_modules/search_ma
 import 'package:market_place/screens/MarketPlace/screen/see_more_page.dart';
 import 'package:market_place/screens/MarketPlace/screen/seller_modules/manage_order_page.dart';
 import 'package:market_place/screens/MarketPlace/screen/vouchers/main_voucher.dart';
+import 'package:market_place/screens/MarketPlace/screen/vouchers/storage_voucher.dart';
 import 'package:market_place/screens/MarketPlace/widgets/banner_widget.dart';
 import 'package:market_place/screens/MarketPlace/widgets/cart_widget.dart';
 import 'package:market_place/screens/MarketPlace/widgets/category_product_item.dart';
@@ -34,7 +36,7 @@ import 'package:market_place/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:market_place/widgets/GeneralWidget/text_content_button.dart';
 import 'package:market_place/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:market_place/widgets/cross_bar.dart';
-
+import 'package:qrscan/qrscan.dart';
 import '../../../../constant/marketPlace_constants.dart';
 import '../../../../theme/colors.dart';
 import '../widgets/product_item_widget.dart';
@@ -283,8 +285,9 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
           Flexible(
             flex: 2,
             child: GestureDetector(
-              onTap: () {
-                //
+              onTap: () async {
+                String? cameraScanner = await scan();
+                consoleLog("name", cameraScanner);
               },
               child: Container(
                 alignment: Alignment.center,
@@ -739,8 +742,11 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
       case "Đơn mua của tôi":
         pushToNextScreen(context, const MyOrderPage());
         break;
-      case "Mã giảm giá của tôi":
+      case "Mã giảm giá của shop":
         pushToNextScreen(context, const MainVoucher());
+        break;
+      case "Kho Voucher":
+        pushToNextScreen(context, const StorageVoucher());
         break;
       case "Lời mời":
         pushToNextScreen(
