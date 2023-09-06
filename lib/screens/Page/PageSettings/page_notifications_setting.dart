@@ -312,7 +312,7 @@ class _PageNotificationsSettingState
                             Text(
                                 'Bạn có thể bỏ lỡ các thông báo quan trọng khi mọi người tương tác với Trang. Bạn vẫn sẽ nhìn thấy mọi thông báo trên Nhật Nhất Nhẫn Nhần Nhẩn EMSO khi truy cập vào Trang này.',
                                 style:
-                                    TextStyle(fontSize: 13, color: greyColor)),
+                                    TextStyle(fontSize: 13, color: blackColor)),
                           ],
                         ),
                         actions: <CupertinoDialogAction>[

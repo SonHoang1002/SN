@@ -45,6 +45,9 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
             .getGroupRole({'role': 'admin'}, widget.id);
         ref
             .read(groupListControllerProvider.notifier)
+            .getMemberQuestion(widget.id);
+        ref
+            .read(groupListControllerProvider.notifier)
             .getGroupRole({'role': 'moderator'}, widget.id);
         ref.read(groupListControllerProvider.notifier).getGroupRole(
             {'role': 'member', 'include_friend': true}, widget.id);
@@ -79,6 +82,7 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
 
   @override
   Widget build(BuildContext context) {
+    groupDetail = ref.watch(groupListControllerProvider).groupDetail;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
