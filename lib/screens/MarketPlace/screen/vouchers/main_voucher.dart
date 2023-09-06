@@ -37,7 +37,6 @@ class _MainVoucherState extends ConsumerState<MainVoucher> {
   int _selectedTab = 0;
   List vouchers = [];
 
-
   @override
   void initState() {
     super.initState();
@@ -146,15 +145,13 @@ class _MainVoucherState extends ConsumerState<MainVoucher> {
                                 pageId: _selectedPage['id'],
                               ),
                               ContentVoucherPage(
-                                vouchers: vouchers,
-                                statusVoucher: "upcoming",
-                                pageId: _selectedPage['id']
-                              ),
+                                  vouchers: vouchers,
+                                  statusVoucher: "upcoming",
+                                  pageId: _selectedPage['id']),
                               ContentVoucherPage(
-                                vouchers: vouchers,
-                                statusVoucher: "past",
-                                pageId: _selectedPage['id']
-                              ),
+                                  vouchers: vouchers,
+                                  statusVoucher: "past",
+                                  pageId: _selectedPage['id']),
                             ],
                           ),
                         ),
@@ -170,7 +167,6 @@ class _MainVoucherState extends ConsumerState<MainVoucher> {
   Future _initMainData() async {
     await _initPageList();
     if (_selectedPage != null && _selectedPage!.isNotEmpty) {
-      
       if (vouchers.isEmpty) {
         if (_selectedTab == 0) {
           final response =
@@ -344,7 +340,10 @@ class ContentVoucherPage extends StatefulWidget {
   final String statusVoucher;
   final String pageId;
   const ContentVoucherPage(
-      {super.key, required this.vouchers, required this.statusVoucher, required this.pageId});
+      {super.key,
+      required this.vouchers,
+      required this.statusVoucher,
+      required this.pageId});
 
   @override
   State<ContentVoucherPage> createState() => _ContentVoucherPageState();
@@ -387,22 +386,9 @@ class _ContentVoucherPageState extends State<ContentVoucherPage> {
                 child: SingleChildScrollView(
                     child: Column(
                 children: List.generate(widget.vouchers.length, (index) {
-                  DateTime dateTimeStart =
-                      DateTime.parse(widget.vouchers[index]["start_time"]);
-                  String startTime =
-                      DateFormat('dd-MM-yyy').format(dateTimeStart);
-                  DateTime dateTimeEnd =
-                      DateTime.parse(widget.vouchers[index]["end_time"]);
-                  String endTime = DateFormat('dd-MM-yyy').format(dateTimeEnd);
                   return VoucherWidget(
-                    startTime: startTime,
-                    endTime: endTime,
-                    amountDiscount: widget.vouchers[index]["amount"],
-                    typeDiscount: widget.vouchers[index]["discount_type"],
-                    minimunPrice: widget.vouchers[index]
-                        ["minimum_basket_price"],
-                    typeVoucher: widget.vouchers[index]["applicable_products"],
-                    usedCount: widget.vouchers[index]["used_count"],
+                    pageId: widget.pageId,
+                    objectItem: widget.vouchers[index],
                     statusVoucher: widget.statusVoucher,
                   );
                 }),
@@ -436,8 +422,10 @@ class _ContentVoucherPageState extends State<ContentVoucherPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreateVoucherPage(type: 'shop', pageId: widget.pageId,),
+                                  builder: (context) => CreateVoucherPage(
+                                    type: 'shop',
+                                    pageId: widget.pageId,
+                                  ),
                                 ),
                               );
                             },
@@ -465,8 +453,10 @@ class _ContentVoucherPageState extends State<ContentVoucherPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreateVoucherPage(type: 'products', pageId: widget.pageId,),
+                                  builder: (context) => CreateVoucherPage(
+                                    type: 'products',
+                                    pageId: widget.pageId,
+                                  ),
                                 ),
                               );
                             },
@@ -508,28 +498,23 @@ class _ContentVoucherPageState extends State<ContentVoucherPage> {
 }
 
 class VoucherWidget extends StatelessWidget {
-  final String startTime;
-  final String endTime;
-  final int amountDiscount;
-  final String typeDiscount;
-  final int minimunPrice;
-  final String typeVoucher;
-  final int usedCount;
+  final String pageId;
+  final dynamic objectItem;
   final String statusVoucher;
 
-  const VoucherWidget(
-      {super.key,
-      required this.startTime,
-      required this.endTime,
-      required this.amountDiscount,
-      required this.typeDiscount,
-      required this.minimunPrice,
-      required this.typeVoucher,
-      required this.usedCount,
-      required this.statusVoucher});
+  const VoucherWidget({
+    super.key,
+    required this.pageId,
+    required this.objectItem,
+    required this.statusVoucher,
+  });
 
   @override
   Widget build(BuildContext context) {
+    DateTime dateTimeStart = DateTime.parse(objectItem["start_time"]);
+    String startTime = DateFormat('dd-MM-yyy').format(dateTimeStart);
+    DateTime dateTimeEnd = DateTime.parse(objectItem["end_time"]);
+    String endTime = DateFormat('dd-MM-yyy').format(dateTimeEnd);
     return Container(
       padding: const EdgeInsets.all(15),
       child: Column(children: [
@@ -541,9 +526,10 @@ class VoucherWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Image(
-                    image: AssetImage(typeDiscount == "fix_amount"
-                        ? "assets/images/voucher_amount_discount.png"
-                        : "assets/images/voucher_percent_discount.png")),
+                    image: AssetImage(
+                        objectItem["discount_type"] == "fix_amount"
+                            ? "assets/images/voucher_amount_discount.png"
+                            : "assets/images/voucher_percent_discount.png")),
                 const SizedBox(
                   width: 20,
                 ),
@@ -564,15 +550,18 @@ class VoucherWidget extends StatelessWidget {
                             style: const TextStyle(fontSize: 16),
                             children: [
                           TextSpan(
-                            text: typeDiscount == "by_percentage" ? '%' : 'đ',
+                            text: objectItem["discount_type"] == "by_percentage"
+                                ? '%'
+                                : 'đ',
                             style: TextStyle(
-                              decoration: typeDiscount == "by_percentage"
-                                  ? TextDecoration.none
-                                  : TextDecoration.underline,
+                              decoration:
+                                  objectItem["discount_type"] == "by_percentage"
+                                      ? TextDecoration.none
+                                      : TextDecoration.underline,
                             ),
                           ),
                           TextSpan(
-                            text: amountDiscount.toString(),
+                            text: objectItem["amount"].toString(),
                           ),
                         ])),
                     RichText(
@@ -591,7 +580,7 @@ class VoucherWidget extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: minimunPrice.toString(),
+                            text: objectItem["minimum_basket_price"].toString(),
                           ),
                         ])),
                   ],
@@ -618,8 +607,8 @@ class VoucherWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                  "Loại mã: ${typeVoucher == "all_products" ? "Mã giảm giá toàn shop" : "Áp dụng cho một số sản phẩm"}"),
-              Text("Đã dùng: $usedCount")
+                  "Loại mã: ${objectItem["applicable_products"] == "all_products" ? "Mã giảm giá toàn shop" : "Áp dụng cho một số sản phẩm"}"),
+              Text("Đã dùng: ${objectItem["used_count"]}")
             ],
           ),
         ),
@@ -634,7 +623,24 @@ class VoucherWidget extends StatelessWidget {
                         side: const BorderSide(
                             color: Colors.grey, width: 2), //<-- SEE HERE
                       ),
-                      onPressed: () {},
+                      onPressed: (DateTime.parse(objectItem["end_time"])
+                                  .isBefore(DateTime.now()) ||
+                              statusVoucher == "now")
+                          ? null
+                          : () {
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  return CreateVoucherPage(
+                                    type: objectItem["applicable_products"] ==
+                                            "all_products"
+                                        ? 'shop'
+                                        : "products",
+                                    pageId: pageId,
+                                    objectItem: objectItem,
+                                  );
+                                },
+                              ));
+                            },
                       child: const Text("Chỉnh sửa"))),
               const SizedBox(
                 width: 30,
@@ -645,7 +651,29 @@ class VoucherWidget extends StatelessWidget {
                         side: const BorderSide(
                             color: Colors.grey, width: 2), //<-- SEE HERE
                       ),
-                      onPressed: () {},
+                      onPressed: (DateTime.parse(objectItem["end_time"])
+                                  .isBefore(DateTime.now()) ||
+                              statusVoucher == "now")
+                          ? null
+                          : () async {
+                              final response = await VoucerApis().endVoucher(
+                                  objectItem["id"],
+                                  DateFormat('dd-MM-yyy')
+                                      .format(DateTime.now())
+                                      .toString());
+                              if (response == null ||
+                                  response?["error"] != null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      "Không thể kết thúc mã giảm giá",
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                    duration: Duration(seconds: 3),
+                                  ),
+                                );
+                              }
+                            },
                       child: const Text("Kết thúc")))
             ],
           ),

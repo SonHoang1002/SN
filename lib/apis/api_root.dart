@@ -33,9 +33,9 @@ class Api {
     return dio;
   }
 
-    Future getRequestBaseWithToken(String token ,String path, Map<String, dynamic>? params) async {
+  Future getRequestBaseWithToken(
+      String token, String path, Map<String, dynamic>? params) async {
     try {
-
       Dio dio = await getDio(token);
       var response = await dio.get(path, queryParameters: params);
       if (response.statusCode == 200) {
@@ -66,7 +66,6 @@ class Api {
     }
     return null;
   }
-
 
   Future getRequestBase(String path, Map<String, dynamic>? params) async {
     try {

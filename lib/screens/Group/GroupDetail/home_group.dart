@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:social_network_app_mobile/apis/group_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart' as POST_TYPE;
 import 'package:social_network_app_mobile/constant/post_type.dart';
@@ -22,9 +24,11 @@ import 'package:social_network_app_mobile/screens/Group/GroupUpdate/crop_image.d
 import 'package:social_network_app_mobile/screens/Post/post.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/AvatarStack/avatar_stack.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/chip_menu.dart';
+import 'package:social_network_app_mobile/widgets/modal_invite_friend.dart';
 import 'package:social_network_app_mobile/widgets/skeleton.dart';
 
 import '../../../widgets/AvatarStack/positions.dart';
@@ -227,6 +231,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
 
   @override
   Widget build(BuildContext context) {
+    widget.groupDetail = ref.read(groupListControllerProvider).groupDetail;
     List postGroup = ref.watch(groupListControllerProvider).groupPost;
     List groupPins = ref.watch(groupListControllerProvider).groupPins;
     List groupMember = ref.watch(groupListControllerProvider).groupRoleMember;
@@ -243,24 +248,14 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
-          await ref
-              .read(groupListControllerProvider.notifier)
-              .getGroupDetail(widget.groupDetail["id"])
-              .then(
-            (value) {
-              setState(
-                () {
-                  widget.groupDetail =
-                      ref.read(groupListControllerProvider).groupDetail;
-                },
-              );
-            },
-          );
           ref.read(groupListControllerProvider.notifier).getPostGroup({
             "sort_by": "new_post",
             "exclude_replies": true,
             "limit": 3,
           }, widget.groupDetail?["id"]);
+          await ref
+              .read(groupListControllerProvider.notifier)
+              .getGroupDetail(widget.groupDetail["id"]);
         },
         child: CustomScrollView(
           shrinkWrap: true,
@@ -720,7 +715,12 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
             ),
           ),
           isGrey: true,
-          handlePress: () {},
+          handlePress: () {
+            showBarModalBottomSheet(
+                context: context,
+                builder: (context) =>
+                    InviteFriend(id: widget.groupDetail['id'], type: 'group'));
+          },
         ),
       ));
     }
@@ -734,12 +734,26 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
         width: size.width * 0.895,
         child: ButtonPrimary(
           label: 'Tham gia nhóm',
-          handlePress: () {
-            Navigator.push(
-                context,
-                CupertinoPageRoute(
-                    builder: (context) =>
-                        GroupMemberQuestions(groupDetail: widget.groupDetail)));
+          handlePress: () async {
+            List<dynamic> listQuestions =
+                ref.read(groupListControllerProvider).memberQuestionList;
+            if (listQuestions.isNotEmpty) {
+              Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => GroupMemberQuestions(
+                          groupDetail: widget.groupDetail)));
+            } else {
+              await GroupApi().joinGroupRequest(widget.groupDetail["id"]);
+              ref.read(groupListControllerProvider.notifier).getPostGroup({
+                "sort_by": "new_post",
+                "exclude_replies": true,
+                "limit": 3,
+              }, widget.groupDetail?["id"]);
+              await ref
+                  .read(groupListControllerProvider.notifier)
+                  .getGroupDetail(widget.groupDetail["id"]);
+            }
           },
         ),
       ));
@@ -764,8 +778,12 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
         width: size.width * 0.45,
         child: ButtonPrimary(
           label: 'Hủy lời mời',
-          handlePress: () {
+          handlePress: () async {
             //widget.onTap!();
+            GroupApi().removeGroupRequest(widget.groupDetail["id"]);
+            setState(() {
+              widget.groupDetail?['group_relationship']?['requested'] = false;
+            });
           },
         ),
       ));
@@ -790,8 +808,53 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
         width: size.width * 0.45,
         child: ButtonPrimary(
           label: 'Đã tham gia',
-          handlePress: () {
+          handlePress: () async {
             //widget.onTap!();
+            await showCupertinoModalPopup(
+              context: context,
+              builder: (BuildContext context) => CupertinoAlertDialog(
+                title: const Text('Rời khỏi nhóm ?'),
+                content: const Column(
+                  children: [
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                        'Bạn có muốn rời khỏi Nhóm test không ? Bạn cũng có thể tắt thông báo cho bài viết mới hoặc báo cáo nhóm này',
+                        style: TextStyle(fontSize: 13, color: blackColor)),
+                  ],
+                ),
+                actions: <CupertinoDialogAction>[
+                  CupertinoDialogAction(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Huỷ'),
+                  ),
+                  CupertinoDialogAction(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      await GroupApi()
+                          .removeGroupRequest(widget.groupDetail["id"]);
+                      ref
+                          .read(groupListControllerProvider.notifier)
+                          .getPostGroup({
+                        "sort_by": "new_post",
+                        "exclude_replies": true,
+                        "limit": 3,
+                      }, widget.groupDetail?["id"]);
+                      ref
+                          .read(groupListControllerProvider.notifier)
+                          .getGroupDetail(widget.groupDetail["id"]);
+                      if (mounted) {
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: const Text('Rời khỏi nhóm'),
+                  ),
+                ],
+              ),
+            );
           },
         ),
       ));
@@ -801,6 +864,10 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
           label: 'Mời',
           handlePress: () {
             //widget.onTap!();
+            showBarModalBottomSheet(
+                context: context,
+                builder: (context) =>
+                    InviteFriend(id: widget.groupDetail['id'], type: 'group'));
           },
         ),
       )));

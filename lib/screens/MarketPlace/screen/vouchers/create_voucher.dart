@@ -10,7 +10,6 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_wid
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 
-
 String truncateText(String text, int length) {
   if (text.length > length) {
     return '${text.substring(0, length)}...';
@@ -22,8 +21,9 @@ String truncateText(String text, int length) {
 class CreateVoucherPage extends StatefulWidget {
   final String type;
   final String pageId;
+  final dynamic objectItem;
   const CreateVoucherPage(
-      {super.key, required this.type, required this.pageId});
+      {super.key, required this.type, required this.pageId, this.objectItem});
 
   @override
   State<CreateVoucherPage> createState() => _CreateVoucherPageState();
@@ -157,6 +157,38 @@ class _CreateVoucherPageState extends State<CreateVoucherPage> {
     }
   }
 
+  void initDataUpdateVoucher() {
+    if (widget.objectItem != null) {
+      nameProjectController =
+          TextEditingController(text: widget.objectItem["title"]);
+      codeController = TextEditingController(text: widget.objectItem["code"]);
+      minAmountOrderController = TextEditingController(
+          text: widget.objectItem["minimum_basket_price"].toString());
+      amountDiscountController =
+          TextEditingController(text: widget.objectItem["amount"].toString());
+      numberVoucherController = TextEditingController(
+          text: widget.objectItem["usage_quantity"].toString());
+      numberVoucherPerPersonController = TextEditingController(
+          text: widget.objectItem["max_distribution_per_buyer"].toString());
+      selectedTypeDiscount =
+          widget.objectItem["discount_type"] == "by_percentage"
+              ? "Theo phần trăm"
+              : "Theo số tiền";
+      selectedTypeDisplay =
+          widget.objectItem["display_setting"] == "display_on_all_pages"
+              ? 1
+              : 2;
+      selectedTypeVoucher =
+          widget.objectItem["reward_type"] == "discount" ? 1 : 2;
+      selectedStartDate = DateTime.parse(widget.objectItem["start_time"]);
+      selectedEndDate = DateTime.parse(widget.objectItem["end_time"]);
+      isSaveVoucherBefore = widget.objectItem["display_voucher_early"];
+      selectedSaveVoucherDate = widget.objectItem["start_save_time"] != null
+          ? DateTime.parse(widget.objectItem["start_save_time"])
+          : null;
+    }
+  }
+
   getProducts() async {
     _products =
         await ProductsApi().getShopProducts(widget.pageId, {"limit": 1});
@@ -249,6 +281,7 @@ class _CreateVoucherPageState extends State<CreateVoucherPage> {
   void initState() {
     selectedValueVoucher =
         widget.type == 'shop' ? 'Voucher toàn Shop' : 'Voucher sản phẩm';
+    initDataUpdateVoucher();
     getProducts();
     super.initState();
   }
@@ -347,6 +380,7 @@ class _CreateVoucherPageState extends State<CreateVoucherPage> {
                       SizedBox(
                         width: 200,
                         child: TextField(
+                          readOnly: widget.objectItem != null ? true : false,
                           controller: codeController,
                           onChanged: (text) {
                             setState(() {
@@ -776,7 +810,61 @@ class _CreateVoucherPageState extends State<CreateVoucherPage> {
                         if (errorValidate != "") {
                           showSnackBar(null, errorValidate);
                         } else {
-                          final response = await VoucerApis().createVoucher(
+                          if (widget.objectItem == null) {
+                            //create voucher
+                            final response = await VoucerApis().createVoucher(
+                                title: nameProjectController.text,
+                                code: codeController.text,
+                                start_time:
+                                    '${selectedStartDate.day}-${selectedStartDate.month}-${selectedStartDate.year}',
+                                end_time:
+                                    '${selectedEndDate.day}-${selectedEndDate.month}-${selectedEndDate.year}',
+                                display_voucher_early:
+                                    isSaveVoucherBefore ?? false,
+                                start_save_time: isSaveVoucherBefore == true
+                                    ? selectedSaveVoucherDate!.toIso8601String()
+                                    : null,
+                                voucher_type:
+                                    selectedValueVoucher == "Voucher toàn Shop"
+                                        ? "shop_voucher"
+                                        : "product_voucher",
+                                reward_type: selectedTypeVoucher == 1
+                                    ? "discount"
+                                    : "cashback",
+                                discount_type: selectedTypeDiscount == "Theo số tiền"
+                                    ? "fix_amount"
+                                    : "by_percentage",
+                                amount:
+                                    int.parse(amountDiscountController.text),
+                                maximum_discount_price: null,
+                                minimum_basket_price:
+                                    int.parse(minAmountOrderController.text),
+                                usage_quantity:
+                                    int.parse(numberVoucherController.text),
+                                max_distribution_per_buyer: int.parse(
+                                    numberVoucherPerPersonController.text),
+                                display_setting: selectedTypeDisplay == 1
+                                    ? "display_on_all_pages"
+                                    : "to_be_shared_through_voucher_code",
+                                applicable_products: widget.type == "shop"
+                                    ? "all_products"
+                                    : "specific_products",
+                                product_ids: widget.type == "shop"
+                                    ? null
+                                    : chosenProduct
+                                        .map((e) => int.parse(e["id"]))
+                                        .toList(),
+                                page_id: widget.pageId);
+                            if (response != null) {
+                              showSnackBar(
+                                  Colors.green, "Tạo voucher thành công");
+                            } else {
+                              showSnackBar(null, "Tạo voucher thất bại");
+                            }
+                          } else {
+                            // update voucher
+                            final response = await VoucerApis().updateVoucher(
+                              voucherId: widget.objectItem["id"],
                               title: nameProjectController.text,
                               code: codeController.text,
                               start_time:
@@ -788,13 +876,6 @@ class _CreateVoucherPageState extends State<CreateVoucherPage> {
                               start_save_time: isSaveVoucherBefore == true
                                   ? selectedSaveVoucherDate!.toIso8601String()
                                   : null,
-                              voucher_type:
-                                  selectedValueVoucher == "Voucher toàn Shop"
-                                      ? "shop_voucher"
-                                      : "product_voucher",
-                              reward_type: selectedTypeVoucher == 1
-                                  ? "discount"
-                                  : "cashback",
                               discount_type:
                                   selectedTypeDiscount == "Theo số tiền"
                                       ? "fix_amount"
@@ -805,25 +886,18 @@ class _CreateVoucherPageState extends State<CreateVoucherPage> {
                                   int.parse(minAmountOrderController.text),
                               usage_quantity:
                                   int.parse(numberVoucherController.text),
-                              max_distribution_per_buyer: int.parse(
-                                  numberVoucherPerPersonController.text),
-                              display_setting: selectedTypeDisplay == 1
-                                  ? "display_on_all_pages"
-                                  : "to_be_shared_through_voucher_code",
-                              applicable_products: widget.type == "shop"
-                                  ? "all_products"
-                                  : "specific_products",
                               product_ids: widget.type == "shop"
                                   ? null
                                   : chosenProduct
                                       .map((e) => int.parse(e["id"]))
                                       .toList(),
-                              page_id: widget.pageId);
-                          if (response != null) {
-                            showSnackBar(
-                                Colors.green, "Tạo voucher thành công");
-                          } else {
-                            showSnackBar(null, "Tạo voucher thất bại");
+                            );
+                            if (response != null) {
+                              showSnackBar(
+                                  Colors.green, "Cập nhật voucher thành công");
+                            } else {
+                              showSnackBar(null, "Cập nhật voucher thất bại");
+                            }
                           }
                         }
                       },
@@ -1021,8 +1095,11 @@ class _ChoseProductState extends State<ChoseProduct> {
                 child: TextFormField(
                   onFieldSubmitted: (value) async {
                     _products = await ProductsApi().getShopProducts(
-                        widget.pageId,
-                        {"limit": 20, "is_active": true, "q": value.isEmpty ? null : value});
+                        widget.pageId, {
+                      "limit": 20,
+                      "is_active": true,
+                      "q": value.isEmpty ? null : value
+                    });
                     setState(() {});
                   },
                   decoration: const InputDecoration(
