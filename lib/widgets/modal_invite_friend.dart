@@ -1,6 +1,7 @@
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
+import 'package:social_network_app_mobile/apis/group_api.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -43,7 +44,8 @@ class _InviteFriendState extends State<InviteFriend>
         case 'page':
           if (widget.id != null) {
             paramsExcluded = {"excluded_page": widget.id ?? ''};
-            paramsIncluded = {'included_invitation_follow_page': widget.id ?? ''
+            paramsIncluded = {
+              'included_invitation_follow_page': widget.id ?? ''
             };
           }
           break;
@@ -60,33 +62,38 @@ class _InviteFriendState extends State<InviteFriend>
           }
           break;
         case 'recruit':
-        if (widget.id != null) {
-          paramsExcluded = {"excluded_invitation_recruit": widget.id};
-          paramsIncluded = {"included_invitation_recruit": widget.id};
-        }
+          if (widget.id != null) {
+            paramsExcluded = {"excluded_invitation_recruit": widget.id};
+            paramsIncluded = {"included_invitation_recruit": widget.id};
+          }
+          break;
+        case 'group':
+          if (widget.id != null) {
+            paramsExcluded = {'excluded_invitation_group': widget.id ?? ''};
+            paramsIncluded = {"excluded_group": widget.id ?? ''};
+          }
           break;
         default:
       }
     });
     searchFriendInvite(null);
-      _tabController.addListener(() {
-        if(fetchInvitedCheck == false){
-          fetchFriendInvited(null);
-          fetchInvitedCheck = true;
-        }
+    _tabController.addListener(() {
+      if (fetchInvitedCheck == false) {
+        fetchFriendInvited(null);
+        fetchInvitedCheck = true;
+      }
     });
   }
 
   void searchFriendInvite(key) async {
-    if(key!= null){
-      EasyDebounce.debounce(
-                  'my-debouncer', const Duration(milliseconds: 800), () {
+    if (key != null) {
+      EasyDebounce.debounce('my-debouncer', const Duration(milliseconds: 800),
+          () {
         fetchFriendUnInvited(key);
-    });
-    }
-    else{
+      });
+    } else {
       fetchFriendUnInvited(key);
-    }  
+    }
   }
 
   void fetchFriendUnInvited(key) async {
@@ -146,21 +153,31 @@ class _InviteFriendState extends State<InviteFriend>
             widget.id, {'target_account_ids': value});
         if (res != null) {
           setState(() {
-            inviteSuccess = inviteSuccess + value;  
+            inviteSuccess = inviteSuccess + value;
             fetchInvitedCheck = false;
           });
         }
         break;
       case 'recruit':
-      var res = await RecruitApi().sendInvitationFriendRecruitApi(
-          widget.id, {'target_account_ids': value});
-      if (res != null) {
-        setState(() {
-          inviteSuccess = inviteSuccess + value;  
-          fetchInvitedCheck = false;
-        });
-      }
-      break;
+        var res = await RecruitApi().sendInvitationFriendRecruitApi(
+            widget.id, {'target_account_ids': value, 'role': null});
+        if (res != null) {
+          setState(() {
+            inviteSuccess = inviteSuccess + value;
+            fetchInvitedCheck = false;
+          });
+        }
+        break;
+      case 'group':
+        var res = await GroupApi().inviteUserJoinGroup(
+            widget.id, {'target_account_ids': value, "role": null});
+        if (res != null) {
+          setState(() {
+            inviteSuccess = inviteSuccess + value;
+            fetchInvitedCheck = false;
+          });
+        }
+        break;
       default:
         break;
     }
@@ -244,65 +261,70 @@ class _InviteFriendState extends State<InviteFriend>
                 Column(
                   children: [
                     Container(
-                padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-                child: SearchInput(handleSearch: (value) async {   
-                  searchFriendInvite(value);
-                })),
-                Expanded(child: ListView.builder(
-                    itemCount: friendUnInvited.length,
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              friendUnInvited[index]['avatar_media'] != null
-                                  ? friendUnInvited[index]['avatar_media']
-                                      ['preview_url']
-                                  : friendUnInvited[index]['avatar_static']),
-                        ),
-                        title: Text(friendUnInvited[index]['display_name'],
-                            style: TextStyle(color: colorWord(context))),
-                        trailing: inviteSuccess
-                                .contains(friendUnInvited[index]['id'])
-                            ? const Text(
-                                'Đã gửi',
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    color: secondaryColor),
-                              )
-                            : Checkbox(
-                                checkColor: Colors.white,
-                                fillColor:
-                                    MaterialStateProperty.resolveWith(getColor),
-                                value: inviteCheck
-                                    .contains(friendUnInvited[index]['id']),
-                                onChanged: (bool? value) {
-                                  if (value == true) {
-                                    setState(() {
-                                      var tempInviteCheck = inviteCheck;
-                                      inviteCheck = tempInviteCheck +
-                                          [friendUnInvited[index]['id']];
-                                    });
-                                  } else {
-                                    setState(() {
-                                      var tempInviteCheck = inviteCheck;
-                                      inviteCheck = tempInviteCheck
-                                          .where((element) =>
-                                              element !=
-                                              friendUnInvited[index]['id'])
-                                          .toList();
-                                    });
-                                  }
-                                },
+                        padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
+                        child: SearchInput(handleSearch: (value) async {
+                          searchFriendInvite(value);
+                        })),
+                    Expanded(
+                      child: ListView.builder(
+                          itemCount: friendUnInvited.length,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                    friendUnInvited[index]['avatar_media'] !=
+                                            null
+                                        ? friendUnInvited[index]['avatar_media']
+                                            ['preview_url']
+                                        : friendUnInvited[index]
+                                            ['avatar_static']),
                               ),
-                      );
-                    }),)
-                     
+                              title: Text(
+                                  friendUnInvited[index]['display_name'],
+                                  style: TextStyle(color: colorWord(context))),
+                              trailing: inviteSuccess
+                                      .contains(friendUnInvited[index]['id'])
+                                  ? const Text(
+                                      'Đã gửi',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                          color: secondaryColor),
+                                    )
+                                  : Checkbox(
+                                      checkColor: Colors.white,
+                                      fillColor:
+                                          MaterialStateProperty.resolveWith(
+                                              getColor),
+                                      value: inviteCheck.contains(
+                                          friendUnInvited[index]['id']),
+                                      onChanged: (bool? value) {
+                                        if (value == true) {
+                                          setState(() {
+                                            var tempInviteCheck = inviteCheck;
+                                            inviteCheck = tempInviteCheck +
+                                                [friendUnInvited[index]['id']];
+                                          });
+                                        } else {
+                                          setState(() {
+                                            var tempInviteCheck = inviteCheck;
+                                            inviteCheck = tempInviteCheck
+                                                .where((element) =>
+                                                    element !=
+                                                    friendUnInvited[index]
+                                                        ['id'])
+                                                .toList();
+                                          });
+                                        }
+                                      },
+                                    ),
+                            );
+                          }),
+                    )
                   ],
                 ),
-               
                 ListView.builder(
                     itemCount: friendInvited.length,
                     scrollDirection: Axis.vertical,

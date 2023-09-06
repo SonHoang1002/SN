@@ -17,6 +17,16 @@ class GroupApi {
     return await Api().postRequestBase('/api/v1/groups/$id/accounts', null);
   }
 
+  Future joinGroupRequestWithParams(id, params) async {
+    return await Api().postRequestBase('/api/v1/groups/$id/accounts', params);
+  }
+
+  Future inviteUserJoinGroup(id, params) async {
+    final response =
+        await Api().postRequestBase("/api/v1/groups/$id/invitations", params);
+    return response;
+  }
+
   Future removeGroupRequest(id) async {
     return await Api().deleteRequestBase('/api/v1/groups/$id/leave', null);
   }

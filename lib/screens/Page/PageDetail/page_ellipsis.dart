@@ -68,11 +68,6 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
                     "icon": "assets/pages/settingPage.png",
                   },
                   {
-                    "key": "private",
-                    "label": "Trung tâm quyền riêng tư",
-                    "icon": "assets/pages/privateCenter.png",
-                  },
-                  {
                     "key": "search",
                     "label": "Tìm kiếm",
                     "icon": "assets/pages/search.png",
