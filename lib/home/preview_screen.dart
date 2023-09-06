@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/apis/user.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/screens/Login/LoginCreateModules/main_login_page.dart';
@@ -46,6 +47,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
                 // ignore: use_build_context_synchronously
                 buildSnackBar(
                     context, "Tài khoản của bạn đang bị vô hiệu hoá !!");
+                // ignore: use_build_context_synchronously
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -57,8 +59,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
           Future.delayed(const Duration(seconds: 1), () async {
             await ref.read(meControllerProvider.notifier).getMeData();
             // ignore: use_build_context_synchronously
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: ((context) => const Home())));
+            pushAndRemoveUntil(context, const Home());
           });
         } else {
           SecureStorage().getKeyStorage("dataLogin").then((value) {

@@ -644,9 +644,9 @@ class _BlockNamePostState extends ConsumerState<BlockNamePost> {
                           margin: const EdgeInsets.only(bottom: 2))
                       : const SizedBox()),
               WidgetSpan(
-                  child: widget.post?['target_account'] != null &&
-                          widget.friendData?['id'] !=
-                              widget.post?['target_account']?['id']
+                  child: widget.post?['target_account'] != null
+                       && widget.friendData?['id'] ==
+                                  widget.post?['target_account']?['id']
                       ? Container(
                           margin: const EdgeInsets.only(right: 7),
                           child: Icon(
@@ -657,9 +657,9 @@ class _BlockNamePostState extends ConsumerState<BlockNamePost> {
                         )
                       : const SizedBox()),
               TextSpan(
-                text: widget.post?['target_account'] != null &&
-                        widget.friendData?['id'] !=
-                            widget.post?['target_account']?['id']
+                text: widget.post?['target_account'] != null
+                    && widget.friendData?['id'] ==
+                                widget.post?['target_account']?['id']
                     ? (widget.post?['target_account']?['display_name']) ?? ""
                     : "",
                 recognizer: TapGestureRecognizer()
@@ -784,11 +784,11 @@ class AvatarPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String accountLink = account['avatar_media'] != null
-        ? account['avatar_media']['preview_url']
+    String accountLink = (account?['avatar_media']) != null
+        ? (account?['avatar_media']?['preview_url'])
         : linkAvatarDefault;
-    String pageLink = page != null && page['avatar_media'] != null
-        ? page['avatar_media']['preview_url']
+    String pageLink = (page != null && page?['avatar_media'] != null)
+        ? (page?['avatar_media']?['preview_url'])
         : linkAvatarDefault;
     return InkWell(
       onTap: () {
@@ -809,8 +809,8 @@ class AvatarPost extends StatelessWidget {
                         image: DecorationImage(
                             image: NetworkImage((isInGroup == true
                                     ? accountLink
-                                    : ((group['banner']?['url']) ??
-                                        (group['banner']?['preview_url']))) ??
+                                    : ((group?['banner']?['url']) ??
+                                        (group?['banner']?['preview_url']))) ??
                                 linkBannerDefault),
                             onError: (exception, stackTrace) =>
                                 const SizedBox(),
@@ -833,7 +833,7 @@ class AvatarPost extends StatelessWidget {
           : Padding(
               padding: const EdgeInsets.only(top: 1),
               child: Avatar(
-                path: page != null && post['place']?['id'] != page['id']
+                path: page != null && post?['place']?['id'] != page['id']
                     ? pageLink
                     : accountLink,
                 object: page,

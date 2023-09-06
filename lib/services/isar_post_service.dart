@@ -6,20 +6,6 @@ import 'package:social_network_app_mobile/model/post_users.dart';
 import 'package:social_network_app_mobile/services/isar_service.dart';
 
 class IsarPostService {
-  Future<List> getPostsWithNumber(int number, dynamic lastPost) async {
-    List postsOnIsar = await getAllPostsFromIsar();
-    int indexOnIsar = postsOnIsar.indexWhere((e) => e['id'] == lastPost['id']);
-    if (indexOnIsar >= 0) {
-      // kiem tra xem trong isar co du so luong bai can khong
-      if (indexOnIsar + number < (await getCountPostIsar())) {
-        return [...postsOnIsar.sublist(indexOnIsar + 1, indexOnIsar + number)];
-      } else {
-        return [...postsOnIsar];
-      }
-    }
-    return [];
-  }
-
   Future<int> getCountPostIsar() async {
     final instance = await IsarService.instance;
     final count = await instance.postModels.count();

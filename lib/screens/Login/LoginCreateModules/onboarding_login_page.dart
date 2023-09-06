@@ -65,12 +65,7 @@ class _OnboardingLoginPageState extends ConsumerState<OnboardingLoginPage> {
   }
 
   void completeLogin() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) => const Home(),
-      ),
-    );
+    pushAndRemoveUntil(context, const Home());
   }
 
   handleLogin(int index) async {

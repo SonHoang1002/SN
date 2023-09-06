@@ -91,7 +91,7 @@ class _MenuState extends ConsumerState<Menu> {
       await SecureStorage().saveKeyStorage("token", "noData");
       ref.read(meControllerProvider.notifier).resetMeData();
       if (mounted) {
-        pushAndReplaceToNextScreen(context, const OnboardingLoginPage());
+        pushAndRemoveUntil(context, const OnboardingLoginPage());
       }
     }
 
