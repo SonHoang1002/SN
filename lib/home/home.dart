@@ -12,7 +12,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:social_network_app_mobile/apis/config.dart';
-import 'package:social_network_app_mobile/constant/type_constant.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/home/violation_of_standards.dart';
 import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
@@ -31,7 +30,6 @@ import 'package:social_network_app_mobile/screens/Moment/moment.dart';
 import 'package:social_network_app_mobile/screens/Notification/notification_page.dart';
 import 'package:social_network_app_mobile/screens/Search/search.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch.dart';
-import 'package:social_network_app_mobile/services/isar_post_service.dart';
 import 'package:social_network_app_mobile/services/notification_service.dart';
 import 'package:social_network_app_mobile/services/web_socket_service.dart';
 import 'package:social_network_app_mobile/storage/storage.dart';
@@ -55,7 +53,7 @@ class Home extends ConsumerStatefulWidget {
 
 class _HomeState extends ConsumerState<Home>
     with SingleTickerProviderStateMixin {
-  int _selectedIndex = 0;
+  int _selectedIndex = 3;
   ValueNotifier<bool> isShowSnackBar = ValueNotifier(false);
   ValueNotifier<bool> showBottomNavigatorNotifier = ValueNotifier(true);
   final Connectivity _connectivity = Connectivity();
@@ -85,7 +83,7 @@ class _HomeState extends ConsumerState<Home>
           builder: ((context) => CreatePost(
                 callbackFunction: (type, newData) {
                   if (newData != null) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) async {
                       ref
                           .read(postControllerProvider.notifier)
                           .changeProcessingPost(newData, isIdCurrentUser: true);
@@ -95,10 +93,12 @@ class _HomeState extends ConsumerState<Home>
               ))).whenComplete(() =>
           ref.read(disableMomentController.notifier).setDisableMoment(false));
     } else {
-      if(index == 3){
-        final currentTab = ref.watch(videoCurrentTabController).videoCurrentTab ;
-        if(currentTab != ""){
-          ref.read(disableVideoController.notifier).setDisableVideo(currentTab, false ,disableBefore: true);
+      if (index == 3) {
+        final currentTab = ref.watch(videoCurrentTabController).videoCurrentTab;
+        if (currentTab != "") {
+          ref
+              .read(disableVideoController.notifier)
+              .setDisableVideo(currentTab, false, disableBefore: true);
         }
       }
       setState(() {
@@ -144,7 +144,7 @@ class _HomeState extends ConsumerState<Home>
   }
 
   void listenToWebSocket() {
-    subscription = webSocketChannel?.stream.listen(
+    subscription ??= webSocketChannel?.stream.listen(
       (data) {
         if (data.contains('42')) {
           int startIndex = data.indexOf('[') + 1;
@@ -167,10 +167,10 @@ class _HomeState extends ConsumerState<Home>
                       title: 'EMSO',
                       payLoad: jsonEncode(dataFilter),
                       largeIcon:
-                          dataFilter[0]['account']['avatar_media'] != null
-                              ? dataFilter[0]['account']['avatar_media']
-                                  ['preview_url']
-                              : dataFilter[0]['account']['avatar_static'],
+                          (dataFilter[0]?['account']?['avatar_media']) != null
+                              ? (dataFilter[0]?['account']?['avatar_media']
+                                  ?['preview_url'])
+                              : (dataFilter[0]?['account']?['avatar_static']),
                       body:
                           '${renderName(dataFilter)}${renderContent(dataFilter)['textNone'] ?? ''} ${renderContent(dataFilter)['textBold'] ?? ''}');
                 }
@@ -469,8 +469,8 @@ class _HomeState extends ConsumerState<Home>
                       colorWord: Theme.of(context).textTheme.bodyLarge!.color),
                   buildSpacer(height: 20),
                   QrImageView(
-                    data: "$urlWebEmso/" +
-                        ref.watch(meControllerProvider)[0]['id'],
+                    data:
+                        "$urlWebEmso/user/${ref.watch(meControllerProvider)[0]?['id']}",
                     dataModuleStyle: const QrDataModuleStyle(
                         dataModuleShape: QrDataModuleShape.square,
                         color: blackColor),
@@ -527,6 +527,7 @@ class _HomeState extends ConsumerState<Home>
 
   @override
   Widget build(BuildContext context) {
+    listenToWebSocket();
     Future.delayed(Duration.zero, () async {
       await useIsolate();
     });
@@ -554,7 +555,6 @@ class _HomeState extends ConsumerState<Home>
         : theme!.themeMode == ThemeMode.light
             ? 'light'
             : 'system';
-
     List iconActionFeed = [
       {
         "key": "qr",
@@ -667,17 +667,19 @@ class _HomeState extends ConsumerState<Home>
                 child: const Menu(),
               ),
         onDrawerChanged: (isOpened) {
-         if (_selectedIndex == 3) {
+          if (_selectedIndex == 3) {
             if (isOpened == true) {
               ref.read(disableVideoController.notifier).disableAllVideo();
-            }else{
-              final currentTab = ref.watch(videoCurrentTabController).videoCurrentTab;
-              if( currentTab != ""){
-                 ref.read(disableVideoController.notifier).setDisableVideo(currentTab, false, disableBefore: true);
+            } else {
+              final currentTab =
+                  ref.watch(videoCurrentTabController).videoCurrentTab;
+              if (currentTab != "") {
+                ref
+                    .read(disableVideoController.notifier)
+                    .setDisableVideo(currentTab, false, disableBefore: true);
               }
             }
           }
-
         },
         appBar: _selectedIndex == 1 || _selectedIndex == 4
             ? null

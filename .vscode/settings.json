@@ -1,4 +1,7 @@
 {
     "cmake.sourceDirectory": "/Users/hungnguyen/Desktop/emso-project-app/Social-Network-App/linux",
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "disabled",
+    "files.autoSave": "afterDelay",
+    "dart.previewFlutterUiGuides": true,
+    "dart.previewFlutterUiGuidesCustomTracking": true
 }

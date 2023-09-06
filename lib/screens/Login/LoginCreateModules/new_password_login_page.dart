@@ -110,8 +110,7 @@ class _NewPasswordLoginPageState extends State<NewPasswordLoginPage> {
                               buildButtonForLoginWidget(
                                   width: width,
                                   function: () {
-                                    pushAndReplaceToNextScreen(
-                                        context, const Home());
+                                    pushAndRemoveUntil(context, const Home());
                                   })
                             ],
                           ),

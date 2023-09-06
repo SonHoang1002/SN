@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -58,6 +59,7 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
         });
       }
     });
+
     if (widget.accountChoose != null) {
       if (mounted) {
         setState(() {
@@ -103,15 +105,11 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
   }
 
   void completeLogin() {
-    Navigator.pushReplacement<void, void>(
-      context,
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) => const Home(),
-      ),
-    );
+   pushAndRemoveUntil(context, const Home());
   }
 
   handleLogin() async {
+    hiddenKeyboard(context);
     setState(() {
       isLoading = true;
     });
@@ -156,12 +154,7 @@ class _MainLoginPageState extends ConsumerState<MainLoginPage> {
           .then((value) async {
         await _handleSignOut();
         // ignore: use_build_context_synchronously
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute<void>(
-              builder: (BuildContext context) => const PreviewScreen(),
-            ),
-            ((route) => false));
+        pushAndRemoveUntil(context,const PreviewScreen());
         // }
       });
     }

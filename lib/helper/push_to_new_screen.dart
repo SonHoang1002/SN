@@ -5,6 +5,15 @@ pushToNextScreen(BuildContext context, Widget newScreen) {
   Navigator.of(context).push(MaterialPageRoute(builder: (_) => newScreen));
 }
 
+pushAndRemoveUntil(BuildContext context, Widget newScreen,{bool removeAllStackRoutes = false}) {
+  Navigator.of(context).pushAndRemoveUntil(
+    MaterialPageRoute(
+      builder: (BuildContext context) => newScreen,
+    ),
+    (route) => removeAllStackRoutes,
+  );
+}
+
 pushAndReplaceToNextScreen(BuildContext context, Widget newScreen) {
   Navigator.of(context)
       .pushReplacement(MaterialPageRoute(builder: (_) => newScreen));

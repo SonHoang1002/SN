@@ -1,5 +1,3 @@
- 
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
@@ -18,7 +16,6 @@ import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/model/post_model.dart';
-import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
@@ -59,13 +56,10 @@ class _FeedState extends ConsumerState<Feed> {
   void initState() {
     super.initState();
     if (!mounted) return;
-    Future.delayed(Duration.zero, () async {
-      updatePostIsar();
-      initRiverpodData();
-      addScrollListener();
-      // getListPost();
-      _isMore.value = ref.read(postControllerProvider).isMore;
-    });
+    updatePostIsar();
+    initRiverpodData();
+    addScrollListener();
+    _isMore.value = ref.read(postControllerProvider).isMore;
   }
 
   // init 4  first post for riverpod post
@@ -80,28 +74,25 @@ class _FeedState extends ConsumerState<Feed> {
               paramsConfig,
             );
       } else {
-        ref
-            .read(postControllerProvider.notifier)
-            .addListPost(isarPostDataList, paramsConfig);
+        ref.read(postControllerProvider.notifier).addListPost(
+              isarPostDataList,
+              paramsConfig,
+            );
       }
     }
   }
 
-  Future<void> getListPost() async {
-    await IsarPostService().addPostIsar(ref.read(postControllerProvider).posts);
-  }
-
   Future<void> updatePostIsar() async {
-    // final isarPostCount = await IsarPostService().getCountPostIsar();
-    // while (isarPostCount < 100 ||
-    //   isarPostCount == ref.read(postControllerProvider).posts.length) {
-    // if (isarPostCount > 0) {
-    //   _isMore.value = true;
-    // } else {
-    //   _isMore.value = false;
-    // }
-    await useIsolate(paramsConfig);
-    // }
+    final isarPostCount = await IsarPostService().getCountPostIsar();
+    while (isarPostCount < 100 ||
+        isarPostCount == ref.read(postControllerProvider).posts.length) {
+      if (isarPostCount > 0) {
+        _isMore.value = true;
+      } else {
+        _isMore.value = false;
+      }
+      await useIsolate(paramsConfig);
+    }
   }
 
   void addScrollListener() {
@@ -118,16 +109,8 @@ class _FeedState extends ConsumerState<Feed> {
             scrollController.offset ==
                 scrollController.position.maxScrollExtent) {
           EasyDebounce.debounce(
-              'my-debouncer', const Duration(milliseconds: 180), () async {
-            // kiểm tra không có kết nối hoặc có kết nối mà không còn bài viết nào khác nữa --> lấy data từ isar
-            if (!ref.watch(connectivityControllerProvider).connectInternet ||
-                ((_isMore.value != true ||
-                        ref.watch(postControllerProvider).isMore != true) &&
-                    ref
-                        .watch(connectivityControllerProvider)
-                        .connectInternet)) {
-              getDataFromIsar();
-            }
+              'my-debouncer', const Duration(milliseconds: 300), () async {
+            getDataFromIsar();
             updatePostIsar();
           });
         }
@@ -161,9 +144,10 @@ class _FeedState extends ConsumerState<Feed> {
           .map((e) => jsonDecode(e.objectPost!))
           .toList()
           .sublist(index + 1, index + 7);
-      ref
-          .read(postControllerProvider.notifier)
-          .addListPost(newDataList, paramsConfig);
+      ref.read(postControllerProvider.notifier).addListPost(
+            newDataList,
+            paramsConfig,
+          );
     } else {
       ref.read(postControllerProvider.notifier).addListPost(
             isarPostList.map((e) => jsonDecode(e.objectPost!)).toList(),
@@ -171,6 +155,7 @@ class _FeedState extends ConsumerState<Feed> {
           );
     }
   }
+
 ////////////// begin isolate
 
   useIsolate(dynamic params) async {
@@ -187,12 +172,6 @@ class _FeedState extends ConsumerState<Feed> {
     }
     final response = await receivePort.first;
     await IsarPostService().addPostIsar(response);
-    if (ref.watch(connectivityControllerProvider).connectInternet) {
-      ref.read(postControllerProvider.notifier).addListPost(
-            response,
-            paramsConfig,
-          );
-    }
     return response;
   }
 
@@ -205,7 +184,7 @@ class _FeedState extends ConsumerState<Feed> {
 
 ////////////// end isolate
 
-  // // avoid bug look up ...
+// // avoid bug look up ...
   _reloadFeedFunction(dynamic type, dynamic newData) async {
     if (type == null && newData == null) {
       setState(() {});
@@ -411,4 +390,3 @@ class _FeedState extends ConsumerState<Feed> {
     super.dispose();
   }
 }
-

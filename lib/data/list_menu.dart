@@ -20,7 +20,7 @@ List watchMenu = [
   {
     "key": watchSaved,
     "label": "Video đã lưu",
-  }
+  },
 ];
 List eventMenu = [
   {

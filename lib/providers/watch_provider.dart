@@ -57,9 +57,7 @@ class WatchController extends StateNotifier<WatchState> {
   getListWatchFollow(params) async {
     final limit = params['limit'];
     List response = await WatchApi().getListWatchFollow(params) ?? [];
-    if(response.isEmpty){
-      response = fakeWatchFollow;
-    }
+    response.insertAll(0, fakeWatchFollow);
     if (mounted) {
       state = state.copyWith(
           mediaSelected: state.mediaSelected,
@@ -79,9 +77,7 @@ class WatchController extends StateNotifier<WatchState> {
   getListWatchSuggest(params) async {
     final limit = params['limit'];
     List response = await WatchApi().getListWatchSuggest(params) ?? [];
-    if(response.isEmpty){
-      response = fakeWatchSuggest;
-    }
+    response.insertAll(0, fakeWatchSuggest); 
     if (mounted) {
       final newWatch =
           response.where((item) => !state.watchSuggest.contains(item)).toList();
