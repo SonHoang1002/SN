@@ -616,7 +616,7 @@ class PersonalMarketPlaceConstants {
         "icon": FontAwesomeIcons.add,
       },
       {
-        "title": "Mã giảm giá của tôi",
+        "title": "Mã giảm giá của shop",
         "icon": FontAwesomeIcons.ticket,
       },
     ]
@@ -635,6 +635,10 @@ class PersonalMarketPlaceConstants {
       {
         "title": "Đơn mua của tôi",
         "icon": FontAwesomeIcons.bagShopping,
+      },
+      {
+        "title": "Kho Voucher",
+        "icon": FontAwesomeIcons.ticket,
       },
     ]
   };

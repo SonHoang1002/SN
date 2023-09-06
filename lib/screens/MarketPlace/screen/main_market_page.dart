@@ -34,7 +34,7 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.da
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_button.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
-
+import 'package:social_network_app_mobile/screens/MarketPlace/screen/vouchers/storage_voucher.dart';
 import '../../../../constant/marketPlace_constants.dart';
 import '../../../../theme/colors.dart';
 import '../widgets/product_item_widget.dart';
@@ -297,9 +297,7 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
           Flexible(
             flex: 2,
             child: GestureDetector(
-              onTap: () {
-                //
-              },
+              onTap: () async {},
               child: Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(left: 9, right: 10),
@@ -984,8 +982,11 @@ class _MainMarketPageState extends ConsumerState<MainMarketPage> {
       case "Đơn mua của tôi":
         pushToNextScreen(context, const MyOrderPage());
         break;
-      case "Mã giảm giá của tôi":
+      case "Mã giảm giá của shop":
         pushToNextScreen(context, const MainVoucher());
+        break;
+      case "Kho Voucher":
+        pushToNextScreen(context, const StorageVoucher());
         break;
       case "Lời mời":
         pushToNextScreen(

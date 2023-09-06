@@ -1,4 +1,5 @@
 {
-    "cmake.sourceDirectory": "/Users/hungnguyen/Desktop/emso-project-app/Social-Network-App/linux",
-    "C_Cpp.errorSquiggles": "disabled"
+    "cmake.sourceDirectory": "/Users/hungnguyen/Desktop/emso-project-app/Social-Marketplace-App-Base/linux",
+    "dart.previewFlutterUiGuides": false,
+    "dart.previewFlutterUiGuidesCustomTracking": false
 }
