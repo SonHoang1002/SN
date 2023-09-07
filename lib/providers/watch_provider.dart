@@ -43,7 +43,6 @@ class WatchState {
 
 final watchControllerProvider =
     StateNotifierProvider.autoDispose<WatchController, WatchState>((ref) {
-  ref.read(meControllerProvider);
   return WatchController();
 });
 
