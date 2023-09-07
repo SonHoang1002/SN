@@ -406,6 +406,7 @@ class AlertDialogDelete extends ConsumerWidget {
         ref
             .read(pageControllerProvider.notifier)
             .actionHiddenDeletePost(type, post);
+      } else if (type == postSchedule) {
       } else {
         ref.read(postControllerProvider.notifier).actionHiddenDeletePost(
             type, post,
