@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
+import 'package:social_network_app_mobile/providers/disable_watch_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/screens/CreatePost/CreateNewFeed/create_new_feed.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -151,6 +152,9 @@ class _CreatePostState extends ConsumerState<CreatePost> {
                                   ref
                                       .read(disableMomentController.notifier)
                                       .setDisableMoment(true);
+                                  ref
+                                      .read(disableVideoController.notifier)
+                                      .disableAllVideo();
                                 });
                               }
                             },

@@ -54,11 +54,11 @@ class _BottomNavigatorBarEmsoState extends State<BottomNavigatorBarEmso> {
             ),
             label: ''),
         BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              "assets/Plus.svg",
-              width: 20,
-              height: 20,
-              color: _selectedIndex == 2 ? primaryColor : greyColor,
+            icon: Image.asset(
+              "assets/Plus.png",
+              width: 25,
+              height: 25,
+              color: secondaryColor,
             ),
             label: ''),
         BottomNavigationBarItem(
@@ -80,9 +80,11 @@ class _BottomNavigatorBarEmsoState extends State<BottomNavigatorBarEmso> {
       ],
       currentIndex: _selectedIndex!,
       onTap: (value) {
-        setState(() {
-          _selectedIndex = value;
-        });
+        if (value != 2) {
+          setState(() {
+            _selectedIndex = value;
+          });
+        }
         widget.onTap(value);
       },
     );
