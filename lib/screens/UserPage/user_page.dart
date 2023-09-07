@@ -218,17 +218,20 @@ class _UserPageState extends ConsumerState<UserPage>
             id,
             {"limit": 3, "exclude_replies": true});
       friendNew = await UserPageApi().getUserFriend(id, {'limit': 20}) ?? [];
-      if (mounted) {
-          setState(() {
-            userData = ref.watch(userInformationProvider).userInfor;
-            userAbout = ref.watch(userInformationProvider).userMoreInfor;
-            lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
-            postUser = (id == ref.watch(meControllerProvider)[0]['id']
-                ? ref.watch(postControllerProvider).postUserPage
-                : ref.watch(postControllerProvider).postAnotherUserPage);
-            pinPost = ref.watch(postControllerProvider).postsPin;
-          });
-        }
+      Future.delayed(Duration(milliseconds: 700), () async {
+          if (mounted) {
+            setState(() {
+              userData = ref.watch(userInformationProvider).userInfor;
+              userAbout = ref.watch(userInformationProvider).userMoreInfor;
+              print("userData: $userAbout");
+              lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
+              postUser = (id == ref.watch(meControllerProvider)[0]['id']
+                  ? ref.watch(postControllerProvider).postUserPage
+                  : ref.watch(postControllerProvider).postAnotherUserPage);
+              pinPost = ref.watch(postControllerProvider).postsPin;
+            });
+          }
+        });
       friend = friendNew;
       });
     }
