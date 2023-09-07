@@ -256,8 +256,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
                 postRender?["media_attachments"].isNotEmpty
             ? ((postRender?["media_attachments"]?[0]['preview_url']) ??
                 (postRender?["media_attachments"]?[0]['url']))
-            : (postRender?['url'])) ??
-        linkSocialNetwork;
+            : (postRender?['url']));
     final size = MediaQuery.sizeOf(context);
     return WillPopScope(
       onWillPop: () async {
