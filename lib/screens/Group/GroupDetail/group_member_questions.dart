@@ -35,9 +35,9 @@ class _GroupMemberQuestionsState extends ConsumerState<GroupMemberQuestions> {
   }
 
   fetchData() async {
-    /* await ref
+    await ref
         .read(groupListControllerProvider.notifier)
-        .getMemberQuestion(widget.groupDetail["id"]); */
+        .getMemberQuestion(widget.groupDetail["id"]);
     listQuestion = ref.read(groupListControllerProvider).memberQuestionList;
     /* inspect(ref.read(groupListControllerProvider));
     inspect(widget.groupDetail); */
@@ -265,16 +265,9 @@ class _GroupMemberQuestionsState extends ConsumerState<GroupMemberQuestions> {
                             //Navigator.of(context).pop();
                             await GroupApi().joinGroupRequestWithParams(
                                 widget.groupDetail["id"], {"answers": params});
-                            ref
-                                .read(groupListControllerProvider.notifier)
-                                .getPostGroup({
-                              "sort_by": "new_post",
-                              "exclude_replies": true,
-                              "limit": 3,
-                            }, widget.groupDetail?["id"]);
                             await ref
                                 .read(groupListControllerProvider.notifier)
-                                .getGroupDetail(widget.groupDetail["id"]);
+                                .updateGroupDetail(widget.groupDetail["id"]);
                             if (mounted) {
                               Navigator.of(context).pop();
                             }

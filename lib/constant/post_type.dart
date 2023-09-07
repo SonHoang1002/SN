@@ -35,7 +35,7 @@ String postGroup = "post_group";
 String postGrow = "post_grow";
 String postEvent = "post_event";
 String postLearnSpace = "learn_space_post";
-
+String postSchedule = "post_schedule";
 String momentUser = "user_moment";
 String momentPage = "page_moment";
 String momentGroup = "group_moment";

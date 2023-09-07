@@ -73,7 +73,7 @@ class _UserPageHomeState extends State<UserPageHome> {
     const MainMarketPage(isBack: false)
   ];
 
-  void initState(){
+  void initState() {
     super.initState();
     pageUserRoutes = [
       UserPage(
@@ -86,7 +86,7 @@ class _UserPageHomeState extends State<UserPageHome> {
       const MainMarketPage(isBack: false)
     ];
   }
-  
+
   void _onItemTapped(int index) {
     if (index == 2) {
       showBarModalBottomSheet(
@@ -217,8 +217,8 @@ class _UserPageState extends ConsumerState<UserPage>
             id == ref.watch(meControllerProvider)[0]['id'],
             id,
             {"limit": 3, "exclude_replies": true});
-      friendNew = await UserPageApi().getUserFriend(id, {'limit': 20}) ?? [];
-      if (mounted) {
+        friendNew = await UserPageApi().getUserFriend(id, {'limit': 20}) ?? [];
+        if (mounted) {
           setState(() {
             userData = ref.watch(userInformationProvider).userInfor;
             userAbout = ref.watch(userInformationProvider).userMoreInfor;
@@ -229,16 +229,16 @@ class _UserPageState extends ConsumerState<UserPage>
             pinPost = ref.watch(postControllerProvider).postsPin;
           });
         }
-      friend = friendNew;
+        friend = friendNew;
       });
     }
 
-    if(userData == null){
-      final queryParams = ModalRoute.of(context)?.settings.arguments
-              as Map<String, dynamic>;
+    if (userData == null) {
+      final queryParams =
+          ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
       setState(() {
-            userData = queryParams['user'];
-          });
+        userData = queryParams['user'];
+      });
     }
     _tabController = TabController(vsync: this, length: userImageMenu.length);
     scrollController.addListener(() {
@@ -307,13 +307,13 @@ class _UserPageState extends ConsumerState<UserPage>
   // }
 
   @override
-  void didChangeDependencies(){
+  void didChangeDependencies() {
     super.didChangeDependencies();
     Future.delayed(Duration.zero, () async {
-       ref.read(userInformationProvider.notifier).getUserInformation(id);
-        ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
-        ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
-        ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
+      ref.read(userInformationProvider.notifier).getUserInformation(id);
+      ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
+      ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
+      ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
     });
   }
 
@@ -1737,7 +1737,7 @@ class _UserPageState extends ConsumerState<UserPage>
   @override
   Widget build(BuildContext context) {
     pinPost = ref.read(postControllerProvider).postsPin;
-    
+
     return Scaffold(
         appBar: buildAppBar(context),
         body: Stack(
