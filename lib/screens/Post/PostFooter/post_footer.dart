@@ -34,7 +34,9 @@ class PostFooter extends StatelessWidget {
       this.isShowCommentBox,
       this.updateDataFunction,
       this.jumpToOffsetFunction,
-      this.friendData,this.isInGroup,this.groupData})
+      this.friendData,
+      this.isInGroup,
+      this.groupData})
       : super(key: key);
 
   @override

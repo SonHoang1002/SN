@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupDetail/approval_group.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupSchedule/group_list_schedule.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupSetting/group_setting.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
@@ -188,9 +189,16 @@ class _ManagerDetailState extends ConsumerState<ManagerDetail> {
               const SizedBox(
                 height: 5,
               ),
-              const FeatureItem(
-                imagePath: 'assets/groups/scheduledStatus.png',
-                title: 'Bài viết đã lên lịch',
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(CupertinoPageRoute(
+                      builder: (context) =>
+                          GroupListSchedule(groupDetail: widget.groupDetail)));
+                },
+                child: const FeatureItem(
+                  imagePath: 'assets/groups/scheduledStatus.png',
+                  title: 'Bài viết đã lên lịch',
+                ),
               ),
               const SizedBox(
                 height: 5,

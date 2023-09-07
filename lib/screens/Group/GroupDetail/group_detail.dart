@@ -7,6 +7,7 @@ import 'package:social_network_app_mobile/screens/Group/GroupDetail/home_group.d
 import 'package:social_network_app_mobile/screens/Group/GroupDetail/manager.dart';
 import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+import 'package:social_network_app_mobile/widgets/skeleton.dart';
 
 import '../../../widgets/back_icon_appbar.dart';
 
@@ -43,9 +44,6 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
         ref
             .read(groupListControllerProvider.notifier)
             .getGroupRole({'role': 'admin'}, widget.id);
-        ref
-            .read(groupListControllerProvider.notifier)
-            .getMemberQuestion(widget.id);
         ref
             .read(groupListControllerProvider.notifier)
             .getGroupRole({'role': 'moderator'}, widget.id);
@@ -113,7 +111,7 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
                   _drawerscaffoldkey.currentState!.openEndDrawer();
                 },
               )
-            : buildCircularProgressIndicator(),
+            : SkeletonCustom().groupSkeleton(context),
       ),
     );
   }

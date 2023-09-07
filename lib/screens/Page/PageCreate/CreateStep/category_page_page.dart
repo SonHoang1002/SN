@@ -119,132 +119,134 @@ class _CategoryPageState extends ConsumerState<CategoryPage> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  height: height * 0.78055,
-                  width: size.width - 18,
-                  child: ListView(
-                    children: [
-                      Container(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                          child: Column(children: [
-                            Wrap(
-                              children: [
-                                Text(
-                                  'Hạng mục nào mô tả chính xác nhất về ${widget.dataCreate['title']}?',
-                                  style: const TextStyle(
-                                      // color:  white,
-                                      fontSize: 21,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const Text(
-                                'Nhờ hạng mục, mọi người sẽ tìm thấy Trang này trong kết quả tìm kiếm. Bạn có thể thêm đến 3 hạng mục.',
-                                style: TextStyle(
-                                    // color:  white,
-                                    fontSize: 16)),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(0, 3, 0, 6),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: focus.hasFocus
-                                          ? secondaryColor
-                                          : greyColor,
-                                      width: focus.hasFocus ? 2 : 1),
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(8))),
-                              child: Column(
+                Expanded(
+                  child: SizedBox(
+                    width: size.width - 18,
+                    child: ListView(
+                      children: [
+                        Container(
+                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                            child: Column(children: [
+                              Wrap(
                                 children: [
-                                  if (categorySelected.isNotEmpty)
-                                    Container(
-                                      width: width,
-                                      padding:
-                                          const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                      child: Wrap(
-                                          children: List.generate(
-                                              categorySelected.length,
-                                              (index) => selectedArea(context,
-                                                  categorySelected[index]))),
-                                    ),
-                                  if (categorySelected.length < 3)
-                                    TextFormField(
-                                      focusNode: focus,
-                                      controller: _categoryController,
-                                      onChanged: (value) {
-                                        handleSearch(value);
-                                      },
-                                      decoration: const InputDecoration(
-                                          border: InputBorder.none,
-                                          suffixIcon: Icon(Icons.search),
-                                          labelText: CategoryPageConstants
-                                              .PLACEHOLDER_CATEGORY,
-                                          labelStyle: TextStyle(
-                                              color: Colors.grey, fontSize: 16),
-                                          contentPadding: EdgeInsets.fromLTRB(
-                                              10, 12, 0, 0)),
-                                    ),
+                                  Text(
+                                    'Hạng mục nào mô tả chính xác nhất về ${widget.dataCreate['title']}?',
+                                    style: const TextStyle(
+                                        // color:  white,
+                                        fontSize: 21,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ],
                               ),
-                            ),
-                            _categoryController.text.trim().isNotEmpty
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: greyColor,
-                                        ),
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(5))),
-                                    height: 238,
-                                    child: ListView.builder(
-                                      itemBuilder: (context, index) {
-                                        return suggestComponent(
-                                            categorySearch[index]);
-                                      },
-                                      itemCount: categorySearch.length,
-                                    ),
-                                  )
-                                : Container(),
-                            // hang muc pho bien
-                            if (categorySelected.length < 3)
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Text(
+                                  'Nhờ hạng mục, mọi người sẽ tìm thấy Trang này trong kết quả tìm kiếm. Bạn có thể thêm đến 3 hạng mục.',
+                                  style: TextStyle(
+                                      // color:  white,
+                                      fontSize: 16)),
+                              const SizedBox(
+                                height: 10,
+                              ),
                               Container(
-                                padding:
-                                    const EdgeInsets.only(left: 10, top: 10),
-                                child: const Row(
-                                  // ignore: prefer_const_literals_to_create_immutables
+                                padding: const EdgeInsets.fromLTRB(0, 3, 0, 6),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: focus.hasFocus
+                                            ? secondaryColor
+                                            : greyColor,
+                                        width: focus.hasFocus ? 2 : 1),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(8))),
+                                child: Column(
                                   children: [
-                                    Text(
-                                      CategoryPageConstants.TITLE,
-                                      style: TextStyle(fontSize: 15),
-                                    ),
+                                    if (categorySelected.isNotEmpty)
+                                      Container(
+                                        width: width,
+                                        padding: const EdgeInsets.fromLTRB(
+                                            5, 0, 5, 0),
+                                        child: Wrap(
+                                            children: List.generate(
+                                                categorySelected.length,
+                                                (index) => selectedArea(context,
+                                                    categorySelected[index]))),
+                                      ),
+                                    if (categorySelected.length < 3)
+                                      TextFormField(
+                                        focusNode: focus,
+                                        controller: _categoryController,
+                                        onChanged: (value) {
+                                          handleSearch(value);
+                                        },
+                                        decoration: const InputDecoration(
+                                            border: InputBorder.none,
+                                            suffixIcon: Icon(Icons.search),
+                                            labelText: CategoryPageConstants
+                                                .PLACEHOLDER_CATEGORY,
+                                            labelStyle: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 16),
+                                            contentPadding: EdgeInsets.fromLTRB(
+                                                10, 12, 0, 0)),
+                                      ),
                                   ],
                                 ),
                               ),
-                            if (categorySelected.length < 3)
-                              SizedBox(
-                                width: width,
-                                child: Wrap(
-                                    children: List.generate(
-                                        categoryPopular
-                                            .where((element) =>
-                                                !(categorySelected
-                                                    .contains(element)))
-                                            .length,
-                                        (index) => selectedArea(
-                                            context,
-                                            categoryPopular
-                                                .where((element) =>
-                                                    !(categorySelected
-                                                        .contains(element)))
-                                                .toList()[index]))),
-                              ),
-                          ])),
-                    ],
+                              _categoryController.text.trim().isNotEmpty
+                                  ? Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: greyColor,
+                                          ),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(5))),
+                                      height: 238,
+                                      child: ListView.builder(
+                                        itemBuilder: (context, index) {
+                                          return suggestComponent(
+                                              categorySearch[index]);
+                                        },
+                                        itemCount: categorySearch.length,
+                                      ),
+                                    )
+                                  : Container(),
+                              // hang muc pho bien
+                              if (categorySelected.length < 3)
+                                Container(
+                                  padding:
+                                      const EdgeInsets.only(left: 10, top: 10),
+                                  child: const Row(
+                                    // ignore: prefer_const_literals_to_create_immutables
+                                    children: [
+                                      Text(
+                                        CategoryPageConstants.TITLE,
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              if (categorySelected.length < 3)
+                                SizedBox(
+                                  width: width,
+                                  child: Wrap(
+                                      children: List.generate(
+                                          categoryPopular
+                                              .where((element) =>
+                                                  !(categorySelected
+                                                      .contains(element)))
+                                              .length,
+                                          (index) => selectedArea(
+                                              context,
+                                              categoryPopular
+                                                  .where((element) =>
+                                                      !(categorySelected
+                                                          .contains(element)))
+                                                  .toList()[index]))),
+                                ),
+                            ])),
+                      ],
+                    ),
                   ),
                 ),
                 Padding(

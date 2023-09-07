@@ -27,6 +27,12 @@ class GroupApi {
     return response;
   }
 
+  Future getUserInvitedGroup(id, params) async {
+    final response =
+        await Api().getRequestBase("/api/v1/groups/$id/invitations", params);
+    return response;
+  }
+
   Future removeGroupRequest(id) async {
     return await Api().deleteRequestBase('/api/v1/groups/$id/leave', null);
   }
@@ -127,6 +133,12 @@ class GroupApi {
   fetchScheduledStatus(dynamic id) async {
     return await Api()
         .getRequestBase("/api/v1/groups/$id/scheduled_statuses", null);
+  }
+
+  deleteScheduledStatus(dynamic id, dynamic postId) async {
+    return await Api().deleteRequestBase(
+        "/api/v1/groups/$id/scheduled_statuses?scheduled_status_id=$postId",
+        null);
   }
 
   fetchRules(dynamic id) async {
