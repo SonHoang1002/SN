@@ -715,7 +715,6 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
               height: 16,
             ),
           ),
-          isGrey: true,
           handlePress: () {
             showBarModalBottomSheet(
                 context: context,
@@ -814,14 +813,16 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
               context: context,
               builder: (BuildContext context) => CupertinoAlertDialog(
                 title: const Text('Rời khỏi nhóm ?'),
-                content: const Column(
+                content: Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Text(
-                        'Bạn có muốn rời khỏi Nhóm test không ? Bạn cũng có thể tắt thông báo cho bài viết mới hoặc báo cáo nhóm này',
-                        style: TextStyle(fontSize: 13)),
+                        'Bạn có muốn rời khỏi ${widget.groupDetail?['title'] ?? "nhóm"} không ? Bạn cũng có thể tắt thông báo cho bài viết mới hoặc báo cáo nhóm này',
+                        style:
+                            const TextStyle(fontSize: 13, color: blackColor)),
+
                   ],
                 ),
                 actions: <CupertinoDialogAction>[

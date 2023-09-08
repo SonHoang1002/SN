@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/data/report.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
@@ -135,6 +136,14 @@ class ReportChildren extends ConsumerWidget {
           "report_category_id": report['id']
         };
         response = await PostApi().reportPostApi(jsonEncode(data));
+      } else if (entityType == "group") {
+        data = {
+          "entity_id": entityReport,
+          "entity_type": "Group",
+          "note": "",
+          "report_category_id": report['id']
+        };
+        response = await PostApi().reportEventPostApi(jsonEncode(data));
       } else if (entityReport['account'] == null) {
         data = {
           "id": entityReport['id'],

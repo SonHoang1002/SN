@@ -79,6 +79,7 @@ class CreateNewFeed extends ConsumerStatefulWidget {
   final bool? beforeHasVideo;
   final Function? popFunction;
   final bool? edit;
+  final String? sharedGroupId;
 
   const CreateNewFeed(
       {Key? key,
@@ -92,7 +93,8 @@ class CreateNewFeed extends ConsumerStatefulWidget {
       this.isInGroup,
       this.beforeHasVideo = false,
       this.popFunction,
-      this.edit})
+      this.edit,
+      this.sharedGroupId})
       : super(key: key);
 
   @override
@@ -551,12 +553,13 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       if (widget.beforeHasVideo!) {
         ref.read(disableMomentController.notifier).setDisableMoment(false);
       }
-      if(widget.edit == true){
-        Navigator.of(context)..pop()
-                              ..pop()
-                              ..pop()
-                              ..pop();
-      }else{
+      if (widget.edit == true) {
+        Navigator.of(context)
+          ..pop()
+          ..pop()
+          ..pop()
+          ..pop();
+      } else {
 
         Navigator.pop(context);
       }
@@ -629,6 +632,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       }
       if (widget.groupId != null && widget.isInGroup == true) {
         data = {...data, "group_id": widget.groupId};
+      }
+      if (widget.sharedGroupId != null) {
+        data = {...data, "shared_group_id": widget.sharedGroupId};
       }
       var response = await PostApi().createStatus(data);
       if (response != null) {

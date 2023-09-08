@@ -23,18 +23,18 @@ class LifeEventCategories extends ConsumerStatefulWidget {
   final String? type;
   final bool? edit;
   final String? school;
-  
-  const LifeEventCategories(
-      {Key? key,
-      this.listLifeEvent,
-      this.eventSelected,
-      required this.handleUpdateData,
-      this.type,
-      this.edit,
-      this.school,})
-      : super(key: key);
 
- @override
+  const LifeEventCategories({
+    Key? key,
+    this.listLifeEvent,
+    this.eventSelected,
+    required this.handleUpdateData,
+    this.type,
+    this.edit,
+    this.school,
+  }) : super(key: key);
+
+  @override
   _LifeEventCategoriesState createState() => _LifeEventCategoriesState();
 }
 
@@ -92,8 +92,6 @@ class _LifeEventCategoriesState extends ConsumerState<LifeEventCategories> {
                       if (lifeEvent['place_id'] != null) {
                         widget.handleUpdateData('updateLifeEvent', lifeEvent);
                         if (widget.type != null && widget.type == 'children') {
-                          print("aaaaaaaaaaaaaaaaaaaa");
-                          print("widget.edit: ${widget.edit}");
                           ref
                               .read(draftFeedController.notifier)
                               .saveDraftFeed(DraftFeed(lifeEvent: lifeEvent));

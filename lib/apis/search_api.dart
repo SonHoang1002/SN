@@ -16,4 +16,9 @@ class SearchApi {
   Future deleteSearchHistoriesApi(id) async {
     return await Api().deleteRequestBase('/api/v1/search_histories/$id', null);
   }
+
+  Future searchInGroup({required String id, required String query}) async {
+    return await Api().getRequestBase(
+        '/api/v1/timelines/group/$id/search', {"q": query, "limit": 5});
+  }
 }
