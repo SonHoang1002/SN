@@ -596,6 +596,46 @@ class GroupListController extends StateNotifier<GroupListState> {
     }
   }
 
+  updateApprovalList(params) {
+    int indexToReplace = state.waitingApproval
+        .indexWhere((element) => element["id"] == params["id"]);
+    List<Map> updatedWaitingApproval = List.from(state.waitingApproval);
+
+    updatedWaitingApproval[indexToReplace] = params;
+
+    if (params != null) {
+      state = state.copyWith(
+        groupAdmin: state.groupAdmin,
+        groupMember: state.groupMember,
+        isMoreGroupAdmin: state.isMoreGroupAdmin,
+        isMoreGroupMember: state.isMoreGroupMember,
+        memberQuestionList: state.memberQuestionList,
+        groupFeed: state.groupFeed,
+        yourGroup: state.yourGroup,
+        groupDiscover: state.groupDiscover,
+        groupInvitedRequest: state.groupInvitedRequest,
+        groupDetail: state.groupDetail,
+        contentReported: state.contentReported,
+        waitingApproval: updatedWaitingApproval,
+        requestMember: state.requestMember,
+        notiApproval: state.notiApproval,
+        groupPost: state.groupPost,
+        groupPins: state.groupPins,
+        groupRoleMember: state.groupRoleMember,
+        groupRoleFriend: state.groupRoleFriend,
+        groupRoleAdmin: state.groupRoleAdmin,
+        groupRoleMorderator: state.groupRoleMorderator,
+        groupImage: state.groupImage,
+        groupAlbum: state.groupAlbum,
+        groupDetailAlbum: state.groupDetailAlbum,
+        groupOther: state.groupOther,
+        groupInviteAdmin: state.groupInviteAdmin,
+        groupInviteMember: state.groupInviteMember,
+        groupInviteJoin: state.groupInviteJoin,
+      );
+    }
+  }
+
   getReportedStatus(id) async {
     List response = await GroupApi().fetchReportedStatus(id) ?? [];
     if (response.isNotEmpty) {

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/apis/bookmark_api.dart';
+import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/saved/saved_menu_item_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -86,9 +88,16 @@ class _BookmarkPageState extends ConsumerState<BookmarkPage> {
       var response = await BookmarkApi().bookmarkApi(data);
 
       if (response != null && mounted) {
-        ref
-            .read(postControllerProvider.notifier)
-            .actionUpdateDetailInPost(widget.type, response,);
+        if (widget.type == postApproval) {
+          ref.read(groupListControllerProvider.notifier).updateApprovalList(
+                response,
+              );
+        } else {
+          ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+                widget.type,
+                response,
+              );
+        }
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Đã lưu vào ${item['name']}")));
         if (mounted) {

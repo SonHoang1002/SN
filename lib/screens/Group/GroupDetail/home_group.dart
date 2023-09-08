@@ -614,13 +614,17 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                     : SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
-                            return Post(
-                              type: POST_TYPE.postGroup,
-                              post: postGroup[index],
-                              haveSuggest: false,
-                              isInGroup: true,
-                              groupData: widget.groupDetail,
-                            );
+                            if (postGroup[index]["visibility"] != "rejected") {
+                              return Post(
+                                type: POST_TYPE.postGroup,
+                                post: postGroup[index],
+                                haveSuggest: false,
+                                isInGroup: true,
+                                groupData: widget.groupDetail,
+                              );
+                            } else {
+                              return Container();
+                            }
                           },
                           childCount: postGroup.length,
                         ),
@@ -817,7 +821,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                     ),
                     Text(
                         'Bạn có muốn rời khỏi Nhóm test không ? Bạn cũng có thể tắt thông báo cho bài viết mới hoặc báo cáo nhóm này',
-                        style: TextStyle(fontSize: 13, color: blackColor)),
+                        style: TextStyle(fontSize: 13)),
                   ],
                 ),
                 actions: <CupertinoDialogAction>[
