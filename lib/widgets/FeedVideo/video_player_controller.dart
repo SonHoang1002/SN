@@ -98,7 +98,7 @@ class _VideoPlayerHasControllerState
     widget.hasDispose == true
         ? WidgetsBinding.instance.removeObserver(this)
         : null;
-
+    chewieController?.videoPlayerController.setVolume(0.0);
     if (betterPlayer!.videoPlayerController != null &&
         betterPlayer!.videoId != widget.media['id']) {
       chewieController!.pause();
@@ -170,14 +170,21 @@ class _VideoPlayerHasControllerState
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final selectedVideo = ref.watch(selectedVideoProvider);
     if (selectedVideo != null) {
-      chewieController!.videoPlayerController.pause();  
-    }
-    if(checkLicenseVideoWithType() && isVisible && isPlaying && widget.isFocus == true ){ 
-      chewieController?.videoPlayerController.play();
-    }else{ 
       chewieController?.videoPlayerController.pause();
+      chewieController?.videoPlayerController.setVolume(0.0);
+    }
+    if (checkLicenseVideoWithType() &&
+        isVisible &&
+        isPlaying &&
+        widget.isFocus == true) {
+      chewieController?.videoPlayerController.play();
+      chewieController?.videoPlayerController.setVolume(1.0);
+    } else {
+      chewieController?.videoPlayerController.pause();
+      chewieController?.videoPlayerController.setVolume(0.0);
     }
     return AspectRatio(
       aspectRatio:
@@ -195,13 +202,16 @@ class _VideoPlayerHasControllerState
                 if (isVisible) {
                   if (selectedVideo != null) {
                     chewieController!.videoPlayerController.pause();
+                    chewieController?.videoPlayerController.setVolume(0.0);
                   } else {
                     if (isPlaying && widget.isFocus == true) {
                       chewieController!.videoPlayerController.play();
+                      chewieController?.videoPlayerController.setVolume(1.0);
                     }
                   }
                 } else {
                   chewieController!.videoPlayerController.pause();
+                  chewieController?.videoPlayerController.setVolume(0.0);
                 }
               });
             }

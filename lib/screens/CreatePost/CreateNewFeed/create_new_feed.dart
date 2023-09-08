@@ -16,11 +16,9 @@ import 'package:social_network_app_mobile/apis/media_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
-import 'package:social_network_app_mobile/constant/type_constant.dart';
 import 'package:social_network_app_mobile/data/background_post.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
-import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
@@ -61,7 +59,9 @@ import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/grid_layout_image.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
+import '../../../constant/type_constant.dart';
 import '../../../providers/create_feed/feed_draft_provider.dart';
+import '../../../providers/disable_moment_provider.dart';
 
 const EDIT_POST = "edit_post";
 
@@ -154,6 +154,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     checkin = draftContent.checkin;
     previewUrlData = draftContent.previewUrlData;
     poll = draftContent.poll;
+    lifeEvent = draftContent.lifeEvent;
     if (mounted && widget.post != null) {
       setState(() {
         checkin = widget.post['place'];
@@ -552,7 +553,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       if (widget.beforeHasVideo!) {
         ref.read(disableMomentController.notifier).setDisableMoment(false);
       }
-
       if (widget.edit == true) {
         Navigator.of(context)
           ..pop()
@@ -560,9 +560,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           ..pop()
           ..pop();
       } else {
+
         Navigator.pop(context);
       }
-      Navigator.pop(context);
       // prepare data for api
       var data = {"status": content, "visibility": visibility['key']};
       if (backgroundSelected != null) {
@@ -614,7 +614,10 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         data = {...data, "media_ids": mediasId};
       }
       if (lifeEvent != null) {
-        data = {...data, "life_event": lifeEvent};
+        data = {
+          ...data,
+          "life_event": lifeEvent,
+        };
       }
       if (postDiscussion != null) {
         data['course_id'] = widget.postDiscussion['course_id'];

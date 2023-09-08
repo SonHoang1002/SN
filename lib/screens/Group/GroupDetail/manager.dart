@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupDetail/approval_group.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupSchedule/group_list_schedule.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupSetting/group_setting.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
 
@@ -64,267 +65,290 @@ class _ManagerDetailState extends ConsumerState<ManagerDetail> {
     ];
     final theme = pv.Provider.of<ThemeManager>(context);
 
-    return SingleChildScrollView(
-      child: Container(
-        width: double.infinity,
-        color: theme.isDarkMode ? Colors.grey[800] : Colors.grey[200],
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Cần xét duyệt',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: theme.isDarkMode ? Colors.black : Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: requestManager.length,
-                  separatorBuilder: (context, index) => const Divider(
-                    height: 1,
-                    color: Colors.grey,
-                    thickness: 1,
-                    indent: 56,
-                    endIndent: 10,
+    void fetchUpdateData() async {
+      await ref
+          .read(groupListControllerProvider.notifier)
+          .getPendingStatus(widget.groupDetail["id"]);
+    }
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        fetchUpdateData();
+      },
+      child: SingleChildScrollView(
+        child: Container(
+          width: double.infinity,
+          color: theme.isDarkMode ? Colors.grey[800] : Colors.grey[200],
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Cần xét duyệt',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return ApprovalGroup(
-                              menuSelected: requestManager[index]['key'],
-                            );
-                          },
-                        ));
-                      },
-                      dense: true,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 8.0,
-                        vertical: 0.0,
-                      ),
-                      visualDensity: const VisualDensity(
-                        horizontal: -4,
-                        vertical: -1,
-                      ),
-                      leading: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Image.asset(
-                          requestManager[index]['icon'],
-                          width: 18,
-                          height: 18,
-                          color: theme.isDarkMode ? Colors.white : Colors.black,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: theme.isDarkMode ? Colors.black : Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: requestManager.length,
+                    separatorBuilder: (context, index) => const Divider(
+                      height: 1,
+                      color: Colors.grey,
+                      thickness: 1,
+                      indent: 56,
+                      endIndent: 10,
+                    ),
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return ApprovalGroup(
+                                menuSelected: requestManager[index]['key'],
+                                groupDetail: widget.groupDetail,
+                              );
+                            },
+                          ));
+                        },
+                        dense: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 0.0,
                         ),
-                      ),
-                      title: Text(requestManager[index]['label']),
-                      subtitle: RichText(
-                        text: TextSpan(
-                          children: [
-                            if (int.parse(requestManager[index]['noti']) > 0)
-                              const WidgetSpan(
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.only(bottom: 4.0, right: 3.0),
-                                  child: Icon(
-                                    Icons.circle,
-                                    size: 8,
-                                    color: Colors.blue,
+                        visualDensity: const VisualDensity(
+                          horizontal: -4,
+                          vertical: -1,
+                        ),
+                        leading: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Image.asset(
+                            requestManager[index]['icon'],
+                            width: 18,
+                            height: 18,
+                            color:
+                                theme.isDarkMode ? Colors.white : Colors.black,
+                          ),
+                        ),
+                        title: Text(requestManager[index]['label']),
+                        subtitle: RichText(
+                          text: TextSpan(
+                            children: [
+                              if (int.parse(requestManager[index]['noti']) > 0)
+                                const WidgetSpan(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: 4.0, right: 3.0),
+                                    child: Icon(
+                                      Icons.circle,
+                                      size: 8,
+                                      color: Colors.blue,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            TextSpan(
-                                text:
-                                    '${requestManager[index]['noti']} mục mới hôm nay',
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                )),
-                          ],
+                              TextSpan(
+                                  text:
+                                      '${requestManager[index]['noti']} mục mới hôm nay',
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                  )),
+                            ],
+                          ),
                         ),
-                      ),
-                      trailing: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(requestManager[index]['noti']),
-                      ),
-                    );
-                  },
+                        trailing: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(requestManager[index]['noti']),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text(
-                'Lối tắt đến công cụ',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const FeatureItem(
-                imagePath: 'assets/groups/settingGroup.png',
-                title: 'Chat cộng đồng',
-                subtitle: '4 gợi ý chat dành cho nhóm của bạn',
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              const FeatureItem(
-                imagePath: 'assets/groups/activityLog.png',
-                title: 'Nhật ký hoạt động',
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              const FeatureItem(
-                imagePath: 'assets/groups/scheduledStatus.png',
-                title: 'Bài viết đã lên lịch',
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              const FeatureItem(
-                imagePath: 'assets/groups/rulesGroup.png',
-                title: 'Quy tắc nhóm',
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              const FeatureItem(
-                imagePath: 'assets/groups/questionJoin.png',
-                title: 'Câu hỏi chọn thành viên',
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text(
-                'Cài đặt',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                const Text(
+                  'Lối tắt đến công cụ',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) => GroupSetting(
-                                groupDetail: widget.groupDetail,
-                              )));
-                },
-                child: const FeatureItem(
+                const SizedBox(
+                  height: 10,
+                ),
+                const FeatureItem(
                   imagePath: 'assets/groups/settingGroup.png',
-                  title: 'Cài đặt nhóm',
-                  subtitle: 'Quản lý cuộc thảo luận, quyền và vai trò',
+                  title: 'Chat cộng đồng',
+                  subtitle: '4 gợi ý chat dành cho nhóm của bạn',
                 ),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              const FeatureItem(
-                imagePath: 'assets/groups/addFeature.png',
-                title: 'Thêm tính năng',
-                subtitle:
-                    'Chọn định dạng bài viết, huy hiệu và các tính năng khác',
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              const FeatureItem(
-                imagePath: 'assets/groups/settingProfile.png',
-                title: 'Cài đặt cá nhân',
-                subtitle: 'Thay đổi thông báo và xem nội dung cá nhân',
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text(
-                'Hỗ trợ',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                const SizedBox(
+                  height: 5,
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const FeatureItem(
-                imagePath: 'assets/groups/centerHelper.png',
-                title: 'Trung tâm hỗ trợ',
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              const FeatureItem(
-                imagePath: 'assets/groups/centerCommunity.png',
-                title: 'Trung tâm cộng đồng',
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        height: 50,
-                        width: 50,
-                        margin: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: theme.isDarkMode ? Colors.black : Colors.white,
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: Image.asset(
-                          'assets/groups/stopGroup.png',
-                          width: 18,
-                          height: 18,
-                        ),
-                      ),
-                      const Text('Tạm dừng nhóm')
-                    ],
+                const FeatureItem(
+                  imagePath: 'assets/groups/activityLog.png',
+                  title: 'Nhật ký hoạt động',
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(CupertinoPageRoute(
+                        builder: (context) => GroupListSchedule(
+                            groupDetail: widget.groupDetail)));
+                  },
+                  child: const FeatureItem(
+                    imagePath: 'assets/groups/scheduledStatus.png',
+                    title: 'Bài viết đã lên lịch',
                   ),
-                  Column(
-                    children: [
-                      Container(
-                        height: 50,
-                        width: 50,
-                        margin: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: theme.isDarkMode ? Colors.black : Colors.white,
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: Image.asset(
-                          'assets/groups/leaveGroup.png',
-                          width: 18,
-                          height: 18,
-                        ),
-                      ),
-                      const Text('Rời khỏi nhóm')
-                    ],
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                const FeatureItem(
+                  imagePath: 'assets/groups/rulesGroup.png',
+                  title: 'Quy tắc nhóm',
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                const FeatureItem(
+                  imagePath: 'assets/groups/questionJoin.png',
+                  title: 'Câu hỏi chọn thành viên',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'Cài đặt',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-            ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) => GroupSetting(
+                                  groupDetail: widget.groupDetail,
+                                )));
+                  },
+                  child: const FeatureItem(
+                    imagePath: 'assets/groups/settingGroup.png',
+                    title: 'Cài đặt nhóm',
+                    subtitle: 'Quản lý cuộc thảo luận, quyền và vai trò',
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                const FeatureItem(
+                  imagePath: 'assets/groups/addFeature.png',
+                  title: 'Thêm tính năng',
+                  subtitle:
+                      'Chọn định dạng bài viết, huy hiệu và các tính năng khác',
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                const FeatureItem(
+                  imagePath: 'assets/groups/settingProfile.png',
+                  title: 'Cài đặt cá nhân',
+                  subtitle: 'Thay đổi thông báo và xem nội dung cá nhân',
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'Hỗ trợ',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const FeatureItem(
+                  imagePath: 'assets/groups/centerHelper.png',
+                  title: 'Trung tâm hỗ trợ',
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                const FeatureItem(
+                  imagePath: 'assets/groups/centerCommunity.png',
+                  title: 'Trung tâm cộng đồng',
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          margin: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color:
+                                theme.isDarkMode ? Colors.black : Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: Image.asset(
+                            'assets/groups/stopGroup.png',
+                            width: 18,
+                            height: 18,
+                          ),
+                        ),
+                        const Text('Tạm dừng nhóm')
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          margin: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color:
+                                theme.isDarkMode ? Colors.black : Colors.white,
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: Image.asset(
+                            'assets/groups/leaveGroup.png',
+                            width: 18,
+                            height: 18,
+                          ),
+                        ),
+                        const Text('Rời khỏi nhóm')
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+              ],
+            ),
           ),
         ),
       ),

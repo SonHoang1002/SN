@@ -16,7 +16,11 @@ import 'package:social_network_app_mobile/screens/MarketPlace/widgets/circular_p
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
+
 import 'package:social_network_app_mobile/widgets/report_category.dart';
+
+import 'package:social_network_app_mobile/widgets/skeleton.dart';
+
 
 import '../../../apis/post_api.dart';
 import '../../../widgets/back_icon_appbar.dart';
@@ -57,9 +61,6 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
         ref
             .read(groupListControllerProvider.notifier)
             .getGroupRole({'role': 'admin'}, widget.id);
-        ref
-            .read(groupListControllerProvider.notifier)
-            .getMemberQuestion(widget.id);
         ref
             .read(groupListControllerProvider.notifier)
             .getGroupRole({'role': 'moderator'}, widget.id);
@@ -511,7 +512,7 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
                   _drawerscaffoldkey.currentState!.openEndDrawer();
                 },
               )
-            : buildCircularProgressIndicator(),
+            : SkeletonCustom().groupSkeleton(context),
       ),
     );
   }

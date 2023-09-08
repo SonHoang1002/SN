@@ -9,6 +9,7 @@ import 'package:social_network_app_mobile/apis/bookmark_api.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
+import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
@@ -44,12 +45,19 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
     var response =
         await BookmarkApi().unBookmarkApi({"bookmark_id": widget.post['id']});
     if (response != null && mounted) {
-      ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
-          widget.type, response,
-          isIdCurrentUser: widget.friendData != null
-              ? ref.watch(meControllerProvider)[0]['id'] ==
-                  widget.friendData['id']
-              : true);
+      if (widget.type == postApproval) {
+        ref.read(groupListControllerProvider.notifier).updateApprovalList(
+              response,
+            );
+      } else {
+        ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+            widget.type, response,
+            isIdCurrentUser: widget.friendData != null
+                ? ref.watch(meControllerProvider)[0]['id'] ==
+                    widget.friendData['id']
+                : true);
+      }
+
       Navigator.pop(context);
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text("Bỏ lưu thành công")));
@@ -65,12 +73,19 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
         ...widget.post,
         "notify": key == "unopen_notification_post" ? false : true
       };
-      ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
-          widget.type, newData,
-          isIdCurrentUser: widget.friendData != null
-              ? ref.watch(meControllerProvider)[0]['id'] ==
-                  widget.friendData['id']
-              : true);
+      if (widget.type == postApproval) {
+        ref.read(groupListControllerProvider.notifier).updateApprovalList(
+              newData,
+            );
+      } else {
+        ref.read(postControllerProvider.notifier).actionUpdateDetailInPost(
+            widget.type, newData,
+            isIdCurrentUser: widget.friendData != null
+                ? ref.watch(meControllerProvider)[0]['id'] ==
+                    widget.friendData['id']
+                : true);
+      }
+
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(key == "unopen_notification_post"
@@ -287,16 +302,16 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
                 widget.friendData['id'] == meData['id'])
       },
       {
-        "key": widget.post['notify']
+        "key": widget.post['notify'] != null && widget.post['notify']
             ? "unopen_notification_post"
             : "open_notification_post",
-        "label": widget.post['notify']
+        "label": widget.post['notify'] != null && widget.post['notify']
             ? "Tắt thông báo bài viết này"
             : "Bật thông báo bài viết này",
-        "icon": widget.post['notify']
+        "icon": widget.post['notify'] != null && widget.post['notify']
             ? FontAwesomeIcons.solidBellSlash
             : FontAwesomeIcons.solidBell,
-        "description": widget.post['notify']
+        "description": widget.post['notify'] != null && widget.post['notify']
             ? "Không nhận thông báo từ bài viết này"
             : "Bạn sẽ nhận được thông báo của bài viết này",
         "isShow": true
@@ -371,15 +386,17 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
             const SizedBox(
               height: 12.0,
             ),
-            Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: BorderRadius.circular(8)),
-                child: BlockAction(
-                  item: actionsPost.last,
-                  handleAction: handleAction,
-                )),
+            widget.type != "post_approval"
+                ? Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(8)),
+                    child: BlockAction(
+                      item: actionsPost.last,
+                      handleAction: handleAction,
+                    ))
+                : Container(),
           ],
         ),
       ),
@@ -406,6 +423,7 @@ class AlertDialogDelete extends ConsumerWidget {
         ref
             .read(pageControllerProvider.notifier)
             .actionHiddenDeletePost(type, post);
+      } else if (type == postSchedule) {
       } else {
         ref.read(postControllerProvider.notifier).actionHiddenDeletePost(
             type, post,

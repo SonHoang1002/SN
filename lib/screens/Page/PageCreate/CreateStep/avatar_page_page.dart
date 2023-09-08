@@ -54,8 +54,7 @@ class _AvatarPageState extends State<AvatarPage> {
             FocusManager.instance.primaryFocus!.unfocus();
           }),
           child: Column(children: [
-            SizedBox(
-              height: height * 0.78055,
+            Expanded(
               child: ListView(
                 children: [
                   Container(
