@@ -7,6 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:social_network_app_mobile/providers/drawer_status_provider.dart';
 import 'package:social_network_app_mobile/providers/moment_provider.dart';
 import 'package:social_network_app_mobile/screens/Menu/menu.dart';
 import 'package:social_network_app_mobile/screens/Moment/moment_pageview.dart';
@@ -168,6 +169,9 @@ class _MomentState extends ConsumerState<Moment>
               child: const Menu(),
             ),
             onDrawerChanged: (isOpened) {
+              ref
+                  .read(drawerStatusProviderController.notifier)
+                  .setDrawerStatus(isOpened);
               setState(() {
                 _isDisable = isOpened || widget.isDisable!;
               });

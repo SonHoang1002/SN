@@ -17,6 +17,7 @@ import 'package:social_network_app_mobile/home/violation_of_standards.dart';
 import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
 import 'package:social_network_app_mobile/providers/disable_watch_provider.dart';
+import 'package:social_network_app_mobile/providers/drawer_status_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/notification/notification_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
@@ -128,6 +129,9 @@ class _HomeState extends ConsumerState<Home>
   }
 
   void _onDrawerChanged(bool isOpened) {
+    print("isOpened isOpened ${isOpened}");
+    ref.read(drawerStatusProviderController.notifier).setDrawerStatus(isOpened);
+
     /// only disable watch video, moment disable in [moment.dart] file
     if (_selectedIndex == 3) {
       if (isOpened == true) {
@@ -138,7 +142,7 @@ class _HomeState extends ConsumerState<Home>
           ref
               .read(disableVideoController.notifier)
               .setDisableVideo(currentTab, false, disableBefore: true);
-        }
+           }
       }
     }
   }

@@ -139,7 +139,7 @@ class _CreatePostState extends ConsumerState<CreatePost> {
                                 pushCustomCupertinoPageRoute(
                                     context,
                                     CreateNewFeed(
-                                      beforeHasVideo: true,
+                                      fromScreenVideo: true,
                                       reloadFunction: (type, newData) {
                                         widget.callbackFunction != null
                                             ? widget.callbackFunction!(

@@ -224,7 +224,6 @@ class _UserPageState extends ConsumerState<UserPage>
             setState(() {
               userData = ref.watch(userInformationProvider).userInfor;
               userAbout = ref.watch(userInformationProvider).userMoreInfor;
-              print("userData: $userAbout");
               lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
               postUser = (id == ref.watch(meControllerProvider)[0]['id']
                   ? ref.watch(postControllerProvider).postUserPage
