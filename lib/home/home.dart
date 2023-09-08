@@ -53,7 +53,7 @@ class Home extends ConsumerStatefulWidget {
 
 class _HomeState extends ConsumerState<Home>
     with SingleTickerProviderStateMixin {
-  int _selectedIndex = 3;
+  int _selectedIndex = 0;
   ValueNotifier<bool> isShowSnackBar = ValueNotifier(false);
   ValueNotifier<bool> showBottomNavigatorNotifier = ValueNotifier(true);
   final Connectivity _connectivity = Connectivity();
@@ -76,7 +76,12 @@ class _HomeState extends ConsumerState<Home>
 
   void _onItemTapped(int index) {
     if (index == 2) {
-      ref.read(disableMomentController.notifier).setDisableMoment(true);
+      if (_selectedIndex == 1) {
+        ref.read(disableMomentController.notifier).setDisableMoment(true);
+      }
+      if (_selectedIndex == 3) {
+        ref.read(disableVideoController.notifier).disableAllVideo();
+      }
       showBarModalBottomSheet(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           context: context,
@@ -90,8 +95,20 @@ class _HomeState extends ConsumerState<Home>
                     });
                   }
                 },
-              ))).whenComplete(() =>
-          ref.read(disableMomentController.notifier).setDisableMoment(false));
+              ))).whenComplete(() {
+        if (_selectedIndex == 1) {
+          ref.read(disableMomentController.notifier).setDisableMoment(false);
+        }
+        if (_selectedIndex == 3) {
+          final currentTab =
+              ref.watch(videoCurrentTabController).videoCurrentTab;
+          if (currentTab != "") {
+            ref
+                .read(disableVideoController.notifier)
+                .setDisableVideo(currentTab, false, disableBefore: true);
+          }
+        }
+      });
     } else {
       if (index == 3) {
         final currentTab = ref.watch(videoCurrentTabController).videoCurrentTab;
@@ -107,6 +124,22 @@ class _HomeState extends ConsumerState<Home>
             .read(disableMomentController.notifier)
             .setDisableMoment(index == 1 ? false : true);
       });
+    }
+  }
+
+  void _onDrawerChanged(bool isOpened) {
+    /// only disable watch video, moment disable in [moment.dart] file
+    if (_selectedIndex == 3) {
+      if (isOpened == true) {
+        ref.read(disableVideoController.notifier).disableAllVideo();
+      } else {
+        final currentTab = ref.watch(videoCurrentTabController).videoCurrentTab;
+        if (currentTab != "") {
+          ref
+              .read(disableVideoController.notifier)
+              .setDisableVideo(currentTab, false, disableBefore: true);
+        }
+      }
     }
   }
 
@@ -667,19 +700,7 @@ class _HomeState extends ConsumerState<Home>
                 child: const Menu(),
               ),
         onDrawerChanged: (isOpened) {
-          if (_selectedIndex == 3) {
-            if (isOpened == true) {
-              ref.read(disableVideoController.notifier).disableAllVideo();
-            } else {
-              final currentTab =
-                  ref.watch(videoCurrentTabController).videoCurrentTab;
-              if (currentTab != "") {
-                ref
-                    .read(disableVideoController.notifier)
-                    .setDisableVideo(currentTab, false, disableBefore: true);
-              }
-            }
-          }
+          _onDrawerChanged(isOpened);
         },
         appBar: _selectedIndex == 1 || _selectedIndex == 4
             ? null

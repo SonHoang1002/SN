@@ -8,61 +8,64 @@ class CreateUpdateRender extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: infoField.length,
-      itemBuilder: (context, index) {
-        switch (infoField[index]['type']) {
-          case 'blank':
-            return const SizedBox(
-              height: 50,
-            );
-          case 'title':
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  infoField[index]['title'],
-                  style: const TextStyle(
-                      // color:  white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text(
-                    'Thành công rồi! Bạn đã tạo trang thành công. Hãy bổ sung thông tin chi tiết để mọi người dễ dàng kết nối với bạn nhé.',
-                    style: TextStyle(fontSize: 17)),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
-            );
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 50.0),
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: infoField.length,
+        itemBuilder: (context, index) {
+          switch (infoField[index]['type']) {
+            case 'blank':
+              return const SizedBox(
+                height: 50,
+              );
+            case 'title':
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    infoField[index]['title'],
+                    style: const TextStyle(
+                        // color:  white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                      'Thành công rồi! Bạn đã tạo trang thành công. Hãy bổ sung thông tin chi tiết để mọi người dễ dàng kết nối với bạn nhé.',
+                      style: TextStyle(fontSize: 17)),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                ],
+              );
 
-          case 'radio':
-            return _buildRadioGroup(
+            case 'radio':
+              return _buildRadioGroup(
+                  infoField[index]['title'],
+                  infoField[index]['iconTitle'],
+                  infoField[index]['description'],
+                  infoField[index]['options'],
+                  infoField[index]['radioGroup'],
+                  infoField[index]['action'],
+                  infoField[index]['valueRadio']);
+            case 'autocomplete':
+              return _buildAutocomplete(context, infoField[index]['title'],
+                  infoField[index]['action'], infoField[index]['listSelect']);
+            default:
+              return _buildTextFormField(
                 infoField[index]['title'],
                 infoField[index]['iconTitle'],
                 infoField[index]['description'],
-                infoField[index]['options'],
-                infoField[index]['radioGroup'],
-                infoField[index]['action'],
-                infoField[index]['valueRadio']);
-          case 'autocomplete':
-            return _buildAutocomplete(context, infoField[index]['title'],
-                infoField[index]['action'], infoField[index]['listSelect']);
-          default:
-            return _buildTextFormField(
-              infoField[index]['title'],
-              infoField[index]['iconTitle'],
-              infoField[index]['description'],
-              infoField[index]['placeholder'],
-              infoField[index]['type'],
-            );
-        }
-      },
+                infoField[index]['placeholder'],
+                infoField[index]['type'],
+              );
+          }
+        },
+      ),
     );
   }
 

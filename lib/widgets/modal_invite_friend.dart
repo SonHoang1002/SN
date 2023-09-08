@@ -112,15 +112,31 @@ class _InviteFriendState extends State<InviteFriend>
 
   void fetchFriendInvited(key) async {
     if (paramsIncluded != null) {
-      var response = await FriendsApi().getListFriendsApi(
-          key == null || key == ''
-              ? paramsIncluded
-              : {...paramsIncluded, 'keyword': key});
-      if (response != null) {
-        if (mounted) {
-          setState(() {
-            friendInvited = response['data'];
-          });
+      if (widget.type == "group") {
+        var response =
+            await GroupApi().getUserInvitedGroup(widget.id, {'role': 'member'});
+        if (response != null) {
+          List<Map> invitedList = [];
+          for (var element in response) {
+            invitedList.add(element["target_account"]);
+          }
+          if (mounted) {
+            setState(() {
+              friendInvited = invitedList;
+            });
+          }
+        }
+      } else {
+        var response = await FriendsApi().getListFriendsApi(
+            key == null || key == ''
+                ? paramsIncluded
+                : {...paramsIncluded, 'keyword': key});
+        if (response != null) {
+          if (mounted) {
+            setState(() {
+              friendInvited = response['data'];
+            });
+          }
         }
       }
     }
@@ -238,6 +254,9 @@ class _InviteFriendState extends State<InviteFriend>
             indicatorColor: secondaryColor,
             dividerColor: secondaryColor,
             controller: _tabController,
+            onTap: (value) {
+              setState(() {});
+            },
             tabs: const <Widget>[
               Tab(
                 icon: Text(

@@ -174,7 +174,9 @@ class _PostHeaderState extends ConsumerState<PostHeader> {
             highlightColor: transparent,
             splashColor: transparent,
             onTap: () {
-              if (widget.type != postDetail && widget.type != 'edit_post') {
+              if (widget.type != postDetail &&
+                  widget.type != 'edit_post' &&
+                  widget.type != postApproval) {
                 pushCustomCupertinoPageRoute(
                     context,
                     PostDetail(
@@ -644,9 +646,9 @@ class _BlockNamePostState extends ConsumerState<BlockNamePost> {
                           margin: const EdgeInsets.only(bottom: 2))
                       : const SizedBox()),
               WidgetSpan(
-                  child: widget.post?['target_account'] != null
-                       && widget.friendData?['id'] ==
-                                  widget.post?['target_account']?['id']
+                  child: widget.post?['target_account'] != null &&
+                          widget.friendData?['id'] ==
+                              widget.post?['target_account']?['id']
                       ? Container(
                           margin: const EdgeInsets.only(right: 7),
                           child: Icon(
@@ -657,9 +659,9 @@ class _BlockNamePostState extends ConsumerState<BlockNamePost> {
                         )
                       : const SizedBox()),
               TextSpan(
-                text: widget.post?['target_account'] != null
-                    && widget.friendData?['id'] ==
-                                widget.post?['target_account']?['id']
+                text: widget.post?['target_account'] != null &&
+                        widget.friendData?['id'] ==
+                            widget.post?['target_account']?['id']
                     ? (widget.post?['target_account']?['display_name']) ?? ""
                     : "",
                 recognizer: TapGestureRecognizer()

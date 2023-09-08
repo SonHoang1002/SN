@@ -66,56 +66,60 @@ class _WatchRenderState extends ConsumerState<WatchRender>
 
   @override
   Widget build(BuildContext context) {
+    print("tabController.indexIsChanging ${tabController.indexIsChanging}");
+    print("tabController menuSelected ${tabController.index} ${menuSelected}");
     super.build(context);
-    return Scaffold(
-        appBar: AppBar(
-          bottom: TabBar(
-            controller: tabController,
-            tabs: watchMenu
-                .map(
-                  (e) => Tab(
-                      child: SizedBox(
-                          width: 100,
-                          child: buildTextContent(e['label'], false,
-                              fontSize: 14, isCenterLeft: false))),
-                )
-                .toList(),
-            indicatorColor: primaryColor,
-            labelColor: primaryColor,
-            unselectedLabelColor:
-                Theme.of(context).textTheme.displayLarge!.color,
-            onTap: (index) {
-              ref
-                  .read(videoCurrentTabController.notifier)
-                  .setVideoCurrentTab(watchMenu[index]['key']);
-              ref.read(disableVideoController.notifier).setDisableVideo(
-                  watchMenu[index]['key'], false,
-                  disableBefore: true);
-              if (mounted) {
-                setState(() {
-                  menuSelected = watchMenu[index]['key'];
-                });
-                fetchDataWatch(watchMenu[index]['key'], {'limit': 3});
-              }
-            },
-          ),
-        ),
-        body: TabBarView(
+    return Column(children: [
+      TabBar(
+        controller: tabController,
+        isScrollable: true,
+        tabs: watchMenu
+            .map(
+              (e) => Tab(
+                child: buildTextContent(e['label'], false,
+                    fontSize: 14, isCenterLeft: false),
+              ),
+            )
+            .toList(),
+        indicatorColor: primaryColor,
+        labelColor: primaryColor,
+        unselectedLabelColor: Theme.of(context).textTheme.displayLarge!.color,
+        onTap: (index) {
+          ref
+              .read(videoCurrentTabController.notifier)
+              .setVideoCurrentTab(watchMenu[index]['key']);
+          ref.read(disableVideoController.notifier).setDisableVideo(
+              watchMenu[index]['key'], false,
+              disableBefore: true);
+          if (mounted) {
+            setState(() {
+              menuSelected = watchMenu[index]['key'];
+            });
+            fetchDataWatch(watchMenu[index]['key'], {'limit': 3});
+          }
+        },
+      ),
+      buildSpacer(height: 20),
+      Expanded(
+        child: TabBarView(
           controller: tabController,
+          physics: const BouncingScrollPhysics(),
           children: [
             WatchHome(
-                type: menuSelected,
+                type: watchHome,
                 fetchDataWatch: fetchDataWatch,
                 isFocus: menuSelected == watchHome),
             WatchHome(
-                type: menuSelected,
+                type: watchFollow,
                 fetchDataWatch: fetchDataWatch,
                 isFocus: menuSelected == watchFollow),
             const WatchLive(),
             const WatchProgram(),
             const WatchSaved(),
           ],
-        ));
+        ),
+      )
+    ]);
 
     // Column(
     //   children: [

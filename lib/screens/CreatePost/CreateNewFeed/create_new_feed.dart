@@ -557,6 +557,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                               ..pop()
                               ..pop();
       }else{
+
         Navigator.pop(context);
       }
       // prepare data for api

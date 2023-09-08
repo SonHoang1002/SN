@@ -7,6 +7,7 @@ import 'package:social_network_app_mobile/apis/group_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
+import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/post_current_provider.dart';
 import 'package:social_network_app_mobile/providers/post_provider.dart';
@@ -322,6 +323,9 @@ class _PostState extends ConsumerState<Post> with WidgetsBindingObserver {
       message = (response?['content']?['error']).toString();
       messageColor = red;
     }
+    ref
+        .read(groupListControllerProvider.notifier)
+        .getPendingStatus(widget.groupId);
     // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(

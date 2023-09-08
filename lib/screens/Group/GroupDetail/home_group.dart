@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -255,7 +254,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
           }, widget.groupDetail?["id"]);
           await ref
               .read(groupListControllerProvider.notifier)
-              .getGroupDetail(widget.groupDetail["id"]);
+              .updateGroupDetail(widget.groupDetail["id"]);
         },
         child: CustomScrollView(
           shrinkWrap: true,
@@ -615,13 +614,17 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                     : SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
-                            return Post(
-                              type: POST_TYPE.postGroup,
-                              post: postGroup[index],
-                              haveSuggest: false,
-                              isInGroup: true,
-                              groupData: widget.groupDetail,
-                            );
+                            if (postGroup[index]["visibility"] != "rejected") {
+                              return Post(
+                                type: POST_TYPE.postGroup,
+                                post: postGroup[index],
+                                haveSuggest: false,
+                                isInGroup: true,
+                                groupData: widget.groupDetail,
+                              );
+                            } else {
+                              return Container();
+                            }
                           },
                           childCount: postGroup.length,
                         ),
@@ -688,8 +691,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
     //(1)
     if (widget.groupDetail?['group_relationship']?['admin'] ||
         widget.groupDetail?['group_relationship']?['moderator']) {
-      listButtons[0] = (SizedBox(
-        width: size.width * 0.45,
+      listButtons[0] = (Expanded(
         child: ButtonPrimary(
           label: 'Quản lý',
           icon: Image.asset(
@@ -702,8 +704,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
           },
         ),
       ));
-      listButtons[1] = (SizedBox(
-        width: size.width * 0.445,
+      listButtons[1] = (Expanded(
         child: ButtonPrimary(
           label: 'Mời',
           icon: Padding(
@@ -804,8 +805,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
     }
     //(6)
     else if (widget.groupDetail?['group_relationship']?['member']) {
-      listButtons[0] = (SizedBox(
-        width: size.width * 0.45,
+      listButtons[0] = (Expanded(
         child: ButtonPrimary(
           label: 'Đã tham gia',
           handlePress: () async {
@@ -821,7 +821,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                     ),
                     Text(
                         'Bạn có muốn rời khỏi Nhóm test không ? Bạn cũng có thể tắt thông báo cho bài viết mới hoặc báo cáo nhóm này',
-                        style: TextStyle(fontSize: 13, color: blackColor)),
+                        style: TextStyle(fontSize: 13)),
                   ],
                 ),
                 actions: <CupertinoDialogAction>[
@@ -858,8 +858,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
           },
         ),
       ));
-      listButtons[1] = ((SizedBox(
-        width: size.width * 0.45,
+      listButtons[1] = ((Expanded(
         child: ButtonPrimary(
           label: 'Mời',
           handlePress: () {
