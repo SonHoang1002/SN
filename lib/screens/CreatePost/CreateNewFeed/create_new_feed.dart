@@ -551,16 +551,15 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         ref.read(disableMomentController.notifier).setDisableMoment(false);
       }
 
-       if(widget.edit == true){
-        Navigator.of(context)..pop()
-                              ..pop()
-                              ..pop()
-                              ..pop();
-      }else{
-        
+      if (widget.edit == true) {
+        Navigator.of(context)
+          ..pop()
+          ..pop()
+          ..pop()
+          ..pop();
+      } else {
         Navigator.pop(context);
       }
-      Navigator.pop(context);
       // prepare data for api
       var data = {"status": content, "visibility": visibility['key']};
       if (backgroundSelected != null) {
@@ -926,13 +925,12 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                             ref
                                 .read(draftFeedController.notifier)
                                 .saveDraftFeed(DraftFeed(
-                                  gifLink: "",
-                                  files: [],
-                                  content: "",
-                                  checkin: null,
-                                  previewUrlData: null,
-                                  lifeEvent: null
-                                ));
+                                    gifLink: "",
+                                    files: [],
+                                    content: "",
+                                    checkin: null,
+                                    previewUrlData: null,
+                                    lifeEvent: null));
                             popToPreviousScreen(context);
                             popToPreviousScreen(context);
                           }),
@@ -1151,7 +1149,9 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                       children: [
                         files.isNotEmpty
                             ? GridLayoutImage(
-                              type:widget.post!=null ? updateStatus:createStatus,
+                                type: widget.post != null
+                                    ? updateStatus
+                                    : createStatus,
                                 post: widget.post,
                                 medias: files,
                                 handlePress: (media) {
