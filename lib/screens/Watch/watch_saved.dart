@@ -27,6 +27,7 @@ class _WatchSavedState extends State<WatchSaved>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final size = MediaQuery.sizeOf(context);
     return listWatchSaved.isNotEmpty
         ? Container(

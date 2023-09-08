@@ -19,6 +19,7 @@ import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/data/background_post.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
+import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
 import 'package:social_network_app_mobile/providers/learn_space/learn_space_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
@@ -61,23 +62,38 @@ import 'package:social_network_app_mobile/widgets/grid_layout_image.dart';
 import 'package:social_network_app_mobile/widgets/image_cache.dart';
 import '../../../constant/type_constant.dart';
 import '../../../providers/create_feed/feed_draft_provider.dart';
-import '../../../providers/disable_moment_provider.dart';
+import 'package:social_network_app_mobile/providers/disable_watch_provider.dart';
 
 const EDIT_POST = "edit_post";
 
 class CreateNewFeed extends ConsumerStatefulWidget {
   /// If [post] is not null -> Update Status, if null -> Create Status
   final dynamic post;
+
+  /// check if type of before screen
+  ///  Example [feedPost], [postUserPage],.....
   final String? type;
+
+  /// [groupId] -> That is id
   final String? groupId;
+
+  /// [postDiscussion] -> this is data that is used to create post
   final dynamic postDiscussion;
   final dynamic pageData;
+
   final Function(dynamic type, dynamic newData)? reloadFunction;
   // This is used to create post in friend wall (must allow to create post from friend)
   final dynamic friendData;
+
+  /// check if this widget in located in Group screen ??
   final bool? isInGroup;
-  final bool? beforeHasVideo;
+
+  /// check if this before screen has video or moment video ??
+  final bool? fromScreenVideo;
+
+  /// [popFunction] is called before navigator.pop
   final Function? popFunction;
+
   final bool? edit;
   final String? sharedGroupId;
 
@@ -91,7 +107,7 @@ class CreateNewFeed extends ConsumerStatefulWidget {
       this.pageData,
       this.friendData,
       this.isInGroup,
-      this.beforeHasVideo = false,
+      this.fromScreenVideo = false,
       this.popFunction,
       this.edit,
       this.sharedGroupId})
@@ -133,7 +149,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
   bool _isClickForCreatePost = false;
   final FocusNode _focusNode = FocusNode();
   List _listMenuPost = [];
-
   List listMentions = [];
   Offset textFieldOffset = const Offset(0, 150.6);
 
@@ -503,14 +518,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
         isHaveVideo = true;
       }
     }
-
-    ref.read(draftFeedController.notifier).saveDraftFeed(DraftFeed(
-        gifLink: "",
-        files: [],
-        content: "",
-        checkin: null,
-        previewUrlData: null,
-        lifeEvent: null));
+    ref.read(draftFeedController.notifier).resetData();
     if (isHaveVideo) {
       _buildSnackBar(
           "Video của bạn đang trong quá trình xử lý, chúng tôi sẽ thông báo cho bạn khi video đã sẵn sàng.");
@@ -550,8 +558,11 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
             : null;
       }
       // re-run video (option)
-      if (widget.beforeHasVideo!) {
+      if (widget.fromScreenVideo!) {
         ref.read(disableMomentController.notifier).setDisableMoment(false);
+        ref.read(disableVideoController.notifier).setDisableVideo(
+            ref.watch(videoCurrentTabController).videoCurrentTab, false,
+            disableBefore: true);
       }
       if (widget.edit == true) {
         Navigator.of(context)
@@ -560,90 +571,98 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           ..pop()
           ..pop();
       } else {
-
-        Navigator.pop(context);
-      }
-      // prepare data for api
-      var data = {"status": content, "visibility": visibility['key']};
-      if (backgroundSelected != null) {
-        data = {...data, 'status_background_id': backgroundSelected['id']};
-      }
-      if (gifLink.isNotEmpty) {
-        data = {
-          ...data,
-          "extra_body": {"description": "", "link": gifLink, "title": ""}
-        };
-      }
-      if (statusActivity != null) {
-        data = {...data, 'status_activity_id': statusActivity['id']};
-      }
-      if (friendSelected.isNotEmpty) {
-        data = {
-          ...data,
-          'mention_ids': friendSelected.map((e) => e['id']).toList()
-        };
-      }
-      if (poll != null) {
-        data = {...data, 'poll': poll};
-      }
-      if (statusQuestion != null) {
-        data = {
-          ...data,
-          "post_type": statusQuestion['postType'],
-          statusQuestion['postType'] == 'target'
-              ? 'status_target'
-              : 'status_question': {
-            "color": statusQuestion['color'],
-            "content": statusQuestion['content'],
+        if (widget.edit == true) {
+          Navigator.of(context)
+            ..pop()
+            ..pop()
+            ..pop()
+            ..pop();
+        } else {
+          Navigator.pop(context);
+        }
+        // prepare data for api
+        var data = {"status": content, "visibility": visibility['key']};
+        if (backgroundSelected != null) {
+          data = {...data, 'status_background_id': backgroundSelected['id']};
+        }
+        if (gifLink.isNotEmpty) {
+          data = {
+            ...data,
+            "extra_body": {"description": "", "link": gifLink, "title": ""}
+          };
+        }
+        if (statusActivity != null) {
+          data = {...data, 'status_activity_id': statusActivity['id']};
+        }
+        if (friendSelected.isNotEmpty) {
+          data = {
+            ...data,
+            'mention_ids': friendSelected.map((e) => e['id']).toList()
+          };
+        }
+        if (poll != null) {
+          data = {...data, 'poll': poll};
+        }
+        if (statusQuestion != null) {
+          data = {
+            ...data,
+            "post_type": statusQuestion['postType'],
+            statusQuestion['postType'] == 'target'
+                ? 'status_target'
+                : 'status_question': {
+              "color": statusQuestion['color'],
+              "content": statusQuestion['content'],
+            }
+          };
+        }
+        if (checkin != null) {
+          data = {...data, 'place_id': checkin['id']};
+        }
+        if (files.isNotEmpty) {
+          List<Future> listUpload = [];
+          for (var i = 0; i < files.length; i++) {
+            listUpload.add(handleUploadMedia(i, files[i]));
           }
-        };
-      }
-      if (checkin != null) {
-        data = {...data, 'place_id': checkin['id']};
-      }
-      if (files.isNotEmpty) {
-        List<Future> listUpload = [];
-        for (var i = 0; i < files.length; i++) {
-          listUpload.add(handleUploadMedia(i, files[i]));
+          var results = await Future.wait(listUpload);
+          List mediasId = [];
+          if (results.isNotEmpty) {
+            mediasId = results.map((e) => e['id']).toList();
+          }
+          data = {...data, "media_ids": mediasId};
         }
-        var results = await Future.wait(listUpload);
-        List mediasId = [];
-        if (results.isNotEmpty) {
-          mediasId = results.map((e) => e['id']).toList();
+        if (lifeEvent != null) {
+          data = {
+            ...data,
+            "life_event": lifeEvent,
+          };
         }
-        data = {...data, "media_ids": mediasId};
-      }
-      if (lifeEvent != null) {
-        data = {
-          ...data,
-          "life_event": lifeEvent,
-        };
-      }
-      if (postDiscussion != null) {
-        data['course_id'] = widget.postDiscussion['course_id'];
-      }
-      if (widget.pageData != null) {
-        data['page_id'] = widget.pageData['id'];
-        data['page_owner_id'] = widget.pageData['id'];
-      }
-      if (widget.friendData != null &&
-          widget.friendData['id'] != ref.watch(meControllerProvider)[0]['id']) {
-        data['target_account_id'] = widget.friendData['id'];
-      }
-      if (widget.groupId != null && widget.isInGroup == true) {
-        data = {...data, "group_id": widget.groupId};
-      }
-      if (widget.sharedGroupId != null) {
-        data = {...data, "shared_group_id": widget.sharedGroupId};
-      }
-      var response = await PostApi().createStatus(data);
-      if (response != null) {
-        if (previewUrlData != null && response['card'] == null) {
-          response['card'] = previewUrlData;
+        if (postDiscussion != null) {
+          data['course_id'] = widget.postDiscussion['course_id'];
         }
-        widget.reloadFunction != null
-            ? widget.reloadFunction!(type, response)
-            : null;
+        if (widget.pageData != null) {
+          data['page_id'] = widget.pageData['id'];
+          data['page_owner_id'] = widget.pageData['id'];
+        }
+        if (widget.friendData != null &&
+            widget.friendData['id'] !=
+                ref.watch(meControllerProvider)[0]['id']) {
+          data['target_account_id'] = widget.friendData['id'];
+        }
+        if (widget.groupId != null && widget.isInGroup == true) {
+          data = {...data, "group_id": widget.groupId};
+        }
+        if (widget.sharedGroupId != null) {
+          data = {...data, "shared_group_id": widget.sharedGroupId};
+        }
+        var response = await PostApi().createStatus(data);
+        if (response != null) {
+          if (previewUrlData != null && response['card'] == null) {
+            response['card'] = previewUrlData;
+          }
+          widget.reloadFunction != null
+              ? widget.reloadFunction!(type, response)
+              : null;
+        }
       }
     }
   }
@@ -918,9 +937,19 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                     previewUrlData: previewUrlData,
                                     poll: poll,
                                     lifeEvent: lifeEvent));
-                            ref
-                                .read(disableMomentController.notifier)
-                                .setDisableMoment(false);
+                            if (widget.fromScreenVideo!) {
+                              ref
+                                  .read(disableMomentController.notifier)
+                                  .setDisableMoment(false);
+                              ref
+                                  .read(disableVideoController.notifier)
+                                  .setDisableVideo(
+                                      ref
+                                          .watch(videoCurrentTabController)
+                                          .videoCurrentTab,
+                                      false,
+                                      disableBefore: true);
+                            }
                             popToPreviousScreen(context);
                             popToPreviousScreen(context);
                           }),
@@ -985,9 +1014,19 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                               isCenterLeft: false,
                               colorWord: red),
                           onPressed: () {
-                            ref
-                                .read(disableMomentController.notifier)
-                                .setDisableMoment(false);
+                            if (widget.fromScreenVideo!) {
+                              ref
+                                  .read(disableMomentController.notifier)
+                                  .setDisableMoment(false);
+                              ref
+                                  .read(disableVideoController.notifier)
+                                  .setDisableVideo(
+                                      ref
+                                          .watch(videoCurrentTabController)
+                                          .videoCurrentTab,
+                                      false,
+                                      disableBefore: true);
+                            }
                             popToPreviousScreen(context);
                             popToPreviousScreen(context);
                           }),
@@ -1028,8 +1067,11 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     width = size.width;
     return WillPopScope(
       onWillPop: () async {
-        if (widget.beforeHasVideo!) {
+        if (widget.fromScreenVideo!) {
           ref.read(disableMomentController.notifier).setDisableMoment(false);
+          ref.read(disableVideoController.notifier).setDisableVideo(
+              ref.watch(videoCurrentTabController).videoCurrentTab, false,
+              disableBefore: true);
         }
         return checkSaveDraft();
       },
@@ -1054,9 +1096,19 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          ref
-                              .read(disableMomentController.notifier)
-                              .setDisableMoment(false);
+                          if (widget.fromScreenVideo!) {
+                            ref
+                                .read(disableMomentController.notifier)
+                                .setDisableMoment(false);
+                            ref
+                                .read(disableVideoController.notifier)
+                                .setDisableVideo(
+                                    ref
+                                        .watch(videoCurrentTabController)
+                                        .videoCurrentTab,
+                                    false,
+                                    disableBefore: true);
+                          }
                           return checkSaveDraft();
                         },
                         child: Icon(

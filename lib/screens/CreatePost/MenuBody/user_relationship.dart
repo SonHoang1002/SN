@@ -81,7 +81,6 @@ class _RelationshipState extends ConsumerState<Relationship> {
   }
 
   handlePress(event, lifeEventCategoryId) {
-    print("widget.edit 1111111111111111: ${widget.edit}");
     if (event['children'] != null && event['children'].isNotEmpty) {
       Navigator.push(
           context,
@@ -122,8 +121,6 @@ class _RelationshipState extends ConsumerState<Relationship> {
                       if (lifeEvent['place_id'] != null) {
                         widget.handleUpdateData('updateLifeEvent', lifeEvent);
                         if (widget.type != null && widget.type == 'children') {
-                          print("aaaaaaaaaaaaaaaaaaaa");
-                          print("widget.edit: ${widget.edit}");
                           ref
                               .read(draftFeedController.notifier)
                               .saveDraftFeed(DraftFeed(lifeEvent: lifeEvent));
@@ -150,14 +147,11 @@ class _RelationshipState extends ConsumerState<Relationship> {
                       }
                     },
                   ))));
-      print("lifeEvent: ${jsonEncode(lifeEvent)}");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("aaaaaaaaaaaaaaaaa aadadad ${jsonEncode(lifeEvent)}");
-    print("widget.relationship: ${jsonEncode(widget.relationship)}");
     final size = MediaQuery.sizeOf(context);
     List listData = widget.listLifeEvent ?? lifeEventCategories;
 
@@ -408,8 +402,6 @@ class _RelationshipState extends ConsumerState<Relationship> {
                                         title: "Gắn thẻ ai đó",
                                         body: body,
                                         buttonAppbar: buttonAppbar)));
-                            print(
-                                "inforRelationship: ${jsonEncode(inforRelationship)}");
                             if (inforRelationship != null) {
                               setState(() {
                                 check = true;

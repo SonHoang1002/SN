@@ -12,6 +12,8 @@ import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:social_network_app_mobile/providers/drawer_status_provider.dart';
+
 class VideoPlayerNoneController extends ConsumerStatefulWidget {
   final String path;
   final String type;
@@ -108,6 +110,7 @@ class _VideoPlayerNoneControllerState
         state == AppLifecycleState.detached) {
       if (videoPlayerController.value.isPlaying) {
         videoPlayerController.pause();
+        videoPlayerController.setVolume(0.0);
       }
     }
   }
@@ -115,15 +118,22 @@ class _VideoPlayerNoneControllerState
   @override
   Widget build(BuildContext context) {
     size ??= MediaQuery.sizeOf(context);
-    if (widget.isPause == true) {
-      videoPlayerController.pause();
-    } else {
-      if (isPlaying) {
-        videoPlayerController.play();
-      } else {
+    final drawerStatus = ref.watch(drawerStatusProviderController).drawerStatus;
+    if (drawerStatus == false) {
+      if (widget.isPause == true) {
         videoPlayerController.pause();
+        videoPlayerController.setVolume(0.0);
+      } else {
+        if (isPlaying) {
+          videoPlayerController.play();
+          videoPlayerController.setVolume(1.0);
+        } else {
+          videoPlayerController.pause();
+          videoPlayerController.setVolume(0.0);
+        }
       }
     }
+
     return AspectRatio(
       aspectRatio: widget.aspectRatio ??
           (videoPlayerController.value.aspectRatio > 1
@@ -136,6 +146,7 @@ class _VideoPlayerNoneControllerState
                 isVisible = visibilityInfo.visibleFraction == 1;
                 if (isVisible) {
                   videoPlayerController.play();
+                  videoPlayerController.setVolume(1.0);
                   if (ref.read(watchControllerProvider).mediaSelected?['id'] ==
                       (widget.media?['id'] ?? 0)) {
                     videoPlayerController.seekTo(Duration(
@@ -147,6 +158,7 @@ class _VideoPlayerNoneControllerState
                   }
                 } else {
                   videoPlayerController.pause();
+                  videoPlayerController.setVolume(0.0);
                 }
               });
             }
@@ -242,6 +254,7 @@ class _VideoPlayerNoneControllerState
         ? WidgetsBinding.instance.removeObserver(this)
         : null;
     videoPlayerController.pause();
+    videoPlayerController.setVolume(0.0);
     videoPlayerController.dispose();
     super.dispose();
   }

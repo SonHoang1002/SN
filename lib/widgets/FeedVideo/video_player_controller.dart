@@ -2,8 +2,8 @@ import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/type_constant.dart';
-import 'package:social_network_app_mobile/providers/disable_moment_provider.dart';
 import 'package:social_network_app_mobile/providers/disable_watch_provider.dart';
+import 'package:social_network_app_mobile/providers/drawer_status_provider.dart';
 import 'package:social_network_app_mobile/providers/video_repository.dart';
 import 'package:social_network_app_mobile/screens/Watch/WatchDetail/watch_detail.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -172,19 +172,23 @@ class _VideoPlayerHasControllerState
   Widget build(BuildContext context) {
     super.build(context);
     final selectedVideo = ref.watch(selectedVideoProvider);
+    final drawerStatus = ref.watch(drawerStatusProviderController).drawerStatus;
     if (selectedVideo != null) {
       chewieController?.videoPlayerController.pause();
       chewieController?.videoPlayerController.setVolume(0.0);
-    }
-    if (checkLicenseVideoWithType() &&
-        isVisible &&
-        isPlaying &&
-        widget.isFocus == true) {
-      chewieController?.videoPlayerController.play();
-      chewieController?.videoPlayerController.setVolume(1.0);
     } else {
-      chewieController?.videoPlayerController.pause();
-      chewieController?.videoPlayerController.setVolume(0.0);
+      if (checkLicenseVideoWithType() &&
+          isVisible &&
+          isPlaying &&
+          widget.isFocus == true) {
+        if (drawerStatus == false) {
+          chewieController?.videoPlayerController.play();
+          chewieController?.videoPlayerController.setVolume(1.0);
+        }
+      } else {
+        chewieController?.videoPlayerController.pause();
+        chewieController?.videoPlayerController.setVolume(0.0);
+      }
     }
     return AspectRatio(
       aspectRatio:
@@ -205,8 +209,10 @@ class _VideoPlayerHasControllerState
                     chewieController?.videoPlayerController.setVolume(0.0);
                   } else {
                     if (isPlaying && widget.isFocus == true) {
-                      chewieController!.videoPlayerController.play();
-                      chewieController?.videoPlayerController.setVolume(1.0);
+                      if (drawerStatus == false) {
+                        chewieController!.videoPlayerController.play();
+                        chewieController?.videoPlayerController.setVolume(1.0);
+                      }
                     }
                   }
                 } else {

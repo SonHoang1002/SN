@@ -17,24 +17,22 @@ class DraftFeed {
       this.previewUrlData,
       this.poll,
       this.lifeEvent});
-  DraftFeed copyWith({
-    String gifLink = "",
-    List files = const [],
-    String content = "",
-    dynamic checkin,
-    dynamic previewUrlData,
-    dynamic poll,
-    dynamic lifeEvent
-  }) {
+  DraftFeed copyWith(
+      {String gifLink = "",
+      List files = const [],
+      String content = "",
+      dynamic checkin,
+      dynamic previewUrlData,
+      dynamic poll,
+      dynamic lifeEvent}) {
     return DraftFeed(
-      gifLink: gifLink,
-      files: files,
-      content: content,
-      checkin: checkin,
-      previewUrlData: previewUrlData,
-      poll: poll,
-      lifeEvent: lifeEvent
-    );
+        gifLink: gifLink,
+        files: files,
+        content: content,
+        checkin: checkin,
+        previewUrlData: previewUrlData,
+        poll: poll,
+        lifeEvent: lifeEvent);
   }
 
   String toContentString() {
@@ -51,13 +49,16 @@ class DraftFeedContentController extends StateNotifier<DraftFeed> {
   DraftFeedContentController() : super(DraftFeed());
   saveDraftFeed(DraftFeed draftFeed) {
     state = state.copyWith(
-      gifLink: draftFeed.gifLink,
-      files: draftFeed.files,
-      content: draftFeed.content,
-      checkin: draftFeed.checkin,
-      previewUrlData: draftFeed.previewUrlData,
-      poll:draftFeed.poll,
-      lifeEvent: draftFeed.lifeEvent
-    );
+        gifLink: draftFeed.gifLink,
+        files: draftFeed.files,
+        content: draftFeed.content,
+        checkin: draftFeed.checkin,
+        previewUrlData: draftFeed.previewUrlData,
+        poll: draftFeed.poll,
+        lifeEvent: draftFeed.lifeEvent);
+  }
+
+  resetData() {
+    state = DraftFeed();
   }
 }

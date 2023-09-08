@@ -9,8 +9,6 @@ import 'package:social_network_app_mobile/screens/Watch/watch_saved.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
-import 'package:social_network_app_mobile/widgets/cross_bar.dart';
-import 'package:social_network_app_mobile/widgets/header_tabs.dart';
 
 import 'watch_live.dart';
 import 'watch_program.dart';
@@ -66,8 +64,6 @@ class _WatchRenderState extends ConsumerState<WatchRender>
 
   @override
   Widget build(BuildContext context) {
-    print("tabController.indexIsChanging ${tabController.indexIsChanging}");
-    print("tabController menuSelected ${tabController.index} ${menuSelected}");
     super.build(context);
     return Column(children: [
       TabBar(
@@ -120,103 +116,6 @@ class _WatchRenderState extends ConsumerState<WatchRender>
         ),
       )
     ]);
-
-    // Column(
-    //   children: [
-    //     TabBar(
-    //       controller: tabController,
-    //       tabs: watchMenu
-    //           .map(
-    //             (e) => Tab(
-    //                 child: SizedBox(
-    //                     width: 100,
-    //                     child: buildTextContent(e['label'], false,
-    //                         fontSize: 14, isCenterLeft: false))),
-    //           )
-    //           .toList(),
-    //       indicatorColor: primaryColor,
-    //       labelColor: primaryColor,
-    //       unselectedLabelColor: Theme.of(context).textTheme.displayLarge!.color,
-    //       onTap: (index) {
-    //         ref
-    //             .read(videoCurrentTabController.notifier)
-    //             .setVideoCurrentTab(watchMenu[index]['key']);
-    //         ref.read(disableVideoController.notifier).setDisableVideo(
-    //             watchMenu[index]['key'], false,
-    //             disableBefore: true);
-    //         if (mounted) {
-    //           setState(() {
-    //             menuSelected = watchMenu[index]['key'];
-    //           });
-    //           fetchDataWatch(watchMenu[index]['key'], {'limit': 3});
-    //         }
-    //       },
-    //     ),
-    //     buildSpacer(height: 5),
-    //     Expanded(
-    //       child: TabBarView(
-    //         controller: tabController,
-    //         children: [
-    //           WatchHome(
-    //               type: menuSelected,
-    //               fetchDataWatch: fetchDataWatch,
-    //               isFocus: menuSelected == watchHome),
-    //           WatchHome(
-    //               type: menuSelected,
-    //               fetchDataWatch: fetchDataWatch,
-    //               isFocus: menuSelected == watchFollow),
-    //           const WatchLive(),
-    //           const WatchProgram(),
-    //           const WatchSaved(),
-    //         ],
-    //       ),
-    //     )
-    //   ],
-    // );
-
-    // return Column(
-    //   children: [
-    //     const SizedBox(
-    //       height: 5,
-    //     ),
-    //     SingleChildScrollView(
-    //       scrollDirection: Axis.horizontal,
-    //       child: HeaderTabs(
-    //         chooseTab: (tab) {
-    //             ref
-    //                 .read(videoCurrentTabController.notifier)
-    //                 .setVideoCurrentTab(tab);
-    //                 ref
-    //                 .read(disableVideoController.notifier)
-    //                 .setDisableVideo(tab, false, disableBefore: true);
-    //           if (mounted) {
-    //             setState(() {
-    //               menuSelected = tab;
-    //             });
-    //             fetchDataWatch(tab, {'limit': 3});
-    //           }
-    //         },
-    //         listTabs: watchMenu,
-    //         tabCurrent: menuSelected,
-    //       ),
-    //     ),
-    //     const CrossBar(
-    //       height: 1,
-    //     ),
-    //     if (menuSelected == watchHome)
-    //       WatchHome(
-    //           type: menuSelected,
-    //           fetchDataWatch: fetchDataWatch,
-    //           isFocus: menuSelected == watchHome)
-    //     else if (menuSelected == watchFollow)
-    //       WatchHome(
-    //           type: menuSelected,
-    //           fetchDataWatch: fetchDataWatch,
-    //           isFocus: menuSelected == watchFollow)
-    //     else
-    //       menuSelected == watchSaved ? const WatchSaved() : const SizedBox()
-    //   ],
-    // );
   }
 
   @override
