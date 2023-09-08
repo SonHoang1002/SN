@@ -30,12 +30,14 @@ import 'package:social_network_app_mobile/widgets/page_item.dart';
 import 'package:social_network_app_mobile/widgets/search_input.dart';
 
 class ScreenShare extends ConsumerStatefulWidget {
+  final String? sharedGroupId;
   final dynamic entityShare;
   final String type;
   final String entityType;
   final dynamic pageShared;
   const ScreenShare({
     Key? key,
+    this.sharedGroupId,
     this.entityShare,
     required this.type,
     required this.entityType,
@@ -220,7 +222,7 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
       };
 
       if (groupShareSelected != null) {
-        data['shared_group_id'] = groupShareSelected['id'];
+        data['group_id'] = groupShareSelected['id'];
       }
 
       if (pageShareSelected != null) {
@@ -231,7 +233,12 @@ class _ScreenShareState extends ConsumerState<ScreenShare> {
       }
 
       if (['post', 'moment'].contains(widget.entityType)) {
-        data['reblog_of_id'] = widget.entityShare['id'];
+        if (widget.sharedGroupId != null) {
+          data['reblog_of_id'] = null;
+          data['shared_group_id'] = widget.sharedGroupId;
+        } else {
+          data['reblog_of_id'] = widget.entityShare['id'];
+        }
         var response = await PostApi().createStatus(data);
         if (response != null) {
           if (context.mounted) {

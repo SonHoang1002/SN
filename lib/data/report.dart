@@ -1,7 +1,7 @@
 List reportCategories = [
   {
     "id": 279,
-    "text": "Nội dung ghớm ghiếc",
+    "text": "Nội dung gớm ghiếc",
     "description":
         "\n    <h6 style=\"font-size: 20px\">Nội dung này có vi phạm Tiêu chuẩn cộng đồng của chúng tôi không?</h6><br/>\n    Các tiêu chuẩn của chúng tôi giải thích về những gì chúng tôi cho phép và không cho phép hiển thị trên Emso. Với sự hỗ trợ của các chuyên gia, chúng tôi thường xuyên xem xét và cập nhật các tiêu chuẩn mình đề ra.",
     "children": []
