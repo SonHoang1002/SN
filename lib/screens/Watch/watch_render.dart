@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/type_constant.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
 import 'package:social_network_app_mobile/providers/disable_watch_provider.dart';
@@ -66,7 +67,7 @@ class _WatchRenderState extends ConsumerState<WatchRender>
     super.build(context);
     return Scaffold(
       appBar: AppBar(
-        actions: const [BackButtonIcon()],
+        title: buildTextContent("Watch", true,fontSize:16,isCenterLeft: false),
         bottom: TabBar(
           controller: tabController,
           isScrollable: true,

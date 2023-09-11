@@ -121,6 +121,7 @@ class MomentController extends StateNotifier<MomentState> {
 
   getListMomentSuggest(params) async {
     List response = await MomentApi().getListMomentSuggest(params) ?? [];
+    print("getListMomentSuggest response.isEmpty");
     if (response.isEmpty) {
       response.addAll(fakeMomentSuggest);
     }
