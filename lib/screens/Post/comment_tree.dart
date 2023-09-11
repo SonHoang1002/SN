@@ -1029,7 +1029,7 @@ class _PostMediaCommentState extends State<PostMediaComment> {
                   onTap: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(
+                        CupertinoPageRoute(
                             builder: (context) => PostOneMediaDetail(
                                   postMedia: widget.post,
                                   // post: widget.post,

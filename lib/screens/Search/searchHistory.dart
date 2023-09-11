@@ -64,7 +64,7 @@ class SearchHistory extends ConsumerWidget {
                                           'Account'
                                       ? Navigator.push(
                                           context,
-                                          MaterialPageRoute(
+                                          CupertinoPageRoute(
                                             builder: (context) => const UserPageHome(),
                                             settings: RouteSettings(
                                               arguments: {
@@ -102,7 +102,7 @@ class SearchHistory extends ConsumerWidget {
                                                   'Page'
                                               ? Navigator.push(
                                                   context,
-                                                  MaterialPageRoute(
+                                                  CupertinoPageRoute(
                                                     builder: (context) =>
                                                         const PageDetail(),
                                                     settings: RouteSettings(
@@ -116,7 +116,7 @@ class SearchHistory extends ConsumerWidget {
                                                       'Group'
                                                   ? Navigator.push(
                                                       context,
-                                                      MaterialPageRoute(
+                                                      CupertinoPageRoute(
                                                         builder: (context) =>
                                                             GroupDetail(
                                                           id: searchHistory[

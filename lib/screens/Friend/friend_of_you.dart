@@ -218,7 +218,7 @@ class _FriendOfYouState extends ConsumerState<FriendOfYou> {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
+                              CupertinoPageRoute(
                                 builder: (context) =>  UserPageHome(id: friends[index]['id'],user: friends[index],),
                                 settings: RouteSettings(
                                   arguments: {'id': friends[index]['id'], 'user': friends[index]},

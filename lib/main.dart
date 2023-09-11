@@ -22,7 +22,7 @@ void main() async {
       child: App(),
     ),
   );
-  await IsarPostService().getEarlyPost();
+  // await IsarPostService().getEarlyPost();
 }
 
 class MyHttpOverrides extends HttpOverrides {

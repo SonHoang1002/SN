@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -517,7 +518,7 @@ class _ManageProductMarketPageState
                                 onTap: () async {
                                   Navigator.pop(context);
                                   final isRecallApi = await Navigator.push(
-                                      context, MaterialPageRoute(
+                                      context, CupertinoPageRoute(
                                     builder: (context) {
                                       return UpdateMarketPage(data['id']);
                                     },

@@ -195,7 +195,7 @@ class _CreateFeedStatusHeaderState
                   onTap: () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(
+                        CupertinoPageRoute(
                             builder: (context) => CreateModalBaseMenu(
                                 title: "Quyền riêng tư",
                                 body: PageVisibility(

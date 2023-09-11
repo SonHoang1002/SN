@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -77,7 +78,7 @@ class PersonalSettingsPage extends StatelessWidget {
                                         case "private_rule":
                                           {
                                             Navigator.of(context).push(
-                                                MaterialPageRoute(
+                                                CupertinoPageRoute(
                                                     builder: (_) =>
                                                         const PrivateRulesSettingPage()));
                                             break;

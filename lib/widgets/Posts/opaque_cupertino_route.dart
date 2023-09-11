@@ -329,7 +329,7 @@ mixin CupertinoRouteTransitionMixin<T> on PageRoute<T> {
 ///
 ///  * [CupertinoRouteTransitionMixin], for a mixin that provides iOS transition
 ///    for this modal route.
-///  * [MaterialPageRoute], for an adaptive [PageRoute] that uses a
+///  * [CupertinoPageRoute], for an adaptive [PageRoute] that uses a
 ///    platform-appropriate transition.
 ///  * [CupertinoPageScaffold], for applications that have one page with a fixed
 ///    navigation bar on top.

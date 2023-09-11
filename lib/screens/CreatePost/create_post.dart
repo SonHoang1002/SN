@@ -126,7 +126,7 @@ class _CreatePostState extends ConsumerState<CreatePost> {
                                 // _startVideoEditorDefault();
                                 // Navigator.push(
                                 //     context,
-                                //     MaterialPageRoute(
+                                //     CupertinoPageRoute(
                                 //         builder: (context) =>
                                 //             const CameraMomentController()));
                                 Future.delayed(

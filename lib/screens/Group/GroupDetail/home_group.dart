@@ -151,7 +151,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
       case 'intro':
         Navigator.push(
           context,
-          MaterialPageRoute(
+          CupertinoPageRoute(
             builder: (context) => GroupIntro(
               groupDetail: widget.groupDetail,
               join: true,
@@ -162,7 +162,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
       case 'noticeable':
         Navigator.push(
           context,
-          MaterialPageRoute(
+          CupertinoPageRoute(
             builder: (context) => GroupNoticeable(
               data: ref.read(groupListControllerProvider).groupPins,
             ),
@@ -172,7 +172,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
       case 'image':
         Navigator.push(
           context,
-          MaterialPageRoute(
+          CupertinoPageRoute(
             builder: (context) => GroupImage(
               data: ref.read(groupListControllerProvider).groupImage,
             ),
@@ -184,7 +184,7 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
       case 'album':
         Navigator.push(
           context,
-          MaterialPageRoute(
+          CupertinoPageRoute(
             builder: (context) => GroupAlbum(
               data: ref.read(groupListControllerProvider).groupAlbum,
             ),

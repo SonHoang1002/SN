@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/a_test/fake_video_data.dart';
@@ -54,6 +53,7 @@ class WatchController extends StateNotifier<WatchState> {
   }
 
   getListWatchFollow(params) async {
+    print("call_ getListWatchFollow");
     final limit = params['limit'];
     List response = await WatchApi().getListWatchFollow(params) ?? [];
     response.insertAll(0, fakeWatchFollow);
@@ -76,7 +76,7 @@ class WatchController extends StateNotifier<WatchState> {
   getListWatchSuggest(params) async {
     final limit = params['limit'];
     List response = await WatchApi().getListWatchSuggest(params) ?? [];
-    response.insertAll(0, fakeWatchSuggest); 
+    response.insertAll(0, fakeWatchSuggest);
     if (mounted) {
       final newWatch =
           response.where((item) => !state.watchSuggest.contains(item)).toList();

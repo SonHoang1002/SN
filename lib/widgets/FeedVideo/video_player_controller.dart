@@ -101,7 +101,7 @@ class _VideoPlayerHasControllerState
     chewieController?.videoPlayerController.setVolume(0.0);
     if (betterPlayer!.videoPlayerController != null &&
         betterPlayer!.videoId != widget.media['id']) {
-      chewieController!.pause();
+      chewieController?.pause();
       videoPlayerController?.dispose();
       chewieController?.dispose();
     }
@@ -139,7 +139,7 @@ class _VideoPlayerHasControllerState
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.detached) {
       if (chewieController != null && chewieController!.isPlaying) {
-        chewieController!.pause();
+        chewieController?.pause();
       }
     }
   }
@@ -165,6 +165,9 @@ class _VideoPlayerHasControllerState
         ref.watch(disableVideoController).isDisableWatchSaved == false) {
       return true;
     }
+    if (widget.type == null) {
+      return true;
+    }
     return false;
   }
 
@@ -184,6 +187,9 @@ class _VideoPlayerHasControllerState
         if (drawerStatus == false) {
           chewieController?.videoPlayerController.play();
           chewieController?.videoPlayerController.setVolume(1.0);
+        } else {
+          chewieController?.videoPlayerController.pause();
+          chewieController?.videoPlayerController.setVolume(0.0);
         }
       } else {
         chewieController?.videoPlayerController.pause();
@@ -205,18 +211,21 @@ class _VideoPlayerHasControllerState
                 if (chewieController == null) return;
                 if (isVisible) {
                   if (selectedVideo != null) {
-                    chewieController!.videoPlayerController.pause();
+                    chewieController?.videoPlayerController.pause();
                     chewieController?.videoPlayerController.setVolume(0.0);
                   } else {
                     if (isPlaying && widget.isFocus == true) {
                       if (drawerStatus == false) {
-                        chewieController!.videoPlayerController.play();
+                        chewieController?.videoPlayerController.play();
                         chewieController?.videoPlayerController.setVolume(1.0);
+                      } else {
+                        chewieController?.videoPlayerController.pause();
+                        chewieController?.videoPlayerController.setVolume(0.0);
                       }
                     }
                   }
                 } else {
-                  chewieController!.videoPlayerController.pause();
+                  chewieController?.videoPlayerController.pause();
                   chewieController?.videoPlayerController.setVolume(0.0);
                 }
               });

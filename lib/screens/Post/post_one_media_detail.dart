@@ -416,7 +416,7 @@ class _PostOneMediaDetailState extends ConsumerState<PostOneMediaDetail> {
     } else {
       Navigator.push(
           context,
-          MaterialPageRoute(
+          CupertinoPageRoute(
             builder: (context) => const UserPageHome(),
             settings: RouteSettings(
               arguments: {'id': account['id'], 'user': account},

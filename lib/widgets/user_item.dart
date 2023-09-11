@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
@@ -25,7 +26,7 @@ class UserItem extends ConsumerWidget {
         if (status == true) {
           Navigator.push(
               context,
-              MaterialPageRoute(
+              CupertinoPageRoute(
                 builder: (context) => const UserPageHome(),
                 settings: RouteSettings(
                   arguments: {'id': user['id'].toString(), "user": user},

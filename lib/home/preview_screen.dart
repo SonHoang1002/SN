@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
@@ -50,7 +51,7 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
                 // ignore: use_build_context_synchronously
                 Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
+                    CupertinoPageRoute(
                         builder: ((context) => const OnboardingLoginPage())));
                 return;
               }
@@ -66,12 +67,12 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
             if (value.toString() == "[]" || value == "noData") {
               Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
+                  CupertinoPageRoute(
                       builder: ((context) => const MainLoginPage(null))));
             } else {
               Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
+                  CupertinoPageRoute(
                       builder: ((context) => const OnboardingLoginPage())));
             }
           });

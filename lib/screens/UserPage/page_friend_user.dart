@@ -182,7 +182,7 @@ class _PageFriendUserState extends ConsumerState<PageFriendUser> {
                                         onTap: () {
                                           Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                 builder: (context) =>
                                                     const UserPageHome(),
                                                 settings: RouteSettings(

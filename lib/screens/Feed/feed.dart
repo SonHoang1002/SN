@@ -271,12 +271,7 @@ class _FeedState extends ConsumerState<Feed> {
                 posts.isEmpty
                     ? Column(
                         children: [
-                          ref
-                                  .watch(momentControllerProvider)
-                                  .momentSuggest
-                                  .isNotEmpty
-                              ? const Reef()
-                              : const SizedBox(),
+                          const Reef(),
                           _buildSuggestGroupWidget(),
                           _buildSuggestFriendsWidget()
                         ],

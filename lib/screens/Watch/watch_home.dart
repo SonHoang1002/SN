@@ -88,79 +88,76 @@ class _WatchHomeState extends ConsumerState<WatchHome>
     watchData.isEmpty
         ? null
         : focusIdNotifier ??= ValueNotifier(watchData[0]?['id']);
-    return Expanded(
-        child: watchData.isNotEmpty
-            ? Column(
-                children: [
-                  Flexible(
-                      child: RefreshIndicator(
-                    onRefresh: () async {
-                      await widget.fetchDataWatch(widget.type, {"limit": 6});
-                    },
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        controller: scrollController,
-                        itemCount: watchData.length,
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, index) => VisibilityDetector(
-                              key: Key((watchData[index]?['id']) ??
-                                  Random().nextInt(10000).toString()),
-                              onVisibilityChanged: (info) {
-                                double visibleFraction = info.visibleFraction;
-                                if (visibleFraction > 0.7) {
-                                  focusIdNotifier!.value =
-                                      focusIdNotifier!.value !=
-                                              watchData[index]['id']
-                                          ? watchData[index]['id']
-                                          : focusIdNotifier!.value;
-                                  setState(() {});
-                                }
-                              },
-                              child: Column(
-                                children: [
-                                  Post(
-                                      key: Key((watchData[index]?['id']) ??
-                                          Random().nextInt(10000).toString()),
-                                      post: watchData[index],
-                                      type: widget.type ?? postWatch,
-                                      isFocus:
-                                          // widget.isFocus == true && (
-                                          focusIdNotifier!.value ==
-                                              watchData[index]['id'],
-                                      // ),
-                                      preType: widget.type == 'watch_home'
-                                          ? "suggest"
-                                          : "follow"),
-                                  index == watchData.length - 1
-                                      ? (widget.type == 'watch_home'
-                                              ? ref
-                                                  .watch(
-                                                      watchControllerProvider)
-                                                  .isMoreSuggest
-                                              : ref
-                                                  .watch(
-                                                      watchControllerProvider)
-                                                  .isMoreFollow)
-                                          ? const SizedBox()
-                                          : const Center(
-                                              child: Text(
-                                                  'Không còn bài viết gợi ý nào nữa'))
-                                      : const SizedBox()
-                                ],
-                              ),
-                            )),
-                  )),
-                ],
-              )
-            : ListView.builder(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                itemCount: 3,
-                itemBuilder: ((context, index) {
-                  return SkeletonCustom().postSkeleton(context);
-                }))
-        // const Center(child: Text('Không còn bài viết nào')),
-        );
+    return watchData.isNotEmpty
+        ? Column(
+            children: [
+              Flexible(
+                  child: RefreshIndicator(
+                onRefresh: () async {
+                  await widget.fetchDataWatch(widget.type, {"limit": 6});
+                },
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    controller: scrollController,
+                    itemCount: watchData.length,
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) => VisibilityDetector(
+                          key: Key((watchData[index]?['id']) ??
+                              Random().nextInt(10000).toString()),
+                          onVisibilityChanged: (info) {
+                            double visibleFraction = info.visibleFraction;
+                            if (visibleFraction > 0.7) {
+                              focusIdNotifier!.value =
+                                  focusIdNotifier!.value !=
+                                          watchData[index]['id']
+                                      ? watchData[index]['id']
+                                      : focusIdNotifier!.value;
+                              setState(() {});
+                            }
+                          },
+                          child: Column(
+                            children: [
+                              Post(
+                                  key: Key((watchData[index]?['id']) ??
+                                      Random().nextInt(10000).toString()),
+                                  post: watchData[index],
+                                  type: widget.type ?? postWatch,
+                                  isFocus:
+                                      // widget.isFocus == true && (
+                                      focusIdNotifier!.value ==
+                                          watchData[index]['id'],
+                                  // ),
+                                  preType: widget.type == 'watch_home'
+                                      ? "suggest"
+                                      : "follow"),
+                              index == watchData.length - 1
+                                  ? (widget.type == 'watch_home'
+                                          ? ref
+                                              .watch(
+                                                  watchControllerProvider)
+                                              .isMoreSuggest
+                                          : ref
+                                              .watch(
+                                                  watchControllerProvider)
+                                              .isMoreFollow)
+                                      ? const SizedBox()
+                                      : const Center(
+                                          child: Text(
+                                              'Không còn bài viết gợi ý nào nữa'))
+                                  : const SizedBox()
+                            ],
+                          ),
+                        )),
+              )),
+            ],
+          )
+        : ListView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            itemCount: 3,
+            itemBuilder: ((context, index) {
+              return SkeletonCustom().postSkeleton(context);
+            }));
   }
 
   @override

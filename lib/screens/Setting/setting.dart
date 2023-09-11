@@ -167,7 +167,7 @@ class _SettingState extends ConsumerState<Setting> {
     }
 
     onClickUser() {
-      Navigator.of(context).push(MaterialPageRoute(
+      Navigator.of(context).push(CupertinoPageRoute(
           builder: (_) => UserSettings(
                 data: ref.read(meControllerProvider)[0],
               )));

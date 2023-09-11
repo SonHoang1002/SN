@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -35,12 +36,12 @@ class SuggestItem extends ConsumerWidget {
         onTap: () {
           type == suggestFriends?Navigator.push(
               context,
-              MaterialPageRoute(
+              CupertinoPageRoute(
                 builder: (context) => const UserPageHome(),
                 settings: RouteSettings(
                   arguments: {'id': suggestData['id'], "user": suggestData},
                 ),
-              )): Navigator.push(context, MaterialPageRoute(
+              )): Navigator.push(context, CupertinoPageRoute(
                             builder: (context) {
                               return GroupDetail(
                                 id: suggestData['id'],

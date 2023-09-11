@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
@@ -29,7 +30,7 @@ class SearchItem extends StatelessWidget {
         item?['relationships']?['friendship_status'] == 'ARE_FRIENDS'
             ? Navigator.push(
                 context,
-                MaterialPageRoute(
+                CupertinoPageRoute(
                   builder: (context) => const UserPageHome(),
                   settings: RouteSettings(
                     arguments: {'id': item['id'].toString(), "user": item},
@@ -40,12 +41,12 @@ class SearchItem extends StatelessWidget {
                     item?["page_relationship"] != null
                 ? Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    CupertinoPageRoute(
                       builder: (context) => const PageDetail(),
                       settings: RouteSettings(arguments: item['id'].toString()),
                     ))
                 : item?["group_relationship"] != null
-                    ? Navigator.push(context, MaterialPageRoute(
+                    ? Navigator.push(context, CupertinoPageRoute(
                         builder: (context) {
                           return GroupDetail(
                             id: item['id'],

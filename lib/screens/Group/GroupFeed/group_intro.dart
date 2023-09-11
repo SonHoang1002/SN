@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
@@ -161,7 +162,7 @@ class _GroupIntroState extends ConsumerState<GroupIntro> {
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
+                          Navigator.push(context, CupertinoPageRoute(
                             builder: (context) {
                               return GroupRole(
                                 groupMember: avatarNoFriend,
@@ -311,7 +312,7 @@ class _GroupIntroState extends ConsumerState<GroupIntro> {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
+                        Navigator.push(context, CupertinoPageRoute(
                           builder: (context) {
                             return GroupRole(
                               groupMember: avatarNoFriend,

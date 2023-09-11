@@ -9,7 +9,6 @@ import 'package:social_network_app_mobile/screens/Watch/watch_saved.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
-
 import 'watch_live.dart';
 import 'watch_program.dart';
 
@@ -65,57 +64,62 @@ class _WatchRenderState extends ConsumerState<WatchRender>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Column(children: [
-      TabBar(
-        controller: tabController,
-        isScrollable: true,
-        tabs: watchMenu
-            .map(
-              (e) => Tab(
-                child: buildTextContent(e['label'], false,
-                    fontSize: 14, isCenterLeft: false),
-              ),
-            )
-            .toList(),
-        indicatorColor: primaryColor,
-        labelColor: primaryColor,
-        unselectedLabelColor: Theme.of(context).textTheme.displayLarge!.color,
-        onTap: (index) {
-          ref
-              .read(videoCurrentTabController.notifier)
-              .setVideoCurrentTab(watchMenu[index]['key']);
-          ref.read(disableVideoController.notifier).setDisableVideo(
-              watchMenu[index]['key'], false,
-              disableBefore: true);
-          if (mounted) {
-            setState(() {
-              menuSelected = watchMenu[index]['key'];
-            });
-            fetchDataWatch(watchMenu[index]['key'], {'limit': 3});
-          }
-        },
-      ),
-      buildSpacer(height: 20),
-      Expanded(
-        child: TabBarView(
+    return Scaffold(
+      appBar: AppBar(
+        actions: const [BackButtonIcon()],
+        bottom: TabBar(
           controller: tabController,
-          physics: const BouncingScrollPhysics(),
-          children: [
-            WatchHome(
-                type: watchHome,
-                fetchDataWatch: fetchDataWatch,
-                isFocus: menuSelected == watchHome),
-            WatchHome(
-                type: watchFollow,
-                fetchDataWatch: fetchDataWatch,
-                isFocus: menuSelected == watchFollow),
-            const WatchLive(),
-            const WatchProgram(),
-            const WatchSaved(),
-          ],
+          isScrollable: true,
+          tabs: watchMenu
+              .map(
+                (e) => Tab(
+                  child: buildTextContent(e['label'], false,
+                      fontSize: 14, isCenterLeft: false),
+                ),
+              )
+              .toList(),
+          indicatorColor: primaryColor,
+          labelColor: primaryColor,
+          unselectedLabelColor: Theme.of(context).textTheme.displayLarge!.color,
+          onTap: (index) {
+            ref
+                .read(videoCurrentTabController.notifier)
+                .setVideoCurrentTab(watchMenu[index]['key']);
+            ref.read(disableVideoController.notifier).setDisableVideo(
+                watchMenu[index]['key'], false,
+                disableBefore: true);
+            if (mounted) {
+              setState(() {
+                menuSelected = watchMenu[index]['key'];
+              });
+              fetchDataWatch(watchMenu[index]['key'], {'limit': 3});
+            }
+          },
         ),
-      )
-    ]);
+      ),
+      body: Column(children: [
+        buildSpacer(height: 10),
+        Expanded(
+          child: TabBarView(
+            controller: tabController,
+            physics: const BouncingScrollPhysics(),
+            children: [
+              WatchHome(
+                  type: watchHome,
+                  fetchDataWatch: fetchDataWatch,
+                  isFocus: menuSelected == watchHome),
+              WatchHome(
+                  type: watchFollow,
+                  fetchDataWatch: fetchDataWatch,
+                  isFocus: menuSelected == watchFollow),
+              const WatchLive(),
+              const WatchProgram(),
+              const WatchSaved(),
+            ],
+          ),
+        )
+      ]),
+    );
   }
 
   @override

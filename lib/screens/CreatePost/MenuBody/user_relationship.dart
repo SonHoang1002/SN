@@ -163,105 +163,119 @@ class _RelationshipState extends ConsumerState<Relationship> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
-      
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const SizedBox(),
                     InkWell(
-                    onTap: () {
-                      showBarModalBottomSheet(
-                        backgroundColor:
-                            Theme.of(context).scaffoldBackgroundColor,
-                        context: context,
-                        builder: (context) => Container(
-                          margin: const EdgeInsets.only(left: 8.0, top: 15.0),
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          child: Column(
-                            children: [
-                              ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: typeVisibility.length,
-                                itemBuilder: ((context, index) {
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 15.0, bottom: 13.0),
-                                      child:  Row(
-                          children: [
-                            Icon(
-                              typeVisibility[index]['icon'],
-                              size: 20,
+                        onTap: () {
+                          showBarModalBottomSheet(
+                            backgroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
+                            context: context,
+                            builder: (context) => Container(
+                              margin:
+                                  const EdgeInsets.only(left: 8.0, top: 15.0),
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.3,
+                              child: Column(
+                                children: [
+                                  ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: typeVisibility.length,
+                                    itemBuilder: ((context, index) {
+                                      return InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 15.0, bottom: 13.0),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                typeVisibility[index]['icon'],
+                                                size: 20,
+                                              ),
+                                              const SizedBox(
+                                                width: 12.0,
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      typeVisibility[index]
+                                                          ['label'],
+                                                      style: const TextStyle(
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.w500)),
+                                                  const SizedBox(
+                                                    height: 4.0,
+                                                  ),
+                                                  SizedBox(
+                                                    width: MediaQuery.sizeOf(
+                                                                context)
+                                                            .width -
+                                                        110,
+                                                    child: TextDescription(
+                                                        description:
+                                                            typeVisibility[
+                                                                    index]
+                                                                ['subLabel']),
+                                                  )
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                                  )
+                                ],
+                              ),
                             ),
-                            const SizedBox(
-                              width: 12.0,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Container(
+                            width: size.width * 0.28,
+                            height: 37,
+                            decoration: BoxDecoration(
+                                // color: const Color.fromARGB(189, 202, 202, 202),
+                                borderRadius: BorderRadius.circular(4),
+                                border:
+                                    Border.all(width: 0.6, color: greyColor)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(typeVisibility[index]['label'],
-                                    style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500)),
-                                const SizedBox(
-                                  height: 4.0,
+                                Text(
+                                  "Công Khai",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(
-                                  width: MediaQuery.sizeOf(context).width - 110,
-                                  child: TextDescription(
-                                      description: typeVisibility[index]
-                                          ['subLabel']),
-                                )
+                                const SizedBox(width: 4),
+                                const Padding(
+                                  padding: EdgeInsets.only(bottom: 3),
+                                  child:
+                                      Icon(FontAwesomeIcons.sortDown, size: 14),
+                                ),
                               ],
-                            )
-                          ],
-                        ),
-                                    ),
-                                  );
-                                }),
-                              )
-                            ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Container(
-                        width: size.width*0.28,
-                        height: 37,
-                        decoration: BoxDecoration(
-                            // color: const Color.fromARGB(189, 202, 202, 202),
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(width: 0.6, color: greyColor)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Công Khai",
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(width: 4),
-                            const Padding(
-                              padding: EdgeInsets.only(bottom: 3),
-                              child: Icon(FontAwesomeIcons.sortDown, size: 14),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )),
-                   
+                        )),
                   ],
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(
+                  height: 10,
+                ),
                 InkWell(
                     onTap: () {
                       showBarModalBottomSheet(
@@ -305,13 +319,12 @@ class _RelationshipState extends ConsumerState<Relationship> {
                                       padding: const EdgeInsets.only(
                                           top: 15.0, bottom: 13.0),
                                       child: Container(
-                                        margin: const EdgeInsets.only(
-                                            left: 10.0),
+                                        margin:
+                                            const EdgeInsets.only(left: 10.0),
                                         child: Text(listData[index]["name"],
                                             style: const TextStyle(
                                                 fontSize: 18.0,
-                                                fontWeight:
-                                                    FontWeight.w500)),
+                                                fontWeight: FontWeight.w500)),
                                       ),
                                     ),
                                   );
@@ -344,7 +357,9 @@ class _RelationshipState extends ConsumerState<Relationship> {
                         ],
                       ),
                     )),
-                    const SizedBox(height: 20,),
+                const SizedBox(
+                  height: 20,
+                ),
                 checkRelationship
                     ? Container(
                         padding: const EdgeInsets.all(12),
@@ -367,8 +382,8 @@ class _RelationshipState extends ConsumerState<Relationship> {
                                               ['avatar_media']['preview_url']
                                           : linkAvatarDefault
                                       : inforRelationship != null
-                                          ? inforRelationship[0]
-                                              ['avatar_media']['preview_url']
+                                          ? inforRelationship[0]['avatar_media']
+                                              ['preview_url']
                                           : linkAvatarDefault),
                               const SizedBox(
                                 width: 8.0,
@@ -380,8 +395,7 @@ class _RelationshipState extends ConsumerState<Relationship> {
                                             ['display_name'] ??
                                         "Chọn bạn đời ...",
                                 style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500),
+                                    fontSize: 13, fontWeight: FontWeight.w500),
                               )
                             ],
                           ),

@@ -173,7 +173,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                           courseDetail['page_owner'] != null
                               ? Navigator.push(
                                   context,
-                                  MaterialPageRoute(
+                                  CupertinoPageRoute(
                                     builder: (context) => const PageDetail(),
                                     settings: RouteSettings(
                                         arguments: courseDetail['page_owner']
@@ -182,7 +182,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                   ))
                               : Navigator.push(
                                   context,
-                                  MaterialPageRoute(
+                                  CupertinoPageRoute(
                                     builder: (context) => const UserPageHome(),
                                     settings: RouteSettings(
                                       arguments: {
@@ -223,7 +223,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                 courseDetail['page_owner'] != null
                                     ? Navigator.push(
                                         context,
-                                        MaterialPageRoute(
+                                        CupertinoPageRoute(
                                           builder: (context) =>
                                               const PageDetail(),
                                           settings: RouteSettings(
@@ -234,7 +234,7 @@ class _LearnSpaceIntroState extends ConsumerState<LearnSpaceIntro> {
                                         ))
                                     : Navigator.push(
                                         context,
-                                        MaterialPageRoute(
+                                        CupertinoPageRoute(
                                           builder: (context) =>
                                               const UserPageHome(),
                                           settings: RouteSettings(

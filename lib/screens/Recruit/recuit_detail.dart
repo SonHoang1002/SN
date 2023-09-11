@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -127,7 +128,7 @@ class _RecruitDetailState extends ConsumerState<RecruitDetail> {
                           //Chuyển đến web để tạo CV và nộp luôn trên web
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
+                            CupertinoPageRoute(
                               builder: (context) => SizedBox(
                                 width: MediaQuery.sizeOf(context).width,
                                 child: WebView(

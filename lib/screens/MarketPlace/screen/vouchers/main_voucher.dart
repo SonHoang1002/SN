@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -421,7 +422,7 @@ class _ContentVoucherPageState extends State<ContentVoucherPage> {
                               Navigator.pop(context);
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
+                                CupertinoPageRoute(
                                   builder: (context) => CreateVoucherPage(
                                     type: 'shop',
                                     pageId: widget.pageId,
@@ -452,7 +453,7 @@ class _ContentVoucherPageState extends State<ContentVoucherPage> {
                               Navigator.pop(context);
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
+                                CupertinoPageRoute(
                                   builder: (context) => CreateVoucherPage(
                                     type: 'products',
                                     pageId: widget.pageId,
@@ -628,7 +629,7 @@ class VoucherWidget extends StatelessWidget {
                               statusVoucher == "now")
                           ? null
                           : () {
-                              Navigator.push(context, MaterialPageRoute(
+                              Navigator.push(context, CupertinoPageRoute(
                                 builder: (context) {
                                   return CreateVoucherPage(
                                     type: objectItem["applicable_products"] ==

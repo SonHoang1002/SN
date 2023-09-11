@@ -89,7 +89,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
         imageDataFuture.then((imageData) {
           Navigator.push(
             context,
-            MaterialPageRoute(
+            CupertinoPageRoute(
               builder: (context) => CropImageScreen(
                 image: imageData,
                 onChange: (value) {

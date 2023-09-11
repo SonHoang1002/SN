@@ -88,7 +88,7 @@ class _EditDetailState extends ConsumerState<EditDetail> {
                     onTap: () async {
                       final selectedCategory = await Navigator.push(
                         context,
-                        MaterialPageRoute(
+                        CupertinoPageRoute(
                             builder: (context) => const SelectCategory()),
                       );
                       if (selectedCategory != null) {

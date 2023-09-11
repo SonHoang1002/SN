@@ -85,7 +85,7 @@ class _CreateMomentState extends ConsumerState<CreateMoment> {
   handleSubmit() {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(
+        CupertinoPageRoute(
             builder: (context) => Moment(
                     imageUpload: widget.imageCover,
                     dataUploadMoment: {

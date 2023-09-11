@@ -222,7 +222,7 @@ class _WatchSuggestState extends ConsumerState<WatchSuggest> {
                               //   onDoubleTap: () {
                               //     Navigator.push(
                               //         context,
-                              //         MaterialPageRoute(
+                              //         CupertinoPageRoute(
                               //             builder: (context) => WatchDetail(
                               //                   post: watchPost ??
                               //                       widget.post,

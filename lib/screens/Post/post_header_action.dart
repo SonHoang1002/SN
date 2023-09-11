@@ -182,7 +182,7 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
     } else if (key == "comment_permission_post") {
       Navigator.push(
         context,
-        MaterialPageRoute(
+        CupertinoPageRoute(
             builder: (context) => CreateModalBaseMenu(
                   title: "Bình luận về bài viết này",
                   body: PagePermissionComment(
@@ -216,7 +216,7 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
           .firstWhere((element) => element['key'] == widget.post['visibility']);
       Navigator.push(
           context,
-          MaterialPageRoute(
+          CupertinoPageRoute(
               builder: (context) => CreateModalBaseMenu(
                   title: "Chỉnh sửa quyền riêng tư",
                   body: PageVisibility(
@@ -230,7 +230,7 @@ class _PostHeaderActionState extends ConsumerState<PostHeaderAction> {
       Navigator.pop(context);
       Navigator.push(
           context,
-          MaterialPageRoute(
+          CupertinoPageRoute(
               builder: (context) => CreateNewFeed(
                     post: widget.post,
                     type: widget.type,

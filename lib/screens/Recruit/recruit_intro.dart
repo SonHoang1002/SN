@@ -198,7 +198,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                           recruitDetail['page_owner'] != null
                               ? Navigator.push(
                                   context,
-                                  MaterialPageRoute(
+                                  CupertinoPageRoute(
                                     builder: (context) => const PageDetail(),
                                     settings: RouteSettings(
                                         arguments: recruitDetail['page_owner']
@@ -207,7 +207,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                   ))
                               : Navigator.push(
                                   context,
-                                  MaterialPageRoute(
+                                  CupertinoPageRoute(
                                     builder: (context) => const UserPageHome(),
                                     settings: RouteSettings(
                                       arguments: {
@@ -249,7 +249,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                 recruitDetail['page_owner'] != null
                                     ? Navigator.push(
                                         context,
-                                        MaterialPageRoute(
+                                        CupertinoPageRoute(
                                           builder: (context) =>
                                               const PageDetail(),
                                           settings: RouteSettings(
@@ -260,7 +260,7 @@ class _RecruitIntroState extends ConsumerState<RecruitIntro> {
                                         ))
                                     : Navigator.push(
                                         context,
-                                        MaterialPageRoute(
+                                        CupertinoPageRoute(
                                           builder: (context) =>
                                               const UserPageHome(),
                                           settings: RouteSettings(

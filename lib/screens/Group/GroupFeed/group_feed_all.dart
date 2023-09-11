@@ -1,4 +1,5 @@
 import 'package:extended_image/extended_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
@@ -56,7 +57,7 @@ class _GroupFeedAllState extends ConsumerState<GroupFeedAll> {
                   itemCount: groupMember.length,
                   itemBuilder: (context, index) => InkWell(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
+                          Navigator.push(context, CupertinoPageRoute(
                             builder: (context) {
                               return GroupDetail(
                                 id: groupMember[index]['id'],

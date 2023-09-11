@@ -133,7 +133,7 @@ class _UserPageFriendBlockState extends ConsumerState<UserPageFriendBlock> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
+                            CupertinoPageRoute(
                               builder: (context) => const UserPageHome(),
                               settings: RouteSettings(
                                 arguments: {

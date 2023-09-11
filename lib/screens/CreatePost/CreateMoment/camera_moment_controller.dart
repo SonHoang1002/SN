@@ -52,7 +52,7 @@ class _CameraMomentControllerState extends State<CameraMomentController> {
     var navigate = Navigator.of(context);
     XFile videoFile = await controller!.stopVideoRecording();
     if (videoFile.path.isNotEmpty) {
-      navigate.pushReplacement(MaterialPageRoute(
+      navigate.pushReplacement(CupertinoPageRoute(
           builder: (context) => MomentCover(
                 videoPath: videoFile.path,
               )));
@@ -206,12 +206,12 @@ class _BottomActionState extends State<BottomAction>
             onTap: () {
               Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  CupertinoPageRoute(
                       builder: (context) => GalleryDevice(
                           handleAction: (dynamic asset) async {
                             final navigate = Navigator.of(context);
                             // File videoFile = await convertVideo(asset!);
-                            navigate.push(MaterialPageRoute(
+                            navigate.push(CupertinoPageRoute(
                                 builder: (context) => MomentCover(
                                     videoPath: asset!['file'].path,
                                     videoPathUpload: asset!['filePath'])));

@@ -113,7 +113,7 @@ class _ManagerDetailState extends ConsumerState<ManagerDetail> {
                     itemBuilder: (context, index) {
                       return ListTile(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
+                          Navigator.push(context, CupertinoPageRoute(
                             builder: (context) {
                               return ApprovalGroup(
                                 menuSelected: requestManager[index]['key'],

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:badges/badges.dart' as ChipNoti;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pv;
@@ -53,7 +54,7 @@ class _MenuUserState extends ConsumerState<MenuUser> {
               if (status == true) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  CupertinoPageRoute(
                     builder: (context) => const UserPageHome(),
                     settings: RouteSettings(
                       arguments: {'id': meData['id'], "user": meData},

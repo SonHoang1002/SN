@@ -186,7 +186,7 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
                     ..pop();
                   Navigator.push(
                       context,
-                      MaterialPageRoute(
+                      CupertinoPageRoute(
                         builder: (context) => SearchGroup(
                             groupDetail: groupDetail,
                             query: searchController.text),

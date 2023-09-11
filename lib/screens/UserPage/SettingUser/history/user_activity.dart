@@ -96,7 +96,7 @@ class _UserActivityListState extends ConsumerState<UserActivityList> {
       case 'manage':
         Navigator.push(
           context,
-          MaterialPageRoute(
+          CupertinoPageRoute(
             builder: (context) => SizedBox(
               width: MediaQuery.sizeOf(context).width,
               child: WebView(

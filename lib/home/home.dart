@@ -142,7 +142,7 @@ class _HomeState extends ConsumerState<Home>
           ref
               .read(disableVideoController.notifier)
               .setDisableVideo(currentTab, false, disableBefore: true);
-           }
+        }
       }
     }
   }
@@ -163,7 +163,7 @@ class _HomeState extends ConsumerState<Home>
         } else {
           Navigator.pushReplacement(
               context,
-              MaterialPageRoute(
+              CupertinoPageRoute(
                   builder: ((context) => const OnboardingLoginPage())));
         }
       });
@@ -530,7 +530,7 @@ class _HomeState extends ConsumerState<Home>
                   )));
     } else if (key == 'search') {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Search()));
+          context, CupertinoPageRoute(builder: (context) => const Search()));
     } else if (key == 'chat') {}
   }
 
@@ -633,6 +633,7 @@ class _HomeState extends ConsumerState<Home>
       Feed(
         callbackFunction: _showBottomNavigator,
       ),
+      // const SizedBox(),
       Moment(
         typePage: 'home',
         isDisable: ref.watch(disableMomentController).isDisable,
@@ -706,16 +707,17 @@ class _HomeState extends ConsumerState<Home>
         onDrawerChanged: (isOpened) {
           _onDrawerChanged(isOpened);
         },
-        appBar: _selectedIndex == 1 || _selectedIndex == 4
-            ? null
-            : AppBar(
-                elevation: 0,
-                centerTitle: false,
-                iconTheme: const IconThemeData(color: primaryColor),
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                actions: actions.elementAt(_selectedIndex),
-                title: titles.elementAt(_selectedIndex),
-              ),
+        appBar:
+            _selectedIndex == 1 || _selectedIndex == 4 || _selectedIndex == 3
+                ? null
+                : AppBar(
+                    elevation: 0,
+                    centerTitle: false,
+                    iconTheme: const IconThemeData(color: primaryColor),
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    actions: actions.elementAt(_selectedIndex),
+                    title: titles.elementAt(_selectedIndex),
+                  ),
         body: IndexedStack(
           index: _selectedIndex,
           children: pages,

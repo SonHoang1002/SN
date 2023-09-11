@@ -121,7 +121,7 @@ class _RecruitCVState extends ConsumerState<RecruitCV> {
                               var id = recruitsCV[index]['id'];
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
+                                CupertinoPageRoute(
                                   builder: (context) => SizedBox(
                                     width: MediaQuery.sizeOf(context).width,
                                     child: WebView(

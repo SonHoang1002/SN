@@ -209,7 +209,7 @@ class _RecruitNewsState extends ConsumerState<RecruitNews> {
                                 onTap: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(
+                                    CupertinoPageRoute(
                                       builder: (context) => RecruitDetail(
                                         data: recruits[index],
                                       ),

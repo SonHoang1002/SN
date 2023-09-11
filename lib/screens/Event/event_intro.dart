@@ -173,7 +173,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                             hosts[index]['account']['group']
                                 ? Navigator.push(
                                     context,
-                                    MaterialPageRoute(
+                                    CupertinoPageRoute(
                                       builder: (context) => const PageDetail(),
                                       settings: RouteSettings(
                                           arguments: hosts[index]['account']
@@ -182,7 +182,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                     ))
                                 : Navigator.push(
                                     context,
-                                    MaterialPageRoute(
+                                    CupertinoPageRoute(
                                       builder: (context) =>
                                           const UserPageHome(),
                                       settings: RouteSettings(
@@ -304,7 +304,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                       hosts[index]['account']['group']
                                           ? Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                 builder: (context) =>
                                                     const PageDetail(),
                                                 settings: RouteSettings(
@@ -314,7 +314,7 @@ class _EventIntroState extends ConsumerState<EventIntro> {
                                               ))
                                           : Navigator.push(
                                               context,
-                                              MaterialPageRoute(
+                                              CupertinoPageRoute(
                                                 builder: (context) =>
                                                     const UserPageHome(),
                                                 settings: RouteSettings(

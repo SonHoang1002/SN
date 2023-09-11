@@ -303,7 +303,7 @@ class _LearnSpaceCardState extends ConsumerState<LearnSpaceCard> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
+                                CupertinoPageRoute(
                                   builder: (context) => LearnSpaceDetail(
                                     data: course[index],
                                   ),

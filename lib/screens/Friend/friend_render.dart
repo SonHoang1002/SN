@@ -90,7 +90,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                 onTap: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(
+                                    CupertinoPageRoute(
                                       builder: (context) =>  const UserPageHome(),
                                       settings: RouteSettings(
                                         arguments: {
@@ -441,7 +441,7 @@ class _FriendRenderState extends ConsumerState<FriendRender> {
                                 onTap: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(
+                                    CupertinoPageRoute(
                                       builder: (context) => const UserPageHome(),
                                       settings: RouteSettings(
                                         arguments: {

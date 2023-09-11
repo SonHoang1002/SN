@@ -28,9 +28,30 @@ class _ReefState extends ConsumerState<Reef> {
   List momentSuggests = [];
 
   @override
+  void initState() {
+    if (!mounted) return;
+    super.initState();
+    if (mounted) {
+      Future.delayed(Duration.zero, () async {
+        if (ref.read(momentControllerProvider).momentSuggest.isEmpty) {
+          ref
+              .read(momentControllerProvider.notifier)
+              .getListMomentSuggest({'limit': 3});
+        }
+        if (ref.read(momentControllerProvider).momentFollow.isEmpty) {
+          ref
+              .read(momentControllerProvider.notifier)
+              .getListMomentFollow({'limit': 3});
+        }
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     momentSuggests = ref.watch(momentControllerProvider).momentSuggest;
 
+    print("momentSuggests momentSuggests ${momentSuggests.length}");
     return momentSuggests.isNotEmpty
         ? Column(
             children: [
@@ -50,14 +71,15 @@ class _ReefState extends ConsumerState<Reef> {
                       firstFunction: () {
                         Navigator.push(
                             context,
-                            MaterialPageRoute(
+                            CupertinoPageRoute(
                                 builder: (context) =>
                                     const CameraMomentController()));
                       },
                       secondFunction: () {
-                        
                         pushCustomCupertinoPageRoute(
-                            context, const UserPageHome(),);
+                          context,
+                          const UserPageHome(),
+                        );
                       },
                     )
                   ],

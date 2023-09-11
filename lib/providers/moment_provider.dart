@@ -51,11 +51,10 @@ class MomentController extends StateNotifier<MomentState> {
 
   getListMomentFollow(params) async {
     List response = await MomentApi().getListMomentFollow(params) ?? [];
-    List listResult = checkObjectUniqueInList(state.momentFollow + response, "id");
+    List listResult =
+        checkObjectUniqueInList(state.momentFollow + response, "id");
     state = state.copyWith(
-        momentFollow:
-            listResult,
-        momentSuggest: state.momentSuggest);
+        momentFollow: listResult, momentSuggest: state.momentSuggest);
   }
 
   updateReaction(reaction, id) async {
@@ -122,6 +121,9 @@ class MomentController extends StateNotifier<MomentState> {
 
   getListMomentSuggest(params) async {
     List response = await MomentApi().getListMomentSuggest(params) ?? [];
+    if (response.isEmpty) {
+      response.addAll(fakeMomentSuggest);
+    }
     if (mounted) {
       final newMoment = response
           .where((item) => !state.momentSuggest.contains(item))
@@ -129,7 +131,8 @@ class MomentController extends StateNotifier<MomentState> {
       state = state.copyWith(
           momentFollow: state.momentFollow,
           momentSuggest: params.containsKey('max_id')
-              ? checkObjectUniqueInList([...state.momentSuggest, ...newMoment], "id")
+              ? checkObjectUniqueInList(
+                  [...state.momentSuggest, ...newMoment], "id")
               : newMoment);
     }
   }

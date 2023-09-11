@@ -85,7 +85,7 @@ class _PageDiscoverState extends ConsumerState<PageDiscover> {
                             onTap: () async {
                               Navigator.push(
                                   context,
-                                  MaterialPageRoute(
+                                  CupertinoPageRoute(
                                     builder: (context) => const PageDetail(),
                                     settings: RouteSettings(
                                         arguments: pageDiscover![index]['id']

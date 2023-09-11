@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -108,7 +109,7 @@ class _PhotoPageState extends ConsumerState<PhotoPage> {
                   : (value) {
                       Navigator.push(
                           context,
-                          MaterialPageRoute(
+                          CupertinoPageRoute(
                               builder: (context) => RenderPageAlbum(
                                     idAlbum: value['id'],
                                     nameAlbum: value['title'],

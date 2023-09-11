@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/screens/Post/post_detail.dart';
@@ -87,7 +88,7 @@ class _PostMediaState extends State<PostMedia> {
         if (medias[initialIndex]['type'] == "video") {
           Navigator.push(
               context,
-              MaterialPageRoute(
+              CupertinoPageRoute(
                   builder: (context) => WatchDetail(
                         post: widget.post,
                         media: medias[initialIndex],
