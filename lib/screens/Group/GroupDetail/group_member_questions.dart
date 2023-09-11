@@ -240,36 +240,40 @@ class _GroupMemberQuestionsState extends ConsumerState<GroupMemberQuestions> {
                           isGrey: validateForm(),
                           label: "Gửi",
                           handlePress: () async {
-                            List<Map> params = [];
-                            for (var items in listQuestion) {
-                              int index = listQuestion.indexOf(items);
-                              dynamic selected;
-                              switch (index) {
-                                case 0:
-                                  selected = convertAnswered(question1, 0);
-                                  break;
-                                case 1:
-                                  selected = convertAnswered(question2, 1);
-                                  break;
-                                case 2:
-                                  selected = convertAnswered(question3, 2);
-                                  break;
+                            if (validateForm()) {
+                            } else {
+                              List<Map> params = [];
+                              for (var items in listQuestion) {
+                                int index = listQuestion.indexOf(items);
+                                dynamic selected;
+                                switch (index) {
+                                  case 0:
+                                    selected = convertAnswered(question1, 0);
+                                    break;
+                                  case 1:
+                                    selected = convertAnswered(question2, 1);
+                                    break;
+                                  case 2:
+                                    selected = convertAnswered(question3, 2);
+                                    break;
+                                }
+                                var newItem = {
+                                  "question_id": items["id"],
+                                  "answer": selected
+                                };
+                                params.add(newItem);
                               }
-                              var newItem = {
-                                "question_id": items["id"],
-                                "answer": selected
-                              };
-                              params.add(newItem);
-                            }
-                            context.loaderOverlay.show();
-                            //Navigator.of(context).pop();
-                            await GroupApi().joinGroupRequestWithParams(
-                                widget.groupDetail["id"], {"answers": params});
-                            await ref
-                                .read(groupListControllerProvider.notifier)
-                                .updateGroupDetail(widget.groupDetail["id"]);
-                            if (mounted) {
-                              Navigator.of(context).pop();
+                              context.loaderOverlay.show();
+                              //Navigator.of(context).pop();
+                              await GroupApi().joinGroupRequestWithParams(
+                                  widget.groupDetail["id"],
+                                  {"answers": params});
+                              await ref
+                                  .read(groupListControllerProvider.notifier)
+                                  .updateGroupDetail(widget.groupDetail["id"]);
+                              if (mounted) {
+                                Navigator.of(context).pop();
+                              }
                             }
                           },
                         ),
