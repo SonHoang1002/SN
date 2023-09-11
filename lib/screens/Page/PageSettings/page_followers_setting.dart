@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/page/page_follower_management_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
@@ -122,9 +124,9 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                 ),
               ),
-              const Text(
-                "Đây là nơi hiển thị những người và Trang khác đã thích tam hon trong sang. Từ danh sách người thích Trang, hãy nhấp vào để xóa hoặc cấm ai đó khỏi danh sách này. Người bị cấm không thể đăng, bình luận, gửi tin nhắn hoặc thực hiện các hành động khác trên Trang.",
-                style: TextStyle(fontSize: 14),
+              Text(
+                "Đây là nơi hiển thị những người và Trang khác đã thích ${widget.data["title"]}. Từ danh sách người thích Trang, hãy nhấp vào để xóa hoặc cấm ai đó khỏi danh sách này. Người bị cấm không thể đăng, bình luận, gửi tin nhắn hoặc thực hiện các hành động khác trên Trang.",
+                style: const TextStyle(fontSize: 14),
               ),
               const SizedBox(
                 height: 10,
@@ -186,6 +188,7 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                           context.loaderOverlay.show();
                           var res;
                           if (menuSelected != "blocked") {
+                            //api 500
                             res = await PageApi().pageBlockAccount(
                                 widget.data["id"],
                                 {"target_account_ids": arrayToStringList()});
@@ -292,6 +295,14 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
     });
   }
 
+  String formatDate(String inputDate) {
+    final inputFormat = DateFormat('yyyy-MM-dd');
+    final outputFormat = DateFormat('dd-MM-yyyy');
+    final date = inputFormat.parse(inputDate);
+    final formattedDate = outputFormat.format(date);
+    return formattedDate;
+  }
+
   Widget renderTab(data) {
     if (data != null) {
       switch (menuSelected) {
@@ -323,7 +334,7 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
+              SizedBox(
                 width: width * 0.1,
                 child: Checkbox(
                   value: selectAll,
@@ -335,8 +346,8 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                   },
                 ),
               ),
-              Container(width: width * 0.6, child: Text("Họ tên")),
-              Container(width: width * 0.3, child: Text("Ngày đăng ký")),
+              SizedBox(width: width * 0.6, child: const Text("Họ tên")),
+              SizedBox(width: width * 0.3, child: const Text("Ngày đăng ký")),
             ],
           ),
         ),
@@ -344,40 +355,40 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
           child: ListView.builder(
               itemCount: filteredUserList.length,
               shrinkWrap: true,
-              itemBuilder: (context, index) => GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        checkIndex[index] = !checkIndex[index];
-                        showButton = checkAvailableButton();
-                      });
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: width * 0.1,
-                          child: Checkbox(
-                            value: checkIndex[index],
-                            activeColor: secondaryColor,
-                            onChanged: (value) {
-                              setState(() {
-                                checkIndex[index] = value;
-                                showButton = checkAvailableButton();
-                              });
-                            },
-                          ),
+              itemBuilder: (context, index) {
+                String displaysDate =
+                    formatDate(filteredUserList[index]["last_status_at"]);
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      checkIndex[index] = !checkIndex[index];
+                      showButton = checkAvailableButton();
+                    });
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: width * 0.1,
+                        child: Checkbox(
+                          value: checkIndex[index],
+                          activeColor: secondaryColor,
+                          onChanged: (value) {
+                            setState(() {
+                              checkIndex[index] = value;
+                              showButton = checkAvailableButton();
+                            });
+                          },
                         ),
-                        Container(
-                            width: width * 0.6,
-                            child:
-                                Text(filteredUserList[index]["display_name"])),
-                        Container(
-                            width: width * 0.3,
-                            child: Text(
-                                filteredUserList[index]["last_status_at"])),
-                      ],
-                    ),
-                  )),
+                      ),
+                      SizedBox(
+                          width: width * 0.6,
+                          child: Text(filteredUserList[index]["display_name"])),
+                      SizedBox(width: width * 0.3, child: Text(displaysDate)),
+                    ],
+                  ),
+                );
+              }),
         )
       ],
     );
@@ -398,7 +409,7 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
+              SizedBox(
                 width: width * 0.1,
                 child: Checkbox(
                   value: selectAll,
@@ -410,9 +421,9 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                   },
                 ),
               ),
-              Container(width: width * 0.4, child: Text("Họ tên")),
-              Container(width: width * 0.3, child: Text("Ngày đăng ký")),
-              Container(width: width * 0.2, child: Text("Người chặn")),
+              SizedBox(width: width * 0.4, child: Text("Họ tên")),
+              SizedBox(width: width * 0.3, child: Text("Ngày đăng ký")),
+              SizedBox(width: width * 0.2, child: Text("Người chặn")),
             ],
           ),
         ),
@@ -430,7 +441,7 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Container(
+                        SizedBox(
                           width: width * 0.1,
                           child: Checkbox(
                             value: checkIndex[index],
@@ -443,15 +454,15 @@ class _PageFollowersSettingsState extends ConsumerState<PageFollowersSettings> {
                             },
                           ),
                         ),
-                        Container(
+                        SizedBox(
                             width: width * 0.4,
                             child: Text(filteredUserList[index]
                                 ["target_account"]["display_name"])),
-                        Container(
+                        SizedBox(
                             width: width * 0.3,
                             child: Text(filteredUserList[index]
                                 ["target_account"]["last_status_at"])),
-                        Container(
+                        SizedBox(
                           width: width * 0.2,
                           child: Text(filteredUserList[index]["account"]
                               ["display_name"]),

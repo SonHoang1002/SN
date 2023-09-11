@@ -17,6 +17,8 @@ import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_wid
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 
+import '../../../helpers.dart';
+
 class PageGeneralSettings extends ConsumerStatefulWidget {
   final dynamic data;
   final bool? rolePage;
@@ -188,6 +190,7 @@ class _PageGeneralSettingsState extends ConsumerState<PageGeneralSettings> {
                               ...monitored_keywords,
                               _categoryController.text
                             ];
+                            consoleLog("name", monitored_keywords);
                             setState(() {
                               _categoryController.text = "";
                             });
@@ -221,6 +224,12 @@ class _PageGeneralSettingsState extends ConsumerState<PageGeneralSettings> {
                                 child: ButtonPrimary(
                                   label: 'Lưu thay đổi',
                                   handlePress: () async {
+                                    if (_categoryController.text.isNotEmpty) {
+                                      monitored_keywords = [
+                                        ...monitored_keywords,
+                                        _categoryController.text
+                                      ];
+                                    }
                                     context.loaderOverlay.show();
                                     var res = await PageApi().pagePostMedia(
                                       {

@@ -1,70 +1,77 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
 class CreateUpdateRender extends StatelessWidget {
+  final GlobalKey formKey;
   final List infoField;
-  const CreateUpdateRender({super.key, required this.infoField});
+  const CreateUpdateRender(
+      {super.key, required this.infoField, required this.formKey});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 50.0),
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: infoField.length,
-        itemBuilder: (context, index) {
-          switch (infoField[index]['type']) {
-            case 'blank':
-              return const SizedBox(
-                height: 50,
-              );
-            case 'title':
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    infoField[index]['title'],
-                    style: const TextStyle(
-                        // color:  white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Text(
-                      'Thành công rồi! Bạn đã tạo trang thành công. Hãy bổ sung thông tin chi tiết để mọi người dễ dàng kết nối với bạn nhé.',
-                      style: TextStyle(fontSize: 17)),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
-              );
+      child: Form(
+        key: formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: infoField.length,
+          itemBuilder: (context, index) {
+            switch (infoField[index]['type']) {
+              case 'blank':
+                return const SizedBox(
+                  height: 50,
+                );
+              case 'title':
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      infoField[index]['title'],
+                      style: const TextStyle(
+                          // color:  white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text(
+                        'Thành công rồi! Bạn đã tạo trang thành công. Hãy bổ sung thông tin chi tiết để mọi người dễ dàng kết nối với bạn nhé.',
+                        style: TextStyle(fontSize: 17)),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                );
 
-            case 'radio':
-              return _buildRadioGroup(
+              case 'radio':
+                return _buildRadioGroup(
+                    infoField[index]['title'],
+                    infoField[index]['iconTitle'],
+                    infoField[index]['description'],
+                    infoField[index]['options'],
+                    infoField[index]['radioGroup'],
+                    infoField[index]['action'],
+                    infoField[index]['valueRadio']);
+              case 'autocomplete':
+                return _buildAutocomplete(context, infoField[index]['title'],
+                    infoField[index]['action'], infoField[index]['listSelect']);
+              default:
+                return _buildTextFormField(
                   infoField[index]['title'],
                   infoField[index]['iconTitle'],
                   infoField[index]['description'],
-                  infoField[index]['options'],
-                  infoField[index]['radioGroup'],
-                  infoField[index]['action'],
-                  infoField[index]['valueRadio']);
-            case 'autocomplete':
-              return _buildAutocomplete(context, infoField[index]['title'],
-                  infoField[index]['action'], infoField[index]['listSelect']);
-            default:
-              return _buildTextFormField(
-                infoField[index]['title'],
-                infoField[index]['iconTitle'],
-                infoField[index]['description'],
-                infoField[index]['placeholder'],
-                infoField[index]['type'],
-              );
-          }
-        },
+                  infoField[index]['placeholder'],
+                  infoField[index]['type'],
+                );
+            }
+          },
+        ),
       ),
     );
   }
@@ -105,13 +112,52 @@ class CreateUpdateRender extends StatelessWidget {
               ),
             ),
           TextFormField(
-            maxLength: 100,
+            maxLength: placeholder == "Số điện thoại" ? 11 : 100,
             onChanged: ((value) {}),
             validator: (value) {
-              if (value != null) {}
-              return null;
+              if (value != null && value.isNotEmpty) {
+                if (placeholder == "Số điện thoại") {
+                  if (value.startsWith('0') == false) {
+                    return 'Số điện thoại phải bắt đầu bằng số 0';
+                  } else {
+                    if (value.length >= 10 && value.length < 12) {
+                      return null; // Giá trị hợp lệ, không báo lỗi
+                    } else {
+                      return 'Số điện thoại phải có độ dài từ 10 đến 11 kí tự'; // Báo lỗi khi độ dài không phù hợp
+                    }
+                  }
+                } else if (placeholder == "Email") {
+                  // Sử dụng RegExp để kiểm tra định dạng email
+                  final emailRegExp = RegExp(
+                    r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$',
+                  );
+
+                  if (!emailRegExp.hasMatch(value)) {
+                    return 'Email không hợp lệ';
+                  }
+
+                  return null; // Giá trị hợp lệ
+                } else if (placeholder == "Trang web") {
+                  // Biểu thức chính quy kiểm tra URL có đúng định dạng không
+                  final urlRegExp = RegExp(
+                    r'^https?://(?:www\.)?[a-zA-Z0-9\.-]+\.[a-zA-Z]{2,6}(?:[/\w\.-]*)*/?$',
+                  );
+
+                  if (!urlRegExp.hasMatch(value)) {
+                    return 'Địa chỉ trang web không hợp lệ';
+                  }
+
+                  return null; // Giá trị hợp lệ
+                }
+              }
+
+              return null; // Không báo lỗi nếu giá trị rỗng hoặc null
             },
-            keyboardType: type == 'number' ? TextInputType.number : null,
+            keyboardType: placeholder == "Email"
+                ? TextInputType.emailAddress
+                : type == 'number'
+                    ? TextInputType.number
+                    : null,
             decoration: InputDecoration(
                 suffix: placeholder == placeholder
                     ? const Icon(
@@ -271,7 +317,8 @@ class CreateUpdateRender extends StatelessWidget {
                     onChanged: ((value) {
                       if (action != null) action();
                     }),
-                    style: const TextStyle(color: white),
+                    style: TextStyle(
+                        color: Theme.of(context).textTheme.displayLarge!.color),
                     decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -293,36 +340,48 @@ class CreateUpdateRender extends StatelessWidget {
                         itemCount: listSelected.length,
                         itemBuilder: ((context, index) {
                           if (listSelected.isNotEmpty) {
-                            return Container(
-                              padding: const EdgeInsets.only(left: 10),
-                              height: 40,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                      child: Flex(
-                                    direction: Axis.horizontal,
-                                    children: [
-                                      Text(
-                                        listSelected[index],
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                        ),
-                                      )
-                                    ],
-                                  )),
-                                  const Divider(
-                                    height: 2,
-                                    color: white,
-                                  )
-                                ],
+                            return InkWell(
+                              onTap: () {
+                                
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.only(left: 10),
+                                height: 40,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                        child: Flex(
+                                      direction: Axis.horizontal,
+                                      children: [
+                                        Text(
+                                          listSelected[index],
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                        )
+                                      ],
+                                    )),
+                                    Divider(
+                                      height: 2,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .displayLarge!
+                                          .color,
+                                    )
+                                  ],
+                                ),
                               ),
                             );
                           }
-                          return const Center(
+                          return Center(
                               child: Text(" Không có dữ liệu",
-                                  style: TextStyle(color: white)));
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .displayLarge!
+                                          .color)));
                         }))),
               ]),
             );

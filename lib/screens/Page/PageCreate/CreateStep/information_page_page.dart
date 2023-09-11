@@ -138,7 +138,7 @@ class _InformationPagePageState extends State<InformationPagePage> {
             Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 18),
-                child: CreateUpdateRender(infoField: infoField)),
+                child: CreateUpdateRender(infoField: infoField, formKey: _informationKey,)),
             Container(
               color: Theme.of(context).scaffoldBackgroundColor,
               padding: const EdgeInsets.only(bottom: 20),
