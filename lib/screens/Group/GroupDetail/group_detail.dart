@@ -21,7 +21,6 @@ import 'package:social_network_app_mobile/widgets/report_category.dart';
 
 import 'package:social_network_app_mobile/widgets/skeleton.dart';
 
-
 import '../../../apis/post_api.dart';
 import '../../../widgets/back_icon_appbar.dart';
 import '../../../widgets/screen_share.dart';
@@ -58,6 +57,9 @@ class _GroupDetailState extends ConsumerState<GroupDetail> {
             );
           },
         );
+        ref
+            .read(groupListControllerProvider.notifier)
+            .getMemberQuestion(widget.id);
         ref
             .read(groupListControllerProvider.notifier)
             .getGroupRole({'role': 'admin'}, widget.id);
