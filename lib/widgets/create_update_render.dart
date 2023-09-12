@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:social_network_app_mobile/apis/market_place_apis/province_api.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 
@@ -23,10 +24,12 @@ class _CreateUpdateRenderState extends State<CreateUpdateRender> {
     selectedAdress = widget.infoField[6]['title'];
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 50.0),
+
       child: ListView.builder(
         shrinkWrap: true,
         itemCount: widget.infoField.length,
@@ -83,6 +86,7 @@ class _CreateUpdateRenderState extends State<CreateUpdateRender> {
                   widget.infoField[index]['for']);
           }
         },
+
       ),
     );
   }
@@ -148,6 +152,7 @@ class _CreateUpdateRenderState extends State<CreateUpdateRender> {
               ),
             ),
           TextFormField(
+
             controller: controller,
             maxLength: 100,
             onChanged: (value) {
@@ -174,8 +179,13 @@ class _CreateUpdateRenderState extends State<CreateUpdateRender> {
                 }
               }
               return null;
+
             },
-            keyboardType: type == 'number' ? TextInputType.number : null,
+            keyboardType: placeholder == "Email"
+                ? TextInputType.emailAddress
+                : type == 'number'
+                    ? TextInputType.number
+                    : null,
             decoration: InputDecoration(
                 suffix: placeholder == placeholder
                     ? const Icon(
@@ -307,6 +317,7 @@ class _CreateUpdateRenderState extends State<CreateUpdateRender> {
         context: context,
         builder: (context) {
           return StatefulBuilder(builder: (context, setStateFull) {
+
             return DropDownProvinces(
               action: action,
               callback: (p0) {
@@ -314,6 +325,7 @@ class _CreateUpdateRenderState extends State<CreateUpdateRender> {
                 selectedAdress = p0;
                 setState(() {});
               },
+
             );
           });
         });
