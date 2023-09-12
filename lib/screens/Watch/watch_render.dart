@@ -4,7 +4,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:social_network_app_mobile/constant/type_constant.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
 import 'package:social_network_app_mobile/providers/disable_watch_provider.dart';
+import 'package:social_network_app_mobile/providers/drawer_status_provider.dart';
 import 'package:social_network_app_mobile/providers/watch_provider.dart';
+import 'package:social_network_app_mobile/screens/Menu/menu.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch_home.dart';
 import 'package:social_network_app_mobile/screens/Watch/watch_saved.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
@@ -25,6 +27,7 @@ class _WatchRenderState extends ConsumerState<WatchRender>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   String menuSelected = watchHome;
   late TabController tabController;
+  final GlobalKey<ScaffoldState> key = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -62,21 +65,21 @@ class _WatchRenderState extends ConsumerState<WatchRender>
       }
     }
   }
-    void _onDrawerChanged(bool isOpened) {
+
+  void _onDrawerChanged(bool isOpened) {
     ref.read(drawerStatusProviderController.notifier).setDrawerStatus(isOpened);
 
     /// only disable watch video, moment disable in [moment.dart] file
 
-      if (isOpened == true) {
-        ref.read(disableVideoController.notifier).disableAllVideo();
-      } else {
-        final currentTab = ref.watch(videoCurrentTabController).videoCurrentTab;
-        if (currentTab != "") {
-          ref
-              .read(disableVideoController.notifier)
-              .setDisableVideo(currentTab, false, disableBefore: true);
-        }
-      
+    if (isOpened == true) {
+      ref.read(disableVideoController.notifier).disableAllVideo();
+    } else {
+      final currentTab = ref.watch(videoCurrentTabController).videoCurrentTab;
+      if (currentTab != "") {
+        ref
+            .read(disableVideoController.notifier)
+            .setDisableVideo(currentTab, false, disableBefore: true);
+      }
     }
   }
 
@@ -84,20 +87,40 @@ class _WatchRenderState extends ConsumerState<WatchRender>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      drawer:Drawer(
-                width: size!.width - 20,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                child: const Menu(),
-              ),
-              onDrawerChanged: (isOpened) {
-          _onDrawerChanged(isOpened);
-        },
+      key: key,
+      drawer: Drawer(
+        width: MediaQuery.sizeOf(context).width - 20,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        child: const Menu(),
+      ),
+      onDrawerChanged: (isOpened) {
+        _onDrawerChanged(isOpened);
+      },
       appBar: AppBar(
-        title:
-            buildTextContent("Watch", true, fontSize: 16, isCenterLeft: false,colorWord: Theme.of(context).textTheme.bodyLarge!.color),
+        title: Center(
+          child: Text(
+            "Watch",
+            style:
+                TextStyle(color: Theme.of(context).textTheme.bodyLarge!.color),
+          ),
+        ),
+        leading: GestureDetector(
+            onTap: () {
+              key.currentState?.openDrawer();
+            },
+            child: const Icon(
+              Icons.menu,
+              color: primaryColor,
+            )),
+        actions: const [
+          SizedBox(
+            width: 30,
+          )
+        ],
         bottom: TabBar(
           controller: tabController,
           isScrollable: true,
+          dividerColor: transparent,
           tabs: watchMenu
               .map(
                 (e) => ChipMenu(
