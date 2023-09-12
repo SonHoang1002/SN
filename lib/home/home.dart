@@ -129,7 +129,6 @@ class _HomeState extends ConsumerState<Home>
   }
 
   void _onDrawerChanged(bool isOpened) {
-    print("isOpened isOpened ${isOpened}");
     ref.read(drawerStatusProviderController.notifier).setDrawerStatus(isOpened);
 
     /// only disable watch video, moment disable in [moment.dart] file
@@ -413,7 +412,6 @@ class _HomeState extends ConsumerState<Home>
     if (!mounted) {
       return Future.value(null);
     }
-
     return _updateConnectionStatus(result);
   }
 
@@ -629,21 +627,29 @@ class _HomeState extends ConsumerState<Home>
         _selectedIndex = widget.selectedIndex!;
       });
     }
+    // List<Widget> pages = [
+    //   Feed(
+    //     callbackFunction: _showBottomNavigator,
+    //   ),
+    //   Moment(
+    //     typePage: 'home',
+    //     isDisable: ref.watch(disableMomentController).isDisable,
+    //   ),
+    //   const SizedBox(),
+    //   const Watch(),
+    //   MainMarketPage(
+    //     isBack: false,
+    //     callbackFunction: _showBottomNavigator,
+    //   )
+    // ];
     List<Widget> pages = [
       Feed(
         callbackFunction: _showBottomNavigator,
       ),
-      // const SizedBox(),
-      Moment(
-        typePage: 'home',
-        isDisable: ref.watch(disableMomentController).isDisable,
-      ),
       const SizedBox(),
-      const Watch(),
-      MainMarketPage(
-        isBack: false,
-        callbackFunction: _showBottomNavigator,
-      )
+      const SizedBox(),
+      const SizedBox(),
+      const SizedBox(),
     ];
     List actions = [
       List.generate(

@@ -840,6 +840,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       case 'bg-color':
         setState(() {
           _isShow = false;
+          isActiveBackground = true;
         });
         _focusNode.requestFocus();
         return;
@@ -1519,9 +1520,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                                 padding: const EdgeInsets.only(right: 7),
                                 child: GestureDetector(
                                   onTap: () {
-                                    setState(() {
-                                      isActiveBackground = false;
-                                    });
+                                    hiddenKeyboard(context);
                                     showCustomBottomSheet(context, 500,
                                         title: "Chọn màu nền",
                                         isHaveCloseButton: false,
@@ -1568,6 +1567,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
                       child: InkWell(
                           onTap: () {
                             if (index == 4) {
+                              hiddenKeyboard(context);
                               setState(() {
                                 _isShow = false;
                               });

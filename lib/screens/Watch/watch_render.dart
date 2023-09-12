@@ -10,6 +10,7 @@ import 'package:social_network_app_mobile/screens/Watch/watch_saved.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/spacer_widget.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
+import 'package:social_network_app_mobile/widgets/chip_menu.dart';
 import 'watch_live.dart';
 import 'watch_program.dart';
 
@@ -67,15 +68,16 @@ class _WatchRenderState extends ConsumerState<WatchRender>
     super.build(context);
     return Scaffold(
       appBar: AppBar(
-        title: buildTextContent("Watch", true,fontSize:16,isCenterLeft: false),
+        title:
+            buildTextContent("Watch", true, fontSize: 16, isCenterLeft: false),
         bottom: TabBar(
           controller: tabController,
           isScrollable: true,
           tabs: watchMenu
               .map(
-                (e) => Tab(
-                  child: buildTextContent(e['label'], false,
-                      fontSize: 14, isCenterLeft: false),
+                (e) => ChipMenu(
+                  isSelected: menuSelected == e['label'],
+                  label: e['label'],
                 ),
               )
               .toList(),

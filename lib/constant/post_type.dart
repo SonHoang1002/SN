@@ -40,3 +40,4 @@ String postApproval = 'post_approval';
 String momentUser = "user_moment";
 String momentPage = "page_moment";
 String momentGroup = "group_moment";
+String postLiveStream = "livestream";
