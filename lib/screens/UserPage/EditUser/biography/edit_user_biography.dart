@@ -5,6 +5,7 @@ import 'package:social_network_app_mobile/theme/colors.dart';
 import '../../../../constant/common.dart';
 import '../../../../providers/UserPage/user_information_provider.dart';
 import '../../../../widgets/avatar_social.dart';
+import '../../../../widgets/back_icon_appbar.dart';
 
 class EditUserBiography extends ConsumerStatefulWidget {
   final dynamic dataPage;
@@ -24,7 +25,7 @@ class EditUserBiographyState extends ConsumerState<EditUserBiography> {
     final generalInformation = userAbout['general_information'];
     descriptionTxtCtrl.text = generalInformation['description']!=null?generalInformation['description'].toString():"";
     return Scaffold(
-      appBar: AppBar(title: const Text("Chỉnh sửa tiểu sử"), actions: [
+      appBar: AppBar(title: Text("Chỉnh sửa tiểu sử", style: TextStyle(color: colorWord(context)),), actions: [
         TextButton(
             onPressed: () {
               if (descriptionTxtCtrl.text.split('').isNotEmpty) {
@@ -49,7 +50,9 @@ class EditUserBiographyState extends ConsumerState<EditUserBiography> {
               "Lưu",
               style: TextStyle(fontSize: 18),
             ))
-      ]),
+      ],
+      leading: const BackIconAppbar(),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
         child: Column(

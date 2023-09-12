@@ -78,7 +78,6 @@ class _FriendTagState extends ConsumerState<FriendTag> {
       if(widget.user_relationship != null)
       {
         Navigator.pop(context, friendSelected);
-        print("friendSelected: $friendSelected");
       }
     });
     widget.handleUpdateData('update_friend', newList);
