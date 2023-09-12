@@ -67,7 +67,8 @@ class _ReviewPageState extends ConsumerState<ReviewPage> {
             const Icon(Icons.star, size: 22, color: Colors.red),
             const SizedBox(width: 8),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('${point.toStringAsFixed(1)}/5', style: const TextStyle(fontSize: 15)),
+              Text('${point.toStringAsFixed(1)}/5',
+                  style: const TextStyle(fontSize: 15)),
               Text('Dựa trên đánh giá của $totalReviewer người')
             ])
           ],
@@ -85,14 +86,13 @@ class _ReviewPageState extends ConsumerState<ReviewPage> {
                   const Text('Bạn chắc chắn muốn gửi đề xuất và đánh giá này.'),
               actions: <CupertinoDialogAction>[
                 CupertinoDialogAction(
-                  isDefaultAction: true,
+                  isDestructiveAction: true,
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                   child: const Text('Hủy'),
                 ),
                 CupertinoDialogAction(
-                  isDestructiveAction: true,
                   onPressed: () async {
                     await PageApi().handleReviewPageApi(widget.pageData['id'],
                         {'rating': point, 'content': contentReview});
