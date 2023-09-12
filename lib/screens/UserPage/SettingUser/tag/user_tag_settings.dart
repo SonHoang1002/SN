@@ -604,6 +604,7 @@ class CustomContainer extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
         color: isDarkMode ? Colors.transparent : Colors.white,
         boxShadow: const [

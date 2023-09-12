@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupDetail/approval_group.dart';
+import 'package:social_network_app_mobile/screens/Group/GroupDetail/edit_group_member_questions.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupSchedule/group_list_schedule.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupSetting/group_setting.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
@@ -223,9 +224,16 @@ class _ManagerDetailState extends ConsumerState<ManagerDetail> {
                 const SizedBox(
                   height: 5,
                 ),
-                const FeatureItem(
-                  imagePath: 'assets/groups/questionJoin.png',
-                  title: 'Câu hỏi chọn thành viên',
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(CupertinoPageRoute(
+                        builder: (context) => GroupMemberQuestionsSetting(
+                            groupDetail: widget.groupDetail)));
+                  },
+                  child: const FeatureItem(
+                    imagePath: 'assets/groups/questionJoin.png',
+                    title: 'Câu hỏi chọn thành viên',
+                  ),
                 ),
                 const SizedBox(
                   height: 10,

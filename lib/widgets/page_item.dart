@@ -1,10 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/widgets/avatar_social.dart';
 
+import '../helper/push_to_new_screen.dart';
+import '../screens/Page/PageDetail/page_detail.dart';
 import 'text_description.dart';
 
 class PageItem extends ConsumerWidget {
@@ -37,7 +38,14 @@ class PageItem extends ConsumerWidget {
         ? InkWell(
             onTap: () async {
               await ref.read(pageControllerProvider.notifier).reset();
-              Navigator.pushNamed(context, '/page', arguments: page);
+              // Navigator.pushNamed(context, '/page', arguments: page);
+              pushCustomCupertinoPageRoute(
+                context,
+                PageDetail(),
+                settings: RouteSettings(
+                  arguments: page,
+                ),
+              );
             },
             child: Row(
               children: [

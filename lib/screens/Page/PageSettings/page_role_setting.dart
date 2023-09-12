@@ -7,6 +7,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:social_network_app_mobile/apis/friends_api.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_role_provider.dart';
@@ -50,6 +51,14 @@ class _PageRoleSettingsState extends ConsumerState<PageRoleSettings> {
     _controller.text = filterUserList['admin']!;
     getUserRole();
     getInvite();
+    getInitFriends();
+  }
+
+  getInitFriends() async {
+    var response = await FriendsApi().getListFriendsApi({"limit": 10});
+    if (response != null) {
+      searchResults = response["data"];
+    }
   }
 
   getInvite() async {
@@ -459,7 +468,7 @@ class _PageRoleSettingsState extends ConsumerState<PageRoleSettings> {
                 }),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.6,
+                height: MediaQuery.of(context).size.height * 0.65,
                 child: ListView.builder(
                     padding: EdgeInsets.zero,
                     itemCount: searchResults.length,
@@ -546,13 +555,13 @@ class _PageRoleSettingsState extends ConsumerState<PageRoleSettings> {
   }
 
   buildAdminRoleActionBottomSheet(index) {
-    showCustomBottomSheet(context, 100,
+    showCustomBottomSheet(context, 120,
         isNoHeader: true,
         isHaveCloseButton: false,
         bgColor: Colors.grey[300], widget: StatefulBuilder(
       builder: (ctx, setStatefull) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 14),
           child: Row(
             children: [
               Expanded(

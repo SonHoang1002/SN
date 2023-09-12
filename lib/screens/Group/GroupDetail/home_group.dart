@@ -820,9 +820,9 @@ class _HomeGroupState extends ConsumerState<HomeGroup> {
                     ),
                     Text(
                         'Bạn có muốn rời khỏi ${widget.groupDetail?['title'] ?? "nhóm"} không ? Bạn cũng có thể tắt thông báo cho bài viết mới hoặc báo cáo nhóm này',
-                        style:
-                            const TextStyle(fontSize: 13, color: blackColor)),
-
+                        style: const TextStyle(
+                          fontSize: 13,
+                        )),
                   ],
                 ),
                 actions: <CupertinoDialogAction>[
