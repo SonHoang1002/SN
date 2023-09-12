@@ -9,8 +9,8 @@ class GroupApi {
     return await Api().getRequestBase('/api/v1/groups/$id', null);
   }
 
-  Future fetchGroupRole(id) async {
-    return await Api().getRequestBase('/api/v1/groups/$id/accounts', null);
+  Future fetchGroupRole(id, params) async {
+    return await Api().getRequestBase('/api/v1/groups/$id/accounts', params);
   }
 
   Future joinGroupRequest(id) async {
@@ -89,6 +89,16 @@ class GroupApi {
   updateMemberQuestion(groupId, id, params) async {
     return await Api().patchRequestBase(
         "/api/v1/groups/$groupId/member_questions?question_id=$id", params);
+  }
+
+  addMemberQuestion(groupId, params) async {
+    return await Api()
+        .postRequestBase("/api/v1/groups/$groupId/member_questions", params);
+  }
+
+  removeMemberQuestion(groupId, id) async {
+    return await Api().deleteRequestBase(
+        "/api/v1/groups/$groupId/member_questions?question_id=$id", null);
   }
 
   fetchJoinRequest(dynamic id) async {

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,9 +7,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:social_network_app_mobile/apis/group_api.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
+import 'package:social_network_app_mobile/screens/Page/PageEdit/page_action.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/theme/theme_manager.dart';
+import 'package:social_network_app_mobile/widgets/GeneralWidget/circular_progress_indicator.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/show_bottom_sheet_widget.dart';
+import 'package:social_network_app_mobile/widgets/SnackBar/custom_snackbar.dart';
 import 'package:social_network_app_mobile/widgets/back_icon_appbar.dart';
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/messenger_app_bar/app_bar_title.dart';
@@ -25,6 +30,7 @@ class GroupMemberQuestionsSetting extends ConsumerStatefulWidget {
 class _GroupMemberQuestionsSettingState
     extends ConsumerState<GroupMemberQuestionsSetting> {
   List<dynamic> listQuestion = [];
+  bool _isLoading = true;
   dynamic question1;
   dynamic question2;
   dynamic question3;
@@ -40,6 +46,11 @@ class _GroupMemberQuestionsSettingState
     await ref
         .read(groupListControllerProvider.notifier)
         .getMemberQuestion(widget.groupDetail["id"]);
+    listQuestion = ref.read(groupListControllerProvider).memberQuestionList;
+    setData();
+  }
+
+  setData() {
     for (var element in listQuestion) {
       int index = listQuestion.indexOf(element);
 
@@ -61,15 +72,47 @@ class _GroupMemberQuestionsSettingState
         default:
           break;
       }
-      setState(() {});
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
-  updateData() {}
+  updateQuestion(params) {
+    setState(() {
+      _isLoading = true;
+    });
+    bool found = false;
+    for (int i = 0; i < listQuestion.length; i++) {
+      if (listQuestion[i]["id"] == params["id"]) {
+        listQuestion[i] = params;
+        found = true;
+        break; // Thoát khỏi vòng lặp sau khi cập nhật
+      }
+    }
+    if (found == false) {
+      listQuestion.add(params);
+      setData();
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  deleteQuestion(id) async {
+    setState(() {
+      _isLoading = true;
+    });
+    await GroupApi().removeMemberQuestion(widget.groupDetail["id"], id);
+    listQuestion.removeWhere((element) => element["id"] == id);
+    setState(() {
+      _isLoading = false;
+    });
+    if (mounted) CustomSnackBar.showSnackBar(context, "Xoá thành công");
+  }
 
   @override
   Widget build(BuildContext context) {
-    listQuestion = ref.watch(groupListControllerProvider).memberQuestionList;
     return LoaderOverlay(
       useDefaultLoading: false,
       overlayWidget: const Center(
@@ -105,20 +148,29 @@ class _GroupMemberQuestionsSettingState
                               }
                             },
                           )
-                        : const Center(
-                            child: Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Text("Chưa có câu hỏi nào"),
-                          )),
-                    GestureDetector(
-                      onTap: () {
-                        _showBottomSheetForSelect(context, null, updateData);
-                      },
-                      child: const ButtonPrimary(
-                        label: "Tạo câu hỏi",
-                        colorText: white,
-                      ),
-                    )
+                        : _isLoading
+                            ? Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: buildCircularProgressIndicator(),
+                              )
+                            : const Center(
+                                child: Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text("Chưa có câu hỏi nào"),
+                              )),
+                    listQuestion.length < 3
+                        ? GestureDetector(
+                            onTap: () {
+                              _showBottomSheetForSelect(
+                                  context, null, updateQuestion);
+                            },
+                            child: ButtonPrimary(
+                              isGrey: _isLoading,
+                              label: "Tạo câu hỏi",
+                              colorText: white,
+                            ),
+                          )
+                        : Container()
                   ],
                 )),
           )),
@@ -207,8 +259,39 @@ class _GroupMemberQuestionsSettingState
                 child: ButtonPrimary(
                   isGrey: true,
                   label: "Xoá",
-                  handlePress: () {
-                    Navigator.of(context).pop();
+                  handlePress: () async {
+                    await showCupertinoModalPopup(
+                      context: context,
+                      builder: (BuildContext context) => CupertinoAlertDialog(
+                        title: const Text('Xóa câu hỏi'),
+                        content: const Column(
+                          children: [
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                                'Bạn có chắc chắn muốn xóa câu hỏi này không? Hành động này không thể hoàn tác.',
+                                style:
+                                    TextStyle(fontSize: 13, color: blackColor)),
+                          ],
+                        ),
+                        actions: <CupertinoDialogAction>[
+                          CupertinoDialogAction(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Huỷ'),
+                          ),
+                          CupertinoDialogAction(
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              deleteQuestion(listQuestion[index]["id"]);
+                            },
+                            child: const Text('Xác nhận'),
+                          ),
+                        ],
+                      ),
+                    );
                   },
                 ),
               ),
@@ -221,7 +304,7 @@ class _GroupMemberQuestionsSettingState
                   label: "Chỉnh sửa",
                   handlePress: () {
                     _showBottomSheetForSelect(
-                        context, listQuestion[index], updateData);
+                        context, listQuestion[index], updateQuestion);
                   },
                 ),
               ),
@@ -233,19 +316,24 @@ class _GroupMemberQuestionsSettingState
   }
 
   _showBottomSheetForSelect(
-      BuildContext context, dynamic action, VoidCallback callback) {
+      BuildContext context, dynamic action, Function callback) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double contentHeight = screenHeight - AppBar().preferredSize.height;
     showModalBottomSheet(
         backgroundColor: transparent,
         isScrollControlled: true,
         context: context,
         builder: (context) {
-          return FractionallySizedBox(
-              heightFactor: 0.85,
-              child: _AddQuestion(
-                action: action,
-                groupDetail: widget.groupDetail,
-                callback: callback,
-              ));
+          return SizedBox(
+            height: contentHeight,
+            child: FractionallySizedBox(
+                heightFactor: 1,
+                child: _AddQuestion(
+                  action: action,
+                  groupDetail: widget.groupDetail,
+                  callback: callback,
+                )),
+          );
         });
   }
 }
@@ -253,7 +341,7 @@ class _GroupMemberQuestionsSettingState
 class _AddQuestion extends StatefulWidget {
   final dynamic action;
   final dynamic groupDetail;
-  final VoidCallback callback;
+  final Function callback;
   const _AddQuestion(
       {super.key,
       required this.action,
@@ -266,7 +354,8 @@ class _AddQuestion extends StatefulWidget {
 
 class __AddQuestionState extends State<_AddQuestion> {
   int selectedIndex = 0;
-  List listQuetions = [];
+  List listOptions = [];
+  List savedOptions = [];
   TextEditingController questionTitle = TextEditingController();
   List<dynamic> listTypeQuetion = [
     {"key": "checkboxes", "title": "Ô để đánh dấu"},
@@ -277,27 +366,59 @@ class __AddQuestionState extends State<_AddQuestion> {
     int index = listTypeQuetion.indexWhere((element) => element["key"] == key);
     selectedIndex = index;
     if (selectedIndex == 2) {
-      listQuetions = [];
+      listOptions = [];
     }
   }
 
   addQuestion() {
-    if (listQuetions.length < 5) {
-      listQuetions.add("");
+    if (listOptions.length < 5) {
+      listOptions.add("");
       setState(() {});
     }
   }
 
-  deleteQuestion(index) {
-    listQuetions.removeAt(index);
+  deleteOption(index) {
+    //listOptions.removeAt(index);
+    List newOption = [];
+    for (int i = 0; i < listOptions.length; i++) {
+      if (i != index) {
+        newOption.add(listOptions[i]);
+      }
+    }
+    listOptions = newOption;
     setState(() {});
   }
 
   checkIsUpdate() {
     if (widget.action != null) {
       setQuestionType(widget.action["question_type"]);
-      listQuetions = widget.action["options"];
+      listOptions = List.from(widget.action["options"]);
       questionTitle.text = widget.action["question_text"];
+    }
+  }
+
+  validateFields() {
+    if (listTypeQuetion[selectedIndex]["key"] == "written_answer") {
+      if (questionTitle.text == "") {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (listOptions.isEmpty || questionTitle.text == "") {
+        return true;
+      } else {
+        bool _haveEmpty = false;
+        listOptions.forEach((element) {
+          if (element == "") {
+            _haveEmpty = true;
+          }
+        });
+        if (_haveEmpty) {
+          return true;
+        }
+        return false;
+      }
     }
   }
 
@@ -348,7 +469,7 @@ class __AddQuestionState extends State<_AddQuestion> {
               ? Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                   ListView.builder(
                     shrinkWrap: true,
-                    itemCount: listQuetions.length,
+                    itemCount: listOptions.length,
                     itemBuilder: (context, index) => Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Row(
@@ -362,10 +483,12 @@ class __AddQuestionState extends State<_AddQuestion> {
                                 return null;
                               },
                               onChanged: (value) {
-                                listQuetions[index] = value;
+                                listOptions[index] = value;
                               },
-                              initialValue: listQuetions[index],
+                              initialValue: listOptions[index],
                               decoration: const InputDecoration(
+                                  contentPadding:
+                                      EdgeInsets.symmetric(horizontal: 10),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                         color: Colors.grey, width: 1),
@@ -379,7 +502,7 @@ class __AddQuestionState extends State<_AddQuestion> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              deleteQuestion(index);
+                              deleteOption(index);
                             },
                             child: const Icon(
                               FontAwesomeIcons.circleXmark,
@@ -423,20 +546,30 @@ class __AddQuestionState extends State<_AddQuestion> {
               ),
               Expanded(
                 child: ButtonPrimary(
+                  isGrey: validateFields(),
                   label: widget.action != null ? "Lưu" : "Tạo",
                   handlePress: () async {
-                    if (widget.action != null) {
-                      var params = {
-                        "question_text": questionTitle.text,
-                        "options": listQuetions,
-                        "question_type": listTypeQuetion[selectedIndex]["key"]
-                      };
+                    if (validateFields() == false) {
+                      if (widget.action != null) {
+                        var params = {
+                          "id": widget.action["id"],
+                          "question_text": questionTitle.text,
+                          "options": listOptions,
+                          "question_type": listTypeQuetion[selectedIndex]["key"]
+                        };
 
-                      updateQuestion(widget.action["id"], params);
+                        updateQuestion(widget.action["id"], params);
 
-                      Navigator.of(context).pop();
-                    } else {
-                      createQuestion();
+                        Navigator.of(context).pop();
+                      } else {
+                        var params = {
+                          "question_text": questionTitle.text,
+                          "options": listOptions,
+                          "question_type": listTypeQuetion[selectedIndex]["key"]
+                        };
+                        createQuestion(params);
+                        Navigator.of(context).pop();
+                      }
                     }
                   },
                 ),
@@ -449,11 +582,15 @@ class __AddQuestionState extends State<_AddQuestion> {
   }
 
   updateQuestion(id, params) async {
-    await GroupApi().updateMemberQuestion(widget.groupDetail["id"], id, params);
-    widget.callback();
+    GroupApi().updateMemberQuestion(widget.groupDetail["id"], id, params);
+    widget.callback(params);
   }
 
-  createQuestion() async {}
+  createQuestion(params) async {
+    var res =
+        await GroupApi().addMemberQuestion(widget.groupDetail["id"], params);
+    widget.callback(res);
+  }
 
   Widget selectQuestionType() {
     return SizedBox(

@@ -33,20 +33,22 @@ class SuggestItem extends ConsumerWidget {
     return StatefulBuilder(builder: (context, setState) {
       return InkWell(
         onTap: () {
-          type == suggestFriends?Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const UserPageHome(),
-                settings: RouteSettings(
-                  arguments: {'id': suggestData['id'], "user": suggestData},
-                ),
-              )): Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return GroupDetail(
-                                id: suggestData['id'],
-                              );
-                            },
-                          ));
+          type == suggestFriends
+              ? Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UserPageHome(),
+                    settings: RouteSettings(
+                      arguments: {'id': suggestData['id'], "user": suggestData},
+                    ),
+                  ))
+              : Navigator.push(context, MaterialPageRoute(
+                  builder: (context) {
+                    return GroupDetail(
+                      id: suggestData['id'],
+                    );
+                  },
+                ));
         },
         child: Container(
             width: size.width * 0.8,
@@ -138,8 +140,9 @@ class SuggestItem extends ConsumerWidget {
                                   duration: const Duration(seconds: 2),
                                 ));
                               } else {
-                                await GroupApi()
-                                    .fetchGroupRole(suggestData['id']);
+                                await GroupApi().fetchGroupRole(
+                                    {'role': 'member', 'include_friend': true},
+                                    suggestData['id']);
 
                                 setState(() {
                                   idJoin = suggestData['id'];
