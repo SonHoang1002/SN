@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:social_network_app_mobile/providers/page/select_province_page_provider.dart';
+import 'package:social_network_app_mobile/screens/Page/PageCreate/CreateStep/avatar_page_page.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/bottom_navigator_button_chip.dart';
 import 'package:social_network_app_mobile/widgets/create_update_render.dart';
-
-import 'avatar_page_page.dart';
 
 class InformationPagePage extends StatefulWidget {
   final dynamic dataCreate;
@@ -20,8 +17,17 @@ class _InformationPagePageState extends State<InformationPagePage> {
   late double height = 0;
   List<int> radioGroupWorkTime = [0, 1, 2];
   final _informationKey = GlobalKey<FormState>();
-
   int currentValue = 0;
+  bool validateComplete = true;
+  validateForm() {
+    if (_informationKey.currentState!.validate()) {
+      validateComplete = true;
+    } else {
+      validateComplete = false;
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     List infoField = [
@@ -35,36 +41,41 @@ class _InformationPagePageState extends State<InformationPagePage> {
         'title': 'Chung',
         'iconTitle': Icons.info,
         'description': 'Mô tả về Trang của bạn',
-        'placeholder': 'Tiểu sử'
+        'placeholder': 'Tiểu sử',
+        'for': 'story'
       },
       {
         'title': 'Thông tin liên hệ',
         'iconTitle': Icons.card_giftcard,
         'description': null,
-        'placeholder': 'Trang web'
+        'placeholder': 'Trang web',
+        'for': "web"
       },
       {
         'title': null,
         'iconTitle': null,
         'description': null,
-        'placeholder': 'Email'
+        'placeholder': 'Email',
+        'type': "email",
+        'for': "email"
       },
       {
         'title': null,
         'iconTitle': null,
         'description': null,
         'placeholder': 'Số điện thoại',
-        'type': 'number'
+        'type': 'number',
+        'for': "phone"
       },
       {
         'title': 'Vị trí',
         'iconTitle': Icons.location_history,
         'description': null,
-        'placeholder': 'Địa chỉ'
+        'placeholder': 'Địa chỉ',
+        'for': "address",
       },
       {
         'type': 'autocomplete',
-        'listSelect': Provider.of<SelectProvinceProvider>(context).selectList,
         'title': 'Tỉnh/Thành phố/Thị xã/Thị trấn',
       },
       {
@@ -72,7 +83,8 @@ class _InformationPagePageState extends State<InformationPagePage> {
         'iconTitle': null,
         'description': null,
         'placeholder': 'Mã ZIP',
-        'type': 'number'
+        'type': 'number',
+        'for': "zip"
       },
       {
         'type': 'radio',
@@ -133,25 +145,34 @@ class _InformationPagePageState extends State<InformationPagePage> {
         body: GestureDetector(
           onTap: (() {
             FocusManager.instance.primaryFocus!.unfocus();
+            _informationKey.currentState!.validate();
           }),
           child: Stack(alignment: Alignment.bottomCenter, children: [
             Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 18),
-                child: CreateUpdateRender(infoField: infoField, formKey: _informationKey,)),
+
+                child: Form(
+                    key: _informationKey,
+                    child: CreateUpdateRender(
+                      infoField: infoField,
+                      callback: validateForm,
+                    ))),
+
             Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              padding: const EdgeInsets.only(bottom: 20),
-              child: buildBottomNavigatorWithButtonAndChipWidget(
-                  context: context,
-                  width: width,
-                  newScreen: AvatarPage(dataCreate: widget.dataCreate),
-                  isPassCondition: _informationKey.currentState == null
-                      ? true
-                      : _informationKey.currentState!.validate(),
-                  title: "Tiếp",
-                  currentPage: 3),
-            )
+                color: Theme.of(context).scaffoldBackgroundColor,
+                padding: const EdgeInsets.only(bottom: 20),
+                child: buildBottomNavigatorWithButtonAndChipWidget(
+                    context: context,
+                    width: width,
+                    newScreen: AvatarPage(dataCreate: widget.dataCreate),
+                    isPassCondition: validateComplete,
+                    title: "Tiếp",
+                    currentPage: 3)
+                /* const ButtonPrimary(
+                label: "Tiếp",
+              ), */
+                )
           ]),
         ));
   }

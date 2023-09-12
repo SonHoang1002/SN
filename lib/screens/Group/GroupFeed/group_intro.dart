@@ -3,9 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/providers/group/group_list_provider.dart';
 import 'package:social_network_app_mobile/screens/Group/GroupFeed/group_role.dart';
+import 'package:social_network_app_mobile/theme/theme_manager.dart';
 import 'package:social_network_app_mobile/widgets/AvatarStack/src/avatar_stack.dart';
 import 'package:social_network_app_mobile/widgets/appbar_title.dart';
-
+import 'package:provider/provider.dart' as pv;
 import '../../../widgets/AvatarStack/positions.dart';
 
 class GroupIntro extends ConsumerStatefulWidget {
@@ -74,6 +75,7 @@ class _GroupIntroState extends ConsumerState<GroupIntro> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = pv.Provider.of<ThemeManager>(context);
     List groupMember =
         ref.watch(groupListControllerProvider).groupRoleMember.isNotEmpty
             ? ref.watch(groupListControllerProvider).groupRoleMember
@@ -137,6 +139,7 @@ class _GroupIntroState extends ConsumerState<GroupIntro> {
                           groupIntro[index]['icon'],
                           width: 22,
                           height: 22,
+                          color: theme.isDarkMode ? Colors.white : Colors.black,
                         ),
                         title: Text(
                           groupIntro[index]['title'],

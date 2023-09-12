@@ -86,6 +86,11 @@ class GroupApi {
         .getRequestBase("/api/v1/groups/$id/member_questions", null);
   }
 
+  updateMemberQuestion(groupId, id, params) async {
+    return await Api().patchRequestBase(
+        "/api/v1/groups/$groupId/member_questions?question_id=$id", params);
+  }
+
   fetchJoinRequest(dynamic id) async {
     return await Api().getRequestBase("/api/v1/groups/$id/join_requests", null);
   }
