@@ -1,5 +1,3 @@
- 
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:isolate';
@@ -14,6 +12,7 @@ import 'package:flutter_persistent_keyboard_height/flutter_persistent_keyboard_h
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/a_test/fake_post.dart';
 import 'package:social_network_app_mobile/apis/post_api.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/helper/common.dart';
@@ -247,6 +246,12 @@ class _FeedState extends ConsumerState<Feed> {
   Widget build(BuildContext context) {
     List posts = List.from(ref.watch(postControllerProvider).posts);
     theme ??= pv.Provider.of<ThemeManager>(context);
+    if (!posts.contains(fakePost)) {
+      posts.add(fakePost);
+    }
+    if (!posts.contains(abc)) {
+      posts.add(abc);
+    }
     Future.delayed(Duration.zero, () async {
       final count = await IsarPostService().getCountPostIsar();
       print("=============== ${count}");
@@ -406,4 +411,3 @@ class _FeedState extends ConsumerState<Feed> {
     super.dispose();
   }
 }
-

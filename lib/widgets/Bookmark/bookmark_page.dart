@@ -9,6 +9,7 @@ import 'package:social_network_app_mobile/providers/post_provider.dart';
 import 'package:social_network_app_mobile/providers/saved/saved_menu_item_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/cross_bar.dart';
+import 'package:social_network_app_mobile/widgets/snack_bar_custom.dart';
 import 'package:social_network_app_mobile/widgets/text_description.dart';
 
 class BookmarkPage extends ConsumerStatefulWidget {
@@ -25,6 +26,7 @@ class BookmarkPage extends ConsumerStatefulWidget {
 
 class _BookmarkPageState extends ConsumerState<BookmarkPage> {
   List listAlbums = [];
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -98,12 +100,10 @@ class _BookmarkPageState extends ConsumerState<BookmarkPage> {
                 response,
               );
         }
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Đã lưu vào ${item['name']}")));
+        buildSnackBar(context, "Đã lưu vào ${item['name']}");
         if (mounted) {
           Navigator.pop(context);
         }
-
         setState(() {});
       } else {
         if (mounted) {
@@ -117,9 +117,11 @@ class _BookmarkPageState extends ConsumerState<BookmarkPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+
     return SizedBox(
       height: size.height * 0.5,
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
@@ -223,26 +225,21 @@ class _AlertDialogState extends ConsumerState<CustomAlertDialog> {
           "bookmark_collection_id": response['id']
         };
         var res = await BookmarkApi().bookmarkApi(data);
-
         if (res != null && mounted) {
           ref
               .read(postControllerProvider.notifier)
               .actionUpdateDetailInPost(widget.type, res);
-
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Đã lưu vào ${response['name']}")));
+              buildSnackBar(context, "Đã lưu vào ${response['name']}");
           Navigator.pop(context);
         } else if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Lỗi, vui lòng thử lại sau")));
+             buildSnackBar(context, "Lỗi, vui lòng thử lại sau");
           Navigator.pop(context);
         }
         setState(() {});
       }
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Lỗi, vui lòng thử lại sau")));
+        buildSnackBar(context, "Lỗi, vui lòng thử lại sau");
         Navigator.pop(context);
       }
     }

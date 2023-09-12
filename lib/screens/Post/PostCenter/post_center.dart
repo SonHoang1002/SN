@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
 import 'package:social_network_app_mobile/screens/Post/PostCenter/PostType/post_project.dart';
+import 'package:social_network_app_mobile/screens/Post/PostCenter/post_live_stream.dart';
 import 'package:social_network_app_mobile/widgets/Map/map_widget_item.dart';
 
 import '../../../theme/colors.dart';
@@ -49,6 +50,7 @@ class PostCenter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String postType = post['post_type'] ?? '';
+    print("postLiveStream ${postType == postLiveStream}");
     return Container(
         margin: const EdgeInsets.only(
           top: 10,
@@ -64,7 +66,8 @@ class PostCenter extends StatelessWidget {
                     post['poll'] != null ||
                     post['life_event'] != null ||
                     postType == postAvatarAccount ||
-                    postType == postBannerAccount)
+                    postType == postBannerAccount ||
+                    postType == postLiveStream)
                 ? const SizedBox()
                 : PostMedia(
                     post: post,
@@ -81,7 +84,12 @@ class PostCenter extends StatelessWidget {
                     isInGroup: isInGroup,
                     groupData: groupData,
                     showCmtBoxFunction: showCmtBoxFunction),
-            //
+            postType == postLiveStream
+                ? PostLiveStream(
+                    post: post,
+                    type: type,
+                  )
+                : const SizedBox(),
             post['card'] != null && (post['media_attachments'].isEmpty)
                 ? PostCard(post: post, type: type)
                 : const SizedBox(),

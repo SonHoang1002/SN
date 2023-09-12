@@ -1,11 +1,8 @@
-import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:social_network_app_mobile/apis/post_api.dart';
-import 'package:social_network_app_mobile/apis/user.dart';
-import 'package:social_network_app_mobile/helper/common.dart';
+import 'package:social_network_app_mobile/apis/me_api.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
 import 'package:social_network_app_mobile/providers/connectivity_provider.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
@@ -41,10 +38,9 @@ class _PreviewScreenState extends ConsumerState<PreviewScreen>
             final connectionStatus =
                 ref.read(connectivityControllerProvider).connectInternet;
             if (connectionStatus) {
-              final response =
-                  await UserApi().getAccountSettingApiWithToken(value);
+              final response = await MeApi().fetchDataMeApi();
               // {status_code: 403, content: {error: Your login is currently disabled, type: suspended}}
-              if (response == null || response['status_code'] == 403) {
+              if (response?['status_code'] == 403) {
                 // ignore: use_build_context_synchronously
                 buildSnackBar(
                     context, "Tài khoản của bạn đang bị vô hiệu hoá !!");

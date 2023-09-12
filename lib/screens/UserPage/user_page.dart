@@ -73,6 +73,7 @@ class _UserPageHomeState extends State<UserPageHome> {
     const MainMarketPage(isBack: false)
   ];
 
+  @override
   void initState() {
     super.initState();
     pageUserRoutes = [
@@ -246,7 +247,7 @@ class _UserPageState extends ConsumerState<UserPage>
     _tabController = TabController(vsync: this, length: userImageMenu.length);
     scrollController.addListener(() {
       if (!scrollController.hasClients) {
-        return; // Avoid unnecessary operations if no clients are attached
+        return; 
       }
 
       final offset = scrollController.offset;

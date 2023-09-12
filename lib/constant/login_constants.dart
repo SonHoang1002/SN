@@ -59,7 +59,7 @@ class BirthDayLoginConstants {
   static String BIRTHDAY_LOGIN_WARNING =
       "Ngày sinh không hợp lệ. Hãy kiểm tra lại nhé !";
   static String NOT_OLD_ENOUGH =
-      "Bạn chưa đủ 13 tuổi để đăng ký tài khoản. Vui lòng đề nghị người giám hộ của bạn đăng ký tài khoản!";
+      "Bạn chưa đủ 14 tuổi để đăng ký tài khoản. Vui lòng đề nghị người giám hộ của bạn đăng ký tài khoản!";
 }
 
 class GenderLoginConstants {

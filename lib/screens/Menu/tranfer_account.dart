@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
+import 'package:social_network_app_mobile/apis/me_api.dart';
 import 'package:social_network_app_mobile/apis/user.dart';
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/helper/push_to_new_screen.dart';
@@ -78,9 +79,8 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
       final connectionStatus =
           ref.read(connectivityControllerProvider).connectInternet;
       if (connectionStatus) {
-        final response = await UserApi()
-            .getAccountSettingApiWithToken(dataLogin[index]?['token']);
-        if (response == null || response['status_code'] == 403) {
+        final response = await MeApi().fetchDataMeApi();
+        if (response?['status_code'] == 403) {
           buildSnackBar(context,
               "Tài khoản ${dataLogin[index]['username']} đang bị vô hiệu hoá !!");
           isOK = false;

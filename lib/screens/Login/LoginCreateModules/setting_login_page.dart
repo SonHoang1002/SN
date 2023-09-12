@@ -140,11 +140,10 @@ class _SettingLoginPageState extends State<SettingLoginPage> {
                       bool dataListIfEmpty = await deleteData(widget.index);
                       if (dataListIfEmpty) {
                         // ignore: use_build_context_synchronously
-                        pushAndReplaceToNextScreen(
-                            context, const MainLoginPage(null));
+                        pushAndRemoveUntil(context, const MainLoginPage(null));
                       } else {
                         // ignore: use_build_context_synchronously
-                        pushAndReplaceToNextScreen(
+                        pushAndRemoveUntil(
                             context, const OnboardingLoginPage());
                       }
                     },

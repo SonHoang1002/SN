@@ -50,8 +50,6 @@ class _ReefState extends ConsumerState<Reef> {
   @override
   Widget build(BuildContext context) {
     momentSuggests = ref.watch(momentControllerProvider).momentSuggest;
-
-    print("momentSuggests momentSuggests ${momentSuggests.length}");
     return momentSuggests.isNotEmpty
         ? Column(
             children: [
