@@ -62,14 +62,39 @@ class _WatchRenderState extends ConsumerState<WatchRender>
       }
     }
   }
+    void _onDrawerChanged(bool isOpened) {
+    ref.read(drawerStatusProviderController.notifier).setDrawerStatus(isOpened);
+
+    /// only disable watch video, moment disable in [moment.dart] file
+
+      if (isOpened == true) {
+        ref.read(disableVideoController.notifier).disableAllVideo();
+      } else {
+        final currentTab = ref.watch(videoCurrentTabController).videoCurrentTab;
+        if (currentTab != "") {
+          ref
+              .read(disableVideoController.notifier)
+              .setDisableVideo(currentTab, false, disableBefore: true);
+        }
+      
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+      drawer:Drawer(
+                width: size!.width - 20,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                child: const Menu(),
+              ),
+              onDrawerChanged: (isOpened) {
+          _onDrawerChanged(isOpened);
+        },
       appBar: AppBar(
         title:
-            buildTextContent("Watch", true, fontSize: 16, isCenterLeft: false),
+            buildTextContent("Watch", true, fontSize: 16, isCenterLeft: false,colorWord: Theme.of(context).textTheme.bodyLarge!.color),
         bottom: TabBar(
           controller: tabController,
           isScrollable: true,
