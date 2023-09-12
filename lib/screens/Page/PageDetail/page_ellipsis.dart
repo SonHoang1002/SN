@@ -18,6 +18,7 @@ import 'package:social_network_app_mobile/widgets/report_category.dart';
 
 import '../../../apis/config.dart';
 import '../../../apis/page_api.dart';
+import '../../../providers/page/page_list_provider.dart';
 import '../../../providers/page/page_provider.dart';
 import '../../../theme/theme_manager.dart';
 import '../../../widgets/button_primary.dart';
@@ -138,26 +139,41 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
           builder: (BuildContext context) => CupertinoAlertDialog(
             title: Text('Chặn ${widget.data['title']}?'),
             content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(
                   height: 5,
                 ),
                 Text('${widget.data['title']} sẽ không thể: ',
-                    style: const TextStyle(fontSize: 13, color: greyColor)),
+                    style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: greyColor)),
                 const SizedBox(
                   height: 10,
                 ),
-                widgetRenderText('Xem bài viết của bạn'),
-                widgetRenderText('Gắn thẻ bạn'),
-                widgetRenderText('Mời bạn tham gia nhóm hoặc sự kiện'),
-                widgetRenderText('Trò chuyện với bạn'),
-                widgetRenderText('Thêm bạn làm bạn bè'),
+                widgetRenderText('Tương tác với bài viết của bạn'),
+                widgetRenderText('Thích hoặc phản hồi bình luận của bạn'),
+                Text('Chặn ${widget.data['title']} sẽ: ',
+                    style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: greyColor)),
+                const SizedBox(
+                  height: 10,
+                ),
+                widgetRenderText(
+                    'Không cho bạn nhắn tin hoặc đăng lên dòng thời gian của họ'),
+                widgetRenderText('Bỏ thích và bỏ theo dõi trang'),
                 const SizedBox(
                   height: 10,
                 ),
                 Text(
-                  ' Nếu các bạn là bạn bè, việc chặn ${widget.data['title']} cũng sẽ huỷ kết bạn với họ.',
-                  style: const TextStyle(fontSize: 13, color: greyColor),
+                  '${widget.data['title']} vẫn có thể xuất hiện trong Bảng tin nếu bạn bè bạn chia sẻ hoặc tương tác với Trang này. Ngoài ra, Trang vẫn có thể tương tác với bất kỳ bài viết hoặc bình luận nào về các sự kiện mà họ tổ chức..',
+                  style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: greyColor),
                 ),
               ],
             ),
@@ -170,9 +186,18 @@ class _PageEllipsisState extends ConsumerState<PageEllipsis> {
               ),
               CupertinoDialogAction(
                 onPressed: () async {
-                  await PageApi().blockPage({'page_id': widget.data['id']});
-                  // ignore: use_build_context_synchronously
-                  Navigator.pop(context);
+                  var response =
+                      await PageApi().blockPage({'page_id': widget.data['id']});
+                  if (response != null) {
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context)
+                      ..pop()
+                      ..pop()
+                      ..pop();
+                    ref
+                        .read(pageListControllerProvider.notifier)
+                        .updateListPageLiked(widget.data['id'], null, null);
+                  }
                 },
                 child: const Text('Chặn'),
               ),
