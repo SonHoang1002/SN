@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social_network_app_mobile/apis/page_api.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/page/page_list_provider.dart';
 import 'package:social_network_app_mobile/theme/colors.dart';
 import 'package:social_network_app_mobile/widgets/GeneralWidget/text_content_widget.dart';
@@ -103,8 +104,7 @@ class _PageLikedState extends ConsumerState<PageLiked> {
                 isGrey: true,
                 label: 'Chặn',
                 handlePress: () async {
-                  var response =
-                      await PageApi().handleBlockPage({'page_id': id});
+                  var response = await PageApi().blockPage({'page_id': id});
                   if (response != null) {
                     // ignore: use_build_context_synchronously
                     Navigator.of(context).pop();
@@ -160,7 +160,12 @@ class _PageLikedState extends ConsumerState<PageLiked> {
 
   @override
   Widget build(BuildContext context) {
-    List pagesLike = ref.watch(pageListControllerProvider).pageLiked;
+    List pagesLikeRaw = ref.watch(pageListControllerProvider).pageLiked;
+    List pages = [];
+    for (var element in pagesLikeRaw) {
+      pages.add(element["page"]);
+    }
+    List pagesLike = checkObjectUniqueInList(pages, "id");
     bool isMorePageLike = ref.watch(pageListControllerProvider).isMorePageLiked;
 
     handlePress(page) {
@@ -185,12 +190,12 @@ class _PageLikedState extends ConsumerState<PageLiked> {
         },
         {
           "key": 'share',
-          "icon": FontAwesomeIcons.solidThumbsUp,
+          "icon": FontAwesomeIcons.share,
           "label": "Chia sẻ",
         },
         {
           "key": 'block',
-          "icon": FontAwesomeIcons.solidThumbsUp,
+          "icon": FontAwesomeIcons.ban,
           "label": "Chặn Trang",
         }
       ];
@@ -315,8 +320,8 @@ class _PageLikedState extends ConsumerState<PageLiked> {
                                 color: Colors.grey.withOpacity(0.1),
                                 spreadRadius: 1,
                                 blurRadius: 5,
-                                offset:
-                                    const Offset(0, 0), // changes position of shadow
+                                offset: const Offset(
+                                    0, 0), // changes position of shadow
                               ),
                             ],
                             color: Theme.of(context).scaffoldBackgroundColor),
@@ -327,14 +332,14 @@ class _PageLikedState extends ConsumerState<PageLiked> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 PageItem(
-                                    page: pagesLike[index]['page'],
+                                    page: pagesLike[index],
                                     sizeAvatar: 50,
                                     sizeTitle: 16,
                                     maxLinesTitle: 3,
                                     sizeDesription: 14),
                                 InkWell(
                                     onTap: () {
-                                      handlePress(pagesLike[index]['page']);
+                                      handlePress(pagesLike[index]);
                                     },
                                     child: const Padding(
                                       padding: EdgeInsets.all(5),
