@@ -17,7 +17,8 @@ import '../../../../widgets/button_primary.dart';
 import 'package:provider/provider.dart' as pv;
 
 import '../../../CreatePost/MenuBody/life_event_categories.dart';
-import '../../../CreatePost/MenuBody/user_relationship.dart';
+import 'add_social_links.dart';
+import 'add_user_relationship.dart';
 import '../../../CreatePost/create_modal_base_menu.dart';
 import 'add_website_link.dart';
 
@@ -43,7 +44,7 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
   dynamic statusActivity;
   dynamic statusQuestion;
   dynamic checkin;
-  dynamic lifeEvent;
+  dynamic updateLifeEvent;
   dynamic poll;
 
   bool isUploadVideo = false;
@@ -57,10 +58,17 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
   bool showPreviewImage = true;
   ScrollController menuController = ScrollController();
   bool isMenuMinExtent = true;
+  
 
   List listMentions = [];
   Offset textFieldOffset = const Offset(0, 150.6);
   String type = "";
+  dynamic userAbout;
+  dynamic infor;
+  dynamic relationship;
+  List lifeEvent = [];
+  List workEvents = [];
+  bool refresh = false;
 
   Text buildBoldTxt(String title, ThemeManager theme) {
     return Text(
@@ -231,7 +239,7 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
         break;
       case 'updateLifeEvent':
         setState(() {
-          lifeEvent = data;
+          updateLifeEvent = data;
           _isShow = false;
         });
     }
@@ -256,16 +264,40 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
     }
   }
 
+  
+  refreshData() {
+    setState(() {
+      ref
+          .read(userInformationProvider.notifier)
+          .getUserInformation(userAbout["id"]);
+      ref
+          .read(userInformationProvider.notifier)
+          .getUserMoreInformation(userAbout["id"]);
+      ref
+          .read(userInformationProvider.notifier)
+          .getUserLifeEvent(userAbout["id"]);
+      ref
+          .read(userInformationProvider.notifier)
+          .getUserFeatureContent(userAbout["id"]);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (refresh) {
+      refreshData();
+      setState(() {
+        refresh = false;
+      });
+    }
+
     final size = MediaQuery.sizeOf(context);
     final theme = pv.Provider.of<ThemeManager>(context);
-    final userAbout = ref.watch(userInformationProvider).userMoreInfor;
-    final infor = userAbout?['general_information'];
-    final relationship = userAbout?['account_relationship'];
-    final lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
-    final workEvents =
-        lifeEvent.where((e) => e['life_event']['school_type'] == null).toList();
+    userAbout = ref.watch(userInformationProvider).userMoreInfor;
+    infor = userAbout?['general_information'];
+    relationship = userAbout?['account_relationship'];
+    lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
+    workEvents = lifeEvent.where((e) => e['life_event']['school_type'] == null).toList();
 
     final highSchoolEvents = lifeEvent
         .where((e) => e['life_event']['school_type'] == 'HIGH_SCHOOL')
@@ -488,8 +520,8 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                             Checkbox(
                                 activeColor: secondaryColor,
                                 value: true,
-                                 onChanged: (value) {}), () {
-                            Navigator.push(
+                                 onChanged: (value) {}),  () async {
+                            refresh = await Navigator.push(
                                 context,
                                 CupertinoPageRoute(
                                     builder: (context) => CreateModalBaseMenu(
@@ -503,30 +535,42 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                                           edit: true,
                                           school: null,
                                           relationship: relationship,
+                                          idUser: userAbout["id"],
                                         ),
                                         buttonAppbar: const SizedBox())));
+                            if (refresh) {
+                              setState(() {
+                                refreshData();
+                              });
+                            }
                           }, theme)
                         : ButtonPrimary(
                             label: "Thêm mối quan hệ",
                             colorButton: greyColor[300],
                             colorText: Colors.black54,
-                             handlePress: () {
-                              Navigator.push(
-                                context,
-                                CupertinoPageRoute(
-                                    builder: (context) => CreateModalBaseMenu(
-                                        title: listData[11]['name'],
-                                        body: Relationship(
-                                          type: 'children',
-                                          eventSelected: listData[11],
-                                          listLifeEvent: listData[11]
-                                              ['children'],
-                                          handleUpdateData: handleUpdateData,
-                                          edit: true,
-                                          school: null,
-                                          relationship: relationship,
-                                        ),
-                                        buttonAppbar: const SizedBox())));
+                            handlePress: () async {
+                              refresh = await Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (context) => CreateModalBaseMenu(
+                                          title: listData[11]['name'],
+                                          body: Relationship(
+                                            type: 'children',
+                                            eventSelected: listData[11],
+                                            listLifeEvent: listData[11]
+                                                ['children'],
+                                            handleUpdateData: handleUpdateData,
+                                            edit: true,
+                                            school: null,
+                                            relationship: relationship,
+                                            idUser: userAbout["id"],
+                                          ),
+                                          buttonAppbar: const SizedBox())));
+                              if (refresh) {
+                                setState(() {
+                                  refreshData();
+                                });
+                              }
                             },
                           ),
                     buildDrawer(),
@@ -571,6 +615,25 @@ class EditUserDetailState extends ConsumerState<EditUserDetail> {
                       label: "Thêm liên kết xã hội",
                       colorButton: greyColor[300],
                       colorText: Colors.black54,
+                      handlePress: (){
+                        Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => CreateModalBaseMenu(
+                                        title: listData[11]['name'],
+                                        body: SocialLinks(
+                                          type: 'children',
+                                          eventSelected: listData[11],
+                                          listLifeEvent: listData[11]
+                                              ['children'],
+                                          handleUpdateData: handleUpdateData,
+                                          edit: true,
+                                          school: null,
+                                          relationship: relationship,
+                                          idUser: userAbout["id"],
+                                        ),
+                                        buttonAppbar: const SizedBox())));
+                      },
                     ),
                     const SizedBox(height: 25.0),
                   ],

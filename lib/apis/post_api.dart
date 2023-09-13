@@ -35,6 +35,11 @@ class PostApi {
     final response = await Api().postRequestBase('/api/v1/statuses', data);
     return response;
   }
+  
+  Future createRelationship(data) async {
+    final response = await Api().postRequestBase('/api/v1/account_relationships', data);
+    return response;
+  }
 
   Future updatePost(postId, data) async {
     return await Api().patchRequestBase('/api/v1/statuses/$postId', data);

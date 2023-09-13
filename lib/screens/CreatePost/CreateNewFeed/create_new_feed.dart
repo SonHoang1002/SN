@@ -571,98 +571,89 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
           ..pop()
           ..pop();
       } else {
-        if (widget.edit == true) {
-          Navigator.of(context)
-            ..pop()
-            ..pop()
-            ..pop()
-            ..pop();
-        } else {
-          Navigator.pop(context);
-        }
-        // prepare data for api
-        var data = {"status": content, "visibility": visibility['key']};
-        if (backgroundSelected != null) {
-          data = {...data, 'status_background_id': backgroundSelected['id']};
-        }
-        if (gifLink.isNotEmpty) {
-          data = {
-            ...data,
-            "extra_body": {"description": "", "link": gifLink, "title": ""}
-          };
-        }
-        if (statusActivity != null) {
-          data = {...data, 'status_activity_id': statusActivity['id']};
-        }
-        if (friendSelected.isNotEmpty) {
-          data = {
-            ...data,
-            'mention_ids': friendSelected.map((e) => e['id']).toList()
-          };
-        }
-        if (poll != null) {
-          data = {...data, 'poll': poll};
-        }
-        if (statusQuestion != null) {
-          data = {
-            ...data,
-            "post_type": statusQuestion['postType'],
-            statusQuestion['postType'] == 'target'
-                ? 'status_target'
-                : 'status_question': {
-              "color": statusQuestion['color'],
-              "content": statusQuestion['content'],
-            }
-          };
-        }
-        if (checkin != null) {
-          data = {...data, 'place_id': checkin['id']};
-        }
-        if (files.isNotEmpty) {
-          List<Future> listUpload = [];
-          for (var i = 0; i < files.length; i++) {
-            listUpload.add(handleUploadMedia(i, files[i]));
+        Navigator.pop(context);
+      }
+      // prepare data for api
+      var data = {"status": content, "visibility": visibility['key']};
+      if (backgroundSelected != null) {
+        data = {...data, 'status_background_id': backgroundSelected['id']};
+      }
+      if (gifLink.isNotEmpty) {
+        data = {
+          ...data,
+          "extra_body": {"description": "", "link": gifLink, "title": ""}
+        };
+      }
+      if (statusActivity != null) {
+        data = {...data, 'status_activity_id': statusActivity['id']};
+      }
+      if (friendSelected.isNotEmpty) {
+        data = {
+          ...data,
+          'mention_ids': friendSelected.map((e) => e['id']).toList()
+        };
+      }
+      if (poll != null) {
+        data = {...data, 'poll': poll};
+      }
+      if (statusQuestion != null) {
+        data = {
+          ...data,
+          "post_type": statusQuestion['postType'],
+          statusQuestion['postType'] == 'target'
+              ? 'status_target'
+              : 'status_question': {
+            "color": statusQuestion['color'],
+            "content": statusQuestion['content'],
           }
-          var results = await Future.wait(listUpload);
-          List mediasId = [];
-          if (results.isNotEmpty) {
-            mediasId = results.map((e) => e['id']).toList();
-          }
-          data = {...data, "media_ids": mediasId};
+        };
+      }
+      if (checkin != null) {
+        data = {...data, 'place_id': checkin['id']};
+      }
+      if (files.isNotEmpty) {
+        List<Future> listUpload = [];
+        for (var i = 0; i < files.length; i++) {
+          listUpload.add(handleUploadMedia(i, files[i]));
         }
-        if (lifeEvent != null) {
-          data = {
-            ...data,
-            "life_event": lifeEvent,
-          };
+        var results = await Future.wait(listUpload);
+        List mediasId = [];
+        if (results.isNotEmpty) {
+          mediasId = results.map((e) => e['id']).toList();
         }
-        if (postDiscussion != null) {
-          data['course_id'] = widget.postDiscussion['course_id'];
+        data = {...data, "media_ids": mediasId};
+      }
+      if (lifeEvent != null) {
+        data = {
+          ...data,
+          "life_event": lifeEvent,
+        };
+      }
+      if (postDiscussion != null) {
+        data['course_id'] = widget.postDiscussion['course_id'];
+      }
+      if (widget.pageData != null) {
+        data['page_id'] = widget.pageData['id'];
+        data['page_owner_id'] = widget.pageData['id'];
+      }
+      if (widget.friendData != null &&
+          widget.friendData['id'] != ref.watch(meControllerProvider)[0]['id']) {
+        data['target_account_id'] = widget.friendData['id'];
+      }
+      if (widget.groupId != null && widget.isInGroup == true) {
+        data = {...data, "group_id": widget.groupId};
+      }
+      if (widget.sharedGroupId != null) {
+        data = {...data, "shared_group_id": widget.sharedGroupId};
+      }
+      var response = await PostApi().createStatus(data);
+      if (response != null) {
+        if (previewUrlData != null && response['card'] == null) {
+          response['card'] = previewUrlData;
         }
-        if (widget.pageData != null) {
-          data['page_id'] = widget.pageData['id'];
-          data['page_owner_id'] = widget.pageData['id'];
-        }
-        if (widget.friendData != null &&
-            widget.friendData['id'] !=
-                ref.watch(meControllerProvider)[0]['id']) {
-          data['target_account_id'] = widget.friendData['id'];
-        }
-        if (widget.groupId != null && widget.isInGroup == true) {
-          data = {...data, "group_id": widget.groupId};
-        }
-        if (widget.sharedGroupId != null) {
-          data = {...data, "shared_group_id": widget.sharedGroupId};
-        }
-        var response = await PostApi().createStatus(data);
-        if (response != null) {
-          if (previewUrlData != null && response['card'] == null) {
-            response['card'] = previewUrlData;
-          }
-          widget.reloadFunction != null
-              ? widget.reloadFunction!(type, response)
-              : null;
-        }
+        widget.reloadFunction != null
+            ? widget.reloadFunction!(type, response)
+            : null;
       }
     }
   }

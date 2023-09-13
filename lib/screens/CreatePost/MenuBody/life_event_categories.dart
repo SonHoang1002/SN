@@ -9,9 +9,11 @@ import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/widgets/snack_bar_custom.dart';
 
 import '../../../data/life_event_categories.dart';
+import '../../../providers/UserPage/user_information_provider.dart';
 import '../../../providers/create_feed/feed_draft_provider.dart';
 import '../../../theme/colors.dart';
 import '../../../widgets/button_primary.dart';
+import '../../UserPage/EditUser/Details/edit_detail.dart';
 import '../CreateNewFeed/create_new_feed.dart';
 import '../create_modal_base_menu.dart';
 import 'life_event_detail.dart';
@@ -50,6 +52,13 @@ class _LifeEventCategoriesState extends ConsumerState<LifeEventCategories> {
   List friendSelected = [];
   Widget body = const SizedBox();
   Widget buttonAppbar = const SizedBox();
+
+  void onReset() {
+    setState(() {
+      ref.read(userInformationProvider).userInfor;
+      ref.read(userInformationProvider).userMoreInfor;
+    });
+  }
 
   handlePress(event, lifeEventCategoryId) {
     if (event['children'] != null && event['children'].isNotEmpty) {
@@ -103,10 +112,16 @@ class _LifeEventCategoriesState extends ConsumerState<LifeEventCategories> {
                                           edit: true,
                                         ))));
                           } else {
-                            Navigator.of(context)
-                              ..pop()
-                              ..pop()
-                              ..pop();
+                            // Navigator.of(context)
+                            //   ..pop()
+                            //   ..pop()
+                            //   ..pop();
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) =>  const EditUserDetail(),
+                              ),
+                            );
                           }
                         } else {
                           Navigator.of(context)

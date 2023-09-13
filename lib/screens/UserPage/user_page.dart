@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:easy_debounce/easy_debounce.dart';
@@ -63,7 +62,6 @@ class UserPageHome extends StatefulWidget {
 class _UserPageHomeState extends State<UserPageHome> {
   int _selectedIndex = 0;
   ValueNotifier<bool> isClickedHome = ValueNotifier(false);
-  List<Widget> pageUserRoutes = [];
 
   List<Widget> pageHomeRoutes = [
     const Home(),
@@ -72,20 +70,6 @@ class _UserPageHomeState extends State<UserPageHome> {
     const Watch(),
     const MainMarketPage(isBack: false)
   ];
-
-  void initState() {
-    super.initState();
-    pageUserRoutes = [
-      UserPage(
-        id: widget.id,
-        user: widget.user,
-      ),
-      const Moment(typePage: 'home'),
-      const SizedBox(),
-      const Watch(),
-      const MainMarketPage(isBack: false)
-    ];
-  }
 
   void _onItemTapped(int index) {
     if (index == 2) {
@@ -114,6 +98,16 @@ class _UserPageHomeState extends State<UserPageHome> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> pageUserRoutes = [
+      UserPage(
+        id: widget.id,
+        user: widget.user,
+      ),
+      const Moment(typePage: 'home'),
+      const SizedBox(),
+      const Watch(),
+      const MainMarketPage(isBack: false)
+    ];
     return Scaffold(
         body: IndexedStack(
           index: _selectedIndex,
@@ -150,7 +144,6 @@ class _UserPageState extends ConsumerState<UserPage>
   List lifeEvent = [];
   bool showHeaderTabFixed = false;
   late TabController _tabController;
-  var friendNew;
 
   String menuSelected = 'user_posts';
 
@@ -170,9 +163,9 @@ class _UserPageState extends ConsumerState<UserPage>
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero, () async {
-      ref.read(userInformationProvider.notifier).removeUserInfo();
-    });
+    // Future.delayed(Duration.zero, () async {
+    //   ref.read(userInformationProvider.notifier).removeUserInfo();
+    // });
     if (mounted) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (widget.id != null && widget.user != null) {
@@ -190,26 +183,32 @@ class _UserPageState extends ConsumerState<UserPage>
         }
       });
       Future.delayed(Duration.zero, () async {
-        // ref.read(userInformationProvider.notifier).getUserInformation(id);
-        // ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
-        // ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
-        // ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
+        ref.read(userInformationProvider.notifier).getUserInformation(id);
+        ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
         final deviceUserId = await SecureStorage().getKeyStorage('userId');
-        if (deviceUserId == id) {
-          userType = 'me';
-        } else {
-          if (userData['relationships'] != null &&
-              userData['relationships']['friendship_status'] == 'ARE_FRIENDS') {
-            userType = 'friend';
-          } else if (userData['relationships'] != null &&
-              userData['relationships']['friendship_status'] ==
-                  'OUTGOING_REQUEST') {
-            userType = 'requested';
+        setState(() {
+          if (deviceUserId == id) {
+            userType = 'me';
           } else {
-            userType = 'stranger';
+            if (userData['relationships'] != null &&
+                userData['relationships']['friendship_status'] ==
+                    'ARE_FRIENDS') {
+              userType = 'friend';
+            } else if (userData['relationships'] != null &&
+                userData['relationships']['friendship_status'] ==
+                    'OUTGOING_REQUEST') {
+              userType = 'requested';
+            } else {
+              userType = 'stranger';
+            }
+            following.value = userData['relationships']?['following'];
           }
-          following.value = userData['relationships']?['following'];
-        }
+        });
+        ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
+        ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
+       
+        final friendNew = await UserPageApi().getUserFriend(id, {'limit': 20});
+        
 
         ref.read(postControllerProvider.notifier).getListPostPin(id);
 
@@ -217,22 +216,19 @@ class _UserPageState extends ConsumerState<UserPage>
             id == ref.watch(meControllerProvider)[0]['id'],
             id,
             {"limit": 3, "exclude_replies": true});
-        // conflict nhé 
-      friendNew = await UserPageApi().getUserFriend(id, {'limit': 20}) ?? [];
-      Future.delayed(Duration(milliseconds: 700), () async {
-          if (mounted) {
-            setState(() {
-              userData = ref.watch(userInformationProvider).userInfor;
-              userAbout = ref.watch(userInformationProvider).userMoreInfor;
-              lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
-              postUser = (id == ref.watch(meControllerProvider)[0]['id']
-                  ? ref.watch(postControllerProvider).postUserPage
-                  : ref.watch(postControllerProvider).postAnotherUserPage);
-              pinPost = ref.watch(postControllerProvider).postsPin;
-            });
-          }
+        // conflict nhé
+
+        setState(() {
+          userAbout = ref.watch(userInformationProvider).userMoreInfor;
+          userData = ref.watch(userInformationProvider).userInfor;
+          lifeEvent = ref.watch(userInformationProvider).userLifeEvent;
+          postUser = (id == ref.watch(meControllerProvider)[0]['id']
+              ? ref.watch(postControllerProvider).postUserPage
+              : ref.watch(postControllerProvider).postAnotherUserPage);
+          pinPost = ref.watch(postControllerProvider).postsPin;
+          friend = friendNew;
+         
         });
-      friend = friendNew;
       });
     }
 
@@ -257,12 +253,14 @@ class _UserPageState extends ConsumerState<UserPage>
         if (!showHeaderTabFixed) {
           setState(() {
             showHeaderTabFixed = true;
+            print("aaaaaaaaaaaaaaa");
           });
         }
       } else if (offset < 300) {
         if (showHeaderTabFixed) {
           setState(() {
             showHeaderTabFixed = false;
+            print("bbbbbbbbbbbbbb");
           });
         }
       }
@@ -271,12 +269,14 @@ class _UserPageState extends ConsumerState<UserPage>
         EasyDebounce.debounce(
             'my-debouncer', const Duration(milliseconds: 1000), () async {
           String maxId = '';
-          final postUserPage = ref.read(postControllerProvider).postUserPage;
+          // final postUserPage = ref.read(postControllerProvider).postUserPage;
 
-          if (postUserPage.isEmpty && postUser.isNotEmpty) {
-            maxId = postUser.last['id'];
-          } else if (postUserPage.isNotEmpty) {
-            maxId = postUserPage.last['id'];
+          if (ref.read(postControllerProvider).postUserPage.isEmpty) {
+            if (postUser.isNotEmpty) {
+              maxId = postUser.last['id'];
+            }
+          } else {
+            maxId = ref.read(postControllerProvider).postUserPage.last['id'];
           }
 
           ref.read(postControllerProvider.notifier).getListPostUserPage(
@@ -309,16 +309,16 @@ class _UserPageState extends ConsumerState<UserPage>
   //   });
   // }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    Future.delayed(Duration.zero, () async {
-      ref.read(userInformationProvider.notifier).getUserInformation(id);
-      ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
-      ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
-      ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
-    });
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   Future.delayed(Duration.zero, () async {
+  //     ref.read(userInformationProvider.notifier).getUserInformation(id);
+  //     ref.read(userInformationProvider.notifier).getUserMoreInformation(id);
+  //     ref.read(userInformationProvider.notifier).getUserLifeEvent(id);
+  //     ref.read(userInformationProvider.notifier).getUserFeatureContent(id);
+  //   });
+  // }
 
   _reloadFunction(dynamic type, dynamic newData) {
     if (type == null && newData == null) {
@@ -1754,6 +1754,12 @@ class _UserPageState extends ConsumerState<UserPage>
                           id == ref.watch(meControllerProvider)[0]['id'],
                           id,
                           {"exclude_replies": true, "limit": 20});
+                  await ref
+                      .read(userInformationProvider.notifier)
+                      .getUserInformation(id);
+                  await ref
+                      .read(userInformationProvider.notifier)
+                      .getUserMoreInformation(id);
                 },
                 child: buildUserPageBody(context),
               )
