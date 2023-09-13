@@ -191,6 +191,7 @@ class _GroupIntroState extends ConsumerState<GroupIntro> {
                   ),
                   avatarMember.isNotEmpty
                       ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             AvatarStack(
                               height: 40,

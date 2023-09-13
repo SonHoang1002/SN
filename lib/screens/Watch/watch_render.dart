@@ -123,9 +123,12 @@ class _WatchRenderState extends ConsumerState<WatchRender>
           dividerColor: transparent,
           tabs: watchMenu
               .map(
-                (e) => ChipMenu(
-                  isSelected: menuSelected == e['label'],
-                  label: e['label'],
+                (e) => Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  child: ChipMenu(
+                    isSelected: menuSelected == e['label'],
+                    label: e['label'],
+                  ),
                 ),
               )
               .toList(),

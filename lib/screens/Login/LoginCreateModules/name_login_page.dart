@@ -19,16 +19,11 @@ class NameLoginPage extends StatefulWidget {
 }
 
 class _NameLoginPageState extends State<NameLoginPage> {
-  late double width = 0;
-  late double height = 0;
   String name = '';
   dynamic errorText;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    width = size.width;
-    height = size.height;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:social_network_app_mobile/widgets/Posts/opaque_cupertino_route.dart';
 
-pushToNextScreen(BuildContext context, Widget newScreen) {
+pushToNextScreen(BuildContext context, Widget newScreen,
+    {bool fullscreenDialog = false}) {
   Navigator.of(context).push(MaterialPageRoute(builder: (_) => newScreen));
 }
 
-pushAndRemoveUntil(BuildContext context, Widget newScreen,{bool removeAllStackRoutes = false}) {
+pushAndRemoveUntil(BuildContext context, Widget newScreen,
+    {bool removeAllStackRoutes = false}) {
   Navigator.of(context).pushAndRemoveUntil(
     MaterialPageRoute(
       builder: (BuildContext context) => newScreen,

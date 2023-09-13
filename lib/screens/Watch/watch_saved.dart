@@ -15,14 +15,14 @@ class WatchSaved extends StatefulWidget {
 class _WatchSavedState extends State<WatchSaved>
     with AutomaticKeepAliveClientMixin {
   late List listWatchSaved;
-  
+
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    listWatchSaved = watchSaved;
+    listWatchSaved = [];
   }
 
   @override
@@ -166,6 +166,5 @@ class _WatchSavedState extends State<WatchSaved>
         : Center(
             child: buildTextContent("Chưa có video đã lưu nào !!", false,
                 isCenterLeft: false));
-
   }
 }

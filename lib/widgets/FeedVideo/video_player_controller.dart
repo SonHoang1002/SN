@@ -53,6 +53,7 @@ class _VideoPlayerHasControllerState
   VideoPlayerController? videoPlayerController;
   ChewieController? chewieController;
   bool isPlaying = true;
+  final ValueNotifier<bool> _isDispose = ValueNotifier(false);
 
   @override
   void initState() {
@@ -79,11 +80,11 @@ class _VideoPlayerHasControllerState
                     showControlsOnInitialize: false,
                     videoPlayerController: videoPlayerController!,
                     showControls: true,
-                    customControls: CustomControlVideo(
-                      backgroundColor: const Color.fromRGBO(41, 41, 41, 0.7),
-                      iconColor: const Color.fromARGB(255, 200, 200, 200),
-                      onDoubleTapAction: widget.onDoubleTapAction,
-                    ),
+                    // customControls: CustomControlVideo(
+                    //   backgroundColor: const Color.fromRGBO(41, 41, 41, 0.7),
+                    //   iconColor: const Color.fromARGB(255, 200, 200, 200),
+                    //   onDoubleTapAction: widget.onDoubleTapAction,
+                    // ),
                     aspectRatio: videoPlayerController!.value.aspectRatio,
                     progressIndicatorDelay: const Duration(seconds: 10));
               });
@@ -93,8 +94,10 @@ class _VideoPlayerHasControllerState
     }
   }
 
+
   @override
   void dispose() {
+    _isDispose.value = true;
     widget.hasDispose == true
         ? WidgetsBinding.instance.removeObserver(this)
         : null;
@@ -122,11 +125,11 @@ class _VideoPlayerHasControllerState
             showControlsOnInitialize: true,
             videoPlayerController: videoPlayerController!,
             showControls: true,
-            customControls: CustomControlVideo(
-              backgroundColor: const Color.fromRGBO(41, 41, 41, 0.7),
-              iconColor: const Color.fromARGB(255, 200, 200, 200),
-              onDoubleTapAction: widget.onDoubleTapAction,
-            ),
+            // customControls: CustomControlVideo(
+            //   backgroundColor: const Color.fromRGBO(41, 41, 41, 0.7),
+            //   iconColor: const Color.fromARGB(255, 200, 200, 200),
+            //   onDoubleTapAction: widget.onDoubleTapAction,
+            // ),
             aspectRatio: videoPlayerController!.value.aspectRatio,
             progressIndicatorDelay: const Duration(seconds: 10));
       });
@@ -180,29 +183,26 @@ class _VideoPlayerHasControllerState
       chewieController?.videoPlayerController.pause();
       chewieController?.videoPlayerController.setVolume(0.0);
     } else {
-      if (checkLicenseVideoWithType() &&
-          isVisible &&
-          isPlaying &&
-          widget.isFocus == true) {
-        if (drawerStatus == false) {
-          chewieController?.videoPlayerController.play();
-          chewieController?.videoPlayerController.setVolume(1.0);
+      if (mounted && _isDispose.value == false) {
+        if (checkLicenseVideoWithType() &&
+            isVisible &&
+            isPlaying &&
+            widget.isFocus == true) {
+          if (drawerStatus == false) {
+            chewieController?.videoPlayerController.play();
+            chewieController?.videoPlayerController.setVolume(1.0);
+          } else {
+            chewieController?.videoPlayerController.pause();
+            chewieController?.videoPlayerController.setVolume(0.0);
+          }
         } else {
           chewieController?.videoPlayerController.pause();
           chewieController?.videoPlayerController.setVolume(0.0);
         }
-      } else {
-        chewieController?.videoPlayerController.pause();
-        chewieController?.videoPlayerController.setVolume(0.0);
       }
     }
     return AspectRatio(
-      aspectRatio:
-          //  videoPlayerController!.value.aspectRatio > 1
-          //     ? 1
-          //     :
-          // widget.aspectRatio ??
-          videoPlayerController!.value.aspectRatio,
+      aspectRatio: videoPlayerController!.value.aspectRatio,
       child: VisibilityDetector(
           onVisibilityChanged: (visibilityInfo) {
             if (mounted && checkLicenseVideoWithType()) {
@@ -236,9 +236,7 @@ class _VideoPlayerHasControllerState
             children: [
               chewieController != null
                   ? AspectRatio(
-                      aspectRatio:
-                          // widget.aspectRatio ??
-                          videoPlayerController!.value.aspectRatio,
+                      aspectRatio: videoPlayerController!.value.aspectRatio,
                       child: chewieController!
                               .videoPlayerController.value.isInitialized
                           ? selectedVideo != null &&
@@ -312,17 +310,13 @@ class _VideoPlayerHasControllerState
                                 )
                           : AspectRatio(
                               aspectRatio:
-                                  // widget.aspectRatio ??
                                   videoPlayerController!.value.aspectRatio,
                               child: ImageCacheRender(
                                   path: widget.media['preview_remote_url'] ??
                                       widget.media['preview_url']),
                             ))
                   : AspectRatio(
-                      // aspectRatio: videoPlayerController!.value.aspectRatio,
-                      aspectRatio:
-                          // widget.aspectRatio ??
-                          videoPlayerController!.value.aspectRatio,
+                      aspectRatio: videoPlayerController!.value.aspectRatio,
                       child: ImageCacheRender(
                           path: widget.media['preview_remote_url'] ??
                               widget.media['preview_url']),

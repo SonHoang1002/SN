@@ -75,33 +75,33 @@ class _TranferAccountState extends ConsumerState<TranferAccount>
 
   handleTranferAccount(meData, index) async {
     if (meData[0]['username'] != dataLogin[index]['username']) {
-      bool isOK = true;
-      final connectionStatus =
-          ref.read(connectivityControllerProvider).connectInternet;
-      if (connectionStatus) {
-        final response = await MeApi().fetchDataMeApi();
-        if (response?['status_code'] == 403) {
-          buildSnackBar(context,
-              "Tài khoản ${dataLogin[index]['username']} đang bị vô hiệu hoá !!");
-          isOK = false;
-        } else {
-          isOK = true;
-        }
-      }
-      if (isOK) {
-        SecureStorage().deleteKeyStorage('theme');
-        ref.read(postControllerProvider.notifier).reset();
-        ref.read(momentControllerProvider.notifier).reset();
-        ref.read(watchControllerProvider.notifier).reset();
-        ref.read(watchControllerProvider.notifier).reset();
-        ref.read(pageControllerProvider.notifier).reset();
-        ref.read(friendControllerProvider.notifier).reset();
-        ref.read(groupListControllerProvider.notifier).reset();
-        ref.read(meControllerProvider.notifier).resetMeData();
-        handleLogin(dataLogin[index]['token'], dataLogin[index]['theme']);
-      } else {
-        Navigator.pop(context);
-      }
+      // bool isOK = true;
+      // final connectionStatus =
+      //     ref.read(connectivityControllerProvider).connectInternet;
+      // if (connectionStatus) {
+      //   final response = await MeApi().fetchDataMeApi();
+      //   if (response?['status_code'] == 403) {
+      //     buildSnackBar(context,
+      //         "Tài khoản ${dataLogin[index]['username']} đang bị vô hiệu hoá !!");
+      //     isOK = false;
+      //   } else {
+      //     isOK = true;
+      //   }
+      // }
+      // if (isOK) {
+      SecureStorage().deleteKeyStorage('theme');
+      ref.read(postControllerProvider.notifier).reset();
+      ref.read(momentControllerProvider.notifier).reset();
+      ref.read(watchControllerProvider.notifier).reset();
+      ref.read(watchControllerProvider.notifier).reset();
+      ref.read(pageControllerProvider.notifier).reset();
+      ref.read(friendControllerProvider.notifier).reset();
+      ref.read(groupListControllerProvider.notifier).reset();
+      ref.read(meControllerProvider.notifier).resetMeData();
+      handleLogin(dataLogin[index]['token'], dataLogin[index]['theme']);
+      // } else {
+      //   Navigator.pop(context);
+      // }
     } else {
       Navigator.pop(context);
     }

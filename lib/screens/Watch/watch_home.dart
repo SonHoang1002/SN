@@ -84,7 +84,6 @@ class _WatchHomeState extends ConsumerState<WatchHome>
     } else {
       watchData = ref.watch(watchControllerProvider).watchFollow;
     }
-
     watchData.isEmpty
         ? null
         : focusIdNotifier ??= ValueNotifier(watchData[0]?['id']);
@@ -107,11 +106,10 @@ class _WatchHomeState extends ConsumerState<WatchHome>
                           onVisibilityChanged: (info) {
                             double visibleFraction = info.visibleFraction;
                             if (visibleFraction > 0.7) {
-                              focusIdNotifier!.value =
-                                  focusIdNotifier!.value !=
-                                          watchData[index]['id']
-                                      ? watchData[index]['id']
-                                      : focusIdNotifier!.value;
+                              focusIdNotifier!.value = focusIdNotifier!.value !=
+                                      watchData[index]['id']
+                                  ? watchData[index]['id']
+                                  : focusIdNotifier!.value;
                               setState(() {});
                             }
                           },
@@ -133,12 +131,10 @@ class _WatchHomeState extends ConsumerState<WatchHome>
                               index == watchData.length - 1
                                   ? (widget.type == 'watch_home'
                                           ? ref
-                                              .watch(
-                                                  watchControllerProvider)
+                                              .watch(watchControllerProvider)
                                               .isMoreSuggest
                                           : ref
-                                              .watch(
-                                                  watchControllerProvider)
+                                              .watch(watchControllerProvider)
                                               .isMoreFollow)
                                       ? const SizedBox()
                                       : const Center(

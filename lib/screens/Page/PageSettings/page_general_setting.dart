@@ -190,7 +190,6 @@ class _PageGeneralSettingsState extends ConsumerState<PageGeneralSettings> {
                               ...monitored_keywords,
                               _categoryController.text
                             ];
-                            consoleLog("name", monitored_keywords);
                             setState(() {
                               _categoryController.text = "";
                             });

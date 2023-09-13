@@ -188,11 +188,11 @@ class _ManagerDetailState extends ConsumerState<ManagerDetail> {
                 const SizedBox(
                   height: 10,
                 ),
-                const FeatureItem(
+                /* const FeatureItem(
                   imagePath: 'assets/groups/settingGroup.png',
                   title: 'Chat cộng đồng',
                   subtitle: '4 gợi ý chat dành cho nhóm của bạn',
-                ),
+                ), */
                 const SizedBox(
                   height: 5,
                 ),
@@ -263,7 +263,7 @@ class _ManagerDetailState extends ConsumerState<ManagerDetail> {
                     subtitle: 'Quản lý cuộc thảo luận, quyền và vai trò',
                   ),
                 ),
-                const SizedBox(
+                /* const SizedBox(
                   height: 5,
                 ),
                 const FeatureItem(
@@ -279,7 +279,7 @@ class _ManagerDetailState extends ConsumerState<ManagerDetail> {
                   imagePath: 'assets/groups/settingProfile.png',
                   title: 'Cài đặt cá nhân',
                   subtitle: 'Thay đổi thông báo và xem nội dung cá nhân',
-                ),
+                ), */
                 const SizedBox(
                   height: 10,
                 ),

@@ -1,4 +1,3 @@
-List watchSaved = [];
 
 List pagesLike = [
   {
@@ -1168,5 +1167,3 @@ List pagesLike = [
     }
   }
 ];
-
-List watchs = [];

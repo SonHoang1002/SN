@@ -1,4 +1,3 @@
-
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:social_network_app_mobile/screens/Page/PageCreate/page_create.da
 import 'package:social_network_app_mobile/widgets/button_primary.dart';
 import 'package:social_network_app_mobile/widgets/skeleton.dart';
 
+import '../../apis/page_api.dart';
 import '../../providers/page/page_list_provider.dart';
 import '../../theme/colors.dart';
 import '../../theme/theme_manager.dart';
@@ -34,15 +34,22 @@ class _PageDiscoverState extends ConsumerState<PageDiscover> {
     scrollController.addListener(() {
       if (scrollController.position.maxScrollExtent ==
           scrollController.offset) {
-        String maxId = ref
-            .read(pageListControllerProvider)
-            .pageSuggestions
-            .last['id']
-            .toString();
-        ref.read(pageListControllerProvider.notifier).getListPageSuggest({
-          "max_id": maxId,
-          "limit": 10,
-        });
+        String maxId = pageDiscover!.last["score"];
+        Future.delayed(
+          const Duration(milliseconds: 500),
+          () async {
+            List response = await PageApi().fetchListPageSuggest({
+                  "max_id": maxId,
+                  "limit": 10,
+                }) ??
+                [];
+            if (response.isNotEmpty) {
+              setState(() {
+                pageDiscover?.addAll(response);
+              });
+            }
+          },
+        );
       }
     });
   }

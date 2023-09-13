@@ -1,63 +1,380 @@
 {
-  "id": "108786450044532613",
-  "title": "Hòa Thông",
-  "username": null,
-  "description": "Nhóm của Hòa Thông",
-  "description_html": "&lt;p&gt;Nhóm của Hòa Thông&lt;/p&gt;",
-  "cover_image_url":
-      "https://snapi.emso.asia/cover_images/original/missing.png",
-  "is_archived": false,
-  "member_count": 3,
-  "request_member_count": 0,
-  "created_at": "2022-08-08T16:04:54.089+07:00",
-  "slug": null,
-  "url": "/api/v1/groups/108786450044532613",
-  "tags": ["hoa", "thong"],
-  "category": null,
-  "requires_post_approval": true,
-  "is_private": true,
-  "is_visible": true,
-  "inactivate_reason": null,
+  "id": "108277159419224227",
+  "title": "Trang mới nhất",
+  "description": "chả nói gì",
+  "description_html": "&lt;p&gt;chả nói gì&lt;/p&gt;",
+  "email": "abcd@gmail.com",
+  "address": null,
+  "phone_number": "0987654321",
+  "whatsapp_number": null,
+  "website": null,
+  "policy_link": "https://dantri.com.vn/",
+  "impressum": "không",
+  "products": "không",
+  "addition_information": "không",
+  "updated_at": "2023-09-11T08:30:05.472+07:00",
+  "created_at": "2023-08-24T00:49:48.101+07:00",
+  "like_count": 1,
+  "follow_count": 1,
+  "review_count": 0,
+  "page_relationship": {
+    "following": true,
+    "like": true,
+    "block_page": false,
+    "role": "admin"
+  },
+  "rating": 0.0,
+  "earn_money": false,
+  "hours_type": "NO_HOURS_AVAILABLE",
   "monitored_keywords": [],
-  "updated_at": "2022-09-23T17:08:37.261+07:00",
-  "average_status": 0,
-  "last_status_at": "2022-09-23T17:08:37.259+07:00",
-  "post_permission_setting": "NONE",
-  "post_approval_setting": "NONE",
-  "score": "108786450044532613",
-  "banner": {
-    "id": "108786450298251531",
+  "is_published": true,
+  "schedule": {
+    "fri": [
+      {
+        "open": null,
+        "close": null
+      }
+    ],
+    "mon": [
+      {
+        "open": null,
+        "close": null
+      }
+    ],
+    "sat": [
+      {
+        "open": null,
+        "close": null
+      }
+    ],
+    "sun": [
+      {
+        "open": null,
+        "close": null
+      }
+    ],
+    "thu": [
+      {
+        "open": null,
+        "close": null
+      }
+    ],
+    "tue": [
+      {
+        "open": null,
+        "close": null
+      }
+    ],
+    "wed": [
+      {
+        "open": null,
+        "close": null
+      }
+    ]
+  },
+  "temporary_hours_status": null,
+  "differently_open_offerings": null,
+  "button_key": null,
+  "button_value": null,
+  "username": null,
+  "zip": null,
+  "location": null,
+  "score": "108277159419224227",
+  "avatar_media": {
+    "id": "111042202781381374",
     "type": "image",
-    "url":
-        "https://snapi.emso.asia/system/media_attachments/files/108/786/450/298/251/531/original/60ced941596e0f69.jpg",
-    "preview_url":
-        "https://snapi.emso.asia/system/media_attachments/files/108/786/450/298/251/531/small/60ced941596e0f69.jpg",
+    "url": "https://snapi.emso.asia/system/media_attachments/files/111/042/202/781/381/374/original/7175ebedd679a543.jpg",
+    "preview_url": "https://snapi.emso.asia/system/media_attachments/files/111/042/202/781/381/374/small/7175ebedd679a543.jpg",
     "remote_url": null,
     "preview_remote_url": null,
     "text_url": null,
     "meta": {
       "original": {
-        "width": 1247,
-        "height": 1663,
-        "size": "1247x1663",
-        "aspect": 0.7498496692723993,
-        "average_color": "#959386"
+        "width": 600,
+        "height": 503,
+        "size": "600x503",
+        "aspect": 1.1928429423459244,
+        "average_color": "#615e7c"
       },
       "small": {
-        "width": 346,
-        "height": 461,
-        "size": "346x461",
-        "aspect": 0.7505422993492408,
-        "average_color": "#959386"
+        "width": 437,
+        "height": 366,
+        "size": "437x366",
+        "aspect": 1.1939890710382515,
+        "average_color": "#615e7c"
       }
     },
     "description": null,
-    "blurhash": "UkIr4^nLafxacbV?Rkax-=WrV@WD-otSt5of",
-    "status_id": "108786450302585725",
-    "show_url":
-        "https://snapi.emso.asia/system/media_attachments/files/108/786/450/386/255/177/original/09414798f8f13909.jpeg",
-    "created_at": "2022-08-08T16:04:57.977+07:00",
-    "frame": null
+    "position": 1.0,
+    "blurhash": null,
+    "status_id": "111042202783343163",
+    "show_url": "https://snapi.emso.asia/system/media_attachments/files/111/042/202/781/381/374/original/7175ebedd679a543.jpg",
+    "created_at": "2023-09-11T01:12:29.277+07:00",
+    "frame": null,
+    "status_media": {
+      "id": "111042202783343163",
+      "favourites_count": 0,
+      "reblogs_count": 0,
+      "replies_total": 0,
+      "post_type": "page_avatar",
+      "reactions": [
+        {
+          "type": "like",
+          "likes_count": 0
+        },
+        {
+          "type": "haha",
+          "hahas_count": 0
+        },
+        {
+          "type": "angry",
+          "angrys_count": 0
+        },
+        {
+          "type": "love",
+          "loves_count": 0
+        },
+        {
+          "type": "sad",
+          "sads_count": 0
+        },
+        {
+          "type": "wow",
+          "wows_count": 0
+        },
+        {
+          "type": "yay",
+          "yays_count": 0
+        }
+      ]
+    }
   },
-  "place": null
+  "place_id": null,
+  "is_place": false,
+  "identity_verification": false,
+  "certified": false,
+  "products_count": null,
+  "bookmarked": false,
+  "banner": {
+    "id": "111042203544988150",
+    "type": "image",
+    "url": "https://snapi.emso.asia/system/media_attachments/files/111/042/203/544/988/150/original/a9c935817e4db7e7.jpg",
+    "preview_url": "https://snapi.emso.asia/system/media_attachments/files/111/042/203/544/988/150/small/a9c935817e4db7e7.jpg",
+    "remote_url": null,
+    "preview_remote_url": null,
+    "text_url": null,
+    "meta": {
+      "original": {
+        "width": 1663,
+        "height": 1247,
+        "size": "1663x1247",
+        "aspect": 1.3336006415396953,
+        "average_color": "#625455"
+      },
+      "small": {
+        "width": 461,
+        "height": 346,
+        "size": "461x346",
+        "aspect": 1.3323699421965318,
+        "average_color": "#625455"
+      }
+    },
+    "description": null,
+    "position": 1.0,
+    "blurhash": null,
+    "status_id": "111042203548141464",
+    "show_url": "https://snapi.emso.asia/system/media_attachments/files/111/042/203/544/988/150/original/a9c935817e4db7e7.jpg",
+    "created_at": "2023-09-11T01:12:40.948+07:00",
+    "frame": null,
+    "status_media": {
+      "id": "111042203548141464",
+      "favourites_count": 0,
+      "reblogs_count": 0,
+      "replies_total": 0,
+      "post_type": "page_banner",
+      "reactions": [
+        {
+          "type": "like",
+          "likes_count": 0
+        },
+        {
+          "type": "haha",
+          "hahas_count": 0
+        },
+        {
+          "type": "angry",
+          "angrys_count": 0
+        },
+        {
+          "type": "love",
+          "loves_count": 0
+        },
+        {
+          "type": "sad",
+          "sads_count": 0
+        },
+        {
+          "type": "wow",
+          "wows_count": 0
+        },
+        {
+          "type": "yay",
+          "yays_count": 0
+        }
+      ]
+    }
+  },
+  "page_categories": [
+    {
+      "id": "541",
+      "text": "Bán buôn"
+    }
+  ],
+  "province": null,
+  "district": null,
+  "ward": null,
+  "account_holder": {
+    "id": "107573652397763525",
+    "username": "buingoctu",
+    "display_name": "Bùi Tự",
+    "avatar_static": "https://snapi.emso.asia/avatars/original/missing.png",
+    "gender": null,
+    "earn_money": false,
+    "certified": true,
+    "identity_verification": true,
+    "avatar_media": {
+      "id": "108672189739546496",
+      "type": "image",
+      "url": "https://snapi.emso.asia/system/media_attachments/files/108/672/189/739/546/496/original/a1515a8ce61656fe.jpg",
+      "meta": {
+        "original": {
+          "width": 650,
+          "height": 923,
+          "size": "650x923",
+          "aspect": 0.704225352112676,
+          "average_color": "#7f8070"
+        },
+        "small": {
+          "width": 336,
+          "height": 477,
+          "size": "336x477",
+          "aspect": 0.7044025157232704,
+          "average_color": "#7f8070"
+        }
+      },
+      "preview_url": "https://snapi.emso.asia/system/media_attachments/files/108/672/189/739/546/496/small/a1515a8ce61656fe.jpg",
+      "remote_url": null,
+      "preview_remote_url": null,
+      "show_url": "https://snapi.emso.asia/system/media_attachments/files/108/696/123/897/512/607/original/6ffa3f41d208fac7.jpeg",
+      "status_id": "108672189743734254",
+      "description": "",
+      "position": null,
+      "created_at": "2022-07-19T11:47:00.190+07:00",
+      "frame": null,
+      "status_media": {
+        "id": "108672189743734254",
+        "favourites_count": 0,
+        "reblogs_count": 0,
+        "replies_total": 0,
+        "post_type": "account_avatar",
+        "reactions": [
+          {
+            "type": "like",
+            "likes_count": 0
+          },
+          {
+            "type": "haha",
+            "hahas_count": 0
+          },
+          {
+            "type": "angry",
+            "angrys_count": 0
+          },
+          {
+            "type": "love",
+            "loves_count": 0
+          },
+          {
+            "type": "sad",
+            "sads_count": 0
+          },
+          {
+            "type": "wow",
+            "wows_count": 0
+          },
+          {
+            "type": "yay",
+            "yays_count": 0
+          }
+        ]
+      }
+    },
+    "banner": {
+      "id": "108967311515373347",
+      "type": "image",
+      "url": "https://snapi.emso.asia/system/media_attachments/files/108/967/311/515/373/347/original/31469f1d54043b66.jpg",
+      "meta": {
+        "original": {
+          "width": 1419,
+          "height": 561,
+          "size": "1419x561",
+          "aspect": 2.5294117647058822,
+          "average_color": "#f1782d"
+        },
+        "small": {
+          "width": 636,
+          "height": 251,
+          "size": "636x251",
+          "aspect": 2.5338645418326693,
+          "average_color": "#f1782d"
+        }
+      },
+      "preview_url": "https://snapi.emso.asia/system/media_attachments/files/108/967/311/515/373/347/small/31469f1d54043b66.jpg",
+      "remote_url": null,
+      "preview_remote_url": null,
+      "show_url": "https://snapi.emso.asia/system/media_attachments/files/108/967/312/008/410/459/original/a3cfa1e0267266c4.jpeg",
+      "status_id": "108967311917837479",
+      "description": "",
+      "position": null,
+      "created_at": "2022-09-09T14:40:21.119+07:00",
+      "frame": null,
+      "status_media": {
+        "id": "108967311917837479",
+        "favourites_count": 3,
+        "reblogs_count": 0,
+        "replies_total": 0,
+        "post_type": "account_banner",
+        "reactions": [
+          {
+            "type": "like",
+            "likes_count": 2
+          },
+          {
+            "type": "haha",
+            "hahas_count": 0
+          },
+          {
+            "type": "angry",
+            "angrys_count": 0
+          },
+          {
+            "type": "love",
+            "loves_count": 1
+          },
+          {
+            "type": "sad",
+            "sads_count": 0
+          },
+          {
+            "type": "wow",
+            "wows_count": 0
+          },
+          {
+            "type": "yay",
+            "yays_count": 0
+          }
+        ]
+      }
+    }
+  }
 }

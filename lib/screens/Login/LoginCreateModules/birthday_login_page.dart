@@ -23,18 +23,11 @@ class BirthdayLoginPage extends StatefulWidget {
 }
 
 class _BirthdayLoginPageState extends State<BirthdayLoginPage> {
-  late double width = 0;
-
-  late double height = 0;
   bool _isValid = true;
   late List<int> _timeComponent = [];
-  bool isFillAll = false;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
-    width = size.width;
-    height = size.height;
     checkValidTime();
     return Scaffold(
       appBar: AppBar(

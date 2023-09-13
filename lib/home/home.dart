@@ -627,30 +627,28 @@ class _HomeState extends ConsumerState<Home>
         _selectedIndex = widget.selectedIndex!;
       });
     }
-    List<Widget> pages = [
-      Feed(
-        callbackFunction: _showBottomNavigator,
-      ),
-      Moment(
-        typePage: 'home',
-        isDisable: ref.watch(disableMomentController).isDisable,
-      ),
-      const SizedBox(),
-      const Watch(),
-      MainMarketPage(
-        isBack: false,
-        callbackFunction: _showBottomNavigator,
-      )
-    ];
     // List<Widget> pages = [
     //   Feed(
     //     callbackFunction: _showBottomNavigator,
     //   ),
+    //   Moment(
+    //     typePage: 'home',
+    //     isDisable: ref.watch(disableMomentController).isDisable,
+    //   ),
     //   const SizedBox(),
-    //   const SizedBox(),
-    //   const SizedBox(),
-    //   const SizedBox(),
+    //   const Watch(),
+    //   MainMarketPage(
+    //     isBack: false,
+    //     callbackFunction: _showBottomNavigator,
+    //   )
     // ];
+    List<Widget> pages = [
+      const SizedBox(),
+      const SizedBox(),
+      const SizedBox(),
+      const Watch(),
+      const SizedBox(),
+    ];
     List actions = [
       List.generate(
           iconActionFeed.length,

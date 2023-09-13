@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart' as pv;
 import 'package:social_network_app_mobile/constant/common.dart';
 import 'package:social_network_app_mobile/data/list_menu.dart';
+import 'package:social_network_app_mobile/helper/common.dart';
 import 'package:social_network_app_mobile/providers/me_provider.dart';
 import 'package:social_network_app_mobile/providers/page/page_provider.dart';
 import 'package:social_network_app_mobile/screens/Page/PageDetail/about_page.dart';
@@ -581,7 +582,7 @@ class _PageDetailState extends ConsumerState<PageDetail> {
                 ),
               ),
               data?['page_relationship']?['role'] == 'admin' && rolePage
-                  ? const BoxQuickUpdatePage()
+                  ? BoxQuickUpdatePage(data: data)
                   : const SizedBox(),
               const CrossBar(
                 height: 5,

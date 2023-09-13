@@ -211,10 +211,6 @@ class PageApi {
     return await Api().postRequestBase('/api/v1/pages/$idPage/$action', null);
   }
 
-  Future handleBlockPage(params) async {
-    return await Api().postRequestBase('/api/v1/block_pages', params);
-  }
-
   Future getSettingsPage(id) async {
     return await Api().getRequestBase('/api/v1/pages/$id/settings', null);
   }

@@ -154,9 +154,10 @@ class AddWebsiteLinkState extends ConsumerState<AddWebsiteLink> {
                           SizedBox(
                             height: 45.0,
                             child: CupertinoTextField(
+                              style: TextStyle(color: colorWord(context)),
                               placeholder: "Nhập url trang web ...",
-                              placeholderStyle: const TextStyle(
-                                color: CupertinoColors.placeholderText,
+                              placeholderStyle:  TextStyle(
+                                color: colorWord(context),
                                 fontSize: 16.5,
                               ),
                               onChanged: (value) {

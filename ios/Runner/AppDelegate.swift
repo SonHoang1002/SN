@@ -143,7 +143,6 @@ import flutter_local_notifications
             )
             factory = nil
         }
-        
         return factory
     }
     

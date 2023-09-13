@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_network_app_mobile/constant/post_type.dart';
@@ -71,8 +73,8 @@ class _FeedPageState extends ConsumerState<FeedPage> {
     return Column(
       children: [
         widget.pageData != null &&
-                (widget.pageData?['page_relationship']?['role'] != null &&
-                    widget.pageData?['page_relationship']?['role'] == "admin")
+                ["admin", "moderator"]
+                    .contains(widget.pageData?['page_relationship']?['role'])
             ? CreatePostButton(
                 preType: postPage,
                 reloadFunction: _reloadFunction,
