@@ -53,7 +53,6 @@ class WatchController extends StateNotifier<WatchState> {
   }
 
   getListWatchFollow(params) async {
-    print("call_ getListWatchFollow");
     final limit = params['limit'];
     List response = await WatchApi().getListWatchFollow(params) ?? [];
     response.insertAll(0, fakeWatchFollow);

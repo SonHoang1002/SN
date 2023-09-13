@@ -50,7 +50,6 @@ class PostCenter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String postType = post['post_type'] ?? '';
-    print("postLiveStream ${postType == postLiveStream}");
     return Container(
         margin: const EdgeInsets.only(
           top: 10,

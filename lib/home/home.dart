@@ -64,12 +64,15 @@ class _HomeState extends ConsumerState<Home>
   WebSocketChannel? webSocketChannel;
   StreamSubscription<dynamic>? subscription;
   bool _connectionStatus = true;
+  bool isDisable = false;
+
+  bool isReloadHome = false;
+  String _statusHomeNavigator = "";
+
   double valueFromPercentageInRange(
       {required final double min, max, percentage}) {
     return percentage * (max - min) + min;
   }
-
-  bool isDisable = false;
 
   double percentageFromValueInRange({required final double min, max, value}) {
     return (value - min) / (max - min);
@@ -120,6 +123,19 @@ class _HomeState extends ConsumerState<Home>
         }
       }
       setState(() {
+        if (_selectedIndex == 0) {
+          if (isReloadHome == true) {
+            // check reload data post
+            _statusHomeNavigator = "reload";
+          } else {
+            // check scroll top
+            isReloadHome = true;
+            _statusHomeNavigator = "scrollTop";
+          }
+        } else {
+          isReloadHome = false;
+          _statusHomeNavigator = "";
+        }
         _selectedIndex = index;
         ref
             .read(disableMomentController.notifier)
@@ -627,28 +643,28 @@ class _HomeState extends ConsumerState<Home>
         _selectedIndex = widget.selectedIndex!;
       });
     }
-    // List<Widget> pages = [
-    //   Feed(
-    //     callbackFunction: _showBottomNavigator,
-    //   ),
-    //   Moment(
-    //     typePage: 'home',
-    //     isDisable: ref.watch(disableMomentController).isDisable,
-    //   ),
-    //   const SizedBox(),
-    //   const Watch(),
-    //   MainMarketPage(
-    //     isBack: false,
-    //     callbackFunction: _showBottomNavigator,
-    //   )
-    // ];
     List<Widget> pages = [
-      const SizedBox(),
-      const SizedBox(),
+      Feed(
+          callbackFunction: _showBottomNavigator,
+          statusHomeNavigator: _statusHomeNavigator),
+      Moment(
+        typePage: 'home',
+        isDisable: ref.watch(disableMomentController).isDisable,
+      ),
       const SizedBox(),
       const Watch(),
-      const SizedBox(),
+      MainMarketPage(
+        isBack: false,
+        callbackFunction: _showBottomNavigator,
+      )
     ];
+    // List<Widget> pages = [
+    //   const SizedBox(),
+    //   const SizedBox(),
+    //   const SizedBox(),
+    //   const Watch(),
+    //   const SizedBox(),
+    // ];
     List actions = [
       List.generate(
           iconActionFeed.length,

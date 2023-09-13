@@ -251,14 +251,12 @@ class _UserPageState extends ConsumerState<UserPage>
         if (!showHeaderTabFixed) {
           setState(() {
             showHeaderTabFixed = true;
-            print("aaaaaaaaaaaaaaa");
           });
         }
       } else if (offset < 300) {
         if (showHeaderTabFixed) {
           setState(() {
             showHeaderTabFixed = false;
-            print("bbbbbbbbbbbbbb");
           });
         }
       }

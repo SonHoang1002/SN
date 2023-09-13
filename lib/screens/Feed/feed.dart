@@ -37,7 +37,9 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 class Feed extends ConsumerStatefulWidget {
   final Function? callbackFunction;
-  const Feed({Key? key, this.callbackFunction}) : super(key: key);
+  final String? statusHomeNavigator;
+  const Feed({Key? key, this.callbackFunction, this.statusHomeNavigator})
+      : super(key: key);
 
   @override
   ConsumerState<Feed> createState() => _FeedState();
@@ -104,41 +106,56 @@ class _FeedState extends ConsumerState<Feed> {
   }
 
   void addScrollListener() {
-    scrollController.addListener(() async {
-      if (scrollController.position.userScrollDirection ==
-          ScrollDirection.reverse) {
-        widget.callbackFunction != null
-            ? widget.callbackFunction!(false)
-            : null;
-        hiddenKeyboard(context);
-        if (double.parse((scrollController.offset).toStringAsFixed(0)) %
-                    120.0 ==
-                0 ||
-            scrollController.offset ==
-                scrollController.position.maxScrollExtent) {
-          EasyDebounce.debounce(
-              'my-debouncer', const Duration(milliseconds: 180), () async {
-            // kiểm tra không có kết nối hoặc có kết nối mà không còn bài viết nào khác nữa --> lấy data từ isar
-            if (!ref.watch(connectivityControllerProvider).connectInternet ||
-                ((_isMore.value != true ||
-                        ref.watch(postControllerProvider).isMore != true) &&
-                    ref
-                        .watch(connectivityControllerProvider)
-                        .connectInternet)) {
-              getDataFromIsar();
-            }
-            updatePostIsar();
-          });
+    scrollController
+      ..addListener(() async {
+        if (scrollController.position.userScrollDirection ==
+            ScrollDirection.reverse) {
+          widget.callbackFunction != null
+              ? widget.callbackFunction!(false)
+              : null;
+          hiddenKeyboard(context);
+          if (double.parse((scrollController.offset).toStringAsFixed(0)) %
+                      120.0 ==
+                  0 ||
+              scrollController.offset ==
+                  scrollController.position.maxScrollExtent) {
+            EasyDebounce.debounce(
+                'my-debouncer', const Duration(milliseconds: 180), () async {
+              // kiểm tra không có kết nối hoặc có kết nối mà không còn bài viết nào khác nữa --> lấy data từ isar
+              if (!ref.watch(connectivityControllerProvider).connectInternet ||
+                  ((_isMore.value != true ||
+                          ref.watch(postControllerProvider).isMore != true) &&
+                      ref
+                          .watch(connectivityControllerProvider)
+                          .connectInternet)) {
+                getDataFromIsar();
+              }
+              updatePostIsar();
+            });
+          }
+        } else if (scrollController.position.userScrollDirection ==
+            ScrollDirection.forward) {
+          widget.callbackFunction != null
+              ? widget.callbackFunction!(true)
+              : null;
+          hiddenKeyboard(context);
+          if (double.parse((scrollController.offset).toStringAsFixed(0)) %
+                  120.0 ==
+              0) {}
         }
-      } else if (scrollController.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        widget.callbackFunction != null ? widget.callbackFunction!(true) : null;
-        hiddenKeyboard(context);
-        if (double.parse((scrollController.offset).toStringAsFixed(0)) %
-                120.0 ==
-            0) {}
-      }
-    });
+      })
+      ..addListener(() {
+        if (widget.statusHomeNavigator == "scrollTop") {
+          scrollController.animateTo(0,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.bounceIn);
+          setState(() {});
+        } else if (widget.statusHomeNavigator == "reload") {
+          ref
+              .read(postControllerProvider.notifier)
+              .refreshListPost(paramsConfig);
+        } else {}
+      });
   }
 
   getDataFromIsar() async {
@@ -246,16 +263,6 @@ class _FeedState extends ConsumerState<Feed> {
   Widget build(BuildContext context) {
     List posts = List.from(ref.watch(postControllerProvider).posts);
     theme ??= pv.Provider.of<ThemeManager>(context);
-    if (!posts.contains(fakePost)) {
-      posts.add(fakePost);
-    }
-    if (!posts.contains(abc)) {
-      posts.add(abc);
-    }
-    Future.delayed(Duration.zero, () async {
-      final count = await IsarPostService().getCountPostIsar();
-      print("=============== ${count}");
-    });
     return RefreshIndicator(
       onRefresh: () async {
         ref.read(postControllerProvider.notifier).refreshListPost(paramsConfig);

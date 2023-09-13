@@ -107,7 +107,6 @@ class _SocialLinksState extends ConsumerState<SocialLinks> {
   void handleDate(DateTime selectedDate) {
     formattedDate =
         DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(selectedDate);
-    print('Formatted Date: $formattedDate');
     // formattedDate sẽ có định dạng "2022-02-22T17:00:00.000Z"
   }
 

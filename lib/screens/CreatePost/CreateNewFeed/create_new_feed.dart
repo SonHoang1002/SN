@@ -523,7 +523,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
       _buildSnackBar(
           "Video của bạn đang trong quá trình xử lý, chúng tôi sẽ thông báo cho bạn khi video đã sẵn sàng.");
     }
-    print("_isClickForCreatePost ${_isClickForCreatePost}");
     if (!_isClickForCreatePost) {
       _isClickForCreatePost = true;
       String? type = widget.type ?? feedPost;
@@ -1053,7 +1052,6 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
 
   @override
   Widget build(BuildContext context) {
-    print("_isClickForCreatePost build ${_isClickForCreatePost}");
     final size = MediaQuery.sizeOf(context);
     height = size.height;
     width = size.width;
@@ -1153,6 +1151,7 @@ class _CreateNewFeedState extends ConsumerState<CreateNewFeed> {
     );
   }
 
+ 
   Widget mainBody() {
     final size = MediaQuery.sizeOf(context);
     return Container(

@@ -65,13 +65,6 @@ class IsarPostUsers {
     final instance = await IsarService.instance;
     final listUser =
         await instance.postDataUsers.where(distinct: true).findAll();
-    // if (instance.isOpen == true) {
-    //   // final listUser = await instance.postDataUsers.where().findAll();
-    //   // print("listUser ${jsonDecode(listUser[0].listUser!)}");
-    //   print("listUser listUser listUser listUser");
-    // } else {
-    //   print("0909090990");
-    // }
   }
 
   resetPostUsers() async {
